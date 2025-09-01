@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../utils/api';
 
 const FinancialProjections = ({ goal }) => {
+    const { t } = useTranslation();
     const [extraSavings, setExtraSavings] = useState('');
     const [projection, setProjection] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleProjection = async () => {
         if (!extraSavings || parseFloat(extraSavings) <= 0) {
-            alert('Please enter a valid amount to add to your savings.');
+            alert(t('financialProjections.enter_valid_amount'));
             return;
         }
 
@@ -21,7 +23,7 @@ const FinancialProjections = ({ goal }) => {
             setProjection(projectionData.data);
         } catch (error) {
             console.error('Error calculating projection:', error);
-            alert('Failed to calculate projection. Please try again.');
+            alert(t('financialProjections.calculation_failed'));
         } finally {
             setLoading(false);
         }
@@ -29,17 +31,17 @@ const FinancialProjections = ({ goal }) => {
 
     return (
         <div>
-            <h3 className="text-xl font-semibold mb-4">“What-If” Scenario Planner</h3>
-            <p className="mb-4">See how extra savings can impact your goal: <strong>{goal.goal_name}</strong></p>
+            <h3 className="text-xl font-semibold mb-4">{t('financialProjections.what_if_scenario')}</h3>
+            <p className="mb-4">{t('financialProjections.see_impact')} <strong>{goal.goal_name}</strong></p>
 
             <div className="mb-4">
-                <label htmlFor="extra-savings" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Extra monthly savings ($)</label>
+                <label htmlFor="extra-savings" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('financialProjections.extra_monthly_savings')}</label>
                 <input
                     type="number"
                     id="extra-savings"
                     value={extraSavings}
                     onChange={(e) => setExtraSavings(e.target.value)}
-                    placeholder="e.g., 100"
+                    placeholder={t('financialProjections.amount_placeholder')}
                     className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
             </div>
@@ -49,21 +51,21 @@ const FinancialProjections = ({ goal }) => {
                 disabled={loading}
                 className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-blue-300"
             >
-                {loading ? 'Calculating...' : 'Calculate Projection'}
+                {loading ? t('financialProjections.calculating') : t('financialProjections.calculate_projection')}
             </button>
 
             {projection && (
                 <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                    <h4 className="font-bold text-lg">AI-Powered Projection Results</h4>
+                    <h4 className="font-bold text-lg">{t('financialProjections.ai_powered_results')}</h4>
                     
                     <div className="my-4">
-                        <p>Based on your transaction history, we predict you can save an average of <strong className="text-blue-500">${projection.predictedMonthlySavings}</strong> per month.</p>
-                        <p>With your extra commitment of <strong className="text-blue-500">${extraSavings}</strong>, your total monthly savings could be <strong className="text-blue-500">${(parseFloat(projection.predictedMonthlySavings) + parseFloat(extraSavings)).toFixed(2)}</strong>.</p>
+                        <p>{t('financialProjections.based_on_history')} <strong className="text-blue-500">${projection.predictedMonthlySavings}</strong> {t('financialProjections.per_month')}.</p>
+                        <p>{t('financialProjections.with_extra_commitment')} <strong className="text-blue-500">${extraSavings}</strong>, {t('financialProjections.total_monthly_savings')} <strong className="text-blue-500">${(parseFloat(projection.predictedMonthlySavings) + parseFloat(extraSavings)).toFixed(2)}</strong>.</p>
                     </div>
 
-                    <p>With this pace, you could reach your goal on:</p>
+                    <p>{t('financialProjections.with_this_pace')}</p>
                     <p className="text-2xl font-bold text-green-500">{projection.projectedDate}</p>
-                    <p>That's approximately <strong>{projection.monthsToReachGoal} months</strong> from now, and <strong>{projection.daysSooner} days sooner</strong> than your original target date!</p>
+                    <p>{t('financialProjections.approximately')} <strong>{projection.monthsToReachGoal} {t('financialProjections.months')}</strong> {t('financialProjections.from_now')}, {t('financialProjections.and')} <strong>{projection.daysSooner} {t('financialProjections.days_sooner')}</strong> {t('financialProjections.than_original_target')}!</p>
                 </div>
             )}
         </div>

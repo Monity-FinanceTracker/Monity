@@ -25,12 +25,19 @@ function Savings() {
                 
                 const total = savingsTransactions.reduce((acc, transaction) => {
                     const amount = parseFloat(transaction.amount);
-                    if (transaction.category === "Make Investments") {
-                        return acc - amount;
-                    } else if (transaction.category === "Withdraw Investments") {
-                        return acc + amount;
+                    
+                    // NEW: Try metadata first for future-proof categorization (safe access)
+                    const savingsBehavior = transaction.metadata?.savings_behavior;
+                    
+                    // Handle investment transactions (moving money to/from investments)
+                    if (savingsBehavior === 'investment' || transaction.category === "Make Investments") {
+                        return acc - amount; // Subtract when moving to investments
+                    } else if (savingsBehavior === 'divestment' || transaction.category === "Withdraw Investments") {
+                        return acc + amount; // Add when withdrawing from investments
                     }
-                    return acc;
+                    
+                    // Default: regular savings transaction (positive contribution)
+                    return acc + amount;
                 }, 0);
 
                 setTotalSavings(total);

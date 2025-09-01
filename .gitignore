@@ -61,6 +61,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node.js
 node_modules
 dist
 dist-ssr
@@ -77,4 +78,19 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Test coverage
+coverage/
+*.lcov
+*.xml
+
+# Generated files
+__mocks__/
+performance-monitor.js
+database-optimizer.js
+debug-*.js
+
+# Temporary files
+*.tmp
+*.temp
 

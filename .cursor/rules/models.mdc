@@ -1,0 +1,216 @@
+---
+globs: backend/models/*.js
+description: Model layer guidelines for MVC architecture
+---
+
+# Models Layer Guidelines
+
+## Purpose
+Models represent the data layer of the application and handle:
+- Data structure definition
+- Database operations (CRUD)
+- Data validation
+- Business rules related to data integrity
+- Relationship management between entities
+
+## Model Structure Template
+
+```javascript
+const { createClient } = require('@supabase/supabase-js');
+const EncryptionMiddleware = require('../middleware/encryption');
+const { validateRequired, validateEmail } = require('../utils/validators');
+
+class ModelName {
+    constructor(supabase) {
+        this.supabase = supabase;
+        this.tableName = 'table_name';
+        this.encryptedFields = ['field1', 'field2']; // Fields that need encryption
+    }
+
+    // Create operations
+    async create(data, userId) {
+        // Validate input
+        this.validateCreateData(data);
+        
+        // Add user context
+        const insertData = { ...data, user_id: userId, created_at: new Date() };
+        
+        // Encrypt sensitive fields
+        const encryptedData = EncryptionMiddleware.encryptForInsert(this.tableName, insertData);
+        
+        const { data: result, error } = await this.supabase
+            .from(this.tableName)
+            .insert([encryptedData])
+            .select();
+            
+        if (error) throw new Error(`Failed to create ${this.tableName}: ${error.message}`);
+        
+        // Decrypt response
+        return EncryptionMiddleware.decryptFromSelect(this.tableName, result[0]);
+    }
+
+    // Read operations
+    async findById(id, userId) {
+        const { data, error } = await this.supabase
+            .from(this.tableName)
+            .select('*')
+            .eq('id', id)
+            .eq('user_id', userId)
+            .single();
+            
+        if (error) {
+            if (error.code === 'PGRST116') return null; // Not found
+            throw new Error(`Failed to find ${this.tableName}: ${error.message}`);
+        }
+        
+        return EncryptionMiddleware.decryptFromSelect(this.tableName, data);
+    }
+
+    async findByUser(userId, options = {}) {
+        let query = this.supabase
+            .from(this.tableName)
+            .select('*')
+            .eq('user_id', userId);
+            
+        // Apply pagination
+        if (options.limit) query = query.limit(options.limit);
+        if (options.offset) query = query.range(options.offset, options.offset + options.limit - 1);
+        
+        // Apply ordering
+        if (options.orderBy) {
+            query = query.order(options.orderBy, { ascending: options.ascending ?? true });
+        }
+        
+        const { data, error } = await query;
+        if (error) throw new Error(`Failed to fetch ${this.tableName}: ${error.message}`);
+        
+        return EncryptionMiddleware.decryptFromSelect(this.tableName, data || []);
+    }
+
+    // Update operations
+    async update(id, updateData, userId) {
+        this.validateUpdateData(updateData);
+        
+        const dataWithTimestamp = { ...updateData, updated_at: new Date() };
+        const encryptedData = EncryptionMiddleware.encryptForInsert(this.tableName, dataWithTimestamp);
+        
+        const { data, error } = await this.supabase
+            .from(this.tableName)
+            .update(encryptedData)
+            .eq('id', id)
+            .eq('user_id', userId)
+            .select();
+            
+        if (error) throw new Error(`Failed to update ${this.tableName}: ${error.message}`);
+        if (!data.length) throw new Error(`${this.tableName} not found or access denied`);
+        
+        return EncryptionMiddleware.decryptFromSelect(this.tableName, data[0]);
+    }
+
+    // Delete operations
+    async delete(id, userId) {
+        const { error } = await this.supabase
+            .from(this.tableName)
+            .delete()
+            .eq('id', id)
+            .eq('user_id', userId);
+            
+        if (error) throw new Error(`Failed to delete ${this.tableName}: ${error.message}`);
+        
+        return { success: true };
+    }
+
+    // Validation methods
+    validateCreateData(data) {
+        // Implement specific validation logic
+        // Example: validateRequired(data, ['name', 'amount']);
+    }
+
+    validateUpdateData(data) {
+        // Implement update-specific validation
+        // Usually less strict than create validation
+    }
+}
+
+module.exports = ModelName;
+```
+
+## Key Models to Create
+
+### 1. User Model (models/User.js)
+```javascript
+// Handle user profile data, preferences, and account management
+// Table: users (likely managed by Supabase Auth)
+// Additional fields: preferences, settings, created_at, updated_at
+```
+
+### 2. Transaction Model (models/Transaction.js)
+```javascript
+// Handle income and expense transactions
+// Table: transactions
+// Fields: user_id, amount, description, category_id, date, type, created_at
+// Methods: getByDateRange, getByCategory, getTotalsByCategory
+```
+
+### 3. Category Model (models/Category.js)
+```javascript
+// Handle transaction categories
+// Table: categories
+// Fields: user_id, name, color, type (income/expense), created_at
+// Methods: getDefault, createDefault, validateCategoryAccess
+```
+
+### 4. Group Model (models/Group.js)
+```javascript
+// Handle expense splitting groups
+// Table: groups, group_members
+// Methods: addMember, removeMember, getMembers, getGroupExpenses
+```
+
+### 5. SavingsGoal Model (models/SavingsGoal.js)
+```javascript
+// Handle savings goals and progress tracking
+// Table: savings_goals
+// Fields: user_id, goal_name, target_amount, current_amount, target_date
+// Methods: updateProgress, calculateProgress, getGoalsNearTarget
+```
+
+## Best Practices
+
+### 1. Error Handling
+- Always throw descriptive errors
+- Use consistent error messages
+- Handle Supabase-specific error codes
+- Never expose internal details to clients
+
+### 2. Data Validation
+- Validate all input data before database operations
+- Use utility functions for common validations
+- Implement both client-side and server-side validation
+- Consider using a validation library like Joi or Yup
+
+### 3. Security
+- Always encrypt sensitive data using EncryptionMiddleware
+- Use Row Level Security (RLS) policies in Supabase
+- Never trust user input
+- Validate user ownership for all operations
+
+### 4. Performance
+- Use appropriate indexes in Supabase
+- Implement pagination for large datasets
+- Consider caching frequently accessed data
+- Use select() to limit returned fields when possible
+
+### 5. Database Relationships
+- Use foreign keys properly
+- Implement cascade deletes where appropriate
+- Consider using Supabase's built-in relationship queries
+- Handle orphaned records gracefully
+
+## Migration from Current Code
+When migrating from the current structure:
+1. Extract database operations from [api.js](mdc:backend/api.js)
+2. Move validation logic from route handlers to models
+3. Convert function-based operations to class-based models
+4. Maintain existing encryption patterns using EncryptionMiddleware
+5. Preserve all business logic related to data integrity

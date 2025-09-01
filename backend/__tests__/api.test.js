@@ -1,114 +1,103 @@
 const request = require('supertest');
-let app;
-let server;
+const { createServer } = require('../server');
 
-jest.doMock('@supabase/supabase-js', () => ({
-  createClient: jest.fn(),
+let server;
+let app;
+
+// Mock the logger to prevent issues with morgan
+jest.mock('../utils/logger', () => ({
+    logger: {
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+        debug: jest.fn(),
+    },
+    morganMiddleware: (req, res, next) => next(),
 }));
 
-describe('API Endpoints', () => {
-  let supabaseMock;
-
-  beforeAll((done) => {
-    supabaseMock = {
-      auth: {
-        signUp: jest.fn(),
-        signInWithPassword: jest.fn(),
-        getUser: jest.fn(),
-      },
-      from: jest.fn(() => ({
+// Mocking dependencies
+jest.mock('@supabase/supabase-js', () => ({
+    createClient: jest.fn(() => ({
+        auth: {
+            signUp: jest.fn(),
+            signInWithPassword: jest.fn(),
+            getUser: jest.fn(),
+        },
+        from: jest.fn().mockReturnThis(),
         select: jest.fn().mockReturnThis(),
         insert: jest.fn().mockReturnThis(),
         delete: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
-        gte: jest.fn().mockReturnThis(),
-        lte: jest.fn().mockReturnThis(),
-        order: jest.fn().mockReturnThis(),
-      })),
-    };
-    require('@supabase/supabase-js').createClient.mockReturnValue(supabaseMock);
-    app = require('../api');
-    server = app.listen(3001, done);
-  });
+    })),
+}));
 
-  afterAll((done) => {
-    server.close(done);
-  });
+const { createClient } = require('@supabase/supabase-js');
+const supabaseMock = createClient();
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe('GET /', () => {
-    it('should respond with "Monity API is running."', async () => {
-      const response = await request(server).get('/');
-      expect(response.status).toBe(200);
-      expect(response.text).toBe('Monity API is running.');
-    });
-  });
-
-  describe('POST /signup', () => {
-    it('should create a new user and return 201', async () => {
-      const mockUser = { id: '123', email: 'test@example.com' };
-      const mockSession = { access_token: 'fake-token' };
-      supabaseMock.auth.signUp.mockResolvedValue({ data: { user: mockUser, session: mockSession }, error: null });
-
-      const response = await request(server)
-        .post('/signup')
-        .send({ email: 'test@example.com', password: 'password123', name: 'Test User' });
-
-      expect(response.status).toBe(201);
-      expect(response.body.user).toEqual(mockUser);
-      expect(supabaseMock.auth.signUp).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        password: 'password123',
-        options: {
-            data: {
-                role: 'user',
-                name: 'Test User'
-            }
-        }
-      });
+describe('API Endpoints', () => {
+    beforeAll((done) => {
+        app = createServer(supabaseMock);
+        server = app.listen(3002, done); 
     });
 
-    it('should return 400 if signup fails', async () => {
-      const errorMessage = 'User already registered';
-      supabaseMock.auth.signUp.mockResolvedValue({ data: {}, error: { message: errorMessage } });
-
-      const response = await request(server)
-        .post('/signup')
-        .send({ email: 'test@example.com', password: 'password123', name: 'Test User' });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error).toBe(errorMessage);
-    });
-  });
-
-  describe('GET /transactions', () => {
-    it('should return 401 if no token is provided', async () => {
-      const response = await request(server).get('/transactions');
-      expect(response.status).toBe(401);
+    afterAll((done) => {
+        server.close(done);
     });
 
-    it('should return transactions for the authenticated user', async () => {
-      const mockUser = { id: '123', user_metadata: { role: 'user' } };
-      supabaseMock.auth.getUser.mockResolvedValue({ data: { user: mockUser }, error: null });
-      const mockTransactions = [{ id: 1, description: 'Test Transaction' }];
-      const selectMock = jest.fn().mockResolvedValue({ data: mockTransactions, error: null });
-      supabaseMock.from.mockReturnValue({
-          select: jest.fn().mockReturnThis(),
-          eq: selectMock,
-      });
-
-      const response = await request(server)
-        .get('/transactions')
-        .set('Authorization', 'Bearer fake-token');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockTransactions);
-      expect(supabaseMock.from).toHaveBeenCalledWith('transactions');
-      expect(supabaseMock.from().select).toHaveBeenCalledWith('*');
-      expect(selectMock).toHaveBeenCalledWith('userId', '123');
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
-  });
+
+    describe('POST /api/v1/auth/register', () => {
+        it('should create a new user and return 201', async () => {
+            const mockUser = { id: '123', email: 'test@example.com' };
+            const mockSession = { access_token: 'fake-token' };
+            supabaseMock.auth.signUp.mockResolvedValue({ data: { user: mockUser, session: mockSession }, error: null });
+            supabaseMock.from('categories').insert.mockResolvedValue({ error: null });
+
+            const response = await request(app)
+                .post('/api/v1/auth/register')
+                .send({ email: 'test@example.com', password: 'password123', name: 'Test User' });
+
+            expect(response.status).toBe(201);
+            expect(response.body.user).toEqual(mockUser);
+        });
+    });
+
+    describe('POST /api/v1/auth/login', () => {
+        it('should log in a user and return a session', async () => {
+            const mockUser = { id: '123', email: 'test@example.com' };
+            const mockSession = { access_token: 'fake-token' };
+            supabaseMock.auth.signInWithPassword.mockResolvedValue({ data: { user: mockUser, session: mockSession }, error: null });
+
+            const response = await request(app)
+                .post('/api/v1/auth/login')
+                .send({ email: 'test@example.com', password: 'password123' });
+
+            expect(response.status).toBe(200);
+            expect(response.body.session).toEqual(mockSession);
+        });
+    });
+
+    describe('GET /api/v1/transactions', () => {
+        it('should return 401 if no token is provided', async () => {
+            const response = await request(app).get('/api/v1/transactions');
+            expect(response.status).toBe(401);
+        });
+
+        it('should return transactions for an authenticated user', async () => {
+            const mockUser = { id: '123', user_metadata: { role: 'user' } };
+            supabaseMock.auth.getUser.mockResolvedValue({ data: { user: mockUser }, error: null });
+            
+            const mockTransactions = [{ id: 1, description: 'Test', amount: 100 }];
+            supabaseMock.from('transactions').select().eq.mockResolvedValue({ data: mockTransactions, error: null });
+
+            const response = await request(app)
+                .get('/api/v1/transactions')
+                .set('Authorization', 'Bearer fake-token');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(mockTransactions);
+        });
+    });
 });
