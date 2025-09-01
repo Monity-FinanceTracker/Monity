@@ -1,0 +1,726 @@
+---
+globs: backend/middleware/*.js
+description: Middleware layer guidelines for MVC architecture
+---
+
+# Middleware Layer Guidelines
+
+## Purpose
+Middleware functions handle cross-cutting concerns that apply across multiple routes and controllers. They:
+- Process requests before they reach controllers
+- Handle authentication and authorization
+- Validate input data and sanitize requests
+- Implement rate limiting and security measures
+- Log requests and responses
+- Handle errors consistently across the application
+
+## Middleware Structure Template
+
+```javascript
+const { logger } = require('../utils/logger');
+
+/**
+ * Middleware function template
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next function
+ */
+const middlewareName = (options = {}) => {
+    return async (req, res, next) => {
+        try {
+            // Pre-processing logic
+            const startTime = Date.now();
+            
+            // Main middleware logic
+            const result = await processMiddleware(req, options);
+            
+            // Attach result to request object if needed
+            req.middlewareResult = result;
+            
+            // Log processing time
+            const processingTime = Date.now() - startTime;
+            logger.debug(`Middleware ${middlewareName.name} completed`, {
+                processingTime,
+                userId: req.user?.id,
+                path: req.path
+            });
+            
+            // Continue to next middleware/controller
+            next();
+            
+        } catch (error) {
+            logger.error(`Middleware ${middlewareName.name} failed`, {
+                error: error.message,
+                userId: req.user?.id,
+                path: req.path
+            });
+            
+            // Pass error to error handler
+            next(error);
+        }
+    };
+};
+
+async function processMiddleware(req, options) {
+    // Implement middleware-specific logic
+}
+
+module.exports = middlewareName;
+```
+
+## Specific Middleware to Create
+
+### 1. Authentication Middleware (middleware/auth.js)
+Based on auth logic in [api.js](mdc:backend/api.js):
+```javascript
+const { createClient } = require('@supabase/supabase-js');
+
+const authenticate = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                message: 'No token provided'
+            });
+        }
+
+        const { data: { user }, error } = await supabase.auth.getUser(token);
+        if (error || !user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid or expired token'
+            });
+        }
+
+        req.user = user;
+        req.token = token;
+        next();
+        
+    } catch (error) {
+        res.status(401).json({
+            success: false,
+            message: 'Authentication failed'
+        });
+    }
+};
+
+const optionalAuth = async (req, res, next) => {
+    // Similar to authenticate but doesn't fail if no token
+    const token = req.headers.authorization?.split(' ')[1];
+    if (token) {
+        try {
+            const { data: { user } } = await supabase.auth.getUser(token);
+            req.user = user;
+            req.token = token;
+        } catch (error) {
+            // Continue without authentication
+        }
+    }
+    next();
+};
+
+const requireRole = (roles) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Authentication required'
+            });
+        }
+
+        const userRole = req.user.user_metadata?.role || 'user';
+        if (!roles.includes(userRole)) {
+            return res.status(403).json({
+                success: false,
+                message: 'Insufficient permissions'
+            });
+        }
+
+        next();
+    };
+};
+
+module.exports = { authenticate, optionalAuth, requireRole };
+```
+
+### 2. Validation Middleware (middleware/validation.js)
+Based on [security/validation.js](mdc:backend/security/validation.js):
+```javascript
+const Joi = require('joi');
+
+const validateBody = (schema) => {
+    return (req, res, next) => {
+        const { error, value } = schema.validate(req.body, {
+            abortEarly: false,
+            stripUnknown: true
+        });
+
+        if (error) {
+            const errors = error.details.map(detail => ({
+                field: detail.path.join('.'),
+                message: detail.message
+            }));
+
+            return res.status(400).json({
+                success: false,
+                message: 'Validation failed',
+                errors
+            });
+        }
+
+        req.body = value;
+        next();
+    };
+};
+
+const validateQuery = (allowedParams = []) => {
+    return (req, res, next) => {
+        const schema = Joi.object().keys(
+            allowedParams.reduce((acc, param) => {
+                acc[param] = Joi.string().optional();
+                return acc;
+            }, {})
+        ).unknown(false);
+
+        const { error, value } = schema.validate(req.query);
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid query parameters',
+                errors: error.details.map(d => d.message)
+            });
+        }
+
+        req.query = value;
+        next();
+    };
+};
+
+const validateParams = (requiredParams = []) => {
+    return (req, res, next) => {
+        const schema = Joi.object().keys(
+            requiredParams.reduce((acc, param) => {
+                acc[param] = Joi.string().required();
+                return acc;
+            }, {})
+        );
+
+        const { error, value } = schema.validate(req.params);
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid parameters',
+                errors: error.details.map(d => d.message)
+            });
+        }
+
+        req.params = value;
+        next();
+    };
+};
+
+// Common validation schemas
+const schemas = {
+    transaction: Joi.object({
+        amount: Joi.number().required().positive(),
+        description: Joi.string().required().max(255),
+        category_id: Joi.string().uuid().required(),
+        date: Joi.date().iso().required(),
+        type: Joi.string().valid('income', 'expense').required()
+    }),
+
+    category: Joi.object({
+        name: Joi.string().required().max(100),
+        color: Joi.string().pattern(/^#[0-9A-F]{6}$/i),
+        type: Joi.string().valid('income', 'expense').required()
+    }),
+
+    savingsGoal: Joi.object({
+        goal_name: Joi.string().required().max(100),
+        target_amount: Joi.number().required().positive(),
+        target_date: Joi.date().iso().min('now').required(),
+        current_amount: Joi.number().min(0).default(0)
+    })
+};
+
+module.exports = { validateBody, validateQuery, validateParams, schemas };
+```
+
+### 3. Encryption Middleware (middleware/encryption.js)
+Based on [security/encryptionMiddleware.js](mdc:backend/security/encryptionMiddleware.js):
+```javascript
+const crypto = require('crypto');
+
+class EncryptionMiddleware {
+    constructor() {
+        this.algorithm = 'aes-256-gcm';
+        this.key = Buffer.from(process.env.ENCRYPTION_KEY || 'default-key-change-in-production', 'hex');
+        
+        // Define which fields need encryption for each table
+        this.encryptionConfig = {
+            transactions: ['description', 'merchant'],
+            categories: ['name'],
+            savings_goals: ['goal_name'],
+            groups: ['name'],
+            // Add more tables as needed
+        };
+    }
+
+    /**
+     * Encrypt data before database insert/update
+     */
+    encryptForInsert(tableName, data) {
+        const fieldsToEncrypt = this.encryptionConfig[tableName] || [];
+        const encryptedData = { ...data };
+
+        fieldsToEncrypt.forEach(field => {
+            if (encryptedData[field] && typeof encryptedData[field] === 'string') {
+                encryptedData[field] = this.encrypt(encryptedData[field]);
+            }
+        });
+
+        return encryptedData;
+    }
+
+    /**
+     * Decrypt data after database select
+     */
+    decryptFromSelect(tableName, data) {
+        if (!data) return data;
+        
+        const fieldsToDecrypt = this.encryptionConfig[tableName] || [];
+        
+        if (Array.isArray(data)) {
+            return data.map(item => this.decryptItem(item, fieldsToDecrypt));
+        } else {
+            return this.decryptItem(data, fieldsToDecrypt);
+        }
+    }
+
+    decryptItem(item, fieldsToDecrypt) {
+        const decryptedItem = { ...item };
+        
+        fieldsToDecrypt.forEach(field => {
+            if (decryptedItem[field] && typeof decryptedItem[field] === 'string') {
+                try {
+                    decryptedItem[field] = this.decrypt(decryptedItem[field]);
+                } catch (error) {
+                    // Handle decryption errors gracefully
+                    console.warn(`Failed to decrypt field ${field}:`, error.message);
+                }
+            }
+        });
+
+        return decryptedItem;
+    }
+
+    encrypt(text) {
+        const iv = crypto.randomBytes(16);
+        const cipher = crypto.createCipher(this.algorithm, this.key, iv);
+        
+        let encrypted = cipher.update(text, 'utf8', 'hex');
+        encrypted += cipher.final('hex');
+        
+        const authTag = cipher.getAuthTag();
+        
+        return `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted}`;
+    }
+
+    decrypt(encryptedText) {
+        const parts = encryptedText.split(':');
+        if (parts.length !== 3) {
+            throw new Error('Invalid encrypted text format');
+        }
+        
+        const [ivHex, authTagHex, encrypted] = parts;
+        const iv = Buffer.from(ivHex, 'hex');
+        const authTag = Buffer.from(authTagHex, 'hex');
+        
+        const decipher = crypto.createDecipher(this.algorithm, this.key, iv);
+        decipher.setAuthTag(authTag);
+        
+        let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+        
+        return decrypted;
+    }
+}
+
+// Export singleton instance
+module.exports = new EncryptionMiddleware();
+```
+
+### 4. Error Handler Middleware (middleware/errorHandler.js)
+```javascript
+const { logger } = require('../utils/logger');
+
+const errorHandler = (err, req, res, next) => {
+    // Log error details
+    logger.error('Request error', {
+        error: err.message,
+        stack: err.stack,
+        url: req.url,
+        method: req.method,
+        userId: req.user?.id,
+        body: req.body,
+        query: req.query,
+        params: req.params
+    });
+
+    // Default error response
+    let error = {
+        success: false,
+        message: 'Internal server error'
+    };
+
+    // Handle specific error types
+    if (err.name === 'ValidationError') {
+        error.message = 'Validation failed';
+        error.errors = err.details;
+        return res.status(400).json(error);
+    }
+
+    if (err.name === 'UnauthorizedError') {
+        error.message = 'Authentication required';
+        return res.status(401).json(error);
+    }
+
+    if (err.name === 'ForbiddenError') {
+        error.message = 'Access denied';
+        return res.status(403).json(error);
+    }
+
+    if (err.name === 'NotFoundError') {
+        error.message = 'Resource not found';
+        return res.status(404).json(error);
+    }
+
+    if (err.name === 'ConflictError') {
+        error.message = 'Resource conflict';
+        return res.status(409).json(error);
+    }
+
+    // PostgreSQL/Supabase errors
+    if (err.code === '23505') { // Unique violation
+        error.message = 'Duplicate resource';
+        return res.status(409).json(error);
+    }
+
+    if (err.code === '23503') { // Foreign key violation
+        error.message = 'Referenced resource not found';
+        return res.status(400).json(error);
+    }
+
+    // Development vs Production error handling
+    if (process.env.NODE_ENV === 'development') {
+        error.message = err.message;
+        error.stack = err.stack;
+    }
+
+    res.status(500).json(error);
+};
+
+// 404 handler for unmatched routes
+const notFoundHandler = (req, res) => {
+    res.status(404).json({
+        success: false,
+        message: `Route ${req.method} ${req.url} not found`
+    });
+};
+
+module.exports = { errorHandler, notFoundHandler };
+```
+
+### 5. Rate Limiting Middleware (middleware/rateLimiter.js)
+```javascript
+const rateLimit = require('express-rate-limit');
+const { RedisStore } = require('rate-limit-redis');
+const Redis = require('redis');
+
+// Create Redis client for rate limiting
+const redisClient = Redis.createClient({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+    password: process.env.REDIS_PASSWORD
+});
+
+// General API rate limiter
+const apiLimiter = rateLimit({
+    store: new RedisStore({
+        client: redisClient,
+        prefix: 'api_limit:'
+    }),
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // 100 requests per window
+    message: {
+        success: false,
+        message: 'Too many requests, please try again later'
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+// Strict rate limiter for auth endpoints
+const authLimiter = rateLimit({
+    store: new RedisStore({
+        client: redisClient,
+        prefix: 'auth_limit:'
+    }),
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // 5 attempts per window
+    message: {
+        success: false,
+        message: 'Too many authentication attempts, please try again later'
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+// File upload rate limiter
+const uploadLimiter = rateLimit({
+    store: new RedisStore({
+        client: redisClient,
+        prefix: 'upload_limit:'
+    }),
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 10, // 10 uploads per hour
+    message: {
+        success: false,
+        message: 'Upload limit exceeded, please try again later'
+    }
+});
+
+module.exports = { apiLimiter, authLimiter, uploadLimiter };
+```
+
+### 6. Request Logger Middleware (middleware/logger.js)
+```javascript
+const morgan = require('morgan');
+const { logger } = require('../utils/logger');
+
+// Custom token for user ID
+morgan.token('userId', (req) => req.user?.id || 'anonymous');
+
+// Custom token for request duration
+morgan.token('duration', (req, res) => {
+    if (req._startTime) {
+        return Date.now() - req._startTime;
+    }
+    return '-';
+});
+
+// Set start time
+const setStartTime = (req, res, next) => {
+    req._startTime = Date.now();
+    next();
+};
+
+// Development logger
+const developmentLogger = morgan(
+    ':method :url :status :res[content-length] - :response-time ms - User: :userId',
+    {
+        stream: {
+            write: (message) => logger.info(message.trim())
+        }
+    }
+);
+
+// Production logger
+const productionLogger = morgan('combined', {
+    stream: {
+        write: (message) => logger.info(message.trim())
+    },
+    skip: (req, res) => res.statusCode < 400 // Only log errors in production
+});
+
+// Request/Response logger with body
+const detailedLogger = (req, res, next) => {
+    const startTime = Date.now();
+    
+    // Log request
+    logger.info('Incoming request', {
+        method: req.method,
+        url: req.url,
+        userId: req.user?.id,
+        userAgent: req.get('User-Agent'),
+        ip: req.ip,
+        body: req.method !== 'GET' ? req.body : undefined
+    });
+
+    // Capture response
+    const originalSend = res.send;
+    res.send = function(data) {
+        const duration = Date.now() - startTime;
+        
+        logger.info('Response sent', {
+            method: req.method,
+            url: req.url,
+            statusCode: res.statusCode,
+            duration,
+            userId: req.user?.id,
+            responseSize: data ? data.length : 0
+        });
+
+        originalSend.call(this, data);
+    };
+
+    next();
+};
+
+module.exports = {
+    setStartTime,
+    developmentLogger,
+    productionLogger,
+    detailedLogger
+};
+```
+
+### 7. Security Middleware (middleware/security.js)
+```javascript
+const helmet = require('helmet');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+
+// CORS configuration
+const corsOptions = {
+    origin: function (origin, callback) {
+        const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+        
+        // Allow requests with no origin (mobile apps, etc.)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+// Security headers
+const securityHeaders = helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'", "https://api.supabase.io"]
+        }
+    },
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true
+    }
+});
+
+// Input sanitization
+const sanitizeInput = (req, res, next) => {
+    // Sanitize strings in body, query, and params
+    sanitizeObject(req.body);
+    sanitizeObject(req.query);
+    sanitizeObject(req.params);
+    
+    next();
+};
+
+function sanitizeObject(obj) {
+    if (!obj || typeof obj !== 'object') return;
+    
+    for (const key in obj) {
+        if (typeof obj[key] === 'string') {
+            // Remove potentially dangerous characters
+            obj[key] = obj[key].replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+            obj[key] = obj[key].replace(/javascript:/gi, '');
+            obj[key] = obj[key].trim();
+        } else if (typeof obj[key] === 'object') {
+            sanitizeObject(obj[key]);
+        }
+    }
+}
+
+module.exports = {
+    cors: cors(corsOptions),
+    securityHeaders,
+    sanitizeInput
+};
+```
+
+## Middleware Application Order
+
+In your main server file:
+```javascript
+const express = require('express');
+const app = express();
+
+// Security middleware (first)
+app.use(require('./middleware/security').securityHeaders);
+app.use(require('./middleware/security').cors);
+app.use(require('./middleware/security').sanitizeInput);
+
+// Rate limiting
+app.use('/api/auth', require('./middleware/rateLimiter').authLimiter);
+app.use('/api', require('./middleware/rateLimiter').apiLimiter);
+
+// Body parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Logging
+app.use(require('./middleware/logger').setStartTime);
+app.use(require('./middleware/logger').developmentLogger);
+
+// Routes
+app.use('/', require('./routes'));
+
+// Error handling (last)
+app.use(require('./middleware/errorHandler').notFoundHandler);
+app.use(require('./middleware/errorHandler').errorHandler);
+```
+
+## Best Practices
+
+### 1. Middleware Order
+- Security middleware first
+- Rate limiting before authentication
+- Body parsing before validation
+- Logging for debugging
+- Error handling last
+
+### 2. Error Handling
+- Always call `next(error)` for errors
+- Use consistent error response format
+- Log errors with sufficient context
+- Never expose sensitive information
+
+### 3. Performance
+- Use caching for expensive operations
+- Implement proper rate limiting
+- Optimize database queries
+- Use compression for responses
+
+### 4. Security
+- Validate and sanitize all input
+- Implement proper authentication
+- Use HTTPS in production
+- Set security headers
+
+### 5. Testing
+- Write unit tests for middleware logic
+- Mock external dependencies
+- Test error scenarios
+- Verify middleware order effects
+
+## Migration from Current Code
+When migrating from existing [security/](mdc:backend/security/) directory:
+1. Convert existing middleware to new structure
+2. Implement consistent error handling
+3. Add proper logging and monitoring
+4. Consolidate validation logic
+5. Improve security measures
+6. Add rate limiting and request logging
+7. Maintain existing encryption functionality

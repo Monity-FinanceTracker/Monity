@@ -31,11 +31,12 @@
 ## Why Monity?
 
 *   **🧠 Truly Smart**: Goes beyond basic ledgers with a custom-trained AI model that learns your spending habits to automate tedious data entry.
-*   **Modern Web Stack**: A robust Node.js + Express API powers a snappy, responsive React/Tailwind UI with beautiful animations and modern design.
+*   **Modern Web Stack**: A robust Node.js + Express API with MVC architecture powers a snappy, responsive React/Tailwind UI with beautiful animations and modern design.
 *   **👥 Built for Collaboration**: The only finance tracker you'll find with real-time expense splitting for groups, perfect for trips with friends, roommates, and family.
 *   **📊 Advanced Analytics**: Comprehensive admin dashboard with growth metrics, user analytics, and system health monitoring.
-*   **🌐 Internationalized**: A bilingual interface (English & Portuguese) makes it accessible to a global audience.
+*   **🌐 Fully Internationalized**: A comprehensive bilingual interface (English & Portuguese) with 500+ translation keys makes it accessible to a global audience.
 *   **🎨 Beautiful & Functional UI**: A mobile-first dashboard with interactive charts, modern authentication forms, and a gorgeous dark mode.
+*   **🏗️ Clean Architecture**: Properly structured MVC architecture with separation of concerns for maintainability and scalability.
 
 ---
 
@@ -43,65 +44,84 @@
 
 | Category | Highlights |
 | :--- | :--- |
-| **🤖 AI & Automation** | **Smart Categorization** using a Naive Bayes classifier & NLP • **Continuous learning** from user feedback • **Scheduled daily model retraining** with `node-cron` • **Real-time accuracy tracking**. |
-| **👥 Collaboration** | Real-time **expense splitting** in groups • User search & invitations • Shared expense tracking and settlement. |
-| **📈 Analytics & Admin** | **Enhanced admin dashboard** with growth metrics • User analytics (premium vs free) • Monthly trends • Category usage stats • System health monitoring • **AI performance tracking**. |
-| **🔐 Security & Auth** | **Modern login/signup UI** with password strength indicators • Secure **JWT authentication** via Supabase • **Role-Based Access Control** (`user`, `premium`, `admin`) • Enhanced form validation. |
-| **🌐 UX & Design** | **Enhanced authentication forms** with animations • **English & Portuguese** support • **Responsive, mobile-first** design • Real-time UI updates • **Modern gradient backgrounds** • Password visibility toggles. |
+| **🤖 AI & Automation** | **Smart Categorization** using a Naive Bayes classifier & NLP • **Continuous learning** from user feedback • **Scheduled daily model retraining** with `node-cron` • **Real-time accuracy tracking** • **Performance monitoring dashboard**. |
+| **👥 Collaboration** | Real-time **expense splitting** in groups • User search & invitations • Shared expense tracking and settlement • **Group invitation system** with email notifications. |
+| **📈 Analytics & Admin** | **Enhanced admin dashboard** with growth metrics • User analytics (premium vs free) • Monthly trends • Category usage stats • System health monitoring • **AI performance tracking** • **Performance dashboard** with real-time metrics. |
+| **🔐 Security & Auth** | **Modern login/signup UI** with password strength indicators • Secure **JWT authentication** via Supabase • **Role-Based Access Control** (`user`, `premium`, `admin`) • Enhanced form validation • **Encryption middleware** for sensitive data. |
+| **🌐 UX & Design** | **Enhanced authentication forms** with animations • **Comprehensive English & Portuguese** support with 500+ translation keys • **Responsive, mobile-first** design • Real-time UI updates • **Modern gradient backgrounds** • Password visibility toggles • **Financial health dashboard** with personalized insights. |
+| **🏗️ Architecture** | **MVC Architecture** with proper separation of concerns • **Service layer** for business logic • **Middleware** for cross-cutting concerns • **Model layer** for data operations • **Controller layer** for request handling • **Route layer** for API endpoints. |
 
 ---
 
 ## Current Architecture
 
-Monity is a modern, decoupled web application with a clear separation between the frontend, backend API, and a powerful BaaS (Backend as a Service) layer.
+Monity has been refactored to follow a proper MVC (Model-View-Controller) architecture, providing better separation of concerns, maintainability, and scalability.
 
 ```mermaid
 flowchart TD
-    subgraph "User Interface"
+    subgraph "Frontend (React)"
         A[React SPA / Vite]
         A1[Enhanced Login/Signup UI]
         A2[Admin Dashboard]
         A3[Growth Analytics]
+        A4[Financial Health Dashboard]
+        A5[Performance Dashboard]
+        A6[Internationalized UI]
     end
 
-    subgraph "Backend API"
+    subgraph "Backend API (MVC Architecture)"
         B[Node.js / Express]
-        B1[Admin Analytics Endpoints]
-        B2[User Trends API]
+        B1[Controllers Layer]
+        B2[Models Layer]
+        B3[Services Layer]
+        B4[Routes Layer]
+        B5[Middleware Layer]
     end
 
     subgraph "AI Subsystem"
-        C[Smart Categorization Engine]
-        D[AI Scheduler] --> |triggers| C
-        E[Performance Tracking]
+        C[Smart Categorization Service]
+        D[AI Scheduler Service]
+        E[Financial Health Service]
+        F[Performance Monitoring]
     end
 
     subgraph "Platform (Supabase)"
-        F[PostgreSQL Database]
-        G[Authentication]
-        H[Realtime Subscriptions]
+        G[PostgreSQL Database]
+        H[Authentication]
+        I[Realtime Subscriptions]
     end
 
     A <-->|REST API| B
-    A <-->|Live Updates| H
-    A1 --> G
+    A <-->|Live Updates| I
+    A1 --> H
     A2 <--> B1
-    A3 <--> B2
-    B --> C
-    B <-->|CRUD, RPC| F
-    B <-->|JWT Validation| G
-    B <-->|Broadcasts| H
-    C --> E
+    A3 <--> B1
+    A4 <--> B1
+    A5 <--> B1
+    A6 --> B1
+    B1 --> B2
+    B1 --> B3
+    B4 --> B1
+    B5 --> B1
+    B3 --> C
+    B3 --> D
+    B3 --> E
+    B3 --> F
+    B2 <-->|CRUD, RPC| G
+    B1 <-->|JWT Validation| H
+    B1 <-->|Broadcasts| I
 ```
 
-**Layer Break-down**
+**MVC Layer Breakdown**
 
 | Layer | Tech | Responsibilities |
 | :--- | :--- | :--- |
-| **Frontend** | React 19 + Vite + Tailwind CSS | **Enhanced UI components** • Modern auth forms • **Admin analytics dashboard** • Interactive charts & widgets • Client-side routing. |
-| **API** | Node.js + Express.js | Business logic • **Advanced admin endpoints** • **Growth metrics API** • AI engine integration • User role management. |
-| **AI Engine**| `natural`, `compromise`, `ml-naivebayes` | NLP processing • ML model training & prediction • **Performance analytics** • Feedback loop management. |
-| **Platform** | Supabase | PostgreSQL data storage • JWT user authentication • Real-time websocket messaging • **Enhanced security**. |
+| **Models** | Supabase Client + SQL | Data structure, validation, and database operations |
+| **Controllers** | Express.js | Process requests, coordinate between models and services, return responses |
+| **Services** | Node.js modules | Business logic and complex operations (AI, financial health, performance) |
+| **Routes** | Express Router | Define API endpoints and delegate to controllers |
+| **Middleware** | Express.js | Handle cross-cutting concerns (auth, validation, encryption, error handling) |
+| **Frontend** | React 19 + Vite + Tailwind CSS | **Enhanced UI components** • Modern auth forms • **Admin analytics dashboard** • Interactive charts & widgets • **Fully internationalized interface** • Client-side routing. |
 
 ---
 
@@ -110,25 +130,71 @@ flowchart TD
 ```
 Monity/
 ├── backend/
-│   ├── api.js                     # Express server with enhanced admin endpoints
-│   ├── smart-categorization.js    # The AI/ML engine with performance tracking
-│   ├── ai-scheduler.js            # node-cron background jobs
-│   ├── expense-splitting.js       # Group expense logic
-│   ├── package.json               # Backend NPM dependencies
-│   └── __tests__/                 # Jest/Supertest API tests
+│   ├── server.js                    # Main application entry point
+│   ├── config/                      # Configuration files
+│   │   ├── database.js              # Database configuration
+│   │   ├── env.js                   # Environment configuration
+│   │   └── supabase.js              # Supabase client setup
+│   ├── models/                      # Data models (MVC)
+│   │   ├── User.js                  # User model
+│   │   ├── Transaction.js           # Transaction model
+│   │   ├── Category.js              # Category model
+│   │   ├── Group.js                 # Group model
+│   │   ├── SavingsGoal.js           # Savings goal model
+│   │   └── index.js                 # Model exports
+│   ├── controllers/                 # Business logic (MVC)
+│   │   ├── authController.js        # Authentication logic
+│   │   ├── transactionController.js # Transaction handling
+│   │   ├── categoryController.js    # Category management
+│   │   ├── groupController.js       # Group operations
+│   │   ├── savingsController.js     # Savings goals
+│   │   ├── adminController.js       # Admin analytics
+│   │   ├── aiController.js          # AI features
+│   │   └── index.js                 # Controller exports
+│   ├── routes/                      # API endpoints (MVC)
+│   │   ├── auth.js                  # Authentication routes
+│   │   ├── transactions.js          # Transaction routes
+│   │   ├── categories.js            # Category routes
+│   │   ├── groups.js                # Group routes
+│   │   ├── savings.js               # Savings routes
+│   │   ├── admin.js                 # Admin routes
+│   │   └── index.js                 # Route aggregation
+│   ├── services/                    # Business services (MVC)
+│   │   ├── smartCategorizationService.js # AI categorization
+│   │   ├── aiSchedulerService.js    # AI scheduling
+│   │   ├── expenseSplittingService.js # Group expenses
+│   │   ├── financialHealthService.js # Financial insights
+│   │   ├── performanceService.js    # System monitoring
+│   │   └── index.js                 # Service exports
+│   ├── middleware/                  # Cross-cutting concerns (MVC)
+│   │   ├── auth.js                  # Authentication middleware
+│   │   ├── validation.js            # Input validation
+│   │   ├── encryption.js            # Data encryption
+│   │   ├── errorHandler.js          # Error handling
+│   │   └── index.js                 # Middleware exports
+│   ├── utils/                       # Utility functions
+│   ├── migrations/                  # Database migrations
+│   └── __tests__/                   # Comprehensive test suite
 ├── frontend/
 │   ├── src/
-│   │   ├── components/            # Enhanced UI components
-│   │   │   ├── AdminDashboard.jsx # Comprehensive admin analytics
-│   │   │   ├── Login.jsx          # Modern authentication UI
-│   │   │   └── Signup.jsx         # Enhanced signup with validation
-│   │   ├── hooks/                 # Custom React hooks
-│   │   ├── context/               # AuthContext for global state
-│   │   ├── utils/                 # API client, i18n config
-│   │   └── App.jsx                # Main router
-│   └── package.json               # Frontend NPM dependencies
-├── docs/                          # Screenshots, diagrams
-├── migration_*.sql                # Supabase database migrations
+│   │   ├── components/              # Enhanced UI components
+│   │   │   ├── AdminDashboard.jsx   # Comprehensive admin analytics
+│   │   │   ├── FinancialHealth.jsx  # Financial wellness dashboard
+│   │   │   ├── PerformanceDashboard.jsx # System performance monitoring
+│   │   │   ├── FinancialProjections.jsx # AI-powered forecasting
+│   │   │   ├── Login.jsx            # Modern authentication UI
+│   │   │   └── Signup.jsx           # Enhanced signup with validation
+│   │   ├── utils/
+│   │   │   ├── locales/             # Internationalization
+│   │   │   │   ├── en.json          # English translations (500+ keys)
+│   │   │   │   └── pt.json          # Portuguese translations (500+ keys)
+│   │   │   └── i18n.js              # i18n configuration
+│   │   ├── hooks/                   # Custom React hooks
+│   │   ├── context/                 # AuthContext for global state
+│   │   └── App.jsx                  # Main router
+│   └── package.json                 # Frontend NPM dependencies
+├── docs/                            # Screenshots, diagrams
+├── migrations/                      # Database migrations
 └── README.md
 ```
 
@@ -186,7 +252,7 @@ Visit **[http://localhost:5173](http://localhost:5173)** to use the application.
 
 ## API Reference
 
-Authentication is handled via JWT Bearer tokens obtained from Supabase. The backend API provides over 50 endpoints including comprehensive admin analytics.
+Authentication is handled via JWT Bearer tokens obtained from Supabase. The backend API provides over 50 endpoints including comprehensive admin analytics, all following the new MVC architecture.
 
 ### Selected Endpoints
 
@@ -194,9 +260,11 @@ Authentication is handled via JWT Bearer tokens obtained from Supabase. The back
 | :--- | :--- | :--- |
 | `POST` | `/ai/suggest-category` | Returns AI-powered category suggestions for a transaction description. |
 | `POST` | `/ai/feedback` | Submits user feedback to the AI model for continuous learning. |
-| `GET` | `/ai/stats` | **NEW**: Returns AI categorization performance metrics (admin only). |
-| `GET` | `/admin/analytics` | **NEW**: Comprehensive growth and user analytics (admin only). |
-| `GET` | `/admin/trends` | **NEW**: Daily activity trends and user engagement metrics (admin only). |
+| `GET` | `/ai/stats` | Returns AI categorization performance metrics (admin only). |
+| `GET` | `/admin/analytics` | Comprehensive growth and user analytics (admin only). |
+| `GET` | `/admin/trends` | Daily activity trends and user engagement metrics (admin only). |
+| `GET` | `/financial-health` | Returns personalized financial health score and recommendations. |
+| `GET` | `/performance/stats` | System performance metrics and health indicators. |
 | `POST` | `/groups` | Creates a new expense-splitting group. |
 | `GET` | `/groups/:id`| Fetches details, members, and expenses for a specific group. |
 | `POST` | `/shares/:id/settle` | Settles a debt within a group, creating the corresponding transactions. |
@@ -210,6 +278,7 @@ The enhanced admin dashboard now provides comprehensive insights:
 * **Engagement**: Daily active users, transaction trends, category usage
 * **AI Performance**: Categorization accuracy, model metrics, feedback analysis
 * **System Health**: Database status, API performance, real-time monitoring
+* **Financial Health**: User financial wellness scores and trends
 
 ---
 
@@ -221,6 +290,7 @@ The data is stored in a relational PostgreSQL database managed by Supabase. Key 
 *   `transactions`, `categories`, `budgets`: Core financial tracking tables.
 *   `groups`, `group_members`, `group_expenses`: Powers the expense-splitting feature.
 *   `categorization_feedback`, `ml_training_data`, `ml_model_metrics`: Store data for the AI feedback loop and model retraining with performance tracking.
+*   `financial_health_metrics`: User financial wellness scores and recommendations.
 
 ---
 
@@ -230,12 +300,14 @@ The data is stored in a relational PostgreSQL database managed by Supabase. Key 
 *   **Authorization**: Role-Based Access Control (RBAC) with enhanced admin endpoints for platform analytics.
 *   **Password Security**: Strong password enforcement with visual strength indicators and comprehensive validation.
 *   **Data Protection**: User passwords are handled and hashed securely by Supabase Auth.
+*   **Encryption**: Sensitive data is encrypted using middleware for additional security.
+*   **Input Validation**: Comprehensive validation middleware for all API endpoints.
 
 ---
 
 ## Testing
 
-The project includes a comprehensive test suite for both frontend and backend.
+The project includes a comprehensive test suite for both frontend and backend, with proper test configuration for the new MVC architecture.
 
 ```bash
 # Run backend tests
@@ -244,6 +316,8 @@ $ cd backend && npm test
 # Run frontend tests
 $ cd frontend && npm test
 ```
+
+**Note**: Frontend tests may require i18n setup for full functionality.
 
 ---
 
@@ -291,7 +365,26 @@ The frontend and backend are deployed as separate services.
 
 ## Recent Updates
 
-### 🎨 Enhanced UI/UX (Latest)
+### 🌐 Comprehensive Internationalization (Latest)
+- **500+ Translation Keys**: Complete coverage of all UI elements in English and Portuguese
+- **New Translation Sections**: Financial health, performance dashboard, AI features, invitations, data export, financial projections
+- **Localized Components**: All major components now support both languages
+- **Cultural Adaptation**: Proper localization for date formats, currency, and user experience
+
+### 🏗️ MVC Architecture Refactoring
+- **Clean Architecture**: Proper separation of concerns with Models, Views (API), Controllers, and Services
+- **Service Layer**: Dedicated services for AI, financial health, performance monitoring, and business logic
+- **Middleware Layer**: Authentication, validation, encryption, and error handling middleware
+- **Route Organization**: Clean API endpoint organization with proper controller delegation
+- **Model Layer**: Structured data models with Supabase integration
+
+### 📊 Enhanced Financial Features
+- **Financial Health Dashboard**: Personalized financial wellness scoring with AI-powered recommendations
+- **Performance Monitoring**: Real-time system performance metrics and health indicators
+- **AI-Powered Projections**: Financial forecasting based on user spending patterns
+- **Advanced Analytics**: Comprehensive financial insights and trend analysis
+
+### 🎨 Enhanced UI/UX
 - **Modern Authentication**: Completely redesigned login and signup forms with:
   - Animated gradient backgrounds
   - Password strength indicators
@@ -325,6 +418,7 @@ The frontend and backend are deployed as separate services.
 | **Q3-2025** | **Plaid Integration**: Connect directly to bank accounts to import transactions automatically. |
 | **Q4-2025** | **Advanced AI Insights**: Implement financial forecasting and anomaly detection features. |
 | **Q1-2026** | **Dockerization**: Provide a `docker-compose.yml` for easy, one-command local setup. |
+| **Q2-2026** | **Additional Languages**: Support for Spanish, French, and German translations. |
 
 ---
 
@@ -338,4 +432,4 @@ Distributed under the **MIT License**. See the [LICENSE](LICENSE) file for detai
 
 Monity is an educational side-project by [Leo Stuart](https://github.com/leo-stuart). Contributions and PRs are welcome!
 
-*Built with ❤️ using modern web technologies and a focus on user experience.*
+*Built with ❤️ using modern web technologies, clean architecture principles, and a focus on user experience and internationalization.*

@@ -229,13 +229,13 @@ const PerformanceDashboard = React.memo(() => {
     });
 
     if (loading) {
-        return <Spinner message="Loading performance data..." />;
+        return <Spinner message={t('performanceDashboard.loading')} />;
     }
 
     if (error) {
         return (
             <div className="text-center py-8">
-                <p className="text-red-400 mb-4">Error loading performance data: {error}</p>
+                <p className="text-red-400 mb-4">{t('performanceDashboard.error')}: {error}</p>
                 <button
                     onClick={() => {
                         setError(null);
@@ -244,7 +244,7 @@ const PerformanceDashboard = React.memo(() => {
                     }}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                    Retry
+                    {t('financialHealth.retry')}
                 </button>
             </div>
         );
@@ -254,7 +254,7 @@ const PerformanceDashboard = React.memo(() => {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-white">Performance Dashboard</h1>
+                <h1 className="text-3xl font-bold text-white">{t('performanceDashboard.title')}</h1>
                 <div className="flex items-center space-x-4">
                     <button
                         onClick={() => setAutoRefresh(!autoRefresh)}
@@ -264,14 +264,14 @@ const PerformanceDashboard = React.memo(() => {
                                 : 'bg-gray-600 hover:bg-gray-700 text-white'
                         }`}
                     >
-                        {autoRefresh ? '⏸️ Pause' : '▶️ Auto Refresh'}
+                        {autoRefresh ? '⏸️ ' + t('performanceDashboard.pause') : '▶️ ' + t('performanceDashboard.auto_refresh')}
                     </button>
                     <button
                         onClick={fetchPerformanceData}
                         disabled={loading}
                         className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors"
                     >
-                        🔄 Refresh
+                        🔄 {t('performanceDashboard.refresh')}
                     </button>
                 </div>
             </div>
@@ -280,7 +280,7 @@ const PerformanceDashboard = React.memo(() => {
             {performanceData?.health && (
                 <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-semibold text-white">System Health</h2>
+                        <h2 className="text-xl font-semibold text-white">{t('performanceDashboard.system_health')}</h2>
                         <HealthIndicator status={performanceData.health.status} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -288,19 +288,19 @@ const PerformanceDashboard = React.memo(() => {
                             <p className="text-2xl font-bold text-blue-400">
                                 {Math.round(performanceData.health.uptime / 3600)}h
                             </p>
-                            <p className="text-gray-400">Uptime</p>
+                            <p className="text-gray-400">{t('performanceDashboard.uptime')}</p>
                         </div>
                         <div className="text-center">
                             <p className="text-2xl font-bold text-green-400">
                                 {performanceData.health.memory?.used || 0}MB
                             </p>
-                            <p className="text-gray-400">Memory Used</p>
+                            <p className="text-gray-400">{t('performanceDashboard.memory_usage')}</p>
                         </div>
                         <div className="text-center">
                             <p className="text-2xl font-bold text-purple-400">
-                                {performanceData.health.cacheService?.redis?.connected ? 'Connected' : 'Memory Only'}
+                                {performanceData.health.cacheService?.redis?.connected ? t('performanceDashboard.connected') : t('performanceDashboard.memory_only')}
                             </p>
-                            <p className="text-gray-400">Cache Status</p>
+                            <p className="text-gray-400">{t('performanceDashboard.cache_status')}</p>
                         </div>
                     </div>
                 </div>
@@ -309,7 +309,7 @@ const PerformanceDashboard = React.memo(() => {
             {/* Alerts */}
             {performanceData?.health?.performance?.alerts && (
                 <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                    <h2 className="text-xl font-semibold text-white mb-4">Active Alerts</h2>
+                    <h2 className="text-xl font-semibold text-white mb-4">{t('performanceDashboard.active_alerts')}</h2>
                     <AlertsDisplay alerts={performanceData.health.performance.alerts} />
                 </div>
             )}
@@ -319,7 +319,7 @@ const PerformanceDashboard = React.memo(() => {
                 {/* Frontend Web Vitals */}
                 {Object.keys(webVitals).length > 0 && (
                     <MetricsCard
-                        title="Frontend Web Vitals"
+                        title={t('performanceDashboard.frontend_metrics')}
                         metrics={webVitals}
                         icon="🌐"
                         className="col-span-1"
@@ -329,7 +329,7 @@ const PerformanceDashboard = React.memo(() => {
                 {/* Backend Performance */}
                 {performanceData?.health?.performance?.requests && (
                     <MetricsCard
-                        title="Request Performance"
+                        title={t('performanceDashboard.backend_metrics')}
                         metrics={performanceData.health.performance.requests}
                         icon="🚀"
                         className="col-span-1"
@@ -369,19 +369,19 @@ const PerformanceDashboard = React.memo(() => {
 
             {/* Debug Controls */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <h2 className="text-xl font-semibold text-white mb-4">Debug Controls</h2>
+                <h2 className="text-xl font-semibold text-white mb-4">{t('performanceDashboard.debug_mode')}</h2>
                 <div className="flex flex-wrap gap-4">
                     <button
                         onClick={enablePerformanceDebug}
                         className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors"
                     >
-                        Enable Frontend Debug
+                        {t('performanceDashboard.enable_debug')}
                     </button>
                     <button
                         onClick={disablePerformanceDebug}
                         className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
                     >
-                        Disable Frontend Debug
+                        {t('performanceDashboard.disable_debug')}
                     </button>
                     <select
                         value={refreshInterval}

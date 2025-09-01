@@ -1,0 +1,61 @@
+# Security Standards & Best Practices
+
+## Authentication & Authorization
+- Use JWT tokens via Supabase Auth
+- Implement proper role-based access control (RBAC)
+- Use service role key only for admin operations
+- Use anonymous key for user operations with RLS
+- Implement proper token validation and expiration
+
+## Data Protection
+- Encrypt sensitive data at rest and in transit
+- Use environment variables for all secrets
+- Never commit API keys or credentials to version control
+- Implement proper data sanitization and validation
+- Use HTTPS in production environments
+
+## Input Validation
+- Validate all user inputs using Joi schemas
+- Sanitize data before database operations
+- Implement proper SQL injection prevention
+- Use parameterized queries with Supabase
+- Validate file uploads and content types
+
+## Rate Limiting & DDoS Protection
+- Implement rate limiting on authentication endpoints
+- Use express-rate-limit middleware
+- Monitor for suspicious activity patterns
+- Implement IP-based blocking for abuse
+- Log security events for analysis
+
+## Database Security
+- Use Row Level Security (RLS) policies
+- Implement proper user isolation
+- Use least privilege principle for database access
+- Regular security audits and updates
+- Monitor database access patterns
+
+## API Security
+- Use Helmet.js for security headers
+- Implement CORS properly
+- Validate request origins
+- Use proper HTTP status codes
+- Implement request logging and monitoring
+
+## Error Handling
+- Don't expose internal error details
+- Log security events appropriately
+- Implement proper error boundaries
+- Use generic error messages for users
+- Monitor error patterns for security issues
+
+## Testing Security
+- Test authentication flows thoroughly
+- Validate authorization rules
+- Test input validation and sanitization
+- Test rate limiting functionality
+- Perform security penetration testing
+description:
+globs:
+alwaysApply: true
+---

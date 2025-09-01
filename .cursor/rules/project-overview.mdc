@@ -1,0 +1,37 @@
+# Monity Project Overview
+
+## Project Description
+Monity is an AI-powered personal finance tracker built with a modern web stack. The project follows a clean MVC architecture with a Node.js/Express backend and React frontend.
+
+## Tech Stack
+- **Backend**: Node.js, Express.js, Supabase (PostgreSQL)
+- **Frontend**: React 19, Vite, Tailwind CSS 4
+- **AI/ML**: Natural language processing, Naive Bayes classification
+- **Database**: Supabase with Row Level Security (RLS)
+- **Authentication**: JWT via Supabase Auth
+- **Testing**: Jest (backend), Vitest (frontend)
+
+## Key Features
+- Smart transaction categorization using AI
+- Real-time expense splitting for groups
+- Multi-language support (English/Portuguese)
+- Advanced analytics and admin dashboard
+- Subscription-based premium features
+- Mobile-first responsive design
+
+## Architecture Principles
+- **MVC Pattern**: Clear separation of concerns
+- **Service Layer**: Business logic isolation
+- **Middleware**: Cross-cutting concerns (auth, validation, error handling)
+- **Environment-based Configuration**: Secure credential management
+- **Comprehensive Testing**: Unit and integration tests
+
+## File Organization
+- `backend/`: Express.js API with MVC structure
+- `frontend/`: React SPA with component-based architecture
+- `migrations/`: Database schema and data migrations
+- `docs/`: Project documentation and guides
+description:
+globs:
+alwaysApply: true
+---
