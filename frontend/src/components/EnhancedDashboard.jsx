@@ -7,6 +7,7 @@ import BalanceCard from './BalanceCard';
 import BalanceChart from './BalanceChart';
 import ExpenseChart from './ExpenseChart';
 import Savings from './Savings';
+import SavingsOverviewCard from './SavingsOverviewCard';
 
 /**
  * Enhanced Dashboard with improved UX, quick actions, and better visual hierarchy
@@ -242,13 +243,7 @@ const EnhancedDashboard = () => {
                     <ExpenseChart selectedRange="all_time" />
                 </EnhancedCard>
 
-                <EnhancedCard 
-                    title={t('dashboardPage.savings_card_title')} 
-                    accent="text-green-400"
-                    isLoading={isLoading}
-                >
-                    <Savings selectedRange="all_time" />
-                </EnhancedCard>
+                <SavingsOverviewCard />
             </div>
 
             {/* Detailed Charts */}

@@ -1,0 +1,54 @@
+# AI/ML Development Guidelines
+
+## Smart Categorization Service
+- Use Naive Bayes classifier for transaction categorization
+- Implement continuous learning from user feedback
+- Store training data and model metrics
+- Schedule daily model retraining with node-cron
+- Track accuracy and performance metrics
+
+## AI Service Architecture
+- Keep AI logic in dedicated service files
+- Implement proper error handling for ML operations
+- Use async/await for model operations
+- Cache model results when appropriate
+- Log model performance and accuracy
+
+## Natural Language Processing
+- Use compromise.js for text processing
+- Implement stopword removal
+- Handle multiple languages (English/Portuguese)
+- Normalize transaction descriptions
+- Extract key features for classification
+
+## Model Training
+- Collect user feedback on categorizations
+- Store training data with proper metadata
+- Implement model versioning
+- Track model performance over time
+- Handle model retraining gracefully
+
+## Performance Optimization
+- Cache model predictions when possible
+- Implement batch processing for multiple transactions
+- Use efficient data structures for feature extraction
+- Monitor memory usage during training
+- Implement timeout handling for long operations
+
+## Data Management
+- Store training data securely
+- Implement data validation and sanitization
+- Handle missing or corrupted data gracefully
+- Maintain data quality standards
+- Implement data backup and recovery
+
+## Testing AI Features
+- Test with various transaction descriptions
+- Validate model accuracy metrics
+- Test edge cases and unusual inputs
+- Mock external ML dependencies
+- Test performance under load
+description:
+globs:
+alwaysApply: true
+---

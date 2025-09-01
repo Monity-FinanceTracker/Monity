@@ -1,0 +1,307 @@
+---
+globs: backend/routes/*.js
+description: Routes layer guidelines for MVC architecture
+---
+
+# Routes Layer Guidelines
+
+## Purpose
+Routes define API endpoints and delegate request handling to controllers. They:
+- Define API endpoint structure
+- Apply middleware (auth, validation, rate limiting)
+- Delegate processing to controllers
+- Handle route-specific middleware
+- Organize API versioning
+
+## Route Structure Template
+
+```javascript
+const express = require('express');
+const router = express.Router();
+const Controller = require('../controllers/ControllerName');
+const authMiddleware = require('../middleware/auth');
+const validationMiddleware = require('../middleware/validation');
+const { supabase } = require('../config/supabase');
+
+// Initialize controller
+const controller = new Controller(supabase);
+
+// Apply common middleware for all routes
+router.use(authMiddleware.authenticate);
+
+// GET /api/resource - Get all resources with pagination
+router.get('/', 
+    validationMiddleware.validateQuery(['page', 'limit', 'sortBy', 'order']),
+    controller.getAll
+);
+
+// GET /api/resource/:id - Get specific resource
+router.get('/:id', 
+    validationMiddleware.validateParams(['id']),
+    controller.getById
+);
+
+// POST /api/resource - Create new resource
+router.post('/', 
+    validationMiddleware.validateBody(controller.getCreateValidationRules()),
+    controller.create
+);
+
+// PUT /api/resource/:id - Update existing resource
+router.put('/:id', 
+    validationMiddleware.validateParams(['id']),
+    validationMiddleware.validateBody(controller.getUpdateValidationRules()),
+    controller.update
+);
+
+// DELETE /api/resource/:id - Delete resource
+router.delete('/:id', 
+    validationMiddleware.validateParams(['id']),
+    controller.delete
+);
+
+module.exports = router;
+```
+
+## Specific Routes to Create
+
+### 1. Auth Routes (routes/auth.js)
+```javascript
+// POST /api/auth/signup - User registration
+// POST /api/auth/login - User login
+// POST /api/auth/logout - User logout
+// POST /api/auth/refresh - Refresh token
+// GET /api/auth/profile - Get user profile
+// PUT /api/auth/profile - Update user profile
+// POST /api/auth/change-password - Change password
+
+// No auth middleware for login/signup
+// Apply auth middleware for protected endpoints
+```
+
+### 2. Transaction Routes (routes/transactions.js)
+```javascript
+// GET /api/transactions - Get all transactions (paginated, filtered)
+// GET /api/transactions/:id - Get specific transaction
+// POST /api/transactions - Create new transaction
+// PUT /api/transactions/:id - Update transaction
+// DELETE /api/transactions/:id - Delete transaction
+// GET /api/transactions/summary - Get transaction summary
+// POST /api/transactions/import - Import transactions from CSV
+// GET /api/transactions/export - Export transactions to CSV
+
+// Apply auth middleware to all routes
+// Add specific validation for transaction data
+```
+
+### 3. Category Routes (routes/categories.js)
+```javascript
+// GET /api/categories - Get all categories
+// GET /api/categories/:id - Get specific category
+// POST /api/categories - Create new category
+// PUT /api/categories/:id - Update category
+// DELETE /api/categories/:id - Delete category
+// POST /api/categories/smart-categorize - Smart categorization endpoint
+
+// Apply auth middleware
+// Add validation for category data
+```
+
+### 4. Group Routes (routes/groups.js)
+```javascript
+// GET /api/groups - Get user's groups
+// GET /api/groups/:id - Get specific group
+// POST /api/groups - Create new group
+// PUT /api/groups/:id - Update group
+// DELETE /api/groups/:id - Delete group
+// POST /api/groups/:id/members - Add member to group
+// DELETE /api/groups/:id/members/:memberId - Remove member
+// GET /api/groups/:id/expenses - Get group expenses
+// POST /api/groups/:id/expenses - Create group expense
+// POST /api/groups/:id/settle - Settle group expenses
+
+// Apply auth middleware
+// Add group membership validation
+```
+
+### 5. Savings Routes (routes/savings.js)
+```javascript
+// GET /api/savings/goals - Get all savings goals
+// GET /api/savings/goals/:id - Get specific goal
+// POST /api/savings/goals - Create new goal
+// PUT /api/savings/goals/:id - Update goal
+// DELETE /api/savings/goals/:id - Delete goal
+// POST /api/savings/goals/:id/allocate - Allocate money to goal
+
+// Apply auth middleware
+// Add validation for goal data
+```
+
+### 6. Analytics Routes (routes/analytics.js)
+```javascript
+// GET /api/analytics/spending-trends - Get spending trends
+// GET /api/analytics/category-breakdown - Get category breakdown
+// GET /api/analytics/income-vs-expenses - Get income vs expenses
+// GET /api/analytics/financial-health - Get financial health score
+// GET /api/analytics/monthly-comparison - Get monthly comparison
+
+// Apply auth middleware
+// Add date range validation
+```
+
+## Route Aggregation (routes/index.js)
+```javascript
+const express = require('express');
+const router = express.Router();
+
+// Import all route modules
+const authRoutes = require('./auth');
+const transactionRoutes = require('./transactions');
+const categoryRoutes = require('./categories');
+const groupRoutes = require('./groups');
+const savingsRoutes = require('./savings');
+const analyticsRoutes = require('./analytics');
+
+// Mount routes with versioning
+router.use('/api/v1/auth', authRoutes);
+router.use('/api/v1/transactions', transactionRoutes);
+router.use('/api/v1/categories', categoryRoutes);
+router.use('/api/v1/groups', groupRoutes);
+router.use('/api/v1/savings', savingsRoutes);
+router.use('/api/v1/analytics', analyticsRoutes);
+
+// Health check endpoint
+router.get('/health', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Monity API is running',
+        timestamp: new Date().toISOString()
+    });
+});
+
+module.exports = router;
+```
+
+## Middleware Application Patterns
+
+### 1. Global Middleware
+Applied in main server file:
+```javascript
+// CORS, body parsing, logging
+app.use(cors());
+app.use(express.json());
+app.use(logger);
+```
+
+### 2. Route-Level Middleware
+Applied to specific route groups:
+```javascript
+// Authentication for protected routes
+router.use(authMiddleware.authenticate);
+
+// Rate limiting for specific endpoints
+router.use('/api/auth', rateLimiter);
+```
+
+### 3. Endpoint-Specific Middleware
+Applied to individual endpoints:
+```javascript
+// Validation middleware
+router.post('/', validationMiddleware, controller.create);
+
+// File upload middleware
+router.post('/import', upload.single('file'), controller.import);
+```
+
+## API Versioning Strategy
+```javascript
+// Current API (maintain backward compatibility)
+router.use('/api', routes);
+
+// Versioned API (new features)
+router.use('/api/v1', routes);
+router.use('/api/v2', routesV2); // Future versions
+```
+
+## Error Handling in Routes
+```javascript
+// Wrap async route handlers
+router.get('/', asyncHandler(async (req, res) => {
+    // Controller logic
+}));
+
+// Global error handler (applied in main server)
+app.use(errorHandler);
+```
+
+## Query Parameter Standards
+```javascript
+// Pagination
+?page=1&limit=10
+
+// Sorting
+?sortBy=created_at&order=desc
+
+// Filtering
+?category=food&startDate=2024-01-01&endDate=2024-01-31
+
+// Search
+?search=coffee&searchFields=description,merchant
+```
+
+## Best Practices
+
+### 1. Route Organization
+- Group related endpoints together
+- Use RESTful conventions
+- Implement consistent URL patterns
+- Use appropriate HTTP methods
+
+### 2. Middleware Usage
+- Apply middleware at appropriate levels
+- Use middleware for cross-cutting concerns
+- Keep route handlers focused
+- Implement proper error handling
+
+### 3. Validation
+- Validate all input parameters
+- Use middleware for common validations
+- Provide detailed error messages
+- Implement rate limiting for security
+
+### 4. Security
+- Always authenticate protected routes
+- Implement proper authorization checks
+- Use HTTPS in production
+- Add rate limiting and input sanitization
+
+### 5. Documentation
+- Document all endpoints
+- Include request/response examples
+- Specify required parameters
+- Document error responses
+
+## Migration from Current Code
+When migrating from [api.js](mdc:backend/api.js):
+1. Group endpoints by resource type
+2. Extract route definitions from main file
+3. Apply appropriate middleware chains
+4. Implement consistent parameter validation
+5. Add proper error handling
+6. Maintain existing endpoint compatibility
+7. Add versioning for future changes
+
+## RESTful Endpoint Patterns
+```
+GET    /api/resource          # List resources
+GET    /api/resource/:id      # Get specific resource
+POST   /api/resource          # Create new resource
+PUT    /api/resource/:id      # Update resource (full)
+PATCH  /api/resource/:id      # Update resource (partial)
+DELETE /api/resource/:id      # Delete resource
+
+# Nested resources
+GET    /api/groups/:id/members      # Get group members
+POST   /api/groups/:id/members      # Add group member
+DELETE /api/groups/:id/members/:uid # Remove group member
+```

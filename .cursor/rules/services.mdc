@@ -1,0 +1,426 @@
+---
+globs: backend/services/*.js
+description: Services layer guidelines for MVC architecture
+---
+
+# Services Layer Guidelines
+
+## Purpose
+Services contain business logic and complex operations that don't belong in controllers or models. They:
+- Implement business rules and logic
+- Handle complex data processing
+- Coordinate between multiple models
+- Integrate with external APIs
+- Manage background tasks and scheduling
+- Provide reusable functionality across controllers
+
+## Service Structure Template
+
+```javascript
+const Model = require('../models/Model');
+const { logger } = require('../utils/logger');
+const { validateBusinessRules } = require('../utils/validators');
+
+class ServiceName {
+    constructor(supabase, dependencies = {}) {
+        this.supabase = supabase;
+        this.model = new Model(supabase);
+        
+        // Inject dependencies for testing
+        this.cacheService = dependencies.cacheService;
+        this.notificationService = dependencies.notificationService;
+    }
+
+    /**
+     * Main business logic method
+     * @param {Object} input - Input parameters
+     * @param {string} userId - User ID for context
+     * @returns {Promise<Object>} - Result object
+     */
+    async performBusinessOperation(input, userId) {
+        try {
+            // Validate business rules
+            await this.validateBusinessRules(input, userId);
+            
+            // Get required data
+            const existingData = await this.model.findByUser(userId);
+            
+            // Perform business logic
+            const result = await this.processBusinessLogic(input, existingData, userId);
+            
+            // Handle side effects
+            await this.handleSideEffects(result, userId);
+            
+            // Log operation
+            logger.info(`Business operation completed for user ${userId}`, { 
+                operation: 'performBusinessOperation',
+                input,
+                result: result.id 
+            });
+            
+            return result;
+            
+        } catch (error) {
+            logger.error(`Business operation failed for user ${userId}`, { 
+                error: error.message,
+                input 
+            });
+            throw error;
+        }
+    }
+
+    /**
+     * Validate business rules specific to this service
+     */
+    async validateBusinessRules(input, userId) {
+        // Implement business-specific validation
+        // Example: Check user limits, validate business constraints, etc.
+    }
+
+    /**
+     * Core business logic implementation
+     */
+    async processBusinessLogic(input, existingData, userId) {
+        // Implement the core business logic
+        // This should be pure business logic without side effects
+    }
+
+    /**
+     * Handle side effects after main operation
+     */
+    async handleSideEffects(result, userId) {
+        // Send notifications, update caches, trigger webhooks, etc.
+        if (this.notificationService) {
+            await this.notificationService.send(userId, 'operation_completed', result);
+        }
+        
+        if (this.cacheService) {
+            await this.cacheService.invalidateUserCache(userId);
+        }
+    }
+
+    /**
+     * Background job or scheduled task
+     */
+    async performScheduledTask() {
+        try {
+            // Implement scheduled operations
+            logger.info('Scheduled task started');
+            
+            // Process data
+            const results = await this.processBatchOperation();
+            
+            logger.info('Scheduled task completed', { processedCount: results.length });
+            
+        } catch (error) {
+            logger.error('Scheduled task failed', { error: error.message });
+            throw error;
+        }
+    }
+}
+
+module.exports = ServiceName;
+```
+
+## Specific Services to Create
+
+### 1. Smart Categorization Service (services/smartCategorizationService.js)
+Based on [smart-categorization.js](mdc:backend/smart-categorization.js):
+```javascript
+// Methods: categorizeTransaction, trainModel, updateMerchantPatterns
+// Methods: batchCategorize, improveAccuracy, getCategorizationStats
+// Handle ML model training and prediction
+// Manage merchant pattern recognition
+// Implement learning from user corrections
+```
+
+### 2. AI Scheduler Service (services/aiSchedulerService.js)
+Based on [ai-scheduler.js](mdc:backend/ai-scheduler.js):
+```javascript
+// Methods: scheduleRecurringTransactions, predictUpcomingBills
+// Methods: analyzeSpendingPatterns, generateRecommendations
+// Handle automatic transaction scheduling
+// Manage predictive analytics
+// Coordinate with notification system
+```
+
+### 3. Expense Splitting Service (services/expenseSplittingService.js)
+Based on [expense-splitting.js](mdc:backend/expense-splitting.js):
+```javascript
+// Methods: calculateSplits, settleExpenses, generateInvitations
+// Methods: balanceCalculation, debtOptimization, settlementRecommendations
+// Handle complex splitting algorithms
+// Manage group expense calculations
+// Coordinate settlement processes
+```
+
+### 4. Financial Health Service (services/financialHealthService.js)
+Based on [financial-health.js](mdc:backend/financial-health.js):
+```javascript
+// Methods: calculateHealthScore, generateInsights, trackGoals
+// Methods: budgetAnalysis, spendingTrends, savingsRecommendations
+// Implement financial scoring algorithms
+// Generate personalized recommendations
+// Track financial goal progress
+```
+
+### 5. Cache Service (services/cacheService.js)
+Based on [cache-service.js](mdc:backend/cache-service.js):
+```javascript
+// Methods: get, set, delete, invalidate, invalidatePattern
+// Methods: getUserCache, setUserCache, invalidateUserCache
+// Handle Redis/memory caching
+// Implement cache invalidation strategies
+// Manage cache warming and cleanup
+```
+
+### 6. Notification Service (services/notificationService.js)
+```javascript
+// Methods: send, sendBulk, scheduleNotification, getUserPreferences
+// Methods: sendEmail, sendPush, sendInApp, markAsRead
+// Handle various notification channels
+// Manage user notification preferences
+// Implement notification templates and scheduling
+```
+
+### 7. Financial Projections Service (services/financialProjectionsService.js)
+Based on [financial-projections.js](mdc:backend/financial-projections.js):
+```javascript
+// Methods: projectCashFlow, forecastExpenses, predictIncome
+// Methods: scenarioAnalysis, goalProjections, budgetForecasting
+// Implement predictive financial modeling
+// Generate future scenario analysis
+// Coordinate with savings goals and budgets
+```
+
+### 8. Data Export Service (services/dataExportService.js)
+```javascript
+// Methods: exportTransactions, exportReports, generatePDF
+// Methods: scheduleExports, formatData, compressData
+// Handle various export formats (CSV, PDF, Excel)
+// Implement data formatting and compression
+// Manage scheduled export jobs
+```
+
+## Service Integration Patterns
+
+### 1. Dependency Injection
+```javascript
+// In controller or other service
+const smartCategorizationService = new SmartCategorizationService(supabase, {
+    cacheService: new CacheService(),
+    notificationService: new NotificationService()
+});
+```
+
+### 2. Service Composition
+```javascript
+class ComplexBusinessService {
+    constructor(supabase) {
+        this.financialHealthService = new FinancialHealthService(supabase);
+        this.projectionService = new FinancialProjectionsService(supabase);
+        this.notificationService = new NotificationService(supabase);
+    }
+
+    async performComplexAnalysis(userId) {
+        const healthScore = await this.financialHealthService.calculateHealthScore(userId);
+        const projections = await this.projectionService.projectCashFlow(userId);
+        
+        // Combine results and generate recommendations
+        const analysis = this.combineAnalysis(healthScore, projections);
+        
+        // Send notifications if needed
+        if (analysis.needsAttention) {
+            await this.notificationService.send(userId, 'financial_alert', analysis);
+        }
+        
+        return analysis;
+    }
+}
+```
+
+### 3. Event-Driven Architecture
+```javascript
+const EventEmitter = require('events');
+
+class TransactionService extends EventEmitter {
+    async createTransaction(data, userId) {
+        const transaction = await this.model.create(data, userId);
+        
+        // Emit events for other services to handle
+        this.emit('transaction:created', { transaction, userId });
+        
+        return transaction;
+    }
+}
+
+// Other services listen to events
+transactionService.on('transaction:created', async ({ transaction, userId }) => {
+    await smartCategorizationService.categorizeTransaction(transaction, userId);
+    await financialHealthService.updateHealthScore(userId);
+});
+```
+
+## Background Jobs and Scheduling
+
+### 1. Cron Jobs
+```javascript
+const cron = require('node-cron');
+
+class ScheduledTasksService {
+    constructor(supabase) {
+        this.supabase = supabase;
+        this.aiScheduler = new AIScheduler(supabase);
+        this.financialHealth = new FinancialHealthService(supabase);
+    }
+
+    startScheduledTasks() {
+        // Daily tasks at midnight
+        cron.schedule('0 0 * * *', async () => {
+            await this.runDailyTasks();
+        });
+
+        // Weekly tasks on Sunday at 2 AM
+        cron.schedule('0 2 * * 0', async () => {
+            await this.runWeeklyTasks();
+        });
+
+        // Monthly tasks on 1st at 3 AM
+        cron.schedule('0 3 1 * *', async () => {
+            await this.runMonthlyTasks();
+        });
+    }
+
+    async runDailyTasks() {
+        // Process recurring transactions
+        await this.aiScheduler.processRecurringTransactions();
+        
+        // Update financial health scores
+        await this.financialHealth.updateAllHealthScores();
+        
+        // Clean up expired data
+        await this.cleanupExpiredData();
+    }
+}
+```
+
+### 2. Queue Management
+```javascript
+const Queue = require('bull');
+const redisConfig = require('../config/redis');
+
+class QueueService {
+    constructor() {
+        this.processingQueue = new Queue('data processing', redisConfig);
+        this.notificationQueue = new Queue('notifications', redisConfig);
+        
+        this.setupQueueProcessors();
+    }
+
+    setupQueueProcessors() {
+        this.processingQueue.process('categorization', async (job) => {
+            const { transactionId, userId } = job.data;
+            await smartCategorizationService.categorizeTransaction(transactionId, userId);
+        });
+
+        this.notificationQueue.process('email', async (job) => {
+            const { userId, type, data } = job.data;
+            await notificationService.sendEmail(userId, type, data);
+        });
+    }
+
+    async addCategorizationJob(transactionId, userId) {
+        await this.processingQueue.add('categorization', { transactionId, userId });
+    }
+}
+```
+
+## Error Handling and Resilience
+
+### 1. Retry Logic
+```javascript
+async performWithRetry(operation, maxRetries = 3, delay = 1000) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            return await operation();
+        } catch (error) {
+            if (attempt === maxRetries) throw error;
+            
+            logger.warn(`Operation failed (attempt ${attempt}/${maxRetries})`, { 
+                error: error.message 
+            });
+            
+            await new Promise(resolve => setTimeout(resolve, delay * attempt));
+        }
+    }
+}
+```
+
+### 2. Circuit Breaker Pattern
+```javascript
+class CircuitBreaker {
+    constructor(threshold = 5, timeout = 60000) {
+        this.failureThreshold = threshold;
+        this.timeout = timeout;
+        this.failureCount = 0;
+        this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN
+        this.nextAttempt = Date.now();
+    }
+
+    async execute(operation) {
+        if (this.state === 'OPEN') {
+            if (Date.now() < this.nextAttempt) {
+                throw new Error('Circuit breaker is OPEN');
+            } else {
+                this.state = 'HALF_OPEN';
+            }
+        }
+
+        try {
+            const result = await operation();
+            this.onSuccess();
+            return result;
+        } catch (error) {
+            this.onFailure();
+            throw error;
+        }
+    }
+}
+```
+
+## Best Practices
+
+### 1. Single Responsibility
+- Each service should have a clear, single purpose
+- Avoid mixing unrelated business logic
+- Keep services focused and cohesive
+
+### 2. Dependency Management
+- Use dependency injection for testability
+- Avoid tight coupling between services
+- Use interfaces for external dependencies
+
+### 3. Error Handling
+- Implement comprehensive error handling
+- Use structured logging for debugging
+- Implement retry and fallback strategies
+
+### 4. Performance
+- Implement caching strategies
+- Use background jobs for heavy operations
+- Optimize database queries and external API calls
+
+### 5. Testing
+- Write unit tests for business logic
+- Mock external dependencies
+- Test error scenarios and edge cases
+
+## Migration from Current Code
+When migrating existing functionality:
+1. Extract business logic from [api.js](mdc:backend/api.js) into services
+2. Convert existing modules to service classes
+3. Implement proper dependency injection
+4. Add error handling and logging
+5. Create unit tests for business logic
+6. Implement caching where appropriate
+7. Add background job processing for heavy operations

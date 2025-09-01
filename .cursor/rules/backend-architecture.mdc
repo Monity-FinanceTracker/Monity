@@ -1,0 +1,68 @@
+# Backend Architecture & Coding Standards
+
+## MVC Architecture
+Follow the established MVC pattern with clear separation of concerns:
+
+### Models (`/models`)
+- Handle data structure, validation, and database operations
+- Use Supabase client for all database interactions
+- Implement proper error handling and data sanitization
+- Export models through `models/index.js`
+
+### Controllers (`/controllers`)
+- Process HTTP requests and responses
+- Coordinate between models and services
+- Handle request validation and error responses
+- Keep business logic in services, not controllers
+- Export controllers through `controllers/index.js`
+
+### Routes (`/routes`)
+- Define API endpoints and HTTP methods
+- Apply middleware (auth, validation, rate limiting)
+- Delegate to appropriate controllers
+- Use RESTful naming conventions
+- Export routes through `routes/index.js`
+
+### Services (`/services`)
+- Contain complex business logic
+- Handle AI/ML operations, financial calculations
+- Implement caching and performance optimizations
+- Export services through `services/index.js`
+
+### Middleware (`/middleware`)
+- Authentication and authorization
+- Input validation and sanitization
+- Error handling and logging
+- Rate limiting and security headers
+
+## Database Guidelines
+- Use Supabase client consistently across models
+- Implement Row Level Security (RLS) policies
+- Use service role key only for admin operations
+- Use anonymous key for user operations with RLS
+- Handle database errors gracefully
+
+## Security Standards
+- Validate all inputs using Joi schemas
+- Implement proper authentication middleware
+- Use environment variables for sensitive data
+- Sanitize data before database operations
+- Implement rate limiting on sensitive endpoints
+
+## Error Handling
+- Use centralized error handling middleware
+- Return consistent error response format
+- Log errors appropriately using Winston
+- Use proper HTTP status codes
+- Don't expose internal error details in production
+
+## Testing
+- Write unit tests for all business logic
+- Use Jest and Supertest for API testing
+- Mock external dependencies
+- Test error scenarios and edge cases
+- Maintain good test coverage
+description:
+globs:
+alwaysApply: true
+---

@@ -1,0 +1,79 @@
+# Monity Cursor Rules Index
+
+## Overview
+This document provides an index of all available Cursor Rules for the Monity project. These rules help maintain code quality, consistency, and best practices across the codebase.
+
+## Available Rules
+
+### 1. [Project Overview](mdc:.cursor/rules/project-overview.mdc)
+**Always Applied** - Provides comprehensive project context, tech stack, and architecture overview.
+
+### 2. [Backend Architecture](mdc:.cursor/rules/backend-architecture.mdc)
+**Applied to Backend Files** - MVC architecture guidelines, coding standards, and database practices.
+
+### 3. [Frontend Architecture](mdc:.cursor/rules/frontend-architecture.mdc)
+**Applied to Frontend Files** - React patterns, component structure, and styling standards.
+
+### 4. [AI/ML Guidelines](mdc:.cursor/rules/ai-ml-guidelines.mdc)
+**Applied to AI/ML Services** - Smart categorization, model training, and performance optimization.
+
+### 5. [Security Standards](mdc:.cursor/rules/security-standards.mdc)
+**Always Applied** - Authentication, authorization, data protection, and security best practices.
+
+### 6. [Testing Standards](mdc:.cursor/rules/testing-standards.mdc)
+**Applied to Test Files** - Backend (Jest) and frontend (Vitest) testing practices and coverage.
+
+### 7. [Development Workflow](mdc:.cursor/rules/development-workflow.mdc)
+**Always Applied** - Git practices, code review, environment management, and deployment processes.
+
+## How to Use These Rules
+
+### For New Developers
+1. Start with the **Project Overview** rule to understand the project
+2. Review **Backend Architecture** or **Frontend Architecture** based on your focus
+3. Follow **Security Standards** for all development work
+4. Use **Testing Standards** when writing or modifying tests
+
+### For Feature Development
+1. Follow the appropriate architecture rule for your layer
+2. Ensure compliance with **Security Standards**
+3. Write tests following **Testing Standards**
+4. Follow **Development Workflow** for code review and deployment
+
+### For Code Reviews
+1. Use these rules as a checklist for code quality
+2. Ensure architectural patterns are followed
+3. Verify security best practices are implemented
+4. Check that testing standards are met
+
+## Rule Categories
+
+### Always Applied Rules
+- Project Overview
+- Security Standards
+- Development Workflow
+
+### Context-Specific Rules
+- Backend Architecture (backend/**/*.js)
+- Frontend Architecture (frontend/src/**/*.{js,jsx})
+- AI/ML Guidelines (backend/services/**/*.js, backend/controllers/aiController.js)
+- Testing Standards (**/*.test.js, **/*.spec.js, **/__tests__/**/*.js)
+
+## Contributing to Rules
+When updating or adding new rules:
+1. Follow the established format and structure
+2. Use appropriate metadata (alwaysApply, globs, description)
+3. Keep rules focused and actionable
+4. Update this index when adding new rules
+5. Test rules to ensure they work as expected
+
+## Rule Maintenance
+- Review rules quarterly for relevance and accuracy
+- Update rules when architecture or standards change
+- Remove obsolete rules to prevent confusion
+- Gather feedback from the development team
+- Ensure rules align with project goals and constraints
+description:
+globs:
+alwaysApply: true
+---
