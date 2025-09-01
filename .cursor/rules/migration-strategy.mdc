@@ -1,0 +1,309 @@
+---
+description: Step-by-step migration strategy for MVC refactoring
+---
+
+# MVC Migration Strategy
+
+## Overview
+This document outlines a comprehensive strategy for migrating the Monity backend from its current monolithic structure to a clean MVC architecture. The migration will be done incrementally to minimize disruption and ensure functionality is maintained throughout the process.
+
+## Current State Analysis
+Based on [api.js](mdc:backend/api.js) analysis:
+- **Current Structure**: Monolithic Express.js application with ~1700 lines
+- **Main Components**: Authentication, transactions, categories, groups, savings goals, analytics
+- **Dependencies**: Supabase, various service modules, encryption middleware
+- **Current Services**: Smart categorization, AI scheduler, expense splitting, financial health
+
+## Migration Phases
+
+### Phase 1: Infrastructure Setup (Foundation)
+**Duration**: 1-2 days
+
+#### 1.1 Create Directory Structure
+```bash
+mkdir -p backend/{config,models,controllers,routes,services,middleware,utils}
+```
+
+#### 1.2 Set up Configuration Layer
+- Create `config/database.js` for Supabase client configuration
+- Create `config/env.js` for environment variable management
+- Move Supabase setup from [api.js](mdc:backend/api.js)
+
+#### 1.3 Create Base Utilities
+- Create `utils/logger.js` for structured logging
+- Create `utils/helpers.js` for common utilities (asyncHandler, etc.)
+- Create `utils/validators.js` for validation functions
+- Create `utils/constants.js` for application constants
+
+#### 1.4 Create Index Files
+- Create index files for each layer to manage exports
+- Set up proper module exports and imports
+
+### Phase 2: Middleware Layer (Security & Cross-cutting Concerns)
+**Duration**: 2-3 days
+
+#### 2.1 Migrate Authentication Middleware
+- Extract auth logic from [api.js](mdc:backend/api.js) lines 39-55
+- Create `middleware/auth.js` with authenticate, optionalAuth, requireRole
+- Maintain Supabase authentication integration
+
+#### 2.2 Create Validation Middleware
+- Migrate and enhance validation from [security/validation.js](mdc:backend/security/validation.js)
+- Create `middleware/validation.js` with body, query, params validation
+- Define validation schemas for each resource type
+
+#### 2.3 Migrate Encryption Middleware
+- Refactor [security/encryptionMiddleware.js](mdc:backend/security/encryptionMiddleware.js)
+- Move to `middleware/encryption.js`
+- Ensure compatibility with existing encrypted data
+
+#### 2.4 Create Additional Middleware
+- Create `middleware/errorHandler.js` for centralized error handling
+- Create `middleware/rateLimiter.js` for API protection
+- Create `middleware/logger.js` for request logging
+- Create `middleware/security.js` for security headers and CORS
+
+### Phase 3: Models Layer (Data Access)
+**Duration**: 3-4 days
+
+#### 3.1 Create Base Model Class
+- Create abstract base model with common CRUD operations
+- Implement encryption/decryption integration
+- Add validation and error handling
+
+#### 3.2 Create Core Models
+**Priority Order**:
+1. `models/User.js` - User profile and preferences
+2. `models/Category.js` - Transaction categories
+3. `models/Transaction.js` - Income and expense transactions
+4. `models/SavingsGoal.js` - Savings goals and progress
+5. `models/Group.js` - Expense splitting groups
+
+#### 3.3 Extract Database Operations
+- Move database queries from [api.js](mdc:backend/api.js) to appropriate models
+- Maintain existing functionality while improving structure
+- Add proper error handling and validation
+
+### Phase 4: Services Layer (Business Logic)
+**Duration**: 4-5 days
+
+#### 4.1 Migrate Existing Services
+**Convert to Service Classes**:
+1. `smart-categorization.js` → `services/smartCategorizationService.js`
+2. `ai-scheduler.js` → `services/aiSchedulerService.js`
+3. `expense-splitting.js` → `services/expenseSplittingService.js`
+4. `financial-health.js` → `services/financialHealthService.js`
+5. `cache-service.js` → `services/cacheService.js`
+6. `savings-goals.js` → Extract business logic to `services/savingsService.js`
+
+#### 4.2 Create New Services
+- `services/analyticsService.js` - Financial analytics and reporting
+- `services/notificationService.js` - User notifications
+- `services/dataExportService.js` - Data export functionality
+- `services/financialProjectionsService.js` - Based on [financial-projections.js](mdc:backend/financial-projections.js)
+
+#### 4.3 Implement Service Integration
+- Set up dependency injection
+- Create service composition patterns
+- Implement event-driven architecture where beneficial
+
+### Phase 5: Controllers Layer (Request Handling)
+**Duration**: 3-4 days
+
+#### 5.1 Create Core Controllers
+**Extract from [api.js](mdc:backend/api.js) endpoints**:
+1. `controllers/authController.js` - Authentication endpoints
+2. `controllers/transactionController.js` - Transaction CRUD and analytics
+3. `controllers/categoryController.js` - Category management
+4. `controllers/groupController.js` - Group and expense splitting
+5. `controllers/savingsController.js` - Savings goals management
+6. `controllers/analyticsController.js` - Financial analytics
+
+#### 5.2 Standardize Response Formats
+- Implement consistent success/error response formats
+- Add proper HTTP status codes
+- Implement pagination and filtering
+
+#### 5.3 Add Input Validation
+- Integrate validation middleware
+- Define validation rules for each endpoint
+- Add sanitization and security checks
+
+### Phase 6: Routes Layer (API Organization)
+**Duration**: 2-3 days
+
+#### 6.1 Create Route Modules
+- `routes/auth.js` - Authentication routes
+- `routes/transactions.js` - Transaction routes
+- `routes/categories.js` - Category routes
+- `routes/groups.js` - Group routes
+- `routes/savings.js` - Savings routes
+- `routes/analytics.js` - Analytics routes
+
+#### 6.2 Implement Route Aggregation
+- Create `routes/index.js` for route organization
+- Add API versioning support
+- Implement health check endpoints
+
+#### 6.3 Apply Middleware Chains
+- Add authentication middleware where needed
+- Apply validation middleware to endpoints
+- Implement rate limiting for sensitive endpoints
+
+### Phase 7: Main Application Setup
+**Duration**: 1-2 days
+
+#### 7.1 Create New Main Server File
+- Create `server.js` (replacing [api.js](mdc:backend/api.js))
+- Set up Express application with middleware chain
+- Configure route mounting and error handling
+
+#### 7.2 Update Package.json
+- Update start scripts to use new server file
+- Add any new dependencies
+- Update test scripts if needed
+
+#### 7.3 Environment Configuration
+- Ensure all environment variables are properly configured
+- Update `.env.example` with new requirements
+- Verify Supabase integration works correctly
+
+### Phase 8: Testing & Validation
+**Duration**: 2-3 days
+
+#### 8.1 Update Existing Tests
+- Modify tests in `__tests__/` directory to work with new structure
+- Update test imports and mocking
+- Ensure all existing functionality is tested
+
+#### 8.2 Add New Tests
+- Create unit tests for new models, controllers, and services
+- Add integration tests for API endpoints
+- Test error handling and edge cases
+
+#### 8.3 Performance Testing
+- Compare performance with old structure
+- Optimize any performance regressions
+- Test under load to ensure stability
+
+### Phase 9: Cleanup & Documentation
+**Duration**: 1 day
+
+#### 9.1 Remove Old Files
+- Archive or remove [api.js](mdc:backend/api.js) after verification
+- Clean up unused files in [security/](mdc:backend/security/) directory
+- Remove any temporary migration files
+
+#### 9.2 Update Documentation
+- Update API documentation
+- Create architecture documentation
+- Update README with new structure
+
+## Migration Execution Strategy
+
+### 1. Feature Flags Approach
+Use feature flags to gradually migrate endpoints:
+```javascript
+const USE_NEW_ARCHITECTURE = process.env.USE_NEW_ARCHITECTURE === 'true';
+
+if (USE_NEW_ARCHITECTURE) {
+    // Use new MVC endpoints
+    app.use('/api/v1', newRoutes);
+} else {
+    // Use old monolithic endpoints
+    app.use('/api', oldRoutes);
+}
+```
+
+### 2. Parallel Development
+- Keep [api.js](mdc:backend/api.js) running while building new structure
+- Test new endpoints alongside old ones
+- Gradually switch endpoints as they're completed and tested
+
+### 3. Data Compatibility
+- Ensure new models work with existing database schema
+- Maintain encryption compatibility with existing data
+- Test data migrations thoroughly
+
+### 4. Rollback Strategy
+- Keep old code in place until migration is complete
+- Use feature flags for easy rollback
+- Maintain database compatibility during transition
+
+## Testing Strategy During Migration
+
+### 1. Continuous Testing
+- Run existing test suite after each phase
+- Add new tests for new components
+- Monitor for any functionality regressions
+
+### 2. Integration Testing
+- Test API endpoints with both old and new implementations
+- Verify data consistency between implementations
+- Test authentication and authorization flows
+
+### 3. Performance Monitoring
+- Monitor response times during migration
+- Track memory usage and database performance
+- Ensure no performance degradation
+
+## Risk Mitigation
+
+### 1. Backup Strategy
+- Create full database backup before starting
+- Version control all changes
+- Document rollback procedures
+
+### 2. Gradual Migration
+- Migrate one feature at a time
+- Test thoroughly before moving to next feature
+- Keep old code until fully verified
+
+### 3. Monitoring
+- Monitor application logs during migration
+- Track error rates and performance metrics
+- Set up alerts for any issues
+
+## Success Criteria
+
+### 1. Functionality
+- All existing API endpoints work correctly
+- No data loss or corruption
+- All tests pass
+
+### 2. Performance
+- Response times equal or better than before
+- No increase in resource usage
+- Database performance maintained
+
+### 3. Code Quality
+- Improved code organization and maintainability
+- Better separation of concerns
+- Enhanced error handling and logging
+
+### 4. Security
+- All security features maintained
+- Encryption working correctly
+- Authentication and authorization intact
+
+## Post-Migration Benefits
+
+### 1. Maintainability
+- Clear separation of concerns
+- Easier to add new features
+- Better code organization
+
+### 2. Testability
+- Individual components can be tested in isolation
+- Better test coverage
+- Easier mocking and stubbing
+
+### 3. Scalability
+- Services can be scaled independently
+- Better resource utilization
+- Easier to optimize specific components
+
+### 4. Team Productivity
+- Multiple developers can work on different layers
+- Clearer code ownership
+- Reduced merge conflicts

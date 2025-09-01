@@ -1,0 +1,61 @@
+# Development Workflow & Best Practices
+
+## Git Workflow
+- Use feature branches for new development
+- Write descriptive commit messages
+- Keep commits focused and atomic
+- Use conventional commit format when possible
+- Never commit sensitive data or credentials
+
+## Code Review Process
+- Review all code changes before merging
+- Check for security vulnerabilities
+- Validate code follows project standards
+- Ensure proper test coverage
+- Verify documentation updates
+
+## Environment Management
+- Use `.env` files for configuration
+- Never commit `.env` files to version control
+- Use `.env.example` for documentation
+- Validate environment variables on startup
+- Use different configs for dev/staging/prod
+
+## Dependency Management
+- Keep dependencies up to date
+- Use exact versions for production
+- Regular security audits of dependencies
+- Document breaking changes
+- Test with new dependency versions
+
+## Code Quality
+- Use ESLint for code linting
+- Follow consistent code formatting
+- Implement proper error handling
+- Write self-documenting code
+- Use meaningful variable and function names
+
+## Documentation
+- Keep README files updated
+- Document API endpoints
+- Comment complex business logic
+- Maintain changelog for releases
+- Document environment setup
+
+## Performance Monitoring
+- Monitor API response times
+- Track database query performance
+- Monitor memory and CPU usage
+- Implement proper logging
+- Use performance profiling tools
+
+## Deployment Process
+- Use separate environments for dev/staging/prod
+- Implement proper CI/CD pipelines
+- Test in staging before production
+- Monitor application health after deployment
+- Implement rollback procedures
+description:
+globs:
+alwaysApply: true
+---

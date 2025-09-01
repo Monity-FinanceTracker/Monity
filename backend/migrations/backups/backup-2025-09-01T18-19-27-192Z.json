@@ -1,0 +1,770 @@
+{
+  "timestamp": "2025-09-01T18:19:27.200Z",
+  "encryption_key_hash": "21401eac1d21a0b6",
+  "tables": {
+    "transactions": [
+      {
+        "id": "3aee40e2-11ea-420f-86d4-218eda12b902",
+        "description": "Ipad",
+        "amount": 2990,
+        "category": "Eletronico",
+        "date": "202025-06-15",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-15T20:05:20.74+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "5c58bcc5-7265-4a7f-b2a4-821dbc3baf78",
+        "description": "Comida",
+        "amount": 150,
+        "category": "Salario",
+        "date": "202025-06-15",
+        "typeId": 1,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "createdAt": "2025-07-15T20:57:15.548+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "dab7a2dc-601a-4ae0-8319-df0c1fc1b524",
+        "description": "Salario",
+        "amount": 1424,
+        "category": "Salario",
+        "date": "202025-06-15",
+        "typeId": 2,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-15T21:13:09.048+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "9399f9f3-7405-4960-b26f-606aa7b398ea",
+        "description": "Salario",
+        "amount": 22000,
+        "category": "Salario",
+        "date": "202025-07-15",
+        "typeId": 2,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-15T22:07:25.645+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "06ead3b4-5d39-4eb4-a936-dc392c1eb157",
+        "description": "Janta",
+        "amount": 480,
+        "category": "Comida",
+        "date": "202025-07-15",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-15T22:08:11.547+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "c7725547-2b36-4fbb-be3c-2bd1dc4a5a4e",
+        "description": "luz",
+        "amount": 130,
+        "category": "Salario",
+        "date": "2025-07-11",
+        "typeId": 1,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "createdAt": "2025-07-16T00:31:31.572+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "f9e2825a-8111-45a1-b99f-f49df2b73f41",
+        "description": "adsda",
+        "amount": 213,
+        "category": "Salario",
+        "date": "2025-08-11",
+        "typeId": 1,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "createdAt": "2025-07-16T00:32:20.967+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "6588df4d-9727-4fd9-8429-4e068ffba6a0",
+        "description": "comida",
+        "amount": 100,
+        "category": "Comida",
+        "date": "2025-07-17",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-17T18:35:14.165+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "27c1a0bf-e3c2-4b03-94d0-11f43f1ee25b",
+        "description": "Allocation to goal: ipad",
+        "amount": 1000,
+        "category": "Savings Goals",
+        "date": "2025-07-19",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-19T10:16:17.763806+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "b1e010f3-ba71-4212-9bc2-a88d78abee95",
+        "description": "Refund from goal: ipad",
+        "amount": 1000,
+        "category": "Savings Goals",
+        "date": "2025-07-19",
+        "typeId": 2,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-19T10:16:32.803338+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "89585997-a770-4498-810d-5b4f14d9aee4",
+        "description": "Refund from goal: Carro",
+        "amount": 1000,
+        "category": "Savings Goals",
+        "date": "2025-07-19",
+        "typeId": 2,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-19T10:18:07.956189+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "350513c8-f2f0-4d0f-8338-760f7465c1ba",
+        "description": "Group settlement: Roupa",
+        "amount": 50,
+        "category": "Group Settlements",
+        "date": "2025-07-21",
+        "typeId": 1,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "createdAt": "2025-07-21T15:21:15.651+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "9e30c77b-36d4-4df8-802d-2c90b92d54d8",
+        "description": "Group reimbursement: Roupa",
+        "amount": 50,
+        "category": "Group Reimbursements",
+        "date": "2025-07-21",
+        "typeId": 2,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "createdAt": "2025-07-21T15:21:15.76+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "dbf2e08f-d0c3-4313-946f-1ecf20202490",
+        "description": "Group expense: Roupa",
+        "amount": 120,
+        "category": "Group Expenses",
+        "date": "2025-07-21",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-21T15:57:29.333+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "e579cd50-1a76-4140-8638-7b2b8039fd1f",
+        "description": "Group settlement: Roupa",
+        "amount": 50,
+        "category": "Group Settlements",
+        "date": "2025-07-21",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-21T15:58:11.447+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "fe816b9c-ded9-4a30-8d33-ec0e670c0816",
+        "description": "Group reimbursement: Roupa",
+        "amount": 50,
+        "category": "Group Reimbursements",
+        "date": "2025-07-21",
+        "typeId": 2,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "createdAt": "2025-07-21T15:58:11.535+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "4e61a657-89b2-451a-9474-2db2d84658b0",
+        "description": "Income - Mesada",
+        "amount": 26.41,
+        "category": "Mesada",
+        "date": "2025-07-21",
+        "typeId": 2,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-21T19:30:22.506+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "ecb1ed30-eb84-41c5-9b59-58078a67688c",
+        "description": "Group settlement: meinha com dois",
+        "amount": 5,
+        "category": "Group Settlements",
+        "date": "2025-07-22",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-07-22T14:46:29.564+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "28533a6c-ce88-4696-942b-d4df009539d5",
+        "description": "Income - Benevolência da mamãe",
+        "amount": 27,
+        "category": "Benevolência da mamãe",
+        "date": "2025-07-22",
+        "typeId": 2,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-23T21:05:17.177+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "0431431d-c823-4705-9e13-f164369aea0e",
+        "description": "Busão pro pátio",
+        "amount": 5.5,
+        "category": "Rolê",
+        "date": "2025-07-23",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-23T21:05:44.319+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "282911a8-33a5-442c-8e24-d09d5a10d3d0",
+        "description": "biscoito de queijo cursinho",
+        "amount": 4,
+        "category": "Eu",
+        "date": "2025-07-28",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-28T14:05:21.249+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "6f999e80-3724-400c-bedb-49123330b90d",
+        "description": "Income - Mesada",
+        "amount": 200,
+        "category": "Mesada",
+        "date": "2025-08-01",
+        "typeId": 2,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-28T17:15:45.574+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "cc836949-fd12-4daa-bd52-13ef79374921",
+        "description": "presente de aniversário da bia",
+        "amount": 62.93,
+        "category": "Eu",
+        "date": "2025-08-01",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-28T17:17:23.173+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "a84ffb2a-7a18-4600-b0e9-dbe1571b781f",
+        "description": "esquentar marmita",
+        "amount": 2,
+        "category": "fome",
+        "date": "2025-07-29",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-29T15:22:39.94+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "f5438b5c-0a72-47d2-ae79-69027f4a02b4",
+        "description": "moça pediu dinheiro pra marmita na rua e paguei no credito",
+        "amount": 24.29,
+        "category": "Rolê",
+        "date": "2025-08-01",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-07-29T15:26:16.503+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "3d55c40e-b65c-45d2-bd19-d8441021b2bc",
+        "description": "comida no cinema com os primos",
+        "amount": 20,
+        "category": "Date",
+        "date": "2025-07-31",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-08-02T13:52:02.274+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "502c5c73-beaa-4907-869b-7803f397626c",
+        "description": "Crunchroll",
+        "amount": 5,
+        "category": "Eu",
+        "date": "2025-08-04",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-08-04T13:56:26.98+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "168dcd1a-0dbe-4f20-9ea6-06c26ff53323",
+        "description": "role de busao",
+        "amount": 22.8,
+        "category": "Date",
+        "date": "2025-08-04",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "createdAt": "2025-08-04T22:32:41.398+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "49966034-8972-4edc-af70-047fc96507cf",
+        "description": "Group expense: Compras",
+        "amount": 170,
+        "category": "Group Expenses",
+        "date": "2025-08-09",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "createdAt": "2025-08-09T12:25:41.537+00:00",
+        "description_hash": null
+      }
+    ],
+    "categories": [
+      {
+        "id": "f8dc4c90-b45f-4d32-a666-bf694c38e988",
+        "name": "Eletronico",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "8b3ce66d-d2d1-4838-9093-5f27d313c626",
+        "name": "Salario",
+        "typeId": 1,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "751c360a-1422-40cd-8706-f0b03515a0da",
+        "name": "Salario",
+        "typeId": 2,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "3dd26bdd-5846-4a8c-bd27-0c00966ce025",
+        "name": "Comida",
+        "typeId": 1,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "fbbee8c3-7055-43af-8f26-a3e217afaeba",
+        "name": "Make Investments",
+        "typeId": 3,
+        "userId": "0a058b6c-f604-40b4-852c-53253672dfa7",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "b9eb3459-a880-418e-ac35-d5ea4f867a65",
+        "name": "Withdraw Investments",
+        "typeId": 3,
+        "userId": "0a058b6c-f604-40b4-852c-53253672dfa7",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "dd6092fc-3474-44f2-b8d0-73400dfe63e1",
+        "name": "Make Investments",
+        "typeId": 3,
+        "userId": "7dcb5dec-1bd9-4a63-b315-b68c0d0a0650",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "cf3ca39a-2aea-48d5-a4db-44df7d85662a",
+        "name": "Withdraw Investments",
+        "typeId": 3,
+        "userId": "7dcb5dec-1bd9-4a63-b315-b68c0d0a0650",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "e99bfe0f-ede1-4ec8-937d-08ba24b9f712",
+        "name": "Make Investments",
+        "typeId": 3,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "c088609b-31c4-4316-ae48-d3c3af4e4e29",
+        "name": "Withdraw Investments",
+        "typeId": 3,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "4b643760-3b80-4fb7-890b-69f5d0d2e316",
+        "name": "Make Investments",
+        "typeId": 3,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "841abdca-d6ae-4d3b-94f7-45051eb78b1b",
+        "name": "Withdraw Investments",
+        "typeId": 3,
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "e96739fe-535e-4581-9799-07198f6ae111",
+        "name": "Mesada",
+        "typeId": 2,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "5f507ae3-9c9e-445c-bece-4931bb7a1f4b",
+        "name": "Date",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "b313497c-bd2a-4eb5-9649-8c75362b2d8f",
+        "name": "Rolê",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "772ce453-3232-448a-b7db-f75f64484822",
+        "name": "Eu",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "fd14291d-b135-4745-85ea-89db8b4e1f16",
+        "name": "Carro",
+        "typeId": 1,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "color": "#01C38D",
+        "icon": "📦"
+      },
+      {
+        "id": "77aed5f4-4ae3-4344-9241-4f18ea146eae",
+        "name": "suoer",
+        "typeId": 1,
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "color": "#EAB308",
+        "icon": "🛒"
+      },
+      {
+        "id": "fc166f7a-f20e-4ac8-a382-b114d794f7d8",
+        "name": "Benevolência da mamãe",
+        "typeId": 2,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "color": "#84CC16",
+        "icon": "💰"
+      },
+      {
+        "id": "876d5cca-bf42-42b9-8dbf-0155f504fa57",
+        "name": "fome",
+        "typeId": 1,
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "color": "#EF4444",
+        "icon": "🍕"
+      },
+      {
+        "id": "12cf49cc-9c88-485a-99c6-2b3f1b35cd9d",
+        "name": "Transportation",
+        "typeId": 1,
+        "userId": "6314b666-347f-4754-8e38-5e13b0993056",
+        "color": "#01C38D",
+        "icon": "📦"
+      }
+    ],
+    "savings_goals": [],
+    "groups": [
+      {
+        "id": "e3ba8a18-1b97-43eb-a7da-e1abf1f24bb4",
+        "name": "Ferias",
+        "created_by": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "created_at": "2025-07-21T13:25:42.400864+00:00"
+      },
+      {
+        "id": "07b60435-bea3-461e-89b7-031cf0c0fba5",
+        "name": "grupo",
+        "created_by": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "created_at": "2025-07-22T13:51:15.186796+00:00"
+      },
+      {
+        "id": "5f0335b5-a185-4ba1-938b-2494f9eb52ab",
+        "name": "feraus",
+        "created_by": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "created_at": "2025-07-22T14:29:46.955762+00:00"
+      },
+      {
+        "id": "bdc9bf69-a500-4bf9-a81f-545a442a95ce",
+        "name": "jaé",
+        "created_by": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "created_at": "2025-07-22T14:31:47.606749+00:00"
+      },
+      {
+        "id": "1da8238c-032f-4ddf-96df-0705545020b4",
+        "name": "18d610f97237a201f1949cad1f6dcd96:4ccfd124c1d0f2bed2d82c31ce9dbd26:ef30d36798efdb32505c30",
+        "created_by": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "created_at": "2025-09-01T17:17:05.379351+00:00"
+      },
+      {
+        "id": "6e608eeb-1c35-4752-b92a-611ba4518582",
+        "name": "Test Group",
+        "created_by": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "created_at": "2025-09-01T18:01:53.463+00:00"
+      },
+      {
+        "id": "b90767ee-9b70-436a-9212-5e114c5fea4e",
+        "name": "Test Group",
+        "created_by": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "created_at": "2025-09-01T18:02:02.902+00:00"
+      },
+      {
+        "id": "03504e28-7f02-4658-a63b-0fd9de39c51c",
+        "name": "My Test Group",
+        "created_by": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "created_at": "2025-09-01T18:02:29.207723+00:00"
+      }
+    ],
+    "group_expenses": [
+      {
+        "id": "3ebcc308-e715-478a-bc7f-155e0f22c5fa",
+        "group_id": "e3ba8a18-1b97-43eb-a7da-e1abf1f24bb4",
+        "description": "Roupa",
+        "amount": 150,
+        "paid_by": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "created_at": "2025-07-21T15:13:27.92039+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "14ab3340-9832-4638-b43e-dca646a972bd",
+        "group_id": "e3ba8a18-1b97-43eb-a7da-e1abf1f24bb4",
+        "description": "Roupa",
+        "amount": 120,
+        "paid_by": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "created_at": "2025-07-21T15:57:29.343167+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "29ef8549-cd0d-417b-921b-a77d845ee64e",
+        "group_id": "07b60435-bea3-461e-89b7-031cf0c0fba5",
+        "description": "meinha com dois",
+        "amount": 10,
+        "paid_by": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "created_at": "2025-07-22T14:32:31.542242+00:00",
+        "description_hash": null
+      },
+      {
+        "id": "4505fea2-f740-4e78-b8f3-36ca0540ae8b",
+        "group_id": "07b60435-bea3-461e-89b7-031cf0c0fba5",
+        "description": "sla",
+        "amount": 10,
+        "paid_by": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "created_at": "2025-07-22T14:48:41.031039+00:00",
+        "description_hash": null
+      }
+    ],
+    "recurring_transactions": [],
+    "profiles": [
+      {
+        "id": "7dcb5dec-1bd9-4a63-b315-b68c0d0a0650",
+        "name": "Lodi",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "lodi@gmail"
+      },
+      {
+        "id": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "name": "Milena",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "milenasalomao100@gmail.com"
+      },
+      {
+        "id": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "name": "Miguel Coimbra",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "miguel.cnaves@gmail.com"
+      },
+      {
+        "id": "0a058b6c-f604-40b4-852c-53253672dfa7",
+        "name": "Regina",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "reginaramalho12@hotmail.com"
+      },
+      {
+        "id": "13976ef7-102e-4868-811b-a45a320162c4",
+        "name": "Leo",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "leostuart@gmail.com"
+      },
+      {
+        "id": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "name": "Leo",
+        "role": "admin",
+        "subscription_tier": "premium",
+        "email": "leostuart05@gmail.com"
+      },
+      {
+        "id": "fc25872e-ad22-4fba-b09d-b1c6ac274cfb",
+        "name": "Arthur",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "arthur@mg.org.br"
+      },
+      {
+        "id": "f2ea38e8-83f7-4359-a6b4-0030dc40d884",
+        "name": "Arthur ",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "teste@gmail.com.br"
+      },
+      {
+        "id": "07720a79-6111-4e19-8d03-9d4d42fe5761",
+        "name": "Luca",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "luca@gmail"
+      },
+      {
+        "id": "6107bfac-0a11-4860-952d-94e89555309b",
+        "name": "LucaL",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "luca.lodi@gmail.com"
+      },
+      {
+        "id": "8ed0ba8d-8631-4913-8b4f-64e38649a8fd",
+        "name": "lynx",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "carlaparecidasantana@gmail.com"
+      },
+      {
+        "id": "0264c3ad-f557-4362-a19f-18d5a944e67a",
+        "name": "matheus",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "matheusfreitascampos@gmail.com"
+      },
+      {
+        "id": "2acfd5a7-6f23-4fc9-9858-28b4c2c13fbb",
+        "name": "Mateus Zancho Neto ",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "mateuszancho@gmail.com"
+      },
+      {
+        "id": "02080f6a-b200-40ac-b319-935912fcbeac",
+        "name": "Matheus Berto",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "matheusberto0910@gmail.com"
+      },
+      {
+        "id": "6314b666-347f-4754-8e38-5e13b0993056",
+        "name": "Fábio Missiaggia Brugnara",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "fabiobrug2006@gmail.com"
+      },
+      {
+        "id": "6e5253e5-2d77-4c03-925f-a8516317437f",
+        "name": "Luca Lodi",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "luca.lodi.ll53@gmail.com"
+      },
+      {
+        "id": "d0f7513d-d5ae-40db-88c0-2384861a47ff",
+        "name": "João Pedro Mota Machado",
+        "role": "user",
+        "subscription_tier": "free",
+        "email": "joaopedromachado830@gmail.com"
+      }
+    ],
+    "budgets": [
+      {
+        "id": "8a0201a2-3657-4c9c-83c6-5968499649c9",
+        "userId": "a9127961-73b3-4f78-a0e5-bd6fc6c2adf9",
+        "categoryId": "8b3ce66d-d2d1-4838-9093-5f27d313c626",
+        "amount": 199,
+        "month": "2025-07-01",
+        "name": "limite",
+        "spent": 0,
+        "period": "monthly",
+        "startDate": "2025-07-22",
+        "endDate": "2025-08-22",
+        "isActive": true,
+        "createdAt": "2025-07-22T14:54:10.274455+00:00",
+        "updatedAt": "2025-07-22T14:54:10.274455+00:00"
+      },
+      {
+        "id": "938ce9c9-3f35-482b-ac20-2b73ba031442",
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "categoryId": "b313497c-bd2a-4eb5-9649-8c75362b2d8f",
+        "amount": 24,
+        "month": "2025-07-01",
+        "name": "rolês agosto",
+        "spent": 0,
+        "period": "monthly",
+        "startDate": "2025-07-28",
+        "endDate": "2025-08-28",
+        "isActive": true,
+        "createdAt": "2025-07-28T14:04:15.406809+00:00",
+        "updatedAt": "2025-07-29T15:26:38.344399+00:00"
+      },
+      {
+        "id": "d13d320c-2ff9-4605-9349-e467215742a0",
+        "userId": "147413a9-40fe-49e5-b8e9-500bfe19bc48",
+        "categoryId": "5f507ae3-9c9e-445c-bece-4931bb7a1f4b",
+        "amount": 120,
+        "month": "2025-07-01",
+        "name": "saídas agosto",
+        "spent": 0,
+        "period": "monthly",
+        "startDate": "2025-07-28",
+        "endDate": "2025-08-28",
+        "isActive": true,
+        "createdAt": "2025-07-28T14:03:52.34871+00:00",
+        "updatedAt": "2025-08-06T01:20:13.594434+00:00"
+      },
+      {
+        "id": "ab9fb9e6-0145-4d91-8f4c-d8a1da20e54a",
+        "userId": "a7c04b90-4a41-4b77-b7f8-2411baa4a9c1",
+        "categoryId": "3dd26bdd-5846-4a8c-bd27-0c00966ce025",
+        "amount": 800,
+        "month": "2025-08-01",
+        "name": "Alimentação",
+        "spent": 0,
+        "period": "monthly",
+        "startDate": "2025-08-09",
+        "endDate": "2025-09-09",
+        "isActive": true,
+        "createdAt": "2025-08-09T12:24:18.410375+00:00",
+        "updatedAt": "2025-08-09T12:24:18.410375+00:00"
+      }
+    ]
+  }
+}

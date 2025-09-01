@@ -8,6 +8,8 @@ function AdminDashboard() {
   const [analytics, setAnalytics] = useState(null);
   const [trends, setTrends] = useState(null);
   const [aiStats, setAiStats] = useState(null);
+  const [healthData, setHealthData] = useState(null);
+  const [financialHealth, setFinancialHealth] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,15 +18,19 @@ function AdminDashboard() {
       setLoading(true);
       setError(null);
       try {
-        const [analyticsRes, trendsRes, aiStatsRes] = await Promise.all([
+        const [analyticsRes, trendsRes, aiStatsRes, healthRes, financialHealthRes] = await Promise.all([
           get('/admin/analytics'),
           get('/admin/trends?days=30'),
-          get('/ai/stats').catch(() => ({ data: null })) // AI stats might not be available
+          get('/ai/stats').catch(() => ({ data: null })), // AI stats might not be available
+          get('/admin/health').catch(() => ({ data: null })), // Health data might not be available
+          get('/admin/financial-health').catch(() => ({ data: null })) // Financial health might not be available
         ]);
 
         setAnalytics(analyticsRes.data);
         setTrends(trendsRes.data);
         setAiStats(aiStatsRes.data?.stats || null);
+        setHealthData(healthRes.data);
+        setFinancialHealth(financialHealthRes.data);
       } catch (err) {
         setError(t('adminDashboard.fetch_error'));
         console.error(err);
@@ -144,7 +150,7 @@ function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-gray-400">{t('adminDashboard.avg_daily_transactions')}</span>
-              <span className="font-semibold">{trends?.summary.avgDailyTransactions?.toFixed(1) || 0}</span>
+              <span className="font-semibold">{trends?.summary.avgDailyTransactions?.toFixed(1) || '0.0'}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-400">{t('adminDashboard.avg_daily_volume')}</span>
@@ -227,6 +233,52 @@ function AdminDashboard() {
         </div>
       </div>
 
+      {/* Financial Health Overview */}
+      {financialHealth && (
+        <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <span className="mr-2">💡</span>
+            Financial Health Overview
+          </h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+              <div className="text-2xl font-bold text-[#01C38D]">{financialHealth.overview?.avgHealthScore || 0}</div>
+              <div className="text-sm text-gray-400">Avg Health Score</div>
+            </div>
+            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+              <div className="text-2xl font-bold text-[#36A2EB]">{financialHealth.overview?.avgSavingsRate || 0}%</div>
+              <div className="text-sm text-gray-400">Avg Savings Rate</div>
+            </div>
+            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+              <div className="text-2xl font-bold text-[#FFCE56]">{financialHealth.trends?.improvingUsers || 0}</div>
+              <div className="text-sm text-gray-400">Improving Users</div>
+            </div>
+            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+              <div className="text-2xl font-bold text-[#FF6384]">{financialHealth.trends?.riskyUsers || 0}</div>
+              <div className="text-sm text-gray-400">At-Risk Users</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="text-center p-3 bg-[#1a1d2e] rounded-lg">
+              <div className="text-lg font-bold text-green-400">{financialHealth.healthDistribution?.excellent || 0}</div>
+              <div className="text-xs text-gray-400">Excellent</div>
+            </div>
+            <div className="text-center p-3 bg-[#1a1d2e] rounded-lg">
+              <div className="text-lg font-bold text-blue-400">{financialHealth.healthDistribution?.good || 0}</div>
+              <div className="text-xs text-gray-400">Good</div>
+            </div>
+            <div className="text-center p-3 bg-[#1a1d2e] rounded-lg">
+              <div className="text-lg font-bold text-yellow-400">{financialHealth.healthDistribution?.fair || 0}</div>
+              <div className="text-xs text-gray-400">Fair</div>
+            </div>
+            <div className="text-center p-3 bg-[#1a1d2e] rounded-lg">
+              <div className="text-lg font-bold text-red-400">{financialHealth.healthDistribution?.poor || 0}</div>
+              <div className="text-xs text-gray-400">Poor</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* System Health */}
       <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
@@ -236,23 +288,23 @@ function AdminDashboard() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <HealthIndicator 
             label="Database" 
-            status="healthy" 
-            value="99.9%" 
+            status={healthData?.checks?.database?.status || "unknown"} 
+            value={healthData?.checks?.database?.uptime || "N/A"} 
           />
           <HealthIndicator 
             label="API Response" 
-            status="healthy" 
-            value="<100ms" 
+            status={healthData?.checks?.api?.status || "unknown"} 
+            value={healthData?.checks?.api?.avgResponseTime || "N/A"} 
           />
           <HealthIndicator 
             label="User Sessions" 
-            status="healthy" 
-            value={`${trends?.summary.totalActiveUsers || 0} active`} 
+            status={healthData?.checks?.userSessions?.status || "unknown"} 
+            value={healthData?.checks?.userSessions?.value || `${trends?.summary.totalActiveUsers || 0} active`} 
           />
           <HealthIndicator 
             label="Data Processing" 
-            status="healthy" 
-            value="Real-time" 
+            status={healthData?.checks?.dataProcessing?.status || "unknown"} 
+            value={healthData?.checks?.dataProcessing?.value || "Real-time"} 
           />
         </div>
       </div>

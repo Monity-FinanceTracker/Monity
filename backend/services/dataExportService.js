@@ -1,0 +1,138 @@
+const { logger } = require('../utils/logger');
+const { Parser } = require('json2csv');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const path = require('path');
+
+class DataExportService {
+    constructor(supabase) {
+        this.supabase = supabase;
+    }
+
+    /**
+     * Export user transactions to a specified format.
+     * @param {string} userId - The ID of the user.
+     * @param {string} format - The export format ('csv', 'pdf', 'json').
+     * @param {Object} options - Filtering options (e.g., date range).
+     * @returns {Promise<string|Buffer>} - The file path or buffer of the exported data.
+     */
+    async exportTransactions(userId, format, options = {}) {
+        try {
+            let query = this.supabase
+                .from('transactions')
+                .select('*')
+                .eq('user_id', userId);
+            
+            if (options.startDate) {
+                query = query.gte('date', options.startDate);
+            }
+            if (options.endDate) {
+                query = query.lte('date', options.endDate);
+            }
+
+            const { data: transactions, error } = await query;
+            if (error) throw error;
+            if (!transactions || transactions.length === 0) {
+                throw new Error('No transactions found for the given criteria.');
+            }
+
+            switch (format) {
+                case 'csv':
+                    return this.generateCsv(transactions);
+                case 'pdf':
+                    return this.generatePdf(transactions, userId);
+                case 'json':
+                    return this.generateJson(transactions);
+                default:
+                    throw new Error('Unsupported format');
+            }
+        } catch (error) {
+            logger.error(`Failed to export transactions for user ${userId}`, {
+                error: error.message,
+                format
+            });
+            throw error;
+        }
+    }
+
+    /**
+     * Generate a CSV string from data.
+     * @param {Array<Object>} data - The data to convert.
+     * @returns {string} - The CSV data as a string.
+     */
+    generateCsv(data) {
+        const json2csvParser = new Parser();
+        const csv = json2csvParser.parse(data);
+        logger.info('CSV data generated successfully');
+        return csv;
+    }
+
+    /**
+     * Generate a JSON string from data.
+     * @param {Array<Object>} data - The data to convert.
+     * @returns {string} - The JSON data as a string.
+     */
+    generateJson(data) {
+        logger.info('JSON data generated successfully');
+        return JSON.stringify(data, null, 2);
+    }
+
+    /**
+     * Generate a PDF document from transaction data.
+     * @param {Array<Object>} transactions - The transaction data.
+     * @param {string} userId - The user ID for the report header.
+     * @returns {Promise<Buffer>} - A buffer containing the PDF data.
+     */
+    generatePdf(transactions, userId) {
+        return new Promise((resolve, reject) => {
+            const doc = new PDFDocument({ margin: 50 });
+            const buffers = [];
+
+            doc.on('data', buffers.push.bind(buffers));
+            doc.on('end', () => {
+                const pdfData = Buffer.concat(buffers);
+                logger.info(`PDF generated successfully for user ${userId}`);
+                resolve(pdfData);
+            });
+            doc.on('error', (err) => {
+                reject(err);
+            });
+
+            // Add header
+            doc.fontSize(20).text('Transaction Report', { align: 'center' });
+            doc.fontSize(12).text(`User ID: ${userId}`, { align: 'center' });
+            doc.moveDown();
+
+            // Add table headers
+            const tableTop = doc.y;
+            const itemX = 50;
+            const descriptionX = 150;
+            const amountX = 350;
+            const dateX = 450;
+            
+            doc.fontSize(10)
+                .text('Category', itemX, tableTop, { bold: true })
+                .text('Description', descriptionX, tableTop, { bold: true })
+                .text('Amount', amountX, tableTop, { bold: true })
+                .text('Date', dateX, tableTop, { bold: true });
+
+            // Draw header line
+            doc.moveTo(itemX, doc.y + 5).lineTo(dateX + 100, doc.y + 5).stroke();
+            doc.y += 10;
+
+            // Add table rows
+            transactions.forEach(tx => {
+                doc.fontSize(10)
+                    .text(tx.category || 'N/A', itemX, doc.y)
+                    .text(tx.description, descriptionX, doc.y)
+                    .text(`$${tx.amount.toFixed(2)}`, amountX, doc.y)
+                    .text(new Date(tx.date).toLocaleDateString(), dateX, doc.y);
+                doc.moveDown(0.5);
+            });
+
+            doc.end();
+        });
+    }
+}
+
+module.exports = DataExportService;

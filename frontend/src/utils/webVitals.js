@@ -7,7 +7,7 @@ import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
 class WebVitalsMonitor {
     constructor() {
         this.metrics = new Map();
-        this.apiEndpoint = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        this.apiEndpoint = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
         this.sessionId = this.generateSessionId();
         this.isEnabled = import.meta.env.PROD; // Only in production by default
         

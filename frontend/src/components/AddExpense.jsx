@@ -46,7 +46,7 @@ function AddExpense({ onAdd }) {
     }, [t]);
 
     const expenseCategories = categories
-    .filter(category => category.typeId === 1 || category.typeId === 3)
+        .filter(category => category.typeId === 1 || category.typeId === 3)
 
     // Debounced AI suggestion fetching
     const handleDescriptionChange = useCallback((value) => {
@@ -132,7 +132,7 @@ function AddExpense({ onAdd }) {
                 suggestedCategory: selectedAISuggestion?.category || null
             };
 
-                        await post('/add-expense', transactionData);
+            await post('/add-expense', transactionData);
 
             // Use notification system instead of local state
             if (selectedAISuggestion && selectedAISuggestion.category === category) {
