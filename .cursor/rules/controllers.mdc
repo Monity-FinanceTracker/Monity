@@ -1,0 +1,289 @@
+---
+globs: backend/controllers/*.js
+description: Controller layer guidelines for MVC architecture
+---
+
+# Controllers Layer Guidelines
+
+## Purpose
+Controllers handle HTTP requests and coordinate between routes, models, and services. They:
+- Process incoming requests
+- Validate request data
+- Coordinate with models and services
+- Format and return responses
+- Handle errors appropriately
+
+## Controller Structure Template
+
+```javascript
+const { asyncHandler } = require('../utils/helpers');
+const Model = require('../models/Model');
+const Service = require('../services/serviceExample');
+const { validateInput } = require('../utils/validators');
+
+class ResourceController {
+    constructor(supabase) {
+        this.supabase = supabase;
+        this.model = new Model(supabase);
+        this.service = new Service(supabase);
+    }
+
+    // GET /api/resource
+    getAll = asyncHandler(async (req, res) => {
+        const userId = req.user.id;
+        const { page = 1, limit = 10, sortBy = 'created_at', order = 'desc' } = req.query;
+        
+        const options = {
+            limit: parseInt(limit),
+            offset: (parseInt(page) - 1) * parseInt(limit),
+            orderBy: sortBy,
+            ascending: order === 'asc'
+        };
+        
+        const data = await this.model.findByUser(userId, options);
+        const total = await this.model.countByUser(userId);
+        
+        res.status(200).json({
+            success: true,
+            data,
+            pagination: {
+                page: parseInt(page),
+                limit: parseInt(limit),
+                total,
+                pages: Math.ceil(total / parseInt(limit))
+            }
+        });
+    });
+
+    // GET /api/resource/:id
+    getById = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const userId = req.user.id;
+        
+        const data = await this.model.findById(id, userId);
+        
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: 'Resource not found'
+            });
+        }
+        
+        res.status(200).json({
+            success: true,
+            data
+        });
+    });
+
+    // POST /api/resource
+    create = asyncHandler(async (req, res) => {
+        const userId = req.user.id;
+        
+        // Validate input
+        const validationResult = validateInput(req.body, this.getCreateValidationRules());
+        if (!validationResult.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Validation failed',
+                errors: validationResult.errors
+            });
+        }
+        
+        const data = await this.model.create(req.body, userId);
+        
+        // Trigger any post-creation services
+        await this.service.handlePostCreate(data, userId);
+        
+        res.status(201).json({
+            success: true,
+            data,
+            message: 'Resource created successfully'
+        });
+    });
+
+    // PUT /api/resource/:id
+    update = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const userId = req.user.id;
+        
+        // Validate input
+        const validationResult = validateInput(req.body, this.getUpdateValidationRules());
+        if (!validationResult.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Validation failed',
+                errors: validationResult.errors
+            });
+        }
+        
+        const data = await this.model.update(id, req.body, userId);
+        
+        res.status(200).json({
+            success: true,
+            data,
+            message: 'Resource updated successfully'
+        });
+    });
+
+    // DELETE /api/resource/:id
+    delete = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const userId = req.user.id;
+        
+        await this.model.delete(id, userId);
+        
+        res.status(200).json({
+            success: true,
+            message: 'Resource deleted successfully'
+        });
+    });
+
+    // Validation rules
+    getCreateValidationRules() {
+        return {
+            // Define validation rules for creation
+        };
+    }
+
+    getUpdateValidationRules() {
+        return {
+            // Define validation rules for updates
+        };
+    }
+}
+
+module.exports = ResourceController;
+```
+
+## Specific Controllers to Create
+
+### 1. Auth Controller (controllers/authController.js)
+Based on current auth logic in [api.js](mdc:backend/api.js):
+```javascript
+// Methods: login, signup, logout, refreshToken, getProfile, updateProfile
+// Extract from current /auth/login, /auth/signup endpoints
+// Handle JWT token generation and validation
+// Integrate with Supabase Auth
+```
+
+### 2. Transaction Controller (controllers/transactionController.js)
+Based on transaction endpoints in [api.js](mdc:backend/api.js):
+```javascript
+// Methods: getTransactions, createTransaction, updateTransaction, deleteTransaction
+// Methods: getTransactionsByDateRange, getTransactionsByCategory
+// Methods: importTransactions (CSV import functionality)
+// Extract from /expenses, /income, /transactions endpoints
+```
+
+### 3. Category Controller (controllers/categoryController.js)
+```javascript
+// Methods: getCategories, createCategory, updateCategory, deleteCategory
+// Methods: getCategoryStats, getDefaultCategories
+// Handle smart categorization integration
+// Extract from category-related endpoints in api.js
+```
+
+### 4. Group Controller (controllers/groupController.js)
+Based on [expense-splitting.js](mdc:backend/expense-splitting.js):
+```javascript
+// Methods: createGroup, getGroups, updateGroup, deleteGroup
+// Methods: addMember, removeMember, getMembers
+// Methods: createGroupExpense, settleExpense, getGroupBalance
+// Handle invitation and membership management
+```
+
+### 5. Savings Controller (controllers/savingsController.js)
+Based on [savings-goals.js](mdc:backend/savings-goals.js):
+```javascript
+// Methods: createGoal, getGoals, updateGoal, deleteGoal
+// Methods: allocateToGoal, getGoalProgress, getGoalsNearTarget
+// Handle goal progress tracking and notifications
+```
+
+### 6. Analytics Controller (controllers/analyticsController.js)
+Extract analytics logic from [api.js](mdc:backend/api.js):
+```javascript
+// Methods: getSpendingTrends, getCategoryBreakdown, getIncomeVsExpenses
+// Methods: getFinancialHealth, getMonthlyComparison
+// Integrate with financial health service
+```
+
+## Response Format Standards
+
+### Success Response
+```javascript
+{
+    success: true,
+    data: {}, // or []
+    message: "Optional success message",
+    pagination: { // For paginated responses
+        page: 1,
+        limit: 10,
+        total: 100,
+        pages: 10
+    }
+}
+```
+
+### Error Response
+```javascript
+{
+    success: false,
+    message: "Error description",
+    errors: [], // Validation errors array
+    code: "ERROR_CODE" // Optional error code
+}
+```
+
+## Best Practices
+
+### 1. Error Handling
+- Use asyncHandler wrapper for all async methods
+- Always return consistent error responses
+- Log errors for debugging
+- Never expose sensitive information in error messages
+
+### 2. Input Validation
+- Validate all input parameters
+- Use consistent validation rules
+- Return detailed validation errors
+- Sanitize input data
+
+### 3. Authorization
+- Always verify user ownership
+- Check permissions before operations
+- Use middleware for common auth checks
+- Implement role-based access if needed
+
+### 4. Request/Response Handling
+- Use consistent HTTP status codes
+- Implement proper pagination
+- Support filtering and sorting
+- Return meaningful success messages
+
+### 5. Service Integration
+- Delegate business logic to services
+- Keep controllers thin and focused
+- Handle service errors appropriately
+- Maintain separation of concerns
+
+## HTTP Status Codes
+- `200`: Success (GET, PUT, DELETE)
+- `201`: Created (POST)
+- `400`: Bad Request (validation errors)
+- `401`: Unauthorized (authentication required)
+- `403`: Forbidden (insufficient permissions)
+- `404`: Not Found
+- `409`: Conflict (duplicate resource)
+- `422`: Unprocessable Entity (business logic errors)
+- `500`: Internal Server Error
+
+## Migration from Current Code
+When migrating from [api.js](mdc:backend/api.js):
+1. Group related endpoints by resource
+2. Extract route handlers into controller methods
+3. Move validation logic to controller level
+4. Standardize response formats
+5. Implement proper error handling
+6. Add pagination and filtering support
+7. Maintain existing functionality while improving structure

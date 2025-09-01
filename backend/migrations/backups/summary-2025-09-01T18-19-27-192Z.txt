@@ -1,0 +1,16 @@
+Database Backup Summary
+========================
+Timestamp: 2025-09-01T18:19:27.200Z
+Encryption Key Hash: 21401eac1d21a0b6
+
+Tables Backed Up:
+  - transactions: 29 records
+  - categories: 21 records
+  - savings_goals: 0 records
+  - groups: 8 records
+  - group_expenses: 4 records
+  - recurring_transactions: 0 records
+  - profiles: 17 records
+  - budgets: 4 records
+
+Total Records: 83

@@ -8,6 +8,8 @@ export const useAuth = () => {
     return useContext(AuthContext);
 };
 
+let subscriptionCheckPromise = null;
+
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -15,13 +17,23 @@ export function AuthProvider({ children }) {
     const [subscriptionTier, setSubscriptionTier] = useState('free');
 
     const refreshSubscription = useCallback(async () => {
-        try {
-            const tier = await checkSubscription();
-            setSubscriptionTier(tier);
-        } catch (error) {
-            console.error('Failed to refresh subscription tier:', error);
-            setSubscriptionTier('free');
+        if (subscriptionCheckPromise) {
+            return subscriptionCheckPromise;
         }
+        subscriptionCheckPromise = (async () => {
+            try {
+                const tier = await checkSubscription();
+                setSubscriptionTier(tier);
+                return tier;
+            } catch (error) {
+                console.error('Failed to refresh subscription tier:', error);
+                setSubscriptionTier('free');
+                return 'free';
+            } finally {
+                subscriptionCheckPromise = null;
+            }
+        })();
+        return subscriptionCheckPromise;
     }, []);
 
     useEffect(() => {

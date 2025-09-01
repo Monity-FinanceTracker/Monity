@@ -38,8 +38,28 @@ function BalanceChart({ selectedRange }){
                     return;
                 }
                 const balancePromises = months.map(monthStr => {
-                    const [year, month] = monthStr.split('/');
-                    return get(`/balance/${year}/${month}`);
+                    const parts = monthStr.split('/');
+                    
+                    // Handle malformed data - if we get more than 2 parts or invalid year/month
+                    let year, month;
+                    if (parts.length === 2) {
+                        [year, month] = parts;
+                    } else {
+                        console.warn('Malformed month string:', monthStr);
+                        // Skip this month if malformed
+                        return Promise.resolve({ data: { balance: 0 } });
+                    }
+                    
+                    // Validate year and month
+                    const yearNum = parseInt(year);
+                    const monthNum = parseInt(month);
+                    
+                    if (isNaN(yearNum) || isNaN(monthNum) || yearNum < 2000 || yearNum > 2100 || monthNum < 1 || monthNum > 12) {
+                        console.warn('Invalid year/month:', { year, month, yearNum, monthNum });
+                        return Promise.resolve({ data: { balance: 0 } });
+                    }
+                    
+                    return get(`/balance/${month}/${year}`);
                 });
 
                 const balanceResponses = await Promise.all(balancePromises);

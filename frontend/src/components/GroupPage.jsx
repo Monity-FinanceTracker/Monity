@@ -37,8 +37,12 @@ const GroupPage = () => {
                 setShares(initialShares);
             }
         } catch (err) {
-            setError(t('groups.fetch_fail'));
-            console.error(err);
+            console.error('Error fetching group:', err);
+            if (err.response?.status === 404) {
+                setError('Group not found or you are not a member of this group.');
+            } else {
+                setError(t('groups.fetch_fail'));
+            }
         } finally {
             setLoading(false);
         }

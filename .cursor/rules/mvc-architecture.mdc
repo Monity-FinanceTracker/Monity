@@ -1,0 +1,104 @@
+---
+alwaysApply: true
+description: MVC Architecture Guidelines for Backend Refactoring
+---
+
+# MVC Architecture Guidelines for Monity Backend
+
+## Overview
+This project is transitioning from a monolithic Express.js structure to a proper MVC (Model-View-Controller) architecture. Follow these guidelines to ensure consistency and maintainability.
+
+## Target Directory Structure
+```
+backend/
+├── server.js                 # Main application entry point
+├── config/
+│   ├── database.js           # Database configuration
+│   ├── env.js               # Environment configuration
+│   └── supabase.js          # Supabase client setup
+├── models/
+│   ├── User.js              # User model
+│   ├── Transaction.js       # Transaction model
+│   ├── Category.js          # Category model
+│   ├── Group.js             # Group model
+│   ├── SavingsGoal.js       # Savings goal model
+│   └── index.js             # Model exports
+├── controllers/
+│   ├── authController.js    # Authentication logic
+│   ├── transactionController.js
+│   ├── categoryController.js
+│   ├── groupController.js
+│   ├── savingsController.js
+│   └── index.js             # Controller exports
+├── routes/
+│   ├── auth.js              # Authentication routes
+│   ├── transactions.js      # Transaction routes
+│   ├── categories.js        # Category routes
+│   ├── groups.js            # Group routes
+│   ├── savings.js           # Savings routes
+│   └── index.js             # Route aggregation
+├── services/
+│   ├── smartCategorizationService.js
+│   ├── aiSchedulerService.js
+│   ├── expenseSplittingService.js
+│   ├── financialHealthService.js
+│   ├── cacheService.js
+│   └── index.js             # Service exports
+├── middleware/
+│   ├── auth.js              # Authentication middleware
+│   ├── validation.js        # Input validation
+│   ├── encryption.js        # Encryption middleware
+│   ├── errorHandler.js      # Error handling
+│   └── index.js             # Middleware exports
+├── utils/
+│   ├── constants.js         # Application constants
+│   ├── helpers.js           # Utility functions
+│   └── validators.js        # Validation helpers
+└── __tests__/               # Test files (maintain current structure)
+```
+
+## Architecture Principles
+
+### 1. Separation of Concerns
+- **Models**: Handle data structure, validation, and database operations
+- **Controllers**: Process requests, coordinate between models and services, return responses
+- **Routes**: Define API endpoints and delegate to controllers
+- **Services**: Contain business logic and complex operations
+- **Middleware**: Handle cross-cutting concerns (auth, validation, logging)
+
+### 2. Current Files Migration Map
+- [api.js](mdc:backend/api.js) → Split into multiple controllers and routes
+- [smart-categorization.js](mdc:backend/smart-categorization.js) → services/smartCategorizationService.js
+- [savings-goals.js](mdc:backend/savings-goals.js) → controllers/savingsController.js + models/SavingsGoal.js
+- [expense-splitting.js](mdc:backend/expense-splitting.js) → services/expenseSplittingService.js
+- [ai-scheduler.js](mdc:backend/ai-scheduler.js) → services/aiSchedulerService.js
+- [cache-service.js](mdc:backend/cache-service.js) → services/cacheService.js
+- [financial-health.js](mdc:backend/financial-health.js) → services/financialHealthService.js
+- [security/](mdc:backend/security/) → middleware/ (restructured)
+
+### 3. Naming Conventions
+- Controllers: `{resource}Controller.js` (e.g., `userController.js`)
+- Models: `{Resource}.js` (e.g., `User.js`, `Transaction.js`)
+- Services: `{domain}Service.js` (e.g., `emailService.js`)
+- Routes: `{resource}.js` (e.g., `users.js`, `transactions.js`)
+- Middleware: `{purpose}.js` (e.g., `auth.js`, `validation.js`)
+
+### 4. Error Handling
+- Use centralized error handling middleware
+- Consistent error response format
+- Proper HTTP status codes
+- Logging for debugging and monitoring
+
+### 5. Environment Configuration
+Use [backend/.env](mdc:backend/.env) variables with proper validation:
+- `SUPABASE_URL`: Supabase project URL
+- `SUPABASE_ANON_KEY`: Anonymous key for client operations
+- `SUPABASE_KEY`: Service role key for admin operations
+- `NODE_ENV`: Environment (development/production)
+- `PORT`: Server port
+
+### 6. Database Integration
+- Use Supabase client consistently across models
+- Implement proper connection pooling
+- Use service role key only for admin operations
+- Use anonymous key for user operations with RLS
