@@ -1,0 +1,61 @@
+# Frontend Architecture & Coding Standards
+
+## React Patterns
+- Use functional components with hooks
+- Implement proper state management with useState/useEffect
+- Use React Router for navigation
+- Follow React best practices for performance
+
+## Component Structure
+- Organize components in logical folders
+- Use descriptive component names (PascalCase)
+- Implement proper prop validation
+- Keep components focused and single-purpose
+- Export components through index files
+
+## State Management
+- Use React Context for global state (AuthContext)
+- Implement local state for component-specific data
+- Use custom hooks for reusable logic
+- Avoid prop drilling by using context appropriately
+
+## Styling Standards
+- Use Tailwind CSS for styling
+- Follow mobile-first responsive design
+- Use consistent color schemes and spacing
+- Implement dark mode support
+- Use CSS Grid and Flexbox for layouts
+
+## Internationalization
+- Use react-i18next for multi-language support
+- Support English and Portuguese
+- Implement proper text extraction
+- Use translation keys consistently
+
+## API Integration
+- Use axios for HTTP requests
+- Implement proper error handling
+- Use loading states for async operations
+- Handle API responses consistently
+
+## Performance
+- Implement lazy loading for routes
+- Use React.memo for expensive components
+- Optimize re-renders with useCallback/useMemo
+- Implement proper loading and error states
+
+## Testing
+- Use Vitest for testing
+- Test component rendering and interactions
+- Mock API calls appropriately
+- Test user flows and edge cases
+
+## Accessibility
+- Use semantic HTML elements
+- Implement proper ARIA labels
+- Ensure keyboard navigation works
+- Test with screen readers
+description:
+globs:
+alwaysApply: true
+---

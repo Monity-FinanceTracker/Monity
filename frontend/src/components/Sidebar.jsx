@@ -136,6 +136,22 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 <span>{t('sidebar.savings_goals')}</span>
               </NavLink>
 
+              <NavLink
+                to="/financial-health"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
+                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
+                    : 'text-white hover:bg-[#31344d]'
+                  }`
+                }
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>{t('sidebar.financial_health')}</span>
+              </NavLink>
+
               {!premiumUser && (
                 <NavLink
                   to="/subscription"

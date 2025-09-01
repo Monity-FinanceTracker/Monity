@@ -1,0 +1,61 @@
+# Testing Standards & Best Practices
+
+## Backend Testing (Jest + Supertest)
+- Use Jest as the primary testing framework
+- Use Supertest for API endpoint testing
+- Mock external dependencies (Supabase, external APIs)
+- Test all controller methods and edge cases
+- Validate response formats and status codes
+
+## Frontend Testing (Vitest)
+- Use Vitest for React component testing
+- Test component rendering and user interactions
+- Mock API calls and external dependencies
+- Test component state changes and effects
+- Validate accessibility and responsive behavior
+
+## Test Structure
+- Organize tests by feature or component
+- Use descriptive test names that explain the scenario
+- Group related tests using describe blocks
+- Use beforeEach/afterEach for setup and cleanup
+- Implement proper test isolation
+
+## Test Coverage
+- Aim for high test coverage (80%+)
+- Test happy path scenarios
+- Test error conditions and edge cases
+- Test input validation and sanitization
+- Test authentication and authorization flows
+
+## Mocking Strategy
+- Mock database operations
+- Mock external API calls
+- Mock authentication and user context
+- Use realistic test data
+- Avoid testing implementation details
+
+## Integration Testing
+- Test API endpoints with real database operations
+- Test complete user workflows
+- Test authentication flows end-to-end
+- Test error handling across layers
+- Validate data consistency
+
+## Performance Testing
+- Test API response times
+- Test component rendering performance
+- Test database query performance
+- Monitor memory usage during tests
+- Test with realistic data volumes
+
+## Test Data Management
+- Use factories for creating test data
+- Clean up test data after each test
+- Use separate test database when possible
+- Implement proper test data seeding
+- Avoid hardcoded test values
+description:
+globs:
+alwaysApply: true
+---

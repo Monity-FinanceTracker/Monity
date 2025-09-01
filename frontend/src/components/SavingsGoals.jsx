@@ -29,6 +29,7 @@ const SavingsGoals = () => {
         current_amount: ''
     });
     const [addingMoney, setAddingMoney] = useState({});
+    const [withdrawingMoney, setWithdrawingMoney] = useState({});
     const [balance, setBalance] = useState(0);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,16 +95,48 @@ const SavingsGoals = () => {
         }
     };
 
+    const handleWithdrawMoney = async (goalId, amount) => {
+        try {
+            await api.post(`/savings-goals/${goalId}/withdraw`, { amount });
+            fetchGoalsAndBalance(); // Refetch data
+            setWithdrawingMoney(prev => ({ ...prev, [goalId]: { isWithdrawing: false, amount: '' } }));
+        } catch (error) {
+            console.error('Error withdrawing money:', error);
+            if (error.response?.data?.error) {
+                setError(error.response.data.error);
+            }
+        }
+    };
+
     const handleAddMoneyClick = (goalId) => {
         setAddingMoney(prev => ({
             ...prev,
             [goalId]: { isAdding: !prev[goalId]?.isAdding, amount: '' }
         }));
+        // Close withdraw if open
+        setWithdrawingMoney(prev => ({ ...prev, [goalId]: { isWithdrawing: false, amount: '' } }));
+    };
+
+    const handleWithdrawMoneyClick = (goalId) => {
+        setWithdrawingMoney(prev => ({
+            ...prev,
+            [goalId]: { isWithdrawing: !prev[goalId]?.isWithdrawing, amount: '' }
+        }));
+        // Close add if open
+        setAddingMoney(prev => ({ ...prev, [goalId]: { isAdding: false, amount: '' } }));
     };
 
     const handleAmountChange = (e, goalId) => {
         const { value } = e.target;
         setAddingMoney(prev => ({
+            ...prev,
+            [goalId]: { ...prev[goalId], amount: value }
+        }));
+    };
+
+    const handleWithdrawAmountChange = (e, goalId) => {
+        const { value } = e.target;
+        setWithdrawingMoney(prev => ({
             ...prev,
             [goalId]: { ...prev[goalId], amount: value }
         }));
@@ -186,10 +219,15 @@ const SavingsGoals = () => {
                                     <span>${parseFloat(goal.current_amount).toLocaleString()}</span>
                                     <span>${parseFloat(goal.target_amount).toLocaleString()}</span>
                                 </div>
-                                <div className="mt-4">
+                                <div className="mt-4 flex space-x-4">
                                     <button onClick={() => handleAddMoneyClick(goal.id)} className="text-[#01C38D] hover:underline font-semibold">
                                         {addingMoney[goal.id]?.isAdding ? t('common.cancel') : t('savings_goals.allocate_funds')}
                                     </button>
+                                    {parseFloat(goal.current_amount) > 0 && (
+                                        <button onClick={() => handleWithdrawMoneyClick(goal.id)} className="text-orange-500 hover:underline font-semibold">
+                                            {withdrawingMoney[goal.id]?.isWithdrawing ? t('common.cancel') : t('savings_goals.withdraw_funds')}
+                                        </button>
+                                    )}
                                 </div>
                                 {addingMoney[goal.id]?.isAdding && (
                                     <div className="mt-4 flex items-center">
@@ -214,6 +252,33 @@ const SavingsGoals = () => {
                                             disabled={parseFloat(addingMoney[goal.id]?.amount || 0) > balance || !addingMoney[goal.id]?.amount}
                                         >
                                             {t('common.save')}
+                                        </button>
+                                    </div>
+                                )}
+                                {withdrawingMoney[goal.id]?.isWithdrawing && (
+                                    <div className="mt-4 flex items-center">
+                                        <input
+                                            type="number"
+                                            value={withdrawingMoney[goal.id].amount}
+                                            onChange={(e) => handleWithdrawAmountChange(e, goal.id)}
+                                            placeholder={t('savings_goals.withdraw_amount_placeholder')}
+                                            max={goal.current_amount}
+                                            className="p-2 border rounded w-full"
+                                        />
+                                        <button
+                                            onClick={() => {
+                                                const amountToWithdraw = parseFloat(withdrawingMoney[goal.id].amount);
+                                                if (amountToWithdraw > parseFloat(goal.current_amount)) {
+                                                    setError(t('savings_goals.insufficient_saved_amount_error'));
+                                                    return;
+                                                }
+                                                setError(null);
+                                                handleWithdrawMoney(goal.id, amountToWithdraw);
+                                            }}
+                                            className="bg-orange-500 text-white p-2 rounded ml-2"
+                                            disabled={!withdrawingMoney[goal.id]?.amount || parseFloat(withdrawingMoney[goal.id]?.amount || 0) > parseFloat(goal.current_amount)}
+                                        >
+                                            {t('savings_goals.withdraw')}
                                         </button>
                                     </div>
                                 )}

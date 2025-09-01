@@ -117,7 +117,7 @@ function ExpenseChart() {
     };
 
     return (
-        <div className="bg-transparent rounded-xl " style={{ width: 340, height: 340, margin: "0 auto" }}>
+        <div className="bg-transparent rounded-xl flex justify-center items-center w-full h-full" style={{ minHeight: 340 }}>
             <Doughnut data={chartData} options={chartOptions} />
         </div>
     )
