@@ -16,12 +16,32 @@ const createServer = (supabaseClient) => {
     
     // --- Pre-router Middleware ---
     app.use(helmet());
-    app.use(cors({
-        origin: process.env.CLIENT_URL || 'http://localhost:5173',
-        credentials: true,
-    }));
-
     
+    // CORS configuration for production and development
+    const corsOptions = {
+        origin: function (origin, callback) {
+            // Allow requests with no origin (mobile apps, etc.)
+            if (!origin) return callback(null, true);
+            
+            const allowedOrigins = [
+                'http://localhost:5173',           // Local development
+                'http://localhost:3000',           // Alternative local port
+                'https://firstmonity.vercel.app',  // Production frontend
+                process.env.CLIENT_URL             // Environment variable override
+            ].filter(Boolean); // Remove undefined values
+            
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                logger.warn('CORS blocked request from origin:', origin);
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true,
+        optionsSuccessStatus: 200
+    };
+    
+    app.use(cors(corsOptions));
     
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -43,12 +63,10 @@ const createServer = (supabaseClient) => {
 const app = createServer();
 const PORT = process.env.PORT || 3000;
 
-// --- Server Startup ---
-if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {
-        logger.info(`Server running on port ${PORT}`);
-        console.log('Encryption-key:', process.env.ENCRYPTION_KEY);
-    });
-}
+app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`);
+    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    logger.info(`CORS enabled for origins: ${process.env.CLIENT_URL || 'http://localhost:5173, https://firstmonity.vercel.app'}`);
+});
 
 module.exports = { createServer, app };

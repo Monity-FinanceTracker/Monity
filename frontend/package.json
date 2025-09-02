@@ -26,7 +26,8 @@
     "react-toastify": "^11.0.5",
     "react-window": "^2.0.2",
     "react-window-infinite-loader": "^1.0.10",
-    "recharts": "^3.1.0"
+    "recharts": "^3.1.0",
+    "web-vitals": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

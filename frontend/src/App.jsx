@@ -2,34 +2,36 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import AddExpense from './components/AddExpense'
-import AddIncome from './components/AddIncome'
-import EnhancedDashboard from './components/EnhancedDashboard'
-import ImprovedTransactionList from './components/ImprovedTransactionList'
-import Sidebar from './components/Sidebar'
-import Login from './components/Login'
-import Signup from './components/Signup'
-import EnhancedCategories from './components/EnhancedCategories'
-import EnhancedSettings from './components/EnhancedSettings'
-import AdminDashboard from './components/AdminDashboard'
-import EnhancedBudgets from './components/EnhancedBudgets'
-import Subscription from './components/Subscription'
-import PremiumPage from './components/PremiumPage'
+import { 
+  AddExpense, 
+  AddIncome, 
+  EnhancedDashboard, 
+  ImprovedTransactionList, 
+  Sidebar, 
+  Login, 
+  Signup, 
+  EnhancedCategories, 
+  EnhancedSettings, 
+  AdminDashboard, 
+  EnhancedBudgets, 
+  Subscription, 
+  PremiumPage, 
+  Spinner, 
+  UnifiedTopBar, 
+  NotificationProvider, 
+  SavingsGoals, 
+  TotalExpenses, 
+  DateRangeFilter, 
+  LanguageSwitcher, 
+  Groups, 
+  CreateGroup, 
+  GroupPage, 
+  Savings, 
+  FinancialHealth 
+} from './components'
 import { useAuth } from './context/AuthContext'
-import Spinner from './components/Spinner'
 import { useEffect, useState } from 'react'
-import UnifiedTopBar from './components/UnifiedTopBar'
-import { NotificationProvider } from './components/NotificationSystem'
 import { isPremium } from './utils/premium'
-import SavingsGoals from './components/SavingsGoals';
-import TotalExpenses from './components/TotalExpenses';
-import DateRangeFilter from './components/DateRangeFilter';
-import LanguageSwitcher from './components/LanguageSwitcher';
-import Groups from './components/Groups';
-import CreateGroup from './components/CreateGroup';
-import GroupPage from './components/GroupPage';
-import Savings from './components/Savings';
-import FinancialHealth from './components/FinancialHealth';
 
 
 // Protected route component
