@@ -77,6 +77,21 @@ export const getRecurringTransactions = async () => {
     return data;
 };
 
+export const addRecurringTransaction = async (transaction) => {
+    const { data } = await API.post('/recurring-transactions', transaction);
+    return data;
+};
+
+export const updateRecurringTransaction = async (id, transaction) => {
+    const { data } = await API.put(`/recurring-transactions/${id}`, transaction);
+    return data;
+};
+
+export const deleteRecurringTransaction = async (id) => {
+    const { data } = await API.delete(`/recurring-transactions/${id}`);
+    return data;
+};
+
 export const addTransaction = async (transaction) => {
     const { data } = await API.post('/transactions', transaction);
     return data;

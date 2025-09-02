@@ -1,4 +1,4 @@
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFCP, onLCP, onTTFB } from 'web-vitals';
 
 /**
  * Web Vitals Performance Monitoring
@@ -31,11 +31,10 @@ class WebVitalsMonitor {
         console.log('[WebVitals] Monitoring initialized');
 
         // Core Web Vitals
-        getCLS(this.handleMetric.bind(this), true);
-        getFID(this.handleMetric.bind(this));
-        getFCP(this.handleMetric.bind(this));
-        getLCP(this.handleMetric.bind(this), true);
-        getTTFB(this.handleMetric.bind(this));
+        onCLS(this.handleMetric.bind(this));
+        onFCP(this.handleMetric.bind(this));
+        onLCP(this.handleMetric.bind(this));
+        onTTFB(this.handleMetric.bind(this));
 
         // Custom performance metrics
         this.trackNavigationTiming();
@@ -414,11 +413,10 @@ export default webVitalsMonitor;
 // Export helper functions
 export const reportWebVitals = (onPerfEntry) => {
     if (onPerfEntry && onPerfEntry instanceof Function) {
-        getCLS(onPerfEntry);
-        getFID(onPerfEntry);
-        getFCP(onPerfEntry);
-        getLCP(onPerfEntry);
-        getTTFB(onPerfEntry);
+        onCLS(onPerfEntry);
+        onFCP(onPerfEntry);
+        onLCP(onPerfEntry);
+        onTTFB(onPerfEntry);
     }
 };
 
