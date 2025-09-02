@@ -1,32 +1,27 @@
-const winston = require('winston');
 const morgan = require('morgan');
 const config = require('../config/env');
 
-const logger = winston.createLogger({
-    level: config.LOG_LEVEL || 'info',
-    format: winston.format.combine(
-        winston.format.timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss'
-        }),
-        winston.format.errors({ stack: true }),
-        winston.format.splat(),
-        winston.format.json()
-    ),
-    defaultMeta: { service: 'monity-backend' },
-    transports: [
-        new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'logs/combined.log' })
-    ]
-});
-
-if (config.NODE_ENV !== 'production') {
-    logger.add(new winston.transports.Console({
-        format: winston.format.combine(
-            winston.format.colorize(),
-            winston.format.simple()
-        )
-    }));
-}
+// Simple console logger
+const logger = {
+    info: (message, meta = {}) => {
+        const timestamp = new Date().toISOString();
+        console.log(`[${timestamp}] INFO: ${message}`, meta);
+    },
+    error: (message, meta = {}) => {
+        const timestamp = new Date().toISOString();
+        console.error(`[${timestamp}] ERROR: ${message}`, meta);
+    },
+    warn: (message, meta = {}) => {
+        const timestamp = new Date().toISOString();
+        console.warn(`[${timestamp}] WARN: ${message}`, meta);
+    },
+    debug: (message, meta = {}) => {
+        if (config.NODE_ENV !== 'production') {
+            const timestamp = new Date().toISOString();
+            console.log(`[${timestamp}] DEBUG: ${message}`, meta);
+        }
+    }
+};
 
 const stream = {
     write: (message) => logger.info(message.trim()),
