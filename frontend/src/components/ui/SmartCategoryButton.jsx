@@ -43,7 +43,7 @@ const SmartCategoryButton = ({ suggestion, onAccept, isVisible }) => {
                 </button>
             </div>
             <div className="mt-2 text-xs text-gray-500">
-                💡 {t('smartCategorization.auto_create_hint')}
+                <i className="ri-lightbulb-line mr-2"></i>{t('smartCategorization.auto_create_hint')}
             </div>
         </div>
     );

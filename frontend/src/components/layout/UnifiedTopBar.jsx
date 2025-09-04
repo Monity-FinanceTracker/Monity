@@ -38,13 +38,13 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     const getQuickActions = (query) => {
         const lowerQuery = query.toLowerCase();
         const actions = [
-            { path: '/add-expense', label: t('quickActions.add_expense'), icon: '💸', keywords: ['expense', 'despesa', 'add', 'new', 'criar'] },
-            { path: '/add-income', label: t('quickActions.add_income'), icon: '💰', keywords: ['income', 'receita', 'salary', 'salario'] },
-            { path: '/transactions', label: t('quickActions.view_transactions'), icon: '📊', keywords: ['transaction', 'history', 'historico'] },
-            { path: '/budgets', label: t('quickActions.manage_budgets'), icon: '🎯', keywords: ['budget', 'orcamento', 'limit'] },
+            { path: '/add-expense', label: t('quickActions.add_expense'), icon: <i className="ri-money-dollar-box-line"></i>, keywords: ['expense', 'despesa', 'add', 'new', 'criar'] },
+            { path: '/add-income', label: t('quickActions.add_income'), icon: <i className="ri-money-dollar-circle-line"></i>, keywords: ['income', 'receita', 'salary', 'salario'] },
+            { path: '/transactions', label: t('quickActions.view_transactions'), icon: <i className="ri-line-chart-line"></i>, keywords: ['transaction', 'history', 'historico'] },
+            { path: '/budgets', label: t('quickActions.manage_budgets'), icon: <span className="material-symbols-outlined">ads_click</span>, keywords: ['budget', 'orcamento', 'limit'] },
             { path: '/groups', label: t('quickActions.view_groups'), icon: '👥', keywords: ['group', 'grupo', 'split', 'shared'] },
             { path: '/categories', label: t('quickActions.manage_categories'), icon: '🏷️', keywords: ['category', 'categoria', 'organize'] },
-            { path: '/settings', label: t('quickActions.settings'), icon: '⚙️', keywords: ['settings', 'configuracoes', 'profile'] },
+            { path: '/settings', label: t('quickActions.settings'), icon: <i className="ri-settings-3-line"></i>, keywords: ['settings', 'configuracoes', 'profile'] },
         ];
 
         if (!query) return actions.slice(0, 4); // Show top 4 when no search
@@ -213,7 +213,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         >
                             <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
                                 <span className="text-[#191E29] text-sm font-bold">
-                                    {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
+                                    {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : <i className="ri-user-line"></i>}
                                 </span>
                             </div>
                             <span className="hidden md:inline text-white font-medium">

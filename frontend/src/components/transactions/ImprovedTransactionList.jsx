@@ -191,7 +191,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                         transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                     }`}>
-                        {transaction.typeId === 1 ? '💸' : '💰'}
+                        {transaction.typeId === 1 ? <i className="ri-money-dollar-box-line"></i> : <i className="fa-solid fa-dollar-sign"></i>}
                     </div>
                     
                     <div>
@@ -324,7 +324,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                             onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
                             className="bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
                         >
-                            🔍 {t('transactions.filters')}
+                            <i className="ri-search-line mr-2"></i>{t('transactions.filters')}
                         </button>
                     </div>
                 </div>
@@ -435,7 +435,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
 
                 {filteredTransactions.length === 0 ? (
                     <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-12 text-center">
-                        <div className="text-6xl mb-4">📊</div>
+                        <div className="text-6xl mb-4"><i className="ri-line-chart-line"></i></div>
                         <h3 className="text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
                         <p className="text-gray-400 mb-6">{t('transactions.no_transactions_desc')}</p>
                         <div className="flex gap-4 justify-center">
@@ -443,13 +443,13 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                                 to="/add-expense"
                                 className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors"
                             >
-                                💸 {t('transactions.add_expense')}
+                                <i className="ri-money-dollar-box-line mr-2"></i>{t('transactions.add_expense')}
                             </Link>
                             <Link
                                 to="/add-income"
                                 className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
                             >
-                                💰 {t('transactions.add_income')}
+                                <i className="fa-solid fa-dollar-sign mr-2"></i>{t('transactions.add_income')}
                             </Link>
                         </div>
                     </div>

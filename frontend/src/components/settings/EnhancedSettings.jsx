@@ -162,10 +162,10 @@ const EnhancedSettings = () => {
     };
 
     const tabs = [
-        { id: 'profile', label: t('settings.profile'), icon: '👤' },
-        { id: 'security', label: t('settings.security'), icon: '🔒' },
-        { id: 'subscription', label: t('settings.subscription'), icon: '💳' },
-        { id: 'preferences', label: t('settings.preferences'), icon: '⚙️' },
+        { id: 'profile', label: t('settings.profile'), icon: <i className="ri-user-line"></i> },
+        { id: 'security', label: t('settings.security'), icon: <i className="ri-lock-line"></i> },
+        { id: 'subscription', label: t('settings.subscription'), icon: <i className="ri-bank-card-line"></i> },
+        { id: 'preferences', label: t('settings.preferences'), icon: <i className="ri-settings-3-line"></i> },
         { id: 'account', label: t('settings.account'), icon: '🗃️' }
     ];
 

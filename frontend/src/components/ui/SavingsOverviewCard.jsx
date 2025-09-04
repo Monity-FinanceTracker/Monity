@@ -65,13 +65,13 @@ const SavingsOverviewCard = () => {
                         {t('savings_goals.title')}
                     </h3>
                     <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">💰</span>
+                        <i className="fa-solid fa-dollar-sign text-white text-sm"></i>
                     </div>
                 </div>
                 
                 <div className="text-center py-8">
                     <div className="mb-4">
-                        <span className="text-4xl">💰</span>
+                        <i className="fa-solid fa-dollar-sign text-4xl"></i>
                     </div>
                     <p className="text-gray-500 dark:text-gray-400 mb-6 text-lg">
                         {t('savings_goals.no_goals_yet')}
@@ -94,7 +94,7 @@ const SavingsOverviewCard = () => {
                     {t('savings_goals.title')}
                 </h3>
                 <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">💰</span>
+                    <i className="fa-solid fa-dollar-sign text-white text-sm"></i>
                 </div>
             </div>
 

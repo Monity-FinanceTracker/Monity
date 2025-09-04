@@ -20,7 +20,7 @@ const EnhancedCategories = () => {
         name: '',
         typeId: 1,
         color: '#01C38D',
-        icon: '📦'
+        icon: <i className="ri-box-line"></i>
     });
     
     const categoryTypes = [
@@ -37,8 +37,8 @@ const EnhancedCategories = () => {
     ];
 
     const iconOptions = [
-        '🏠', '🍕', '🚗', '💰', '🎬', '🛒', '🏥', '📚',
-        '✈️', '⚡', '🎵', '🏋️', '👔', '🎮', '🍔', '📱'
+        <i className="ri-home-line"></i>, <i className="ri-restaurant-line"></i>, <i className="ri-car-line"></i>, <i className="ri-money-dollar-circle-line"></i>, <i className="ri-movie-line"></i>, <i className="ri-shopping-cart-line"></i>, <i className="ri-hospital-line"></i>, <i className="ri-book-line"></i>,
+        <i className="ri-plane-line"></i>, <i className="ri-flashlight-line"></i>, <i className="ri-music-line"></i>, <i className="ri-run-line"></i>, <i className="ri-suitcase-line"></i>, <i className="ri-gamepad-line"></i>, <i className="ri-hamburger-line"></i>, <i className="ri-smartphone-line"></i>
     ];
 
     useEffect(() => {
@@ -63,7 +63,7 @@ const EnhancedCategories = () => {
         try {
             const { data } = await post('/categories', newCategory);
             setCategories(prev => [...prev, data]);
-            setNewCategory({ name: '', typeId: 1, color: '#01C38D', icon: '📦' });
+            setNewCategory({ name: '', typeId: 1, color: '#01C38D', icon: <i className="ri-box-line"></i> });
             setShowAddForm(false);
             success(t('categories.add_success'));
         } catch (error) {
@@ -151,7 +151,7 @@ const EnhancedCategories = () => {
             {filteredCategories.length === 0 ? (
                 searchQuery ? (
                     <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-12 text-center">
-                        <div className="text-4xl mb-4">🔍</div>
+                        <div className="text-4xl mb-4"><i className="ri-search-line"></i></div>
                         <h3 className="text-white text-lg font-medium mb-2">{t('categories.no_results')}</h3>
                         <p className="text-gray-400">{t('categories.no_results_desc')}</p>
                     </div>
@@ -171,7 +171,7 @@ const EnhancedCategories = () => {
                                         className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
                                         style={{ backgroundColor: category.color || '#01C38D' }}
                                     >
-                                        {category.icon || '📦'}
+                                        {category.icon || <i className="ri-box-line"></i>}
                                     </div>
                                     <div>
                                         <h3 className="text-white font-medium">{category.name}</h3>

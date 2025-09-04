@@ -148,9 +148,9 @@ const VirtualizedTransactionList = React.memo(({
 
         const getTypeIcon = (typeId) => {
             switch (typeId) {
-                case 1: return '💸'; // Expense
-                case 2: return '💰'; // Income
-                case 3: return '🏦'; // Savings
+                case 1: return <i className="ri-money-dollar-box-line"></i>; // Expense
+                case 2: return <i className="fa-solid fa-dollar-sign"></i>; // Income
+                case 3: return <i className="ri-bank-line"></i>; // Savings
                 default: return '📄';
             }
         };
@@ -268,7 +268,7 @@ const VirtualizedTransactionList = React.memo(({
 
             {transactions.length === 0 && !isLoading ? (
                 <div className="text-center py-12">
-                    <div className="text-6xl mb-4">📊</div>
+                    <div className="text-6xl mb-4"><i className="ri-line-chart-line"></i></div>
                     <p className="text-gray-400 text-lg">
                         {searchQuery ? t('transactions.no_results') : t('transactions.no_transactions')}
                     </p>

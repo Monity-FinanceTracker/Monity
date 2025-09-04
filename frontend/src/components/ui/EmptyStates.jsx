@@ -71,20 +71,20 @@ export const EmptyTransactions = () => {
     
     return (
         <EmptyStateBase
-            icon="📊"
+            icon={<i className="ri-line-chart-line"></i>}
             title={t('emptyStates.transactions.title')}
             description={t('emptyStates.transactions.description')}
             actions={[
                 {
                     label: t('emptyStates.transactions.add_expense'),
                     href: '/add-expense',
-                    icon: '💸',
+                    icon: <i className="ri-money-dollar-box-line"></i>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.transactions.add_income'),
                     href: '/add-income',
-                    icon: '💰'
+                    icon: <i className="ri-money-dollar-circle-line"></i>
                 }
             ]}
         />
@@ -96,14 +96,14 @@ export const EmptyExpenses = () => {
     
     return (
         <EmptyStateBase
-            icon="💸"
+            icon={<i className="ri-money-dollar-box-line"></i>}
             title={t('emptyStates.expenses.title')}
             description={t('emptyStates.expenses.description')}
             actions={[
                 {
                     label: t('emptyStates.expenses.add_first'),
                     href: '/add-expense',
-                    icon: '➕',
+                    icon: <i className="ri-add-line"></i>,
                     primary: true
                 },
                 {
@@ -121,14 +121,14 @@ export const EmptyIncome = () => {
     
     return (
         <EmptyStateBase
-            icon="💰"
+            icon={<i className="ri-money-dollar-circle-line"></i>}
             title={t('emptyStates.income.title')}
             description={t('emptyStates.income.description')}
             actions={[
                 {
                     label: t('emptyStates.income.add_first'),
                     href: '/add-income',
-                    icon: '➕',
+                    icon: <i className="ri-add-line"></i>,
                     primary: true
                 },
                 {
@@ -153,7 +153,7 @@ export const EmptyCategories = () => {
                 {
                     label: t('emptyStates.categories.create_first'),
                     href: '/categories',
-                    icon: '➕',
+                    icon: <i className="ri-add-line"></i>,
                     primary: true
                 },
                 {
@@ -178,7 +178,7 @@ export const EmptyGroups = () => {
                 {
                     label: t('emptyStates.groups.create_first'),
                     href: '/groups/create',
-                    icon: '➕',
+                    icon: <i className="ri-add-line"></i>,
                     primary: true
                 },
                 {
@@ -196,7 +196,7 @@ export const EmptyBudgets = () => {
     
     return (
         <EmptyStateBase
-            icon="🎯"
+            icon={<span className="material-symbols-outlined">ads_click</span>}
             title={t('emptyStates.budgets.title')}
             description={t('emptyStates.budgets.description')}
         />
@@ -208,20 +208,20 @@ export const EmptySearchResults = ({ query }) => {
     
     return (
         <EmptyStateBase
-            icon="🔍"
+            icon={<i className="ri-search-line"></i>}
             title={t('emptyStates.search.title')}
             description={t('emptyStates.search.description', { query })}
             actions={[
                 {
                     label: t('emptyStates.search.clear_filters'),
                     onClick: () => {/* Clear filters */},
-                    icon: '🗑️',
+                    icon: <i className="ri-delete-bin-line"></i>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.search.browse_all'),
                     href: '/transactions',
-                    icon: '📊'
+                    icon: <i className="ri-line-chart-line"></i>
                 }
             ]}
         />
@@ -233,20 +233,20 @@ export const EmptyDashboard = () => {
     
     return (
         <EmptyStateBase
-            icon="🏠"
+            icon={<i className="ri-home-line"></i>}
             title={t('emptyStates.dashboard.title')}
             description={t('emptyStates.dashboard.description')}
             actions={[
                 {
                     label: t('emptyStates.dashboard.add_expense'),
                     href: '/add-expense',
-                    icon: '💸',
+                    icon: <i className="ri-money-dollar-box-line"></i>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.dashboard.add_income'),
                     href: '/add-income',
-                    icon: '💰'
+                    icon: <i className="ri-money-dollar-circle-line"></i>
                 },
                 {
                     label: t('emptyStates.dashboard.watch_tutorial'),
@@ -264,7 +264,7 @@ export const ErrorState = ({ title, description, onRetry }) => {
     
     return (
         <EmptyStateBase
-            icon="⚠️"
+            icon={<i className="ri-error-warning-line"></i>}
             title={title || t('errorStates.generic.title')}
             description={description || t('errorStates.generic.description')}
             actions={[

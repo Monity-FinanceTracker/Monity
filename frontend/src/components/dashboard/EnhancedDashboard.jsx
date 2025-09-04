@@ -49,7 +49,9 @@ const EnhancedDashboard = () => {
             id: 'add-expense',
             title: t('quickActions.add_expense'),
             description: t('quickActions.add_expense_desc'),
-            icon: '💸',
+            icon: <span class="material-symbols-outlined">
+            request_page
+            </span>,
             color: 'from-red-500 to-red-600',
             path: '/add-expense',
             shortcut: 'E'
@@ -58,7 +60,7 @@ const EnhancedDashboard = () => {
             id: 'add-income',
             title: t('quickActions.add_income'),
             description: t('quickActions.add_income_desc'),
-            icon: '💰',
+            icon: <span class="material-symbols-outlined">add_circle</span>,
             color: 'from-green-500 to-green-600',
             path: '/add-income',
             shortcut: 'I'
@@ -67,7 +69,9 @@ const EnhancedDashboard = () => {
             id: 'view-transactions',
             title: t('quickActions.view_transactions'),
             description: t('quickActions.view_transactions_desc'),
-            icon: '📊',
+            icon: <span class="material-symbols-outlined">
+            finance
+            </span>,
             color: 'from-blue-500 to-blue-600',
             path: '/transactions',
             shortcut: 'T'
@@ -76,7 +80,9 @@ const EnhancedDashboard = () => {
             id: 'manage-budgets',
             title: t('quickActions.manage_budgets'),
             description: t('quickActions.manage_budgets_desc'),
-            icon: '🎯',
+            icon: <span class="material-symbols-outlined">
+            ads_click
+            </span>,
             color: 'from-purple-500 to-purple-600',
             path: '/budgets',
             shortcut: 'B'
@@ -135,7 +141,7 @@ const EnhancedDashboard = () => {
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                     transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                                 }`}>
-                                    {transaction.typeId === 1 ? '💸' : '💰'}
+                                    {transaction.typeId === 1 ? <i className="ri-money-dollar-box-line"></i> : <i className="fa-solid fa-dollar-sign"></i>}
                                 </div>
                                 <div>
                                     <p className="text-white font-medium">{transaction.description}</p>
@@ -203,7 +209,7 @@ const EnhancedDashboard = () => {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold">
-                            {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}! 👋
+                            {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}! 
                         </h1>
                         <p className="text-white/80 mt-1">
                             {t('dashboard.welcome_subtitle')}

@@ -239,7 +239,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
             >
               <div className="w-9 h-9 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md group-hover:bg-[#01A071] transition-colors">
                 <span className="text-[#191E29] text-xl font-bold">
-                  {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
+                  {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : <i className="ri-user-line"></i>}
                 </span>
               </div>
               <span className="text-white font-medium">

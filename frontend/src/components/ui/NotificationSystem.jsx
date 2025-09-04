@@ -144,25 +144,25 @@ const NotificationCard = ({ notification, onClose }) => {
             case 'success':
                 return {
                     bg: 'bg-green-500/10 border-green-500/20',
-                    icon: '✅',
+                    icon: <i className="ri-check-line"></i>,
                     iconBg: 'bg-green-500/20 text-green-400'
                 };
             case 'error':
                 return {
                     bg: 'bg-red-500/10 border-red-500/20',
-                    icon: '❌',
+                    icon: <i className="ri-close-line"></i>,
                     iconBg: 'bg-red-500/20 text-red-400'
                 };
             case 'warning':
                 return {
                     bg: 'bg-yellow-500/10 border-yellow-500/20',
-                    icon: '⚠️',
+                    icon: <i className="ri-error-warning-line"></i>,
                     iconBg: 'bg-yellow-500/20 text-yellow-400'
                 };
             default: // info
                 return {
                     bg: 'bg-blue-500/10 border-blue-500/20',
-                    icon: 'ℹ️',
+                    icon: <i className="ri-information-line"></i>,
                     iconBg: 'bg-blue-500/20 text-blue-400'
                 };
         }

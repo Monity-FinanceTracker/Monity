@@ -25,7 +25,7 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         </span>
         <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
           <span className="text-[#191E29] text-lg font-bold">
-            {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
+            {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : <i className="ri-user-line"></i>}
           </span>
         </div>
       </div>

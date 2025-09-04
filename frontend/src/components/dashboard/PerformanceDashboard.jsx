@@ -92,7 +92,7 @@ const PerformanceDashboard = React.memo(() => {
         }
         
         if (typeof value === 'boolean') {
-            return value ? '✅' : '❌';
+            return value ? <i className="ri-check-line"></i> : <i className="ri-close-line"></i>;
         }
         
         return String(value);
@@ -185,7 +185,7 @@ const PerformanceDashboard = React.memo(() => {
             return (
                 <div className="bg-green-800/20 border border-green-600 rounded-lg p-4">
                     <div className="flex items-center">
-                        <span className="text-green-400 text-xl mr-2">✅</span>
+                        <span className="text-green-400 text-xl mr-2"><i className="ri-check-line"></i></span>
                         <span className="text-green-300">No active alerts</span>
                     </div>
                 </div>
@@ -207,7 +207,7 @@ const PerformanceDashboard = React.memo(() => {
                             <span className={`text-xl mr-2 ${
                                 alert.severity === 'high' ? 'text-red-400' : 'text-yellow-400'
                             }`}>
-                                {alert.severity === 'high' ? '🚨' : '⚠️'}
+                                {alert.severity === 'high' ? <i className="ri-alarm-warning-line"></i> : <i className="ri-error-warning-line"></i>}
                             </span>
                             <div className="flex-1">
                                 <p className={`font-medium ${
@@ -331,7 +331,7 @@ const PerformanceDashboard = React.memo(() => {
                     <MetricsCard
                         title={t('performanceDashboard.backend_metrics')}
                         metrics={performanceData.health.performance.requests}
-                        icon="🚀"
+                        icon={<i className="ri-rocket-line"></i>}
                         className="col-span-1"
                     />
                 )}

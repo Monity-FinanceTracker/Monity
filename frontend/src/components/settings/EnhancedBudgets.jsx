@@ -147,7 +147,7 @@ const EnhancedBudgets = () => {
                     <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-6">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                                <span className="text-[#01C38D] text-xl">💰</span>
+                                <span className="text-[#01C38D] text-xl"><i className="ri-money-dollar-circle-line"></i></span>
                             </div>
                             <div>
                                 <h3 className="text-white font-medium">{t('budgets.total_budget')}</h3>
@@ -162,7 +162,7 @@ const EnhancedBudgets = () => {
                     <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-6">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                                <span className="text-yellow-500 text-xl">⚠️</span>
+                                <span className="text-yellow-500 text-xl"><i className="ri-error-warning-line"></i></span>
                             </div>
                             <div>
                                 <h3 className="text-white font-medium">{t('budgets.at_risk')}</h3>
@@ -209,7 +209,7 @@ const EnhancedBudgets = () => {
                                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
                                     <div className="flex items-center gap-4 mb-4 lg:mb-0">
                                         <div className="w-12 h-12 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                                            <span className="text-[#01C38D] text-xl">📊</span>
+                                            <span className="text-[#01C38D] text-xl"><i className="ri-line-chart-line"></i></span>
                                         </div>
                                         <div>
                                             <h3 className="text-white font-semibold text-lg">{budget.name}</h3>
