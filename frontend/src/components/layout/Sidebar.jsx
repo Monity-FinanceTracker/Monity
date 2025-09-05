@@ -37,12 +37,11 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
       <aside className={`fixed top-0 left-0 h-full bg-[#1e2230] text-white w-64 p-4 z-40 transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="flex flex-col h-full">
           <div>
-            <Link to="/" className="flex items-center gap-2 mb-6" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link to="/" className="flex items-center gap-2 mb-9" onClick={() => setIsMobileMenuOpen(false)}>
               <span className="text-2xl font-bold text-[#01C38D]">Monity</span>
             </Link>
 
             <nav className="flex flex-col gap-1.5 mb-4">
-              <span className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('sidebar.main_navigation')}</span>
               <NavLink
                 to="/"
                 end

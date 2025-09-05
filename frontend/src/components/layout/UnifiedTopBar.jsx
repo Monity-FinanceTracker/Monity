@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../navigation/LanguageSwitcher';
 
 /**
  * Unified top navigation bar with breadcrumbs, search, and user menu
@@ -198,26 +197,20 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </div>
                 </div>
 
-                {/* Right Section: Language + User Menu */}
+                {/* Right Section: User Menu */}
                 <div className="flex items-center gap-3">
-                    {/* Language Switcher - Hidden on mobile */}
-                    <div className="hidden sm:block">
-                        <LanguageSwitcher />
-                    </div>
-
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
                         <button
-                            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setIsUserMenuOpen(!isUserMenuOpen);
+                            }}
                             className="flex items-center gap-2 p-1 rounded-lg hover:bg-[#31344d] transition-colors"
                         >
-                            <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
-                                <span className="text-[#191E29] text-sm font-bold">
-                                    {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : <i className="ri-user-line"></i>}
-                                </span>
-                            </div>
-                            <span className="hidden md:inline text-white font-medium">
-                                {user?.user_metadata?.name || t('sidebar.user')}
+                            <span className="material-symbols-outlined text-white text-2xl">
+                                account_circle
                             </span>
                             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -225,7 +218,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         </button>
 
                         {isUserMenuOpen && (
-                            <div className="absolute right-0 top-full mt-2 w-64 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg overflow-hidden">
+                            <div className="absolute right-0 top-full mt-2 w-64 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg overflow-hidden z-10">
                                 <div className="p-4 border-b border-[#31344d]">
                                     <p className="text-white font-medium">{user?.user_metadata?.name || t('sidebar.user')}</p>
                                     <p className="text-gray-400 text-sm truncate">{user?.email}</p>
