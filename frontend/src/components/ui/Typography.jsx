@@ -1,0 +1,245 @@
+import React, { memo } from 'react';
+
+/**
+ * Modern Typography System Component
+ * Provides consistent text styling across the application
+ * Performance optimized with memoization
+ */
+
+// Heading component with semantic hierarchy
+export const Heading = memo(({ 
+  level = 1, 
+  children, 
+  className = '', 
+  variant = 'default',
+  weight = 'normal',
+  ...props 
+}) => {
+  const baseClasses = 'text-white leading-tight';
+  
+  const variants = {
+    default: '',
+    gradient: 'bg-gradient-to-r from-[#01C38D] to-[#01A071] bg-clip-text text-transparent',
+    accent: 'text-[#01C38D]',
+    muted: 'text-gray-400',
+    error: 'text-red-400',
+    success: 'text-green-400',
+    warning: 'text-yellow-400'
+  };
+
+  const weights = {
+    light: 'font-light',
+    normal: 'font-normal',
+    medium: 'font-medium',
+    semibold: 'font-semibold',
+    bold: 'font-bold',
+    extrabold: 'font-extrabold'
+  };
+
+  const levelStyles = {
+    1: 'text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight',
+    2: 'text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight',
+    3: 'text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight',
+    4: 'text-xl md:text-2xl lg:text-3xl font-semibold',
+    5: 'text-lg md:text-xl lg:text-2xl font-medium',
+    6: 'text-base md:text-lg lg:text-xl font-medium'
+  };
+
+  const Tag = `h${level}`;
+  const classes = `${baseClasses} ${levelStyles[level]} ${variants[variant]} ${weights[weight]} ${className}`;
+
+  return (
+    <Tag className={classes} {...props}>
+      {children}
+    </Tag>
+  );
+});
+
+// Text component for body text
+export const Text = memo(({ 
+  size = 'base', 
+  children, 
+  className = '', 
+  variant = 'default',
+  weight = 'normal',
+  leading = 'normal',
+  as = 'p',
+  ...props 
+}) => {
+  const baseClasses = 'text-white';
+  
+  const variants = {
+    default: 'text-white',
+    muted: 'text-gray-400',
+    accent: 'text-[#01C38D]',
+    error: 'text-red-400',
+    success: 'text-green-400',
+    warning: 'text-yellow-400'
+  };
+
+  const sizes = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    base: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    '2xl': 'text-2xl'
+  };
+
+  const weights = {
+    light: 'font-light',
+    normal: 'font-normal',
+    medium: 'font-medium',
+    semibold: 'font-semibold',
+    bold: 'font-bold'
+  };
+
+  const leadings = {
+    tight: 'leading-tight',
+    normal: 'leading-normal',
+    relaxed: 'leading-relaxed',
+    loose: 'leading-loose'
+  };
+
+  const Tag = as;
+  const classes = `${baseClasses} ${sizes[size]} ${variants[variant]} ${weights[weight]} ${leadings[leading]} ${className}`;
+
+  return (
+    <Tag className={classes} {...props}>
+      {children}
+    </Tag>
+  );
+});
+
+// Label component for form labels and small text
+export const Label = memo(({ 
+  children, 
+  className = '', 
+  variant = 'default',
+  size = 'sm',
+  htmlFor,
+  ...props 
+}) => {
+  const variants = {
+    default: 'text-gray-300',
+    muted: 'text-gray-400',
+    accent: 'text-[#01C38D]',
+    error: 'text-red-400',
+    required: 'text-gray-300 after:content-["*"] after:text-red-400 after:ml-1'
+  };
+
+  const sizes = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    base: 'text-base'
+  };
+
+  const classes = `font-medium ${sizes[size]} ${variants[variant]} ${className}`;
+
+  return (
+    <label className={classes} htmlFor={htmlFor} {...props}>
+      {children}
+    </label>
+  );
+});
+
+// Caption component for small descriptive text
+export const Caption = memo(({ 
+  children, 
+  className = '', 
+  variant = 'muted',
+  ...props 
+}) => {
+  const variants = {
+    default: 'text-white',
+    muted: 'text-gray-400',
+    accent: 'text-[#01C38D]',
+    error: 'text-red-400'
+  };
+
+  const classes = `text-xs ${variants[variant]} ${className}`;
+
+  return (
+    <span className={classes} {...props}>
+      {children}
+    </span>
+  );
+});
+
+// Link component for consistent link styling
+export const TextLink = memo(({ 
+  children, 
+  className = '', 
+  variant = 'default',
+  underline = 'hover',
+  ...props 
+}) => {
+  const variants = {
+    default: 'text-[#01C38D] hover:text-[#01A071]',
+    muted: 'text-gray-400 hover:text-white',
+    accent: 'text-[#01C38D] hover:text-[#01A071]'
+  };
+
+  const underlines = {
+    none: '',
+    always: 'underline',
+    hover: 'hover:underline'
+  };
+
+  const classes = `font-medium transition-colors duration-200 ${variants[variant]} ${underlines[underline]} ${className}`;
+
+  return (
+    <a className={classes} {...props}>
+      {children}
+    </a>
+  );
+});
+
+// Code component for inline code
+export const Code = memo(({ 
+  children, 
+  className = '', 
+  variant = 'default',
+  ...props 
+}) => {
+  const variants = {
+    default: 'bg-[#31344d] text-[#01C38D]',
+    muted: 'bg-[#23263a] text-gray-300'
+  };
+
+  const classes = `px-1.5 py-0.5 rounded text-sm font-mono ${variants[variant]} ${className}`;
+
+  return (
+    <code className={classes} {...props}>
+      {children}
+    </code>
+  );
+});
+
+// Display component for large promotional text
+export const Display = memo(({ 
+  children, 
+  className = '', 
+  size = 'lg',
+  variant = 'default',
+  ...props 
+}) => {
+  const variants = {
+    default: 'text-white',
+    gradient: 'bg-gradient-to-r from-[#01C38D] to-[#01A071] bg-clip-text text-transparent'
+  };
+
+  const sizes = {
+    sm: 'text-5xl md:text-6xl lg:text-7xl',
+    lg: 'text-6xl md:text-7xl lg:text-8xl',
+    xl: 'text-7xl md:text-8xl lg:text-9xl'
+  };
+
+  const classes = `font-extrabold tracking-tight leading-none ${sizes[size]} ${variants[variant]} ${className}`;
+
+  return (
+    <h1 className={classes} {...props}>
+      {children}
+    </h1>
+  );
+});
