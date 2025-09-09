@@ -34,247 +34,275 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
 
   return (
     <>
-      <aside className={`fixed top-0 left-0 h-full bg-[#1e2230] text-white w-64 p-4 z-40 transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+      <aside className={`fixed top-0 left-0 h-full bg-[#191E29] text-white w-64 border-r border-[#31344d] z-40 transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="flex flex-col h-full">
-          <div>
-            <Link to="/" className="flex items-center gap-2 mb-6" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className="text-2xl font-bold text-[#01C38D]">Monity</span>
+          {/* Header */}
+          <div className="p-6 border-b border-[#31344d]">
+            <Link to="/" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
+              <div className="w-8 h-8 bg-[#01C38D] rounded-lg flex items-center justify-center">
+                <span className="text-[#191E29] text-lg font-bold">M</span>
+              </div>
+              <span className="text-xl font-bold text-white">Monity</span>
             </Link>
+          </div>
 
-            <nav className="flex flex-col gap-1.5 mb-4">
-              <span className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('sidebar.main_navigation')}</span>
+          {/* Navigation */}
+          <div className="flex-1 py-6 px-4">
+            <nav className="space-y-1">
+              <div className="px-3 mb-4">
+                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('sidebar.main_navigation')}</span>
+              </div>
               <NavLink
                 to="/"
                 end
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
-                <span>{t('sidebar.dashboard')}</span>
+                <span className="font-medium">{t('sidebar.dashboard')}</span>
               </NavLink>
               <NavLink
                 to="/transactions"
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                 </svg>
-                <span>{t('sidebar.transactions')}</span>
+                <span className="font-medium">{t('sidebar.transactions')}</span>
               </NavLink>
               <NavLink
                 to="/groups"
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 016-6h2a6 6 0 016 6v1H3a2 2 0 01-2-2V5a2 2 0 012-2h6.5L12 2.697V5a2 2 0 01-2 2H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-1a2 2 0 01-2-2h-6.5L12 18.303V16a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-6.5L12 4.354z" />
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span>{t('sidebar.groups')}</span>
+                <span className="font-medium">{t('sidebar.groups')}</span>
               </NavLink>
               <NavLink
                 to="/categories"
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                 </svg>
-                <span>{t('sidebar.categories')}</span>
+                <span className="font-medium">{t('sidebar.categories')}</span>
               </NavLink>
               <NavLink
                 to="/budgets"
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5h2m-2 2h2m-2 2h2" />
                 </svg>
-                <span>{t('sidebar.budgets')}</span>
+                <span className="font-medium">{t('sidebar.budgets')}</span>
               </NavLink>
 
               <NavLink
                 to="/savings-goals"
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" />
                 </svg>
-                <span>{t('sidebar.savings_goals')}</span>
+                <span className="font-medium">{t('sidebar.savings_goals')}</span>
               </NavLink>
 
               <NavLink
                 to="/financial-health"
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                <span>{t('sidebar.financial_health')}</span>
+                <span className="font-medium">{t('sidebar.financial_health')}</span>
               </NavLink>
 
-              {!premiumUser && (
+            </nav>
+
+            {/* Premium/Subscription Section */}
+            {!premiumUser && (
+              <div className="mt-6 px-3">
                 <NavLink
                   to="/subscription"
                   className={({ isActive }) =>
-                    `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                      ? 'bg-yellow-400 text-black font-semibold'
-                      : 'text-yellow-400 hover:bg-yellow-500 hover:text-black'
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                      ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
+                      : 'text-yellow-400 hover:bg-yellow-400/5 border border-yellow-400/10 hover:border-yellow-400/20'
                     }`
                   }
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.293 2.293a1 1 0 010 1.414L13 12l2.293 2.293a1 1 0 01-1.414 1.414L12 13.414l-2.293 2.293a1 1 0 01-1.414-1.414L10.586 12 8.293 9.707a1 1 0 011.414-1.414L12 10.586l2.293-2.293a1 1 0 011.414 0z" />
                   </svg>
-                  <span>{t('sidebar.go_premium')}</span>
+                  <span className="font-medium">{t('sidebar.go_premium')}</span>
                 </NavLink>
-              )}
-              {premiumUser && (
+              </div>
+            )}
+
+            {premiumUser && (
+              <div className="mt-6 px-3">
                 <NavLink
                   to="/premium"
                   className={({ isActive }) =>
-                    `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                      ? 'bg-yellow-400 text-black font-semibold'
-                      : 'text-yellow-400 hover:bg-yellow-500 hover:text-black'
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                      ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
+                      : 'text-yellow-400 hover:bg-yellow-400/5 border border-yellow-400/10 hover:border-yellow-400/20'
                     }`
                   }
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.293 2.293a1 1 0 010 1.414L13 12l2.293 2.293a1 1 0 01-1.414 1.414L12 13.414l-2.293 2.293a1 1 0 01-1.414-1.414L10.586 12 8.293 9.707a1 1 0 011.414-1.414L12 10.586l2.293-2.293a1 1 0 011.414 0z" />
                   </svg>
-                  <span>{t('sidebar.premium')}</span>
+                  <span className="font-medium">{t('sidebar.premium')}</span>
                 </NavLink>
-              )}
-            </nav>
+              </div>
+            )}
 
+            {/* Admin Section */}
             {isAdmin && (
-              <nav className="flex flex-col gap-1.5 mb-4">
-                <span className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('sidebar.admin')}</span>
+              <div className="mt-6">
+                <div className="px-3 mb-3">
+                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('sidebar.admin')}</span>
+                </div>
                 <NavLink
                   to="/admin"
                   end
                   className={({ isActive }) =>
-                    `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                      ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                      : 'text-white hover:bg-[#31344d]'
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                      ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                      : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                     }`
                   }
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  <span>{t('sidebar.admin_dashboard')}</span>
+                  <span className="font-medium">{t('sidebar.admin_dashboard')}</span>
                 </NavLink>
-              </nav>
+              </div>
             )}
 
-            <nav className="flex flex-col gap-1.5">
-              <span className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('sidebar.account')}</span>
+            {/* Account Section */}
+            <div className="mt-6">
+              <div className="px-3 mb-3">
+                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('sidebar.account')}</span>
+              </div>
               <NavLink
                 to="/settings"
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded transition-colors ${isActive
-                    ? 'bg-[#01C38D] text-[#191E29] font-semibold'
-                    : 'text-white hover:bg-[#31344d]'
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>{t('sidebar.settings')}</span>
+                <span className="font-medium">{t('sidebar.settings')}</span>
               </NavLink>
-              {/* Subscription management moved to settings page */}
-            </nav>
+            </div>
           </div>
 
-          <div className="relative mt-auto" ref={dropdownRef}>
+          {/* User Menu */}
+          <div className="border-t border-[#31344d] p-4" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 w-full p-2 rounded hover:bg-[#31344d] transition-colors group"
+              className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-[#23263a] transition-all duration-200 group"
             >
-              <div className="w-9 h-9 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md group-hover:bg-[#01A071] transition-colors">
-                <span className="text-[#191E29] text-xl font-bold">
+              <div className="w-10 h-10 bg-[#01C38D] rounded-full flex items-center justify-center shadow-sm">
+                <span className="text-[#191E29] text-lg font-bold">
                   {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
                 </span>
               </div>
-              <span className="text-white font-medium">
-                {user?.user_metadata?.name || t('sidebar.user')}
-              </span>
+              <div className="flex-1 text-left">
+                <p className="text-white font-medium text-sm">
+                  {user?.user_metadata?.name || t('sidebar.user')}
+                </p>
+                <p className="text-gray-400 text-xs truncate">
+                  {user?.email || 'user@example.com'}
+                </p>
+              </div>
+              <svg className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute left-0 bottom-full mb-2 w-full bg-[#23263a] border border-[#31344d] rounded-md shadow-lg z-10">
-                <div className="p-3 border-b border-[#31344d]">
-                  <p className="text-white font-medium">{user?.user_metadata?.name || t('sidebar.user')}</p>
-                  <p className="text-gray-400 text-sm truncate">{user?.email || 'user@example.com'}</p>
-                </div>
-                <ul>
-                  <li>
-                    <Link
-                      to="/settings"
-                      className="block px-4 py-2 text-white hover:bg-[#31344d] transition-colors"
-                      onClick={() => {
-                        setIsDropdownOpen(false);
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      {t('sidebar.settings')}
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-red-400 hover:bg-[#31344d] transition-colors"
-                    >
-                      {t('sidebar.logout')}
-                    </button>
-                  </li>
-                </ul>
+              <div className="absolute left-4 right-4 bottom-20 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg z-10 overflow-hidden">
+                <Link
+                  to="/settings"
+                  className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#31344d] transition-colors"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="font-medium">{t('sidebar.settings')}</span>
+                </Link>
+                <hr className="border-[#31344d]" />
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 w-full px-4 py-3 text-red-400 hover:bg-red-400/10 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  <span className="font-medium">{t('sidebar.logout')}</span>
+                </button>
               </div>
             )}
           </div>

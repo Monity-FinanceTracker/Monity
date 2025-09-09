@@ -100,17 +100,17 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     const quickActions = getQuickActions(searchQuery);
 
     return (
-        <header className="sticky top-0 z-50 bg-[#191E29] border-b border-[#31344d] shadow-lg">
-            <div className="flex items-center justify-between px-4 py-3">
+        <header className="sticky top-0 z-50 bg-[#191E29] border-b border-[#31344d]">
+            <div className="flex items-center justify-between px-6 py-4">
                 {/* Left Section: Logo + Breadcrumbs */}
                 <div className="flex items-center gap-4 flex-1">
                     {/* Mobile menu toggle */}
                     <button
                         onClick={onMobileMenuToggle}
-                        className="md:hidden text-white hover:text-[#01C38D] transition-colors p-1"
+                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#23263a]"
                         aria-label={t('topbar.toggle_menu')}
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             {isMobileMenuOpen ? (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             ) : (
@@ -120,11 +120,16 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </button>
 
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2 text-[#01C38D] hover:text-[#01C38D]/80 transition-colors">
-                        <span className="text-xl font-bold">Monity</span>
-                        {subscriptionTier === 'premium' && (
-                            <span className="text-xs bg-yellow-400 text-black px-2 py-0.5 rounded-full font-medium">PRO</span>
-                        )}
+                    <Link to="/" className="flex items-center gap-3 text-white hover:text-[#01C38D] transition-colors">
+                        <div className="w-8 h-8 bg-[#01C38D] rounded-lg flex items-center justify-center">
+                            <span className="text-[#191E29] text-lg font-bold">M</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xl font-bold">Monity</span>
+                            {subscriptionTier === 'premium' && (
+                                <span className="text-xs bg-yellow-400 text-black px-2 py-0.5 rounded-full font-medium">PRO</span>
+                            )}
+                        </div>
                     </Link>
 
                     {/* Breadcrumbs - Hidden on small screens */}
@@ -152,30 +157,30 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                 </div>
 
                 {/* Center Section: Search */}
-                <div className="flex-1 max-w-md mx-4 relative" ref={searchRef}>
+                <div className="flex-1 max-w-lg mx-6 relative" ref={searchRef}>
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
-                            className="w-full bg-[#23263a] border border-[#31344d] rounded-lg px-4 py-2 text-left text-gray-400 hover:border-[#01C38D] transition-colors focus:outline-none focus:border-[#01C38D]"
+                            className="w-full bg-[#23263a] border border-[#31344d] rounded-xl px-4 py-3 text-left text-gray-400 hover:border-[#01C38D]/50 hover:bg-[#23263a]/80 transition-all duration-200 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20"
                         >
-                            <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="flex items-center gap-3">
+                                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                                <span className="hidden sm:inline">{t('topbar.quick_search')}</span>
-                                <span className="ml-auto text-xs bg-[#31344d] px-2 py-1 rounded hidden md:inline">⌘K</span>
+                                <span className="hidden sm:inline text-gray-300">{t('topbar.quick_search')}</span>
+                                <span className="ml-auto text-xs bg-[#31344d] text-gray-400 px-2 py-1 rounded-md hidden md:inline font-medium">⌘K</span>
                             </div>
                         </button>
 
                         {isSearchOpen && (
-                            <div className="absolute top-full left-0 right-0 mt-2 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg overflow-hidden">
-                                <div className="p-3 border-b border-[#31344d]">
+                            <div className="absolute top-full left-0 right-0 mt-3 bg-[#23263a] border border-[#31344d] rounded-xl shadow-xl overflow-hidden z-50">
+                                <div className="p-4 border-b border-[#31344d]">
                                     <input
                                         type="text"
                                         placeholder={t('topbar.search_placeholder')}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-[#191E29] border border-[#31344d] rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D]"
+                                        className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20 transition-all duration-200"
                                         autoFocus
                                     />
                                 </div>
@@ -184,11 +189,11 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         <button
                                             key={action.path}
                                             onClick={() => handleQuickActionSelect(action.path)}
-                                            className="w-full text-left px-4 py-3 hover:bg-[#31344d] transition-colors border-b border-[#31344d] last:border-b-0"
+                                            className="w-full text-left px-4 py-3 hover:bg-[#31344d] transition-all duration-200 border-b border-[#31344d]/50 last:border-b-0 group"
                                         >
                                             <div className="flex items-center gap-3">
-                                                <span className="text-lg">{action.icon}</span>
-                                                <span className="text-white">{action.label}</span>
+                                                <span className="text-xl">{action.icon}</span>
+                                                <span className="text-gray-300 group-hover:text-white font-medium">{action.label}</span>
                                             </div>
                                         </button>
                                     ))}
@@ -199,7 +204,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                 </div>
 
                 {/* Right Section: Language + User Menu */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                     {/* Language Switcher - Hidden on mobile */}
                     <div className="hidden sm:block">
                         <LanguageSwitcher />
@@ -209,59 +214,70 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     <div className="relative" ref={userMenuRef}>
                         <button
                             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                            className="flex items-center gap-2 p-1 rounded-lg hover:bg-[#31344d] transition-colors"
+                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#23263a] transition-all duration-200 group"
                         >
-                            <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
-                                <span className="text-[#191E29] text-sm font-bold">
+                            <div className="w-9 h-9 bg-[#01C38D] rounded-full flex items-center justify-center shadow-sm">
+                                <span className="text-[#191E29] text-lg font-bold">
                                     {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
                                 </span>
                             </div>
-                            <span className="hidden md:inline text-white font-medium">
-                                {user?.user_metadata?.name || t('sidebar.user')}
-                            </span>
-                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="hidden md:block text-left">
+                                <p className="text-white font-medium text-sm">
+                                    {user?.user_metadata?.name || t('sidebar.user')}
+                                </p>
+                                {subscriptionTier === 'premium' && (
+                                    <p className="text-yellow-400 text-xs font-medium">Premium</p>
+                                )}
+                            </div>
+                            <svg className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
 
                         {isUserMenuOpen && (
-                            <div className="absolute right-0 top-full mt-2 w-64 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg overflow-hidden">
+                            <div className="absolute right-0 top-full mt-3 w-72 bg-[#23263a] border border-[#31344d] rounded-xl shadow-xl overflow-hidden z-50">
                                 <div className="p-4 border-b border-[#31344d]">
-                                    <p className="text-white font-medium">{user?.user_metadata?.name || t('sidebar.user')}</p>
-                                    <p className="text-gray-400 text-sm truncate">{user?.email}</p>
-                                    {subscriptionTier === 'premium' && (
-                                        <span className="inline-block mt-1 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full font-medium">Premium</span>
-                                    )}
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-[#01C38D] rounded-full flex items-center justify-center">
+                                            <span className="text-[#191E29] text-xl font-bold">
+                                                {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
+                                            </span>
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-white font-medium">{user?.user_metadata?.name || t('sidebar.user')}</p>
+                                            <p className="text-gray-400 text-sm truncate">{user?.email}</p>
+                                            {subscriptionTier === 'premium' && (
+                                                <span className="inline-block mt-1 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full font-medium">✨ Premium</span>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="py-2">
                                     <Link
                                         to="/settings"
-                                        className="block px-4 py-2 text-white hover:bg-[#31344d] transition-colors"
+                                        className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#31344d] transition-all duration-200"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            {t('sidebar.settings')}
-                                        </div>
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span className="font-medium">{t('sidebar.settings')}</span>
                                     </Link>
-                                    <div className="block sm:hidden">
-                                        <div className="px-4 py-2 border-t border-[#31344d]">
+                                    <div className="block sm:hidden border-t border-[#31344d] pt-2">
+                                        <div className="px-4 py-2">
                                             <LanguageSwitcher />
                                         </div>
                                     </div>
+                                    <hr className="border-[#31344d] mx-2" />
                                     <button
                                         onClick={handleLogout}
-                                        className="w-full text-left px-4 py-2 text-red-400 hover:bg-[#31344d] transition-colors border-t border-[#31344d]"
+                                        className="flex items-center gap-3 w-full px-4 py-3 text-red-400 hover:bg-red-400/10 transition-all duration-200"
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                            </svg>
-                                            {t('sidebar.logout')}
-                                        </div>
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        <span className="font-medium">{t('sidebar.logout')}</span>
                                     </button>
                                 </div>
                             </div>
