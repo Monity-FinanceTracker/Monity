@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCategories, addTransaction } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { Button } from '../ui';
 import { FaPlus, FaArrowTrendUp } from 'react-icons/fa6';
 import { FaDollarSign, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
 
@@ -118,9 +119,17 @@ const AddIncome = () => {
                     </select>
                 </div>
                 <div className="flex justify-end pt-4">
-                    <button type="submit" disabled={loading} className="w-full md:w-auto flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 disabled:bg-green-800 disabled:cursor-not-allowed">
-                        {loading ? t('addIncome.adding') : <><FaPlus /> {t('addIncome.add_income')}</>}
-                    </button>
+                    <Button 
+                        type="submit" 
+                        variant="primary" 
+                        size="lg"
+                        loading={loading}
+                        disabled={loading}
+                        leftIcon={!loading ? <FaPlus /> : null}
+                        className="w-full md:w-auto bg-green-600 hover:bg-green-700 focus:ring-green-600/20"
+                    >
+                        {loading ? t('addIncome.adding') : t('addIncome.add_income')}
+                    </Button>
                 </div>
             </form>
         </div>
