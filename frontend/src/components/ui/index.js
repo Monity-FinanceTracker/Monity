@@ -1,3 +1,4 @@
+export { default as Button } from './Button';
 export { default as Card } from './Card';
 export { default as BalanceCard } from './BalanceCard';
 export { default as Balance } from './Balance';
