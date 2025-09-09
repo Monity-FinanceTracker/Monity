@@ -1,5 +1,7 @@
 export { default as Button } from './Button';
 export { default as Card } from './Card';
+export { Heading, Text, Label, Caption, TextLink, Code, Display } from './Typography';
+export { Container, Grid, Flex, Stack, Show, AspectRatio, TouchTarget } from './ResponsiveContainer';
 export { default as BalanceCard } from './BalanceCard';
 export { default as Balance } from './Balance';
 export { default as TotalExpenses } from './TotalExpenses';

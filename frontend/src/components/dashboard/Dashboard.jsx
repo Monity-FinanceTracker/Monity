@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { BalanceCard, ExpensivePurchase, Savings } from "../ui";
+import { BalanceCard, ExpensivePurchase, Savings, Container, Grid, Heading, Text } from "../ui";
 import { BalanceChart, ExpenseChart } from "../charts";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "../../hooks/useResponsive";
 
 function ModernCard({ children, title, subtitle, icon, accent, isLoading = false, action }) {
     return (
@@ -44,21 +45,26 @@ function ModernCard({ children, title, subtitle, icon, accent, isLoading = false
 function Dashboard() {
     const { t } = useTranslation();
     const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
+    const { isMobile, isTablet } = useResponsive();
 
     return (
-        <div className="space-y-8 p-6">
-            {/* Welcome Section */}
-            <div className="bg-gradient-to-r from-[#01C38D] to-[#01A071] rounded-xl p-6">
-                <h1 className="text-2xl font-bold text-white mb-2">
-                    {t('dashboard.welcome_back')} 👋
-                </h1>
-                <p className="text-white/80">
-                    {t('dashboard.welcome_subtitle')}
-                </p>
-            </div>
+        <Container size="default" padding="default">
+            <div className="space-y-8">
+                {/* Welcome Section */}
+                <div className="bg-gradient-to-r from-[#01C38D] to-[#01A071] rounded-xl p-6">
+                    <Heading level={1} className="text-white mb-2">
+                        {t('dashboard.welcome_back')} 👋
+                    </Heading>
+                    <Text variant="default" className="text-white/80">
+                        {t('dashboard.welcome_subtitle')}
+                    </Text>
+                </div>
 
-            {/* Financial Overview Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Financial Overview Cards */}
+                <Grid 
+                    cols={{ base: 1, lg: 3 }} 
+                    gap="default"
+                >
                 <ModernCard 
                     title={t('dashboardPage.balance_card_title')} 
                     subtitle="Total available balance"
@@ -97,10 +103,13 @@ function Dashboard() {
                 >
                     <Savings selectedRange="all_time" />
                 </ModernCard>
-            </div>
+                </Grid>
             
-            {/* Detailed Analytics */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                {/* Detailed Analytics */}
+                <Grid 
+                    cols={{ base: 1, xl: 2 }} 
+                    gap="default"
+                >
                 <ModernCard 
                     title={t('dashboardPage.balance_per_month_title')} 
                     subtitle="Track your balance over time"
@@ -142,7 +151,7 @@ function Dashboard() {
                 >
                     <ExpensivePurchase selectedRange="all_time" />
                 </ModernCard>
-            </div>
+                </Grid>
             
             {/* Quick Actions Floating Button */}
             <div className="fixed bottom-8 right-8 z-50">
@@ -196,7 +205,8 @@ function Dashboard() {
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
+        </Container>
     );
 }
 
