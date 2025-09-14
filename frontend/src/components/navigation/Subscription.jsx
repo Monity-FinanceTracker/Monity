@@ -1,22 +1,13 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { post } from "../../utils/api";
 import { Card, Button, Heading, Text } from "../ui";
-=======
-import React, { useState, useEffect } from "react";
-import { checkSubscription } from "../../utils/subscription";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "../../context/AuthContext";
-import { post } from "../../utils/api";
->>>>>>> 102c91444a80761fb6e3302869248d61f3a68bd8
 
 const Subscription = () => {
   const { t } = useTranslation();
   const { subscriptionTier, refreshSubscription } = useAuth();
   const [isUpgrading, setIsUpgrading] = useState(false);
-  const [justReturned, setJustReturned] = useState(false);
 
   const handleUpgrade = async () => {
     setIsUpgrading(true);
@@ -45,21 +36,7 @@ const Subscription = () => {
     }
   };
 
-  // Detect checkout return via session_id in URL and force refresh subscription
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id");
-    if (sessionId) {
-      setJustReturned(true);
-      const url = new URL(window.location.href);
-      url.searchParams.delete("session_id");
-      window.history.replaceState({}, document.title, url.toString());
-      refreshSubscription({ force: true });
-    }
-  }, [refreshSubscription]);
-
   if (subscriptionTier === null) {
-<<<<<<< HEAD
     return (
       <Card>
         <Text variant="muted">{t("subscription.loading")}</Text>
@@ -127,45 +104,9 @@ const Subscription = () => {
               : t("subscription.upgrade_button")}
           </Button>
         </div>
-=======
-    return <div className="text-white">{t("subscription.loading")}</div>;
-  }
-
-  return (
-    <div className="bg-[#23263a] p-4 md:p-6 rounded-xl shadow-lg text-white">
-      <h2 className="text-xl md:text-2xl font-bold mb-4">
-        {t("subscription.title")}
-      </h2>
-      <p className="text-md md:text-lg">
-        {t("subscription.current_plan")}:{" "}
-        <strong className="capitalize text-[#01C38D]">
-          {subscriptionTier}
-        </strong>
-      </p>
-      {justReturned && (
-        <p className="mt-2 text-sm text-gray-300">
-          {t("subscription.refreshing_status") ||
-            "Refreshing your subscription status..."}
-        </p>
-      )}
-      {subscriptionTier === "free" && (
-        <button
-          className="mt-6 w-full md:w-auto bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white font-bold py-3 px-6 rounded-lg hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 transition-all disabled:opacity-50"
-          onClick={handleUpgrade}
-          disabled={isUpgrading}
-        >
-          {isUpgrading
-            ? t("subscription.upgrading")
-            : t("subscription.upgrade_button")}
-        </button>
->>>>>>> 102c91444a80761fb6e3302869248d61f3a68bd8
       )}
     </Card>
   );
 };
 
-<<<<<<< HEAD
 export default Subscription;
-=======
-export default Subscription;
->>>>>>> 102c91444a80761fb6e3302869248d61f3a68bd8
