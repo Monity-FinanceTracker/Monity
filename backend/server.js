@@ -13,39 +13,34 @@ const initializeMiddleware = require("./middleware");
 const { errorHandler } = require("./middleware/errorHandler");
 
 const createServer = (supabaseClient) => {
-  const app = express();
+  const app = express(); // --- Middleware antes das rotas ---
 
-  // --- Pre-router Middleware ---
-  app.use(helmet());
+  app.use(helmet()); // Configuração do CORS para produção e desenvolvimento
 
-  // CORS configuration for production and development
   const corsOptions = {
     origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, etc.)
+      // Permite requisições sem origem (aplicativos móveis, etc.)
       if (!origin) return callback(null, true);
 
       const allowedOrigins = [
-        "http://localhost:5173", // Local development
-        "http://localhost:3000", // Alternative local port
-        "https://firstmonity.vercel.app", // Production frontend
-        process.env.CLIENT_URL, // Environment variable override
-      ].filter(Boolean); // Remove undefined values
+        "http://localhost:5173", // Desenvolvimento local
+        "http://localhost:3000", // Porta local alternativa
+        "https://firstmonity.vercel.app", // Frontend de produção
+        process.env.CLIENT_URL, // Variável de ambiente
+      ].filter(Boolean); // Remove valores indefinidos
 
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        logger.warn("CORS blocked request from origin:", origin);
-        callback(new Error("Not allowed by CORS"));
+        logger.warn("CORS bloqueou a requisição da origem:", origin);
+        callback(new Error("Não permitido pelo CORS"));
       }
     },
     credentials: true,
     optionsSuccessStatus: 200,
-  };
+  }; // O manipulador do webhook deve vir ANTES do express.json()
 
-  // Webhook handler must come BEFORE express.json()
-  // Initialize controllers now to access webhook handler
-  const controllers = initializeControllers(supabaseClient || supabase);
-
+  const controllers = initializeControllers(supabaseClient || supabase); // Define explicitamente a rota do webhook do Stripe aqui // O caminho da rota e o manipulador são combinados em uma única unidade. // Esta é a maneira mais confiável de lidar com webhooks.
   app.post(
     "/api/v1/billing/webhook",
     express.raw({ type: "application/json" }),
@@ -53,19 +48,14 @@ const createServer = (supabaseClient) => {
   );
 
   app.use(cors(corsOptions));
-
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(morganMiddleware);
+  app.use(morganMiddleware); // --- Inicialização ---
 
-  // --- Initialization ---
-  // controllers already initialized above for webhook
-  const middleware = initializeMiddleware(supabaseClient || supabase);
+  const middleware = initializeMiddleware(supabaseClient || supabase); // --- Rotas da API ---
 
-  // --- API Routes ---
-  app.use("/api/v1", initializeRoutes(controllers, middleware));
+  app.use("/api/v1", initializeRoutes(controllers, middleware)); // --- Middleware depois das rotas ---
 
-  // --- Post-router Middleware ---
   app.use(errorHandler);
 
   return app;
