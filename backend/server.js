@@ -42,7 +42,7 @@ const createServer = (supabaseClient) => {
 
   const controllers = initializeControllers(supabaseClient || supabase); // Define explicitamente a rota do webhook do Stripe aqui // O caminho da rota e o manipulador são combinados em uma única unidade. // Esta é a maneira mais confiável de lidar com webhooks.
   app.post(
-    "/api/v1/billing/webhook",
+    "/api/v1/webhook/stripe",
     express.raw({ type: "application/json" }),
     controllers.billingController.handleWebhook
   );

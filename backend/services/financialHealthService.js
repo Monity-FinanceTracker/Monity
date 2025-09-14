@@ -45,9 +45,19 @@ class FinancialHealthService {
                 return sum + t.amount;
             }, 0);
 
-            // Placeholder for liabilities and assets as these models don't exist yet
-            const totalLiabilities = 0; 
-            const totalAssets = 0;
+            // Get liabilities and assets from the database
+            const { data: liabilities, error: liabilitiesError } = await this.supabase
+                .from('liabilities')
+                .select('amount')
+                .eq('userId', userId);
+
+            const { data: assets, error: assetsError } = await this.supabase
+                .from('assets')
+                .select('amount')
+                .eq('userId', userId);
+
+            const totalLiabilities = liabilities?.reduce((sum, l) => sum + l.amount, 0) || 0;
+            const totalAssets = assets?.reduce((sum, a) => sum + a.amount, 0) || 0;
 
             const savingsRate = totalIncome > 0 ? (totalSavings / totalIncome) : 0;
             const expenseRatio = totalIncome > 0 ? (totalExpenses / totalIncome) : 1;
