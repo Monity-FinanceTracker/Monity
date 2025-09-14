@@ -106,6 +106,8 @@ class BillingController {
       hasSecret: !!endpointSecret,
       bodyLength: req.body?.length || 0,
       contentType: req.headers["content-type"],
+      userAgent: req.headers["user-agent"],
+      timestamp: new Date().toISOString(),
     });
 
     let event;
@@ -117,12 +119,15 @@ class BillingController {
       logger.info("Webhook signature verified successfully", {
         eventType: event.type,
         eventId: event.id,
+        created: event.created,
+        livemode: event.livemode,
       });
     } catch (err) {
       logger.error("Webhook signature verification failed", {
         error: err.message,
         signature: sig,
         bodyLength: req.body?.length || 0,
+        bodyPreview: req.body?.toString().substring(0, 200) + "...",
       });
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
@@ -230,8 +235,10 @@ class BillingController {
         eventType: event.type,
         eventId: event.id,
         error: error.message,
+        errorCode: error.code,
         stack: error.stack,
       });
+      
       res.status(500).json({ error: "Internal server error" });
     }
   }; // Handle one-time payments (upgrade to premium)
@@ -289,22 +296,40 @@ class BillingController {
 
   async handleSubscriptionChange(supabase_user_id, stripe_subscription_id) {
     try {
+      // Validate inputs
+      if (!supabase_user_id) {
+        throw new Error("supabase_user_id is required");
+      }
+      if (!stripe_subscription_id) {
+        throw new Error("stripe_subscription_id is required");
+      }
+
       logger.info("Retrieving subscription from Stripe", {
         userId: supabase_user_id,
         subscriptionId: stripe_subscription_id,
       });
 
-      const subscription = await stripe.subscriptions.retrieve(
-        stripe_subscription_id
-      );
+      // Retrieve subscription from Stripe
+      const subscription = await stripe.subscriptions.retrieve(stripe_subscription_id);
+
+      // Validate subscription data
+      if (!subscription) {
+        throw new Error("Failed to retrieve subscription from Stripe");
+      }
+
+      if (!subscription.items || !subscription.items.data || subscription.items.data.length === 0) {
+        throw new Error("Subscription has no items");
+      }
 
       const newStatus = subscription.status;
       const newTier =
         newStatus === "active" || newStatus === "trialing" ? "premium" : "free";
-      const priceId = subscription.items.data[0].price.id; // Create a variable to store the date, defaulting to null
+      const priceId = subscription.items.data[0].price.id;
 
-      let currentPeriodEnd = null; // Check if the timestamp exists and is a valid number before converting
+      // Create a variable to store the date, defaulting to null
+      let currentPeriodEnd = null;
 
+      // Check if the timestamp exists and is a valid number before converting
       if (
         subscription.current_period_end &&
         typeof subscription.current_period_end === "number"
@@ -323,6 +348,25 @@ class BillingController {
         currentPeriodEnd: currentPeriodEnd,
       });
 
+      // First, check if user profile exists
+      const { data: existingProfile, error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .select("id, email")
+        .eq("id", supabase_user_id)
+        .single();
+
+      if (profileError) {
+        logger.error("User profile not found", {
+          userId: supabase_user_id,
+          error: profileError.message,
+        });
+        throw new Error(`User profile not found: ${profileError.message}`);
+      }
+
+      if (!existingProfile) {
+        throw new Error(`No profile found for user ${supabase_user_id}`);
+      }
+
       const { data, error } = await supabaseAdmin
         .from("profiles")
         .update({
@@ -339,9 +383,19 @@ class BillingController {
         logger.error("Failed to update user subscription in database", {
           userId: supabase_user_id,
           error: error.message,
+          errorCode: error.code,
+          errorDetails: error.details,
           subscriptionId: stripe_subscription_id,
         });
         throw error;
+      }
+
+      if (!data || data.length === 0) {
+        logger.error("No rows updated in database", {
+          userId: supabase_user_id,
+          subscriptionId: stripe_subscription_id,
+        });
+        throw new Error("No rows were updated in the database");
       }
 
       logger.info("Successfully updated user subscription", {
@@ -349,12 +403,22 @@ class BillingController {
         updatedTier: newTier,
         updatedStatus: newStatus,
         rowsAffected: data?.length || 0,
+        updatedProfile: data[0],
       });
+
+      return {
+        success: true,
+        userId: supabase_user_id,
+        subscriptionId: subscription.id,
+        tier: newTier,
+        status: newStatus,
+      };
     } catch (error) {
       logger.error("Error in handleSubscriptionChange", {
         userId: supabase_user_id,
         subscriptionId: stripe_subscription_id,
         error: error.message,
+        errorCode: error.code,
         stack: error.stack,
       });
       throw error;

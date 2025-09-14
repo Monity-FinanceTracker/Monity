@@ -6,6 +6,14 @@ let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
+ * Clears the subscription cache. Should be called when user logs out.
+ */
+export const clearSubscriptionCache = () => {
+  subscriptionCache = null;
+  cacheTimestamp = null;
+};
+
+/**
  * Checks the subscription status of the current user.
  *
  * @returns {Promise<string>} A promise that resolves with the user's subscription tier.

@@ -53,7 +53,7 @@ SUPABASE_KEY=eyJ...
 ### 5. Verify Stripe Webhook Configuration
 
 1. Go to Stripe Dashboard > Webhooks
-2. Check that your webhook endpoint URL is correct: `https://yourdomain.com/api/v1/billing/webhook`
+2. Check that your webhook endpoint URL is correct: `https://yourdomain.com/api/v1/webhook/stripe`
 3. Make sure these events are enabled:
    - `checkout.session.completed`
    - `customer.subscription.created`
@@ -126,7 +126,7 @@ WHERE id = 'your-user-id';
 2. Start your server: `npm start`
 3. In another terminal: `ngrok http 3000`
 4. Copy the HTTPS URL (e.g., `https://abc123.ngrok.io`)
-5. Update Stripe webhook URL to: `https://abc123.ngrok.io/api/v1/billing/webhook`
+5. Update Stripe webhook URL to: `https://abc123.ngrok.io/api/v1/webhook/stripe`
 6. Test the payment flow
 
 ## Log Analysis
@@ -160,18 +160,142 @@ Processing checkout.session.completed
 Failed to update user subscription in database
 ```
 
+## New Debugging Tools
+
+### 1. Offline Webhook Test (Recommended for debugging)
+Test the database update logic without Stripe API calls:
+
+```bash
+node __tests__/webhook-offline-test.js
+```
+
+This will:
+- Test database connectivity
+- Simulate webhook database updates
+- Verify subscription tier updates
+- No Stripe API calls required
+
+### 2. Simple Webhook Test
+Start with the simple test to quickly verify webhook functionality:
+
+```bash
+node __tests__/simple-webhook-test.js
+```
+
+This will:
+- Check environment setup
+- Find or create a test user
+- Test basic webhook functionality
+- Verify user profile updates
+
+### 3. Comprehensive Webhook Test Suite
+Run the full test suite to check all webhook scenarios:
+
+```bash
+node __tests__/comprehensive-webhook-test.js
+```
+
+This will test:
+- Environment setup
+- Database connectivity
+- All webhook event types
+- Error scenarios
+- User profile updates
+
+### 4. Webhook Debug Helper
+Use the debug helper for targeted testing:
+
+```bash
+node __tests__/webhook-debug-helper.js
+```
+
+Or use it programmatically:
+```javascript
+const WebhookDebugHelper = require('./__tests__/webhook-debug-helper');
+const helper = new WebhookDebugHelper();
+
+// Check environment
+await helper.checkEnvironment();
+
+// Test specific webhook
+await helper.sendTestWebhook('checkout.session.completed', 'user-id');
+
+// Check user profile
+await helper.checkUserProfile('user-id');
+```
+
+### 5. Subscription Monitoring
+Monitor subscription profiles and statistics:
+
+```bash
+node __tests__/webhook-monitor.js
+```
+
+This will:
+- Show current subscription profiles
+- Display subscription statistics
+- Identify problematic profiles
+- Monitor subscription health
+
+## Enhanced Error Handling
+
+The webhook now includes:
+- ✅ Input validation for all parameters
+- ✅ Database existence checks before updates
+- ✅ Detailed error logging with context
+- ✅ Row count verification after updates
+- ✅ Comprehensive error messages
+
+## Common Issues & Solutions
+
+### Issue 1: "User profile not found"
+**Cause:** User doesn't exist in profiles table
+**Solution:**
+1. Check if user was created during registration
+2. Verify the user ID in webhook metadata
+3. Check database connection and permissions
+
+### Issue 2: "No rows were updated in database"
+**Cause:** Database update didn't affect any rows
+**Solution:**
+1. Verify user ID exists and matches exactly
+2. Check database permissions
+3. Ensure profile table has correct structure
+
+### Issue 3: "Subscription has no items"
+**Cause:** Stripe subscription object is malformed
+**Solution:**
+1. Check Stripe subscription in dashboard
+2. Verify webhook payload structure
+3. Test with different subscription types
+
+### Issue 4: Webhook signature verification fails
+**Cause:** Incorrect webhook secret or payload format
+**Solution:**
+1. Verify STRIPE_WEBHOOK_SECRET in environment
+2. Check webhook endpoint uses `express.raw()`
+3. Ensure webhook is defined before `express.json()`
+
+### Issue 5: 405 Method Not Allowed Error
+**Cause:** Route conflict with authenticated billing routes
+**Solution:**
+1. Webhook is now at `/api/v1/webhook/stripe` (not `/api/v1/billing/webhook`)
+2. Update Stripe webhook URL in dashboard
+3. Ensure webhook route is defined before other routes in server.js
+
 ## Next Steps
 
 If the webhook is working but the frontend isn't updating:
 
 1. Check if `refreshSubscription()` is called after payment return
 2. Verify the subscription API endpoint returns updated data
-3. Check for caching issues in the frontend
+3. Check for caching issues in the frontend (use `clearSubscriptionCache()`)
 4. Ensure the user is properly authenticated when checking subscription
 
 If the webhook isn't working at all:
 
-1. Verify Stripe webhook configuration
-2. Check server accessibility
-3. Test with the simple webhook test script
-4. Review server logs for errors
+1. Run the comprehensive test suite
+2. Use the webhook debug helper for targeted testing
+3. Monitor webhook events in real-time
+4. Check server logs for detailed error information
+5. Verify Stripe webhook configuration in dashboard

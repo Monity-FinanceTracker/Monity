@@ -6,7 +6,7 @@ import {
   useCallback,
 } from "react";
 import { supabase } from "../utils/supabase";
-import { checkSubscription } from "../utils/subscription";
+import { checkSubscription, clearSubscriptionCache } from "../utils/subscription";
 
 const AuthContext = createContext();
 
@@ -28,7 +28,8 @@ export function AuthProvider({ children }) {
     }
     subscriptionCheckPromise = (async () => {
       try {
-        const tier = await checkSubscription(options);
+        // Force refresh subscription when called for a new user
+        const tier = await checkSubscription({ ...options, force: true });
         setSubscriptionTier(tier);
         return tier;
       } catch (error) {
@@ -53,6 +54,10 @@ export function AuthProvider({ children }) {
 
       if (currentUser) {
         await refreshSubscription();
+      } else {
+        // Ensure cache is cleared on initial load if no user
+        clearSubscriptionCache();
+        setSubscriptionTier("free");
       }
       setLoading(false);
     };
@@ -69,6 +74,8 @@ export function AuthProvider({ children }) {
       if (currentUser) {
         refreshSubscription();
       } else {
+        // Clear subscription cache when user logs out
+        clearSubscriptionCache();
         setSubscriptionTier("free");
       }
     });
@@ -107,6 +114,8 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
+    // Clear subscription cache before logging out
+    clearSubscriptionCache();
     await supabase.auth.signOut();
     setUser(null);
   };
