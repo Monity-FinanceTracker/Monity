@@ -8,6 +8,7 @@ const Subscription = () => {
   const { t } = useTranslation();
   const { subscriptionTier, refreshSubscription } = useAuth();
   const [isUpgrading, setIsUpgrading] = useState(false);
+  const [justReturned, setJustReturned] = useState(false);
 
   const handleUpgrade = async () => {
     setIsUpgrading(true);
@@ -36,6 +37,19 @@ const Subscription = () => {
     }
   };
 
+  // Detect checkout return via session_id in URL and force refresh subscription
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    if (sessionId) {
+      setJustReturned(true);
+      const url = new URL(window.location.href);
+      url.searchParams.delete("session_id");
+      window.history.replaceState({}, document.title, url.toString());
+      refreshSubscription({ force: true });
+    }
+  }, [refreshSubscription]);
+
   if (subscriptionTier === null) {
     return <div className="text-white">{t("subscription.loading")}</div>;
   }
@@ -51,6 +65,12 @@ const Subscription = () => {
           {subscriptionTier}
         </strong>
       </p>
+      {justReturned && (
+        <p className="mt-2 text-sm text-gray-300">
+          {t("subscription.refreshing_status") ||
+            "Refreshing your subscription status..."}
+        </p>
+      )}
       {subscriptionTier === "free" && (
         <button
           className="mt-6 w-full md:w-auto bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white font-bold py-3 px-6 rounded-lg hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 transition-all disabled:opacity-50"

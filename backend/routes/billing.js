@@ -1,10 +1,8 @@
-// backend/routes/billing.js
 const express = require("express");
 
 module.exports = (controllers) => {
-  const router = express.Router();
+  const router = express.Router(); // Suas rotas existentes
 
-  // Auth is applied at mount point in routes/index.js
   router.post(
     "/create-checkout-session",
     controllers.billingController.createCheckoutSession
@@ -13,7 +11,7 @@ module.exports = (controllers) => {
   router.post(
     "/create-portal-session",
     controllers.billingController.createBillingPortalSession
-  );
+  ); // A rota do webhook foi movida para server.js para evitar conflitos // e garantir que o corpo da requisição bruta seja analisado corretamente.
 
   return router;
 };
