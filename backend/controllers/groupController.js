@@ -166,13 +166,31 @@ class GroupController {
                 return res.status(403).json({ error: 'You must be a member of the group to send invitations.' });
             }
 
-            // TODO: Implement invitation logic - for now return success
-            // In a real implementation, you would:
-            // 1. Create an invitation record
-            // 2. Send an email to the user
-            // 3. Handle the invitation acceptance flow
+            // Create invitation record
+            const { data: invitation, error: invitationError } = await this.supabase
+                .from('group_invitations')
+                .insert({
+                    group_id: groupId,
+                    invited_by: userId,
+                    invited_email: email,
+                    status: 'pending',
+                    created_at: new Date().toISOString()
+                })
+                .select()
+                .single();
+
+            if (invitationError) {
+                throw invitationError;
+            }
+
+            // TODO: Send email notification to invited user
+            // This would integrate with a notification service
             
-            res.json({ message: 'Invitation sent successfully', email });
+            res.json({ 
+                message: 'Invitation sent successfully', 
+                email,
+                invitationId: invitation.id 
+            });
         } catch (error) {
             logger.error('Failed to send group invitation', { userId, groupId, email, error: error.message });
             res.status(500).json({ error: 'Failed to send group invitation' });

@@ -13,11 +13,12 @@
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.43.4",
+    "axios": "^1.12.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "compromise": "^14.10.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.6.1",
     "express": "^4.19.2",
     "express-rate-limit": "^8.0.1",
     "helmet": "^8.1.0",
@@ -35,6 +36,7 @@
     "pdfkit": "^0.17.2",
     "redis": "^5.8.2",
     "stopword": "^2.0.8",
+    "stripe": "^18.5.0",
     "xss": "^1.0.15"
   },
   "devDependencies": {

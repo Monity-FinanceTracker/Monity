@@ -10,10 +10,30 @@ class InvitationController {
     async getPendingInvitations(req, res) {
         const userId = req.user.id;
         try {
-            // This is a placeholder implementation.
             logger.info('Fetching pending invitations for user', { userId });
-            // The actual logic will query the database via the model.
-            res.json([]);
+            
+            const { data: invitations, error } = await this.supabase
+                .from('group_invitations')
+                .select(`
+                    id,
+                    group_id,
+                    invited_email,
+                    status,
+                    created_at,
+                    groups (
+                        id,
+                        name,
+                        description
+                    )
+                `)
+                .eq('invited_email', req.user.email)
+                .eq('status', 'pending');
+
+            if (error) {
+                throw error;
+            }
+
+            res.json(invitations || []);
         } catch (error) {
             logger.error('Failed to get pending invitations', { userId, error: error.message });
             res.status(500).json({ error: 'Failed to fetch pending invitations' });

@@ -91,12 +91,38 @@ class AIController {
     }
 
     async getAIStats(req, res) {
-        res.json({
-            message: 'AI stats coming soon!',
-            accuracy: 0.95,
-            suggestions: 1000,
-            feedback: 100,
-        });
+        const userId = req.user.id;
+        try {
+            // Get actual AI categorization statistics
+            const { data: categorizedTransactions, error: categorizationError } = await this.supabase
+                .from('transactions')
+                .select('id, ai_suggested_category, category, ai_confidence')
+                .eq('userId', userId)
+                .not('ai_suggested_category', 'is', null);
+
+            if (categorizationError) {
+                throw categorizationError;
+            }
+
+            const totalSuggestions = categorizedTransactions?.length || 0;
+            const acceptedSuggestions = categorizedTransactions?.filter(t => 
+                t.category === t.ai_suggested_category
+            ).length || 0;
+            
+            const averageConfidence = categorizedTransactions?.length > 0
+                ? categorizedTransactions.reduce((sum, t) => sum + (t.ai_confidence || 0), 0) / categorizedTransactions.length
+                : 0;
+
+            res.json({
+                totalSuggestions,
+                acceptedSuggestions,
+                accuracy: totalSuggestions > 0 ? (acceptedSuggestions / totalSuggestions) : 0,
+                averageConfidence: Math.round(averageConfidence * 100) / 100
+            });
+        } catch (error) {
+            logger.error('Failed to get AI stats', { userId, error: error.message });
+            res.status(500).json({ error: 'Failed to fetch AI statistics' });
+        }
     }
 }
 
