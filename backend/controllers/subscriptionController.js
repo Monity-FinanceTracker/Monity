@@ -8,8 +8,16 @@ class SubscriptionController {
     }
 
     async getSubscriptionTier(req, res) {
-        const userId = req.user.id;
         try {
+            // Check if user is authenticated
+            if (!req.user || !req.user.id) {
+                logger.warn('Subscription tier requested without authentication');
+                return res.status(401).json({ error: 'Authentication required' });
+            }
+
+            const userId = req.user.id;
+            logger.info('Fetching subscription tier for user', { userId });
+            
             const { data, error } = await supabaseAdmin
                 .from('profiles')
                 .select('subscription_tier')
@@ -17,16 +25,25 @@ class SubscriptionController {
                 .single();
 
             if (error) {
+                logger.error('Supabase error fetching subscription tier', { userId, error: error.message });
+                // If user not found in profiles, return free tier
+                if (error.code === 'PGRST116') {
+                    return res.json({ subscription_tier: 'free' });
+                }
                 throw error;
             }
 
             if (!data) {
-                return res.status(404).json({ error: 'User profile not found' });
+                logger.warn('User profile not found, returning free tier', { userId });
+                return res.json({ subscription_tier: 'free' });
             }
 
-            res.json({ subscription_tier: data.subscription_tier });
+            const tier = data.subscription_tier || 'free';
+            logger.info('Successfully fetched subscription tier', { userId, tier });
+            res.json({ subscription_tier: tier });
         } catch (error) {
-            logger.error('Failed to get subscription tier for user', { userId, error: error.message });
+            const userId = req.user?.id || 'unknown';
+            logger.error('Failed to get subscription tier for user', { userId, error: error.message, stack: error.stack });
             res.status(500).json({ error: 'Failed to fetch subscription tier' });
         }
     }
