@@ -51,11 +51,11 @@ function Dashboard() {
         <Container size="default" padding="default">
             <div className="space-y-8">
                 {/* Welcome Section */}
-                <div className="bg-gradient-to-r from-[#01C38D] to-[#01A071] rounded-xl p-6">
+                <div>
                     <Heading level={1} className="text-white mb-2">
-                        {t('dashboard.welcome_back')} 👋
+                        {t('dashboard.welcome_back')}
                     </Heading>
-                    <Text variant="default" className="text-white/80">
+                    <Text variant="default" className="text-gray-400 text-left">
                         {t('dashboard.welcome_subtitle')}
                     </Text>
                 </div>

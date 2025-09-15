@@ -199,24 +199,22 @@ const EnhancedDashboard = () => {
     return (
         <div className="space-y-8">
             {/* Welcome Section */}
-            <div className="bg-gradient-to-r from-[#01C38D] to-[#01A071] rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold">
-                            {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}! 👋
-                        </h1>
-                        <p className="text-white/80 mt-1">
-                            {t('dashboard.welcome_subtitle')}
-                        </p>
-                    </div>
-                    {subscriptionTier === 'premium' && (
-                        <div className="hidden md:block">
-                            <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                                ✨ Premium
-                            </span>
-                        </div>
-                    )}
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-white">
+                        {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}!
+                    </h1>
+                    <p className="text-gray-400 mt-1 text-left">
+                        {t('dashboard.welcome_subtitle')}
+                    </p>
                 </div>
+                {subscriptionTier === 'premium' && (
+                    <div className="hidden md:block">
+                        <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
+                            ✨ Premium
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* Quick Actions */}
