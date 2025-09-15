@@ -100,9 +100,9 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     const quickActions = getQuickActions(searchQuery);
 
     return (
-        <header className="sticky top-0 z-50 bg-[#191E29] border-b border-[#31344d]">
+        <header className="sticky top-0 z-30 bg-[#191E29] border-b border-[#31344d] w-full">
             <div className="flex items-center justify-between px-6 py-4">
-                {/* Left Section: Logo + Breadcrumbs */}
+                {/* Left Section: Mobile menu + Search */}
                 <div className="flex items-center gap-4 flex-1">
                     {/* Mobile menu toggle */}
                     <button
@@ -119,45 +119,8 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         </svg>
                     </button>
 
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center gap-3 text-foreground hover:text-[#01C38D] transition-colors">
-                        <div className="w-8 h-8 bg-[#01C38D] rounded-lg flex items-center justify-center">
-                            <span className="text-[#191E29] text-lg font-bold">M</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xl font-bold">Monity</span>
-                            {subscriptionTier === 'premium' && (
-                                <span className="text-xs bg-yellow-400 text-black px-2 py-0.5 rounded-full font-medium">PRO</span>
-                            )}
-                        </div>
-                    </Link>
-
-                    {/* Breadcrumbs - Hidden on small screens */}
-                    <nav className="hidden lg:flex items-center text-sm" aria-label="Breadcrumb">
-                        {breadcrumbs.map((crumb, index) => (
-                            <div key={crumb.path} className="flex items-center">
-                                {index > 0 && (
-                                    <svg className="w-4 h-4 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                )}
-                                {index === breadcrumbs.length - 1 ? (
-                                    <span className="text-white font-medium">{crumb.label}</span>
-                                ) : (
-                                    <Link
-                                        to={crumb.path}
-                                        className="text-gray-400 hover:text-white transition-colors"
-                                    >
-                                        {crumb.label}
-                                    </Link>
-                                )}
-                            </div>
-                        ))}
-                    </nav>
-                </div>
-
-                {/* Center Section: Search */}
-                <div className="flex-1 max-w-lg mx-6 relative" ref={searchRef}>
+                    {/* Search - moved to left */}
+                    <div className="flex-1 max-w-lg relative" ref={searchRef}>
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -200,6 +163,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 </div>
                             </div>
                         )}
+                    </div>
                     </div>
                 </div>
 
