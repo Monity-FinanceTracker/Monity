@@ -125,26 +125,47 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
-                            className="w-full bg-[#23263a] border border-[#31344d] rounded-xl px-4 py-3 text-left text-gray-400 hover:border-[#01C38D]/50 hover:bg-[#31344d] transition-all duration-200 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20"
+                            className="w-full rounded-lg px-4 py-2.5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#01C38D]/20"
+                            style={{
+                                backgroundColor: '#191E29',
+                                border: '1px solid #23263a',
+                                color: '#9ca3af',
+                                fontSize: '14px',
+                                fontWeight: '400'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#23263a';
+                                e.target.style.borderColor = '#31344d';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = '#191E29';
+                                e.target.style.borderColor = '#23263a';
+                            }}
                         >
                             <div className="flex items-center gap-3">
                                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                                 <span className="hidden sm:inline text-gray-400">{t('topbar.quick_search')}</span>
-                                <span className="ml-auto text-xs bg-[#31344d] text-gray-400 px-2 py-1 rounded-md hidden md:inline font-medium">⌘K</span>
+                                <span className="ml-auto text-xs bg-[#23263a] text-gray-500 px-2 py-1 rounded hidden md:inline font-medium">⌘K</span>
                             </div>
                         </button>
 
                         {isSearchOpen && (
-                            <div className="absolute top-full left-0 right-0 mt-3 bg-[#23263a] border border-[#31344d] rounded-xl shadow-xl overflow-hidden z-50">
-                                <div className="p-4 border-b border-[#31344d]">
+                            <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#191E29', border: '1px solid #23263a' }}>
+                                <div className="p-4" style={{ borderBottom: '1px solid #23263a' }}>
                                     <input
                                         type="text"
                                         placeholder={t('topbar.search_placeholder')}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-[#31344d] border border-[#31344d] rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20 transition-all duration-200"
+                                        className="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D]/20 transition-all duration-200"
+                                        style={{
+                                            backgroundColor: '#0f1419',
+                                            border: '1px solid #01C38D',
+                                            color: '#ffffff',
+                                            fontSize: '14px'
+                                        }}
                                         autoFocus
                                     />
                                 </div>
@@ -153,11 +174,29 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         <button
                                             key={action.path}
                                             onClick={() => handleQuickActionSelect(action.path)}
-                                            className="w-full text-left px-4 py-3 hover:bg-[#31344d] transition-all duration-200 border-b border-[#31344d]/50 last:border-b-0 group"
+                                            className="w-full text-left px-4 py-3 transition-all duration-200 group"
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                                borderBottom: index < quickActions.length - 1 ? '1px solid #23263a' : 'none',
+                                                color: '#9ca3af',
+                                                border: 'none',
+                                                fontSize: '14px',
+                                                fontWeight: '400'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.backgroundColor = '#23263a';
+                                                const span = e.target.querySelector('span:last-child');
+                                                if (span) span.style.color = '#ffffff';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.backgroundColor = 'transparent';
+                                                const span = e.target.querySelector('span:last-child');
+                                                if (span) span.style.color = '#9ca3af';
+                                            }}
                                         >
                                             <div className="flex items-center gap-3">
                                                 <span className="text-xl">{action.icon}</span>
-                                                <span className="text-gray-400 group-hover:text-white font-medium">{action.label}</span>
+                                                <span className="font-medium">{action.label}</span>
                                             </div>
                                         </button>
                                     ))}
@@ -169,7 +208,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                 </div>
 
                 {/* Right Section: Notifications + User Menu */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-8">
                     {/* Notifications */}
                     <Bell className="w-5 h-5 text-white hover:text-gray-300 transition-colors cursor-pointer" />
 
