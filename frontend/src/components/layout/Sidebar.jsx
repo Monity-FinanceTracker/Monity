@@ -1,40 +1,18 @@
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { isPremium } from "../../utils/premium";
-import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { GiPayMoney, GiTakeMyMoney } from "react-icons/gi";
 import { FaMoneyBillWave, FaCog, FaChartLine, FaUsers } from "react-icons/fa";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { t } = useTranslation();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const { user, logout, isAdmin, subscriptionTier } = useAuth();
+  const { isAdmin, subscriptionTier } = useAuth();
   const premiumUser = subscriptionTier === 'premium';
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <>
-      <aside className={`fixed top-0 left-0 h-full bg-[#191E29] text-white w-64 border-r border-[#31344d] z-40 transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+      <aside className={`fixed top-0 left-0 h-full bg-[#23263a] text-white w-64 border-r border-[#31344d] z-40 transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-6 border-b border-[#31344d]">
@@ -49,16 +27,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
           {/* Navigation */}
           <div className="flex-1 py-6 px-4">
             <nav className="space-y-1">
-              <div className="px-3 mb-4">
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('sidebar.main_navigation')}</span>
-              </div>
               <NavLink
                 to="/"
                 end
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -73,7 +48,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -88,7 +63,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -103,7 +78,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -118,7 +93,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -134,7 +109,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -150,7 +125,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                   }`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -216,7 +191,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                       ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                      : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
+                      : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
                     }`
                   }
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -229,82 +204,26 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
               </div>
             )}
 
-            {/* Account Section */}
-            <div className="mt-6">
-              <div className="px-3 mb-3">
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('sidebar.account')}</span>
-              </div>
-              <NavLink
-                to="/settings"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-300 hover:text-white hover:bg-[#23263a]'
-                  }`
-                }
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span className="font-medium">{t('sidebar.settings')}</span>
-              </NavLink>
-            </div>
           </div>
 
-          {/* User Menu */}
-          <div className="border-t border-[#31344d] p-4" ref={dropdownRef}>
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-[#23263a] transition-all duration-200 group"
+          {/* Settings at bottom */}
+          <div className="border-t border-[#31344d] p-4">
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                  ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                  : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                }`
+              }
+              onClick={() => setIsMobileMenuOpen(false)}
             >
-              <div className="w-10 h-10 bg-[#01C38D] rounded-full flex items-center justify-center shadow-sm">
-                <span className="text-[#191E29] text-lg font-bold">
-                  {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
-                </span>
-              </div>
-              <div className="flex-1 text-left">
-                <p className="text-white font-medium text-sm">
-                  {user?.user_metadata?.name || t('sidebar.user')}
-                </p>
-                <p className="text-gray-400 text-xs truncate">
-                  {user?.email || 'user@example.com'}
-                </p>
-              </div>
-              <svg className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <svg className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute left-4 right-4 bottom-20 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg z-10 overflow-hidden">
-                <Link
-                  to="/settings"
-                  className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#31344d] transition-colors"
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span className="font-medium">{t('sidebar.settings')}</span>
-                </Link>
-                <hr className="border-[#31344d]" />
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-red-400 hover:bg-red-400/10 transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  <span className="font-medium">{t('sidebar.logout')}</span>
-                </button>
-              </div>
-            )}
+              <span className="font-medium">{t('sidebar.settings')}</span>
+            </NavLink>
           </div>
         </div>
       </aside>

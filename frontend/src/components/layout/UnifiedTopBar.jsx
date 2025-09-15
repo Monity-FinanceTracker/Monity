@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../navigation/LanguageSwitcher';
+// LanguageSwitcher removed - now only available in settings
 
 /**
  * Unified top navigation bar with breadcrumbs, search, and user menu
@@ -107,7 +107,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     {/* Mobile menu toggle */}
                     <button
                         onClick={onMobileMenuToggle}
-                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#23263a]"
+                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#31344d]"
                         aria-label={t('topbar.toggle_menu')}
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </button>
 
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-3 text-white hover:text-[#01C38D] transition-colors">
+                    <Link to="/" className="flex items-center gap-3 text-foreground hover:text-[#01C38D] transition-colors">
                         <div className="w-8 h-8 bg-[#01C38D] rounded-lg flex items-center justify-center">
                             <span className="text-[#191E29] text-lg font-bold">M</span>
                         </div>
@@ -137,16 +137,16 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         {breadcrumbs.map((crumb, index) => (
                             <div key={crumb.path} className="flex items-center">
                                 {index > 0 && (
-                                    <svg className="w-4 h-4 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg className="w-4 h-4 text-muted-foreground mx-2" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                                     </svg>
                                 )}
                                 {index === breadcrumbs.length - 1 ? (
-                                    <span className="text-white font-medium">{crumb.label}</span>
+                                    <span className="text-foreground font-medium">{crumb.label}</span>
                                 ) : (
                                     <Link
                                         to={crumb.path}
-                                        className="text-gray-400 hover:text-white transition-colors"
+                                        className="text-muted-foreground hover:text-foreground transition-colors">
                                     >
                                         {crumb.label}
                                     </Link>
@@ -161,13 +161,13 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
-                            className="w-full bg-[#23263a] border border-[#31344d] rounded-xl px-4 py-3 text-left text-gray-400 hover:border-[#01C38D]/50 hover:bg-[#23263a]/80 transition-all duration-200 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20"
+                            className="w-full bg-[#23263a] border border-[#31344d] rounded-xl px-4 py-3 text-left text-gray-400 hover:border-[#01C38D]/50 hover:bg-[#31344d] transition-all duration-200 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20"
                         >
                             <div className="flex items-center gap-3">
                                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                                <span className="hidden sm:inline text-gray-300">{t('topbar.quick_search')}</span>
+                                <span className="hidden sm:inline text-gray-400">{t('topbar.quick_search')}</span>
                                 <span className="ml-auto text-xs bg-[#31344d] text-gray-400 px-2 py-1 rounded-md hidden md:inline font-medium">⌘K</span>
                             </div>
                         </button>
@@ -180,7 +180,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         placeholder={t('topbar.search_placeholder')}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20 transition-all duration-200"
+                                        className="w-full bg-[#31344d] border border-[#31344d] rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D] focus:ring-2 focus:ring-[#01C38D]/20 transition-all duration-200"
                                         autoFocus
                                     />
                                 </div>
@@ -193,7 +193,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         >
                                             <div className="flex items-center gap-3">
                                                 <span className="text-xl">{action.icon}</span>
-                                                <span className="text-gray-300 group-hover:text-white font-medium">{action.label}</span>
+                                                <span className="text-gray-400 group-hover:text-white font-medium">{action.label}</span>
                                             </div>
                                         </button>
                                     ))}
@@ -203,18 +203,13 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </div>
                 </div>
 
-                {/* Right Section: Language + User Menu */}
+                {/* Right Section: User Menu */}
                 <div className="flex items-center gap-4">
-                    {/* Language Switcher - Hidden on mobile */}
-                    <div className="hidden sm:block">
-                        <LanguageSwitcher />
-                    </div>
-
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
                         <button
                             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#23263a] transition-all duration-200 group"
+                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#31344d] transition-all duration-200 group"
                         >
                             <div className="w-9 h-9 bg-[#01C38D] rounded-full flex items-center justify-center shadow-sm">
                                 <span className="text-[#191E29] text-lg font-bold">
@@ -222,7 +217,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 </span>
                             </div>
                             <div className="hidden md:block text-left">
-                                <p className="text-white font-medium text-sm">
+                                <p className="text-foreground font-medium text-sm">
                                     {user?.user_metadata?.name || t('sidebar.user')}
                                 </p>
                                 {subscriptionTier === 'premium' && (
@@ -255,7 +250,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 <div className="py-2">
                                     <Link
                                         to="/settings"
-                                        className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#31344d] transition-all duration-200"
+                                        className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-[#31344d] transition-all duration-200"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -264,11 +259,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         </svg>
                                         <span className="font-medium">{t('sidebar.settings')}</span>
                                     </Link>
-                                    <div className="block sm:hidden border-t border-[#31344d] pt-2">
-                                        <div className="px-4 py-2">
-                                            <LanguageSwitcher />
-                                        </div>
-                                    </div>
+                                    {/* Language switcher removed - available in settings only */}
                                     <hr className="border-[#31344d] mx-2" />
                                     <button
                                         onClick={handleLogout}
