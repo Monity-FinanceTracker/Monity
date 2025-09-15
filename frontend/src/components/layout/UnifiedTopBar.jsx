@@ -127,19 +127,19 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
                             className="w-full rounded-lg px-4 py-2.5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#01C38D]/20"
                             style={{
-                                backgroundColor: '#191E29',
-                                border: '1px solid #23263a',
+                                backgroundColor: 'transparent',
+                                border: '1px solid #31344d',
                                 color: '#9ca3af',
                                 fontSize: '14px',
                                 fontWeight: '400'
                             }}
                             onMouseEnter={(e) => {
-                                e.target.style.backgroundColor = '#23263a';
+                                e.target.style.backgroundColor = '#31344d';
                                 e.target.style.borderColor = '#31344d';
                             }}
                             onMouseLeave={(e) => {
-                                e.target.style.backgroundColor = '#191E29';
-                                e.target.style.borderColor = '#23263a';
+                                e.target.style.backgroundColor = 'transparent';
+                                e.target.style.borderColor = '#31344d';
                             }}
                         >
                             <div className="flex items-center gap-3">
@@ -147,13 +147,12 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                                 <span className="hidden sm:inline text-gray-400">{t('topbar.quick_search')}</span>
-                                <span className="ml-auto text-xs bg-[#23263a] text-gray-500 px-2 py-1 rounded hidden md:inline font-medium">⌘K</span>
                             </div>
                         </button>
 
                         {isSearchOpen && (
-                            <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#191E29', border: '1px solid #23263a' }}>
-                                <div className="p-4" style={{ borderBottom: '1px solid #23263a' }}>
+                            <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#23263a', border: '1px solid #31344d' }}>
+                                <div className="p-4" style={{ borderBottom: '1px solid #31344d' }}>
                                     <input
                                         type="text"
                                         placeholder={t('topbar.search_placeholder')}
@@ -161,8 +160,8 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D]/20 transition-all duration-200"
                                         style={{
-                                            backgroundColor: '#0f1419',
-                                            border: '1px solid #01C38D',
+                                            backgroundColor: '#31344d',
+                                            border: '1px solid #31344d',
                                             color: '#ffffff',
                                             fontSize: '14px'
                                         }}
@@ -177,14 +176,14 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             className="w-full text-left px-4 py-3 transition-all duration-200 group"
                                             style={{
                                                 backgroundColor: 'transparent',
-                                                borderBottom: index < quickActions.length - 1 ? '1px solid #23263a' : 'none',
+                                                borderBottom: index < quickActions.length - 1 ? '1px solid #31344d' : 'none',
                                                 color: '#9ca3af',
                                                 border: 'none',
                                                 fontSize: '14px',
                                                 fontWeight: '400'
                                             }}
                                             onMouseEnter={(e) => {
-                                                e.target.style.backgroundColor = '#23263a';
+                                                e.target.style.backgroundColor = '#31344d';
                                                 const span = e.target.querySelector('span:last-child');
                                                 if (span) span.style.color = '#ffffff';
                                             }}
