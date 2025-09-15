@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   /* Dark theme - matching v0 prototype: black background, dark gray containers, white text */
   --background: oklch(0.145 0 0); /* True black background */

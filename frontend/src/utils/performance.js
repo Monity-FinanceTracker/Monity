@@ -19,15 +19,28 @@ export const measureComponentRender = (componentName, renderFn) => {
   return renderFn();
 };
 
-// Web Vitals monitoring
+// Web Vitals monitoring - temporarily disabled to prevent errors
 export const reportWebVitals = (onPerfEntry) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Web Vitals monitoring temporarily disabled');
+    return;
+  }
+  
   if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(onPerfEntry);
-      getFID(onPerfEntry);
-      getFCP(onPerfEntry);
-      getLCP(onPerfEntry);
-      getTTFB(onPerfEntry);
+    import('web-vitals').then((webVitals) => {
+      try {
+        // Use the correct API for web-vitals v5+
+        const { onCLS, onFID, onFCP, onLCP, onTTFB } = webVitals;
+        onCLS(onPerfEntry);
+        onFID(onPerfEntry);
+        onFCP(onPerfEntry);
+        onLCP(onPerfEntry);
+        onTTFB(onPerfEntry);
+      } catch (error) {
+        console.warn('Error initializing Web Vitals:', error);
+      }
+    }).catch((error) => {
+      console.warn('Web Vitals not available:', error);
     });
   }
 };
