@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { post } from "../../utils/api";
 import { Card, Button, Heading, Text } from "../ui";
+import { Sparkles } from "lucide-react";
 
 const Subscription = () => {
   const { t } = useTranslation();
@@ -48,9 +49,7 @@ const Subscription = () => {
     <Card 
       title={t("subscription.title")}
       icon={
-        <svg className="w-6 h-6 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.293 2.293a1 1 0 010 1.414L13 12l2.293 2.293a1 1 0 01-1.414 1.414L12 13.414l-2.293 2.293a1 1 0 01-1.414-1.414L10.586 12 8.293 9.707a1 1 0 011.414-1.414L12 10.586l2.293-2.293a1 1 0 011.414 0z" />
-        </svg>
+        <Sparkles className="w-6 h-6 text-[#01C38D]" />
       }
       className="space-y-6"
     >
@@ -93,9 +92,7 @@ const Subscription = () => {
             onClick={handleUpgrade}
             leftIcon={
               !isUpgrading ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.293 2.293a1 1 0 010 1.414L13 12l2.293 2.293a1 1 0 01-1.414 1.414L12 13.414l-2.293 2.293a1 1 0 01-1.414-1.414L10.586 12 8.293 9.707a1 1 0 011.414-1.414L12 10.586l2.293-2.293a1 1 0 011.414 0z" />
-                </svg>
+                <Sparkles className="w-5 h-5" />
               ) : null
             }
           >
