@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { Bell } from 'lucide-react';
 // LanguageSwitcher removed - now only available in settings
 
 /**
@@ -167,8 +168,11 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </div>
                 </div>
 
-                {/* Right Section: User Menu */}
+                {/* Right Section: Notifications + User Menu */}
                 <div className="flex items-center gap-4">
+                    {/* Notifications */}
+                    <Bell className="w-5 h-5 text-white hover:text-gray-300 transition-colors cursor-pointer" />
+
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
                         <button
