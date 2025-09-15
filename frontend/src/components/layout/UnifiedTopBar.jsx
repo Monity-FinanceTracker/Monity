@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { Bell } from 'lucide-react';
+import { Bell, Sparkles } from 'lucide-react';
 // LanguageSwitcher removed - now only available in settings
 
 /**
@@ -210,7 +210,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 <div className="px-3 py-3 border-b border-[#31344d]">
                                     <div className="flex flex-col space-y-1">
                                         <p className="text-sm font-medium text-white leading-none text-left">
-                                            Luca Lodi
+                                            {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
                                         </p>
                                         <div className="flex items-center gap-2">
                                             <p className="text-xs text-gray-400 leading-none">
@@ -228,11 +228,15 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 {/* Menu Items - Updated with white text */}
                                 <div className="py-1">
                                     <button
-                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200"
+                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 text-left rounded-none"
                                         style={{ 
                                             backgroundColor: 'transparent', 
                                             border: 'none',
-                                            color: '#ffffff !important'
+                                            color: '#ffffff !important',
+                                            padding: '0.5rem 0.75rem',
+                                            margin: '0',
+                                            textAlign: 'left',
+                                            borderRadius: '0'
                                         }}
                                         onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
@@ -250,10 +254,12 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     
                                     <Link
                                         to="/settings"
-                                        className="flex items-center gap-3 px-3 py-2 text-sm transition-all duration-200"
+                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 rounded-none"
                                         style={{ 
                                             color: '#ffffff',
-                                            textDecoration: 'none'
+                                            textDecoration: 'none',
+                                            backgroundColor: 'transparent',
+                                            borderRadius: '0'
                                         }}
                                         onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
@@ -265,16 +271,21 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         </svg>
                                         <span style={{ color: '#ffffff' }}>Settings</span>
                                     </Link>
+
                                     
                                     <hr className="border-[#31344d] my-1" />
                                     
                                     <button
                                         onClick={handleLogout}
-                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200"
+                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 text-left rounded-none"
                                         style={{ 
                                             backgroundColor: 'transparent', 
                                             border: 'none',
-                                            color: '#ffffff'
+                                            color: '#ffffff',
+                                            padding: '0.5rem 0.75rem',
+                                            margin: '0',
+                                            textAlign: 'left',
+                                            borderRadius: '0'
                                         }}
                                         onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
