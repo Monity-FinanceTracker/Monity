@@ -34,13 +34,13 @@ const SavingsOverviewCard = () => {
 
     if (loading) {
         return (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
                 <div className="animate-pulse">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-4"></div>
-                    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-6"></div>
+                    <div className="h-4 bg-gray-700 rounded w-1/3 mb-4"></div>
+                    <div className="h-8 bg-gray-700 rounded w-1/2 mb-6"></div>
                     <div className="space-y-3">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                        <div className="h-4 bg-gray-700 rounded"></div>
+                        <div className="h-4 bg-gray-700 rounded w-3/4"></div>
                     </div>
                 </div>
             </div>
@@ -49,9 +49,9 @@ const SavingsOverviewCard = () => {
 
     if (error) {
         return (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
                 <div className="text-center py-4">
-                    <p className="text-red-500 dark:text-red-400">{error}</p>
+                    <p className="text-red-400">{error}</p>
                 </div>
             </div>
         );
@@ -59,9 +59,9 @@ const SavingsOverviewCard = () => {
 
     if (savingsData.totalGoals === 0) {
         return (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 className="text-lg font-semibold text-white">
                         {t('savings_goals.title')}
                     </h3>
                     <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
@@ -73,7 +73,7 @@ const SavingsOverviewCard = () => {
                     <div className="mb-4">
                         <span className="text-4xl">💰</span>
                     </div>
-                    <p className="text-gray-500 dark:text-gray-400 mb-6 text-lg">
+                    <p className="text-gray-400 mb-6 text-lg">
                         {t('savings_goals.no_goals_yet')}
                     </p>
                     <Link 
@@ -88,9 +88,9 @@ const SavingsOverviewCard = () => {
     }
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-white">
                     {t('savings_goals.title')}
                 </h3>
                 <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
@@ -101,25 +101,25 @@ const SavingsOverviewCard = () => {
             {/* Total allocated amount */}
             <div className="mb-4 text-center">
                 <div className="mb-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white block">
+                    <span className="text-3xl font-bold text-white block">
                         ${savingsData.totalAllocated.toLocaleString()}
                     </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="text-sm text-gray-400">
                         {t('savings_goals.allocated')}
                     </span>
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
+                <div className="text-sm text-gray-300">
                     {t('savings_goals.target')}: ${savingsData.totalTargets.toLocaleString()}
                 </div>
             </div>
 
             {/* Overall progress bar */}
             <div className="mb-4">
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+                <div className="flex justify-between text-sm text-gray-300 mb-2">
                     <span>{t('savings_goals.overall_progress')}</span>
                     <span className="font-semibold">{savingsData.progressPercentage.toFixed(1)}%</span>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                <div className="w-full bg-gray-700 rounded-full h-3">
                     <div 
                         className="bg-[#01C38D] h-3 rounded-full transition-all duration-300" 
                         style={{ width: `${Math.min(savingsData.progressPercentage, 100)}%` }}

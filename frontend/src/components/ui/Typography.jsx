@@ -15,13 +15,13 @@ export const Heading = memo(({
   weight = 'normal',
   ...props 
 }) => {
-  const baseClasses = 'text-white leading-tight';
+  const baseClasses = 'text-foreground leading-tight';
   
   const variants = {
     default: '',
     gradient: 'bg-gradient-to-r from-[#01C38D] to-[#01A071] bg-clip-text text-transparent',
     accent: 'text-[#01C38D]',
-    muted: 'text-gray-400',
+    muted: 'text-muted-foreground',
     error: 'text-red-400',
     success: 'text-green-400',
     warning: 'text-yellow-400'
@@ -66,11 +66,11 @@ export const Text = memo(({
   as = 'p',
   ...props 
 }) => {
-  const baseClasses = 'text-white';
+  const baseClasses = 'text-foreground';
   
   const variants = {
-    default: 'text-white',
-    muted: 'text-gray-400',
+    default: 'text-foreground',
+    muted: 'text-muted-foreground',
     accent: 'text-[#01C38D]',
     error: 'text-red-400',
     success: 'text-green-400',
@@ -121,11 +121,11 @@ export const Label = memo(({
   ...props 
 }) => {
   const variants = {
-    default: 'text-gray-300',
-    muted: 'text-gray-400',
+    default: 'text-foreground',
+    muted: 'text-muted-foreground',
     accent: 'text-[#01C38D]',
     error: 'text-red-400',
-    required: 'text-gray-300 after:content-["*"] after:text-red-400 after:ml-1'
+    required: 'text-foreground after:content-["*"] after:text-red-400 after:ml-1'
   };
 
   const sizes = {
@@ -151,8 +151,8 @@ export const Caption = memo(({
   ...props 
 }) => {
   const variants = {
-    default: 'text-white',
-    muted: 'text-gray-400',
+    default: 'text-foreground',
+    muted: 'text-muted-foreground',
     accent: 'text-[#01C38D]',
     error: 'text-red-400'
   };
@@ -176,7 +176,7 @@ export const TextLink = memo(({
 }) => {
   const variants = {
     default: 'text-[#01C38D] hover:text-[#01A071]',
-    muted: 'text-gray-400 hover:text-white',
+    muted: 'text-muted-foreground hover:text-foreground',
     accent: 'text-[#01C38D] hover:text-[#01A071]'
   };
 
@@ -203,8 +203,8 @@ export const Code = memo(({
   ...props 
 }) => {
   const variants = {
-    default: 'bg-[#31344d] text-[#01C38D]',
-    muted: 'bg-[#23263a] text-gray-300'
+    default: 'bg-muted text-[#01C38D]',
+    muted: 'bg-muted text-muted-foreground'
   };
 
   const classes = `px-1.5 py-0.5 rounded text-sm font-mono ${variants[variant]} ${className}`;
@@ -225,7 +225,7 @@ export const Display = memo(({
   ...props 
 }) => {
   const variants = {
-    default: 'text-white',
+    default: 'text-foreground',
     gradient: 'bg-gradient-to-r from-[#01C38D] to-[#01A071] bg-clip-text text-transparent'
   };
 
