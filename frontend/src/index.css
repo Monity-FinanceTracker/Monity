@@ -1,6 +1,10 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 :root {
+  /* Font variables to match prototype setup */
+  --font-dm-sans: 'DM Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-dm-sans);
   /* Dark theme - matching v0 prototype: black background, dark gray containers, white text */
   --background: oklch(0.145 0 0); /* True black background */
   --foreground: oklch(0.985 0 0); /* White text */
@@ -37,7 +41,7 @@
   --sidebar-ring: oklch(0.708 0 0); /* Light gray sidebar focus ring */
   
   /* Font and rendering settings */
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
   margin: 0;
@@ -87,6 +91,15 @@
 }
 
 /* CSS variables now properly mapped through tailwind.config.js */
+
+/* Base layer to ensure proper font inheritance like prototype */
+* {
+  font-family: var(--font-sans);
+}
+
+body {
+  font-family: var(--font-sans);
+}
 
 a {
   font-weight: 500;

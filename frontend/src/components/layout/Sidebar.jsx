@@ -34,7 +34,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-8 h-8 bg-[#01C38D] rounded-lg flex items-center justify-center">
                   <Wallet className="w-5 h-5 text-[#191E29]" />
                 </div>
-                <span className="text-xl font-bold text-white">Monity</span>
+                <span className="text-lg font-semibold text-white">Monity</span>
               </Link>
             )}
             <button

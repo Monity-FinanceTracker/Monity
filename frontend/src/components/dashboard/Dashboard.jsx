@@ -17,8 +17,8 @@ function ModernCard({ children, title, subtitle, icon, accent, isLoading = false
                         </div>
                     )}
                     <div>
-                        <h3 className={`text-lg font-semibold ${accent || 'text-white'}`}>{title}</h3>
-                        {subtitle && <p className="text-gray-400 text-sm mt-1">{subtitle}</p>}
+                        <h3 className={`text-sm font-medium ${accent || 'text-white'}`}>{title}</h3>
+                        {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
                     </div>
                 </div>
                 {action && (
@@ -52,12 +52,12 @@ function Dashboard() {
             <div className="space-y-8">
                 {/* Welcome Section */}
                 <div>
-                    <Heading level={1} className="text-white mb-2">
+                    <h1 className="text-3xl font-bold text-white mb-2 text-balance">
                         {t('dashboard.welcome_back')}
-                    </Heading>
-                    <Text variant="default" className="text-gray-400 text-left">
+                    </h1>
+                    <p className="text-gray-400 text-lg text-left">
                         {t('dashboard.welcome_subtitle')}
-                    </Text>
+                    </p>
                 </div>
 
                 {/* Financial Overview Cards */}
