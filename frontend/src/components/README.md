@@ -68,21 +68,29 @@ Components for viewing and managing financial transactions.
 - `IncomeList.jsx` - Income-specific transaction list
 
 ### 📁 `ui/` - Reusable UI Components
-Common UI components used throughout the application.
-- `Card.jsx` - Basic card component
-- `BalanceCard.jsx` - Balance display card
+Common UI components and design system elements used throughout the application.
+
+#### Design System Components
+- `Button.jsx` - Modern button component with variants, sizes, and loading states
+- `Card.jsx` - Enhanced card component with icons and actions
+- `Typography.jsx` - Complete typography system (Heading, Text, Label, Caption, etc.)
+- `ResponsiveContainer.jsx` - Responsive layout components (Container, Grid, Flex, etc.)
+- `Spinner.jsx` - Modern loading spinner with multiple variants
+
+#### Data Display Components
+- `BalanceCard.jsx` - Balance display card (React Query optimized)
 - `Balance.jsx` - Balance component
 - `TotalExpenses.jsx` - Total expenses display
 - `Savings.jsx` - Savings overview
 - `SavingsOverviewCard.jsx` - Savings summary card
 - `SavingsGoals.jsx` - Savings goals management
 - `ExpensivePurchase.jsx` - Large purchase tracking
+
+#### Utility Components
 - `SmartCategoryButton.jsx` - AI-powered category button
 - `DateRangeFilter.jsx` - Date filtering component
 - `EmptyStates.jsx` - Empty state placeholders
 - `NotificationSystem.jsx` - Notification management
-- `Spinner.jsx` - Loading spinner component
-- `Spinner.css` - Spinner styles
 
 ## Import Patterns
 
@@ -91,11 +99,42 @@ Common UI components used throughout the application.
 import { Login, Signup } from './components/auth';
 import { EnhancedDashboard } from './components/dashboard';
 import { BalanceChart } from './components/charts';
+import { Button, Card, Heading, Text } from './components/ui';
 ```
 
 ### Import from main index:
 ```javascript
 import { Login, EnhancedDashboard, BalanceChart } from './components';
+```
+
+### Design System Components Usage:
+```javascript
+import { 
+  Button, 
+  Card, 
+  Heading, 
+  Text, 
+  Container, 
+  Grid 
+} from './components/ui';
+
+// Typography
+<Heading level={1} variant="gradient">Welcome</Heading>
+<Text size="lg" variant="muted">Description text</Text>
+
+// Layout
+<Container size="default" padding="lg">
+  <Grid cols={{ base: 1, md: 2, lg: 3 }} gap="default">
+    <Card title="Balance" icon={<Icon />}>
+      Content here
+    </Card>
+  </Grid>
+</Container>
+
+// Buttons
+<Button variant="primary" size="lg" loading={isLoading}>
+  Save Changes
+</Button>
 ```
 
 ## Benefits of This Organization
