@@ -33,10 +33,10 @@ const Card = memo(({
                 {icon}
               </div>
             )}
-            <div>
-              {title && <h3 className="text-lg font-semibold text-white">{title}</h3>}
-              {subtitle && <p className="text-gray-400 text-sm mt-1">{subtitle}</p>}
-            </div>
+                    <div>
+                      {title && <h3 className="text-sm font-medium text-white">{title}</h3>}
+                      {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
+                    </div>
           </div>
           {headerAction && headerAction}
         </div>

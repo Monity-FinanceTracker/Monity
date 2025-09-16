@@ -61,9 +61,9 @@ const SavingsOverviewCard = () => {
         return (
             <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">
-                        {t('savings_goals.title')}
-                    </h3>
+                        <h3 className="text-sm font-medium text-white">
+                            {t('savings_goals.title')}
+                        </h3>
                     <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
                         <span className="text-white font-bold text-sm">💰</span>
                     </div>
@@ -90,9 +90,9 @@ const SavingsOverviewCard = () => {
     return (
         <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">
-                    {t('savings_goals.title')}
-                </h3>
+                        <h3 className="text-sm font-medium text-white">
+                            {t('savings_goals.title')}
+                        </h3>
                 <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">💰</span>
                 </div>
@@ -101,23 +101,23 @@ const SavingsOverviewCard = () => {
             {/* Total allocated amount */}
             <div className="mb-4 text-center">
                 <div className="mb-2">
-                    <span className="text-3xl font-bold text-white block">
-                        ${savingsData.totalAllocated.toLocaleString()}
-                    </span>
-                    <span className="text-sm text-gray-400">
-                        {t('savings_goals.allocated')}
-                    </span>
+                            <span className="text-2xl font-bold text-white block">
+                                ${savingsData.totalAllocated.toLocaleString()}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                                {t('savings_goals.allocated')}
+                            </span>
                 </div>
-                <div className="text-sm text-gray-300">
+                <div className="text-xs text-gray-300">
                     {t('savings_goals.target')}: ${savingsData.totalTargets.toLocaleString()}
                 </div>
             </div>
 
             {/* Overall progress bar */}
             <div className="mb-4">
-                <div className="flex justify-between text-sm text-gray-300 mb-2">
+                <div className="flex justify-between text-xs text-gray-300 mb-2">
                     <span>{t('savings_goals.overall_progress')}</span>
-                    <span className="font-semibold">{savingsData.progressPercentage.toFixed(1)}%</span>
+                    <span className="font-medium">{savingsData.progressPercentage.toFixed(1)}%</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-3">
                     <div 

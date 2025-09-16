@@ -66,7 +66,7 @@ export default {
         xl: "var(--radius-xl)",
       },
       fontFamily: {
-        sans: ["system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"],
+        sans: ["var(--font-sans)", "DM Sans", "system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"],
       },
     },
   },
