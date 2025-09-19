@@ -1,13 +1,31 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { supabaseAdmin } = require("../config/supabase");
 const { logger } = require("../utils/logger");
+
+// Initialize Stripe only if the secret key is available
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+} else {
+  logger.warn("STRIPE_SECRET_KEY not found. Billing features will be disabled.");
+}
 
 class BillingController {
   constructor(supabase) {
     this.supabase = supabase;
-  } // Helper to look up or create a Stripe customer
+  }
+
+  // Helper method to check if Stripe is available
+  _ensureStripeAvailable() {
+    if (!stripe) {
+      throw new Error("Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.");
+    }
+  }
+
+  // Helper to look up or create a Stripe customer
 
   async getOrCreateStripeCustomerId(userId, email) {
+    this._ensureStripeAvailable();
+    
     const { data: profile, error } = await supabaseAdmin
       .from("profiles")
       .select("stripe_customer_id")
@@ -36,6 +54,12 @@ class BillingController {
   } // POST /api/v1/billing/create-checkout-session
 
   createCheckoutSession = async (req, res) => {
+    try {
+      this._ensureStripeAvailable();
+    } catch (error) {
+      return res.status(503).json({ error: error.message });
+    }
+
     const { priceId } = req.body;
     const user = req.user; // from auth middleware
 
@@ -75,6 +99,12 @@ class BillingController {
   }; // POST /api/v1/billing/create-portal-session
 
   createBillingPortalSession = async (req, res) => {
+    try {
+      this._ensureStripeAvailable();
+    } catch (error) {
+      return res.status(503).json({ error: error.message });
+    }
+
     const user = req.user;
 
     try {
@@ -98,6 +128,12 @@ class BillingController {
   }; // Stripe webhook (registered before JSON parser in server.js)
 
   handleWebhook = async (req, res) => {
+    try {
+      this._ensureStripeAvailable();
+    } catch (error) {
+      return res.status(503).json({ error: error.message });
+    }
+
     const sig = req.headers["stripe-signature"];
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -296,6 +332,8 @@ class BillingController {
 
   async handleSubscriptionChange(supabase_user_id, stripe_subscription_id) {
     try {
+      this._ensureStripeAvailable();
+      
       // Validate inputs
       if (!supabase_user_id) {
         throw new Error("supabase_user_id is required");

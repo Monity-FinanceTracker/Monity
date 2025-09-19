@@ -413,25 +413,27 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
 
             {/* Transaction list */}
             <div className="space-y-4">
-                {/* Select all checkbox */}
-                <div className="flex items-center justify-between">
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            checked={selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0}
-                            onChange={handleSelectAll}
-                            className="rounded border-[#31344d] text-[#01C38D] focus:ring-[#01C38D]"
-                        />
-                        <span className="text-white">{t('transactions.select_all')}</span>
-                    </label>
-                    
-                    <Link
-                        to={transactionType === 'expenses' ? '/add-expense' : transactionType === 'income' ? '/add-income' : '/transactions'}
-                        className="bg-[#01C38D] text-[#191E29] px-4 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors"
-                    >
-                        + {t('transactions.add_new')}
-                    </Link>
-                </div>
+                {/* Select all checkbox - only show when there are transactions */}
+                {filteredTransactions.length > 0 && (
+                    <div className="flex items-center justify-between">
+                        <label className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0}
+                                onChange={handleSelectAll}
+                                className="rounded border-[#31344d] text-[#01C38D] focus:ring-[#01C38D]"
+                            />
+                            <span className="text-white">{t('transactions.select_all')}</span>
+                        </label>
+                        
+                        <Link
+                            to={transactionType === 'expenses' ? '/add-expense' : transactionType === 'income' ? '/add-income' : '/transactions'}
+                            className="bg-[#01C38D] text-[#191E29] px-4 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors"
+                        >
+                            + {t('transactions.add_new')}
+                        </Link>
+                    </div>
+                )}
 
                 {filteredTransactions.length === 0 ? (
                     <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-12 text-center">
