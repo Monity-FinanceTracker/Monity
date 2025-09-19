@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../navigation/LanguageSwitcher';
+import { Bell, Sparkles } from 'lucide-react';
+// LanguageSwitcher removed - now only available in settings
 
 /**
  * Unified top navigation bar with breadcrumbs, search, and user menu
@@ -38,13 +39,13 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     const getQuickActions = (query) => {
         const lowerQuery = query.toLowerCase();
         const actions = [
-            { path: '/add-expense', label: t('quickActions.add_expense'), icon: '💸', keywords: ['expense', 'despesa', 'add', 'new', 'criar'] },
-            { path: '/add-income', label: t('quickActions.add_income'), icon: '💰', keywords: ['income', 'receita', 'salary', 'salario'] },
-            { path: '/transactions', label: t('quickActions.view_transactions'), icon: '📊', keywords: ['transaction', 'history', 'historico'] },
-            { path: '/budgets', label: t('quickActions.manage_budgets'), icon: '🎯', keywords: ['budget', 'orcamento', 'limit'] },
-            { path: '/groups', label: t('quickActions.view_groups'), icon: '👥', keywords: ['group', 'grupo', 'split', 'shared'] },
-            { path: '/categories', label: t('quickActions.manage_categories'), icon: '🏷️', keywords: ['category', 'categoria', 'organize'] },
-            { path: '/settings', label: t('quickActions.settings'), icon: '⚙️', keywords: ['settings', 'configuracoes', 'profile'] },
+            { path: '/add-expense', label: t('quickActions.add_expense'), icon: <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>, keywords: ['expense', 'despesa', 'add', 'new', 'criar'] },
+            { path: '/add-income', label: t('quickActions.add_income'), icon: <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>, keywords: ['income', 'receita', 'salary', 'salario'] },
+            { path: '/transactions', label: t('quickActions.view_transactions'), icon: <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>, keywords: ['transaction', 'history', 'historico'] },
+            { path: '/budgets', label: t('quickActions.manage_budgets'), icon: <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, keywords: ['budget', 'orcamento', 'limit'] },
+            { path: '/groups', label: t('quickActions.view_groups'), icon: <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>, keywords: ['group', 'grupo', 'split', 'shared'] },
+            { path: '/categories', label: t('quickActions.manage_categories'), icon: <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>, keywords: ['category', 'categoria', 'organize'] },
+            { path: '/settings', label: t('quickActions.settings'), icon: <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>, keywords: ['settings', 'configuracoes', 'profile'] },
         ];
 
         if (!query) return actions.slice(0, 4); // Show top 4 when no search
@@ -100,17 +101,17 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     const quickActions = getQuickActions(searchQuery);
 
     return (
-        <header className="sticky top-0 z-50 bg-[#191E29] border-b border-[#31344d] shadow-lg">
-            <div className="flex items-center justify-between px-4 py-3">
-                {/* Left Section: Logo + Breadcrumbs */}
+        <header className="sticky top-0 z-30 bg-[#191E29] border-b border-[#31344d] w-full">
+            <div className="flex items-center justify-between px-6 py-4">
+                {/* Left Section: Mobile menu + Search */}
                 <div className="flex items-center gap-4 flex-1">
                     {/* Mobile menu toggle */}
                     <button
                         onClick={onMobileMenuToggle}
-                        className="md:hidden text-white hover:text-[#01C38D] transition-colors p-1"
+                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#31344d]"
                         aria-label={t('topbar.toggle_menu')}
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             {isMobileMenuOpen ? (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             ) : (
@@ -119,76 +120,48 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         </svg>
                     </button>
 
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2 text-[#01C38D] hover:text-[#01C38D]/80 transition-colors">
-                        <span className="text-xl font-bold">Monity</span>
-                        {subscriptionTier === 'premium' && (
-                            <span className="text-xs bg-yellow-400 text-black px-2 py-0.5 rounded-full font-medium">PRO</span>
-                        )}
-                    </Link>
-
-                    {/* Breadcrumbs - Hidden on small screens */}
-                    <nav className="hidden lg:flex items-center text-sm" aria-label="Breadcrumb">
-                        {breadcrumbs.map((crumb, index) => (
-                            <div key={crumb.path} className="flex items-center">
-                                {index > 0 && (
-                                    <svg className="w-4 h-4 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                )}
-                                {index === breadcrumbs.length - 1 ? (
-                                    <span className="text-white font-medium">{crumb.label}</span>
-                                ) : (
-                                    <Link
-                                        to={crumb.path}
-                                        className="text-gray-400 hover:text-white transition-colors"
-                                    >
-                                        {crumb.label}
-                                    </Link>
-                                )}
-                            </div>
-                        ))}
-                    </nav>
-                </div>
-
-                {/* Center Section: Search */}
-                <div className="flex-1 max-w-md mx-4 relative" ref={searchRef}>
+                    {/* Search - moved to left */}
+                    <div className="flex-1 max-w-lg relative" ref={searchRef}>
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
-                            className="w-full bg-[#23263a] border border-[#31344d] rounded-lg px-4 py-2 text-left text-gray-400 hover:border-[#01C38D] transition-colors focus:outline-none focus:border-[#01C38D]"
+                            className="w-full rounded-lg px-4 py-2.5 text-left transition-all duration-200 focus:outline-none hover:bg-[#31344d]"
+                            style={{
+                                backgroundColor: 'transparent',
+                                border: '1px solid #31344d',
+                                color: '#9ca3af',
+                                fontSize: '14px',
+                                fontWeight: '400'
+                            }}
                         >
-                            <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="flex items-center gap-3">
+                                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                                <span className="hidden sm:inline">{t('topbar.quick_search')}</span>
-                                <span className="ml-auto text-xs bg-[#31344d] px-2 py-1 rounded hidden md:inline">⌘K</span>
+                                <span className="hidden sm:inline text-gray-400">{t('topbar.quick_search')}</span>
                             </div>
                         </button>
 
                         {isSearchOpen && (
-                            <div className="absolute top-full left-0 right-0 mt-2 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg overflow-hidden">
-                                <div className="p-3 border-b border-[#31344d]">
-                                    <input
-                                        type="text"
-                                        placeholder={t('topbar.search_placeholder')}
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-[#191E29] border border-[#31344d] rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D]"
-                                        autoFocus
-                                    />
-                                </div>
-                                <div className="max-h-64 overflow-y-auto">
+                            <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#23263a', border: '1px solid #31344d' }}>
+                                <div className="max-h-64 overflow-y-auto" style={{ backgroundColor: '#23263a' }}>
                                     {quickActions.map((action, index) => (
                                         <button
                                             key={action.path}
                                             onClick={() => handleQuickActionSelect(action.path)}
-                                            className="w-full text-left px-4 py-3 hover:bg-[#31344d] transition-colors border-b border-[#31344d] last:border-b-0"
+                                            className="w-full text-left px-4 py-3 transition-all duration-200 group hover:bg-[#31344d]"
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                                borderBottom: index < quickActions.length - 1 ? '1px solid #31344d' : 'none',
+                                                color: '#9ca3af',
+                                                border: 'none',
+                                                fontSize: '14px',
+                                                fontWeight: '400'
+                                            }}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <span className="text-lg">{action.icon}</span>
-                                                <span className="text-white">{action.label}</span>
+                                                <span className="text-xl">{action.icon}</span>
+                                                <span className="font-medium group-hover:text-white transition-colors duration-200">{action.label}</span>
                                             </div>
                                         </button>
                                     ))}
@@ -196,72 +169,139 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                             </div>
                         )}
                     </div>
+                    </div>
                 </div>
 
-                {/* Right Section: Language + User Menu */}
-                <div className="flex items-center gap-3">
-                    {/* Language Switcher - Hidden on mobile */}
-                    <div className="hidden sm:block">
-                        <LanguageSwitcher />
-                    </div>
+                {/* Right Section: Notifications + User Menu */}
+                <div className="flex items-center gap-8">
+                    {/* Notifications */}
+                    <Bell className="w-5 h-5 text-white hover:text-gray-300 transition-colors cursor-pointer" />
 
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
                         <button
                             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                            className="flex items-center gap-2 p-1 rounded-lg hover:bg-[#31344d] transition-colors"
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                                backgroundColor: '#01C38D',
+                                borderRadius: '50%',
+                                border: 'none',
+                                outline: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}
+                            className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
                         >
-                            <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
-                                <span className="text-[#191E29] text-sm font-bold">
-                                    {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
-                                </span>
-                            </div>
-                            <span className="hidden md:inline text-white font-medium">
-                                {user?.user_metadata?.name || t('sidebar.user')}
+                            <span style={{ 
+                                color: '#191E29', 
+                                fontSize: '14px', 
+                                fontWeight: 'bold',
+                                userSelect: 'none'
+                            }}>
+                                {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    </svg>
+                                )}
                             </span>
-                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
                         </button>
 
                         {isUserMenuOpen && (
-                            <div className="absolute right-0 top-full mt-2 w-64 bg-[#23263a] border border-[#31344d] rounded-lg shadow-lg overflow-hidden">
-                                <div className="p-4 border-b border-[#31344d]">
-                                    <p className="text-white font-medium">{user?.user_metadata?.name || t('sidebar.user')}</p>
-                                    <p className="text-gray-400 text-sm truncate">{user?.email}</p>
-                                    {subscriptionTier === 'premium' && (
-                                        <span className="inline-block mt-1 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full font-medium">Premium</span>
-                                    )}
-                                </div>
-                                <div className="py-2">
-                                    <Link
-                                        to="/settings"
-                                        className="block px-4 py-2 text-white hover:bg-[#31344d] transition-colors"
-                                        onClick={() => setIsUserMenuOpen(false)}
-                                    >
+                            <div className="absolute right-0 top-full mt-3 w-56 bg-[#23263a] border border-[#31344d] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
+                                {/* User Info Header */}
+                                <div className="px-3 py-3 border-b border-[#31344d]">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium text-white leading-none text-left">
+                                            {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
+                                        </p>
                                         <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            {t('sidebar.settings')}
-                                        </div>
-                                    </Link>
-                                    <div className="block sm:hidden">
-                                        <div className="px-4 py-2 border-t border-[#31344d]">
-                                            <LanguageSwitcher />
+                                            <p className="text-xs text-gray-400 leading-none">
+                                                {user?.email}
+                                            </p>
+                                            {subscriptionTier === 'premium' && (
+                                                <span className="text-xs bg-[#01C38D] text-white px-2 py-0.5 rounded font-medium">
+                                                    Premium
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
+                                </div>
+                                
+                                {/* Menu Items - Updated with white text */}
+                                <div className="py-1">
+                                    <button
+                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 text-left rounded-none"
+                                        style={{ 
+                                            backgroundColor: 'transparent', 
+                                            border: 'none',
+                                            color: '#ffffff !important',
+                                            padding: '0.5rem 0.75rem',
+                                            margin: '0',
+                                            textAlign: 'left',
+                                            borderRadius: '0'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                        onClick={() => {
+                                            setIsUserMenuOpen(false);
+                                            // TODO: Navigate to profile when profile page is implemented
+                                            console.log('Profile clicked - not implemented yet');
+                                        }}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        <span style={{ color: '#ffffff' }}>Profile</span>
+                                    </button>
+                                    
+                                    <Link
+                                        to="/settings"
+                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 rounded-none"
+                                        style={{ 
+                                            color: '#ffffff',
+                                            textDecoration: 'none',
+                                            backgroundColor: 'transparent',
+                                            borderRadius: '0'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                        onClick={() => setIsUserMenuOpen(false)}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span style={{ color: '#ffffff' }}>Settings</span>
+                                    </Link>
+
+                                    
+                                    <hr className="border-[#31344d] my-1" />
+                                    
                                     <button
                                         onClick={handleLogout}
-                                        className="w-full text-left px-4 py-2 text-red-400 hover:bg-[#31344d] transition-colors border-t border-[#31344d]"
+                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 text-left rounded-none"
+                                        style={{ 
+                                            backgroundColor: 'transparent', 
+                                            border: 'none',
+                                            color: '#ffffff',
+                                            padding: '0.5rem 0.75rem',
+                                            margin: '0',
+                                            textAlign: 'left',
+                                            borderRadius: '0'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                            </svg>
-                                            {t('sidebar.logout')}
-                                        </div>
+                                        <svg className="w-4 h-4" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        <span style={{ color: '#ffffff' }}>Log out</span>
                                     </button>
                                 </div>
                             </div>

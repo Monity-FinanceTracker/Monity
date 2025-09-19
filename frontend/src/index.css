@@ -1,91 +1,152 @@
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Font variables to match prototype setup */
+  --font-dm-sans: 'DM Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-dm-sans);
+  /* Dark theme - matching v0 prototype: black background, dark gray containers, white text */
+  --background: oklch(0.145 0 0); /* True black background */
+  --foreground: oklch(0.985 0 0); /* White text */
+  --card: oklch(0.205 0 0); /* Dark gray card background */
+  --card-foreground: oklch(0.985 0 0); /* White text on cards */
+  --popover: oklch(0.205 0 0); /* Dark gray popover background */
+  --popover-foreground: oklch(0.985 0 0); /* White text in popovers */
+  --primary: oklch(0.985 0 0); /* White primary color */
+  --primary-foreground: oklch(0.145 0 0); /* Black text on primary */
+  --secondary: oklch(0.269 0 0); /* Medium dark gray secondary */
+  --secondary-foreground: oklch(0.985 0 0); /* White text on secondary */
+  --muted: oklch(0.269 0 0); /* Medium dark gray muted backgrounds */
+  --muted-foreground: oklch(0.556 0 0); /* Medium gray text */
+  --accent: oklch(0.269 0 0); /* Medium dark gray accent */
+  --accent-foreground: oklch(0.985 0 0); /* White text on accent */
+  --destructive: oklch(0.577 0.245 27.325); /* Red for destructive actions */
+  --destructive-foreground: oklch(0.985 0 0); /* White text on destructive */
+  --border: oklch(0.269 0 0); /* Dark gray borders */
+  --input: oklch(0.269 0 0); /* Dark gray input background */
+  --ring: oklch(0.708 0 0); /* Light gray focus ring */
+  --chart-1: oklch(0.646 0.222 41.116); /* Chart colors */
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem; /* Border radius */
+  --sidebar: oklch(0.205 0 0); /* Dark gray sidebar background */
+  --sidebar-foreground: oklch(0.985 0 0); /* White sidebar text */
+  --sidebar-primary: oklch(0.985 0 0); /* White primary in sidebar */
+  --sidebar-primary-foreground: oklch(0.145 0 0); /* Black text on sidebar primary */
+  --sidebar-accent: oklch(0.269 0 0); /* Medium dark gray accent in sidebar */
+  --sidebar-accent-foreground: oklch(0.985 0 0); /* White text on sidebar accent */
+  --sidebar-border: oklch(0.269 0 0); /* Dark gray sidebar border */
+  --sidebar-ring: oklch(0.708 0 0); /* Light gray sidebar focus ring */
+  
+  /* Font and rendering settings */
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
   margin: 0;
   padding: 0;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #191E29;
   width: 100%;
   min-height: 100vh;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+.light {
+  /* Light mode - clean white background, dark text */
+  --background: oklch(1 0 0); /* Pure white background */
+  --foreground: oklch(0.145 0 0); /* Very dark text */
+  --card: oklch(1 0 0); /* White card background */
+  --card-foreground: oklch(0.145 0 0); /* Dark text on cards */
+  --popover: oklch(1 0 0); /* White popover background */
+  --popover-foreground: oklch(0.145 0 0); /* Dark text in popovers */
+  --primary: oklch(0.205 0 0); /* Dark primary color */
+  --primary-foreground: oklch(0.985 0 0); /* Light text on primary */
+  --secondary: oklch(0.97 0 0); /* Very light gray secondary */
+  --secondary-foreground: oklch(0.205 0 0); /* Dark text on secondary */
+  --muted: oklch(0.97 0 0); /* Light gray muted backgrounds */
+  --muted-foreground: oklch(0.556 0 0); /* Medium gray text */
+  --accent: oklch(0.97 0 0); /* Light gray accent */
+  --accent-foreground: oklch(0.205 0 0); /* Dark text on accent */
+  --destructive: oklch(0.577 0.245 27.325); /* Red for destructive actions */
+  --destructive-foreground: oklch(0.985 0 0); /* Light text on destructive */
+  --border: oklch(0.922 0 0); /* Light gray borders */
+  --input: oklch(0.922 0 0); /* Light gray input background */
+  --ring: oklch(0.708 0 0); /* Medium gray focus ring */
+  --chart-1: oklch(0.488 0.243 264.376); /* Light mode chart colors */
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.985 0 0); /* Light sidebar background */
+  --sidebar-foreground: oklch(0.145 0 0); /* Dark sidebar text */
+  --sidebar-primary: oklch(0.205 0 0); /* Dark primary in sidebar */
+  --sidebar-primary-foreground: oklch(0.985 0 0); /* Light text on sidebar primary */
+  --sidebar-accent: oklch(0.97 0 0); /* Light accent in sidebar */
+  --sidebar-accent-foreground: oklch(0.205 0 0); /* Dark text on sidebar accent */
+  --sidebar-border: oklch(0.922 0 0); /* Light sidebar border */
+  --sidebar-ring: oklch(0.708 0 0); /* Medium gray sidebar focus ring */
 }
-a:hover {
-  color: #535bf2;
+
+/* CSS variables now properly mapped through tailwind.config.js */
+
+/* Base layer to ensure proper font inheritance like prototype */
+* {
+  font-family: var(--font-sans);
 }
 
 body {
+  font-family: var(--font-sans);
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: inherit;
+}
+a:hover {
+  opacity: 0.8;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-h2 {
+h1, h2 {
+  color: var(--foreground);
   font-size: 3.2em;
   line-height: 1.1;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  opacity: 0.9;
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-@import "tailwindcss/preflight";
-@tailwind utilities;
-
-@theme {
-  --color-darkerst: #191E29;
-  --color-darkblue: #132D46;
-  --color-teal: #01C38D;
-  --color-customgray: #696E79;
-  --color-customwhite: #FFFFFF;
-}
+/* Remove old color variables and media queries - now using CSS variables */
 
 
 

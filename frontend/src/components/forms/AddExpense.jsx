@@ -1,20 +1,24 @@
 import { useState, useEffect, useCallback } from 'react';
-import { get, post } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
 import { useSmartCategorization } from '../../hooks/useSmartCategorization';
 import { useNotifications } from '../ui/NotificationSystem';
+import { useCategories, useAddTransaction } from '../../hooks/useQueries';
+import { Button } from '../ui';
 import { FaPlus, FaArrowTrendDown } from 'react-icons/fa6';
 import { FaDollarSign, FaCalendarAlt, FaListUl, FaEdit, FaBrain } from 'react-icons/fa';
 
 function AddExpense({ onAdd }) {
     const { t } = useTranslation();
     const { success, error: notifyError } = useNotifications();
-    const [categories, setCategories] = useState([]);
+    
+    // React Query hooks
+    const { data: categories = [], isLoading: categoriesLoading } = useCategories(1); // Expense categories
+    const addTransactionMutation = useAddTransaction();
+    
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState('');
     const [date, setDate] = useState('');
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     
     // Smart Categorization
@@ -32,21 +36,7 @@ function AddExpense({ onAdd }) {
     const [selectedAISuggestion, setSelectedAISuggestion] = useState(null);
     const [debounceTimer, setDebounceTimer] = useState(null);
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const { data } = await get('/categories');
-                setCategories(data);
-            } catch (err) {
-                console.error('Error fetching categories:', err);
-                setError(t('addExpense.failed_load_categories'));
-            }
-        };
-        fetchCategories();
-    }, [t]);
-
     const expenseCategories = categories
-        .filter(category => category.typeId === 1 || category.typeId === 3)
 
     // Debounced AI suggestion fetching
     const handleDescriptionChange = useCallback((value) => {
@@ -116,45 +106,44 @@ function AddExpense({ onAdd }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError(null);
         success('');
         
-        try {
-            // Prepare data with AI feedback information
-            const transactionData = {
-                description, 
-                amount, 
-                category, 
-                date,
-                wasAISuggested: !!selectedAISuggestion,
-                aiConfidence: selectedAISuggestion?.confidence || null,
-                suggestedCategory: selectedAISuggestion?.category || null
-            };
+        // Prepare data with AI feedback information
+        const transactionData = {
+            description, 
+            amount, 
+            category, 
+            date,
+            wasAISuggested: !!selectedAISuggestion,
+            aiConfidence: selectedAISuggestion?.confidence || null,
+            suggestedCategory: selectedAISuggestion?.category || null
+        };
 
-            await post('/add-expense', transactionData);
+        addTransactionMutation.mutate(transactionData, {
+            onSuccess: () => {
+                // Use notification system instead of local state
+                if (selectedAISuggestion && selectedAISuggestion.category === category) {
+                    success(t('addExpense.success_with_ai_category', { category }));
+                } else {
+                    success(t('addExpense.success'));
+                }
+                
+                // Reset form
+                setDescription('');
+                setAmount('');
+                setCategory('');
+                setDate('');
+                setShowAISuggestions(false);
+                setSelectedAISuggestion(null);
+                clearSuggestions();
 
-            // Use notification system instead of local state
-            if (selectedAISuggestion && selectedAISuggestion.category === category) {
-                success(t('addExpense.success_with_ai_category', { category }));
-            } else {
-                success(t('addExpense.success'));
+                if (onAdd) onAdd();
+            },
+            onError: (err) => {
+                notifyError(err.response?.data?.message || t('addExpense.failed'));
             }
-            
-            setDescription('');
-            setAmount('');
-            setCategory('');
-            setDate('');
-            setShowAISuggestions(false);
-            setSelectedAISuggestion(null);
-            clearSuggestions();
-
-            if (onAdd) onAdd();
-        } catch (err) {
-            notifyError(err.response?.data?.message || t('addExpense.failed'));
-        } finally {
-            setLoading(false);
-        }
+        });
     };
 
     return (
@@ -314,23 +303,17 @@ function AddExpense({ onAdd }) {
                         </div>
 
                         {/* Submit Button */}
-                        <button
+                        <Button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold py-4 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
-                            disabled={loading}
+                            variant="danger"
+                            size="lg"
+                            fullWidth
+                            loading={addTransactionMutation.isPending}
+                            disabled={addTransactionMutation.isPending}
+                            leftIcon={!addTransactionMutation.isPending ? <FaPlus className="text-lg" /> : null}
                         >
-                            {loading ? (
-                                <>
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                    {t('addExpense.adding')}
-                                </>
-                            ) : (
-                                <>
-                                    <FaPlus className="text-lg" />
-                                    {t('addExpense.add_expense')}
-                                </>
-                            )}
-                        </button>
+                            {addTransactionMutation.isPending ? t('addExpense.adding') : t('addExpense.add_expense')}
+                        </Button>
 
                         {/* Error Message */}
                         {error && (

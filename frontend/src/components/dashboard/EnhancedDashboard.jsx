@@ -90,8 +90,8 @@ const EnhancedDashboard = () => {
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h3 className={`text-xl font-bold ${accent}`}>{title}</h3>
-                            {subtitle && <p className="text-gray-400 text-sm mt-1">{subtitle}</p>}
+                            <h3 className={`text-sm font-medium ${accent}`}>{title}</h3>
+                            {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
                         </div>
                         {action && (
                             <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ const EnhancedDashboard = () => {
                         <div className="flex items-center gap-3">
                             <div className="text-2xl">{action.icon}</div>
                             <div className="flex-1">
-                                <h4 className="text-white font-bold text-sm">{action.title}</h4>
+                                <h4 className="text-white font-medium text-sm">{action.title}</h4>
                                 <p className="text-white/80 text-xs mt-1">{action.description}</p>
                             </div>
                         </div>
@@ -199,24 +199,22 @@ const EnhancedDashboard = () => {
     return (
         <div className="space-y-8">
             {/* Welcome Section */}
-            <div className="bg-gradient-to-r from-[#01C38D] to-[#01A071] rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold">
-                            {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}! 👋
-                        </h1>
-                        <p className="text-white/80 mt-1">
-                            {t('dashboard.welcome_subtitle')}
-                        </p>
-                    </div>
-                    {subscriptionTier === 'premium' && (
-                        <div className="hidden md:block">
-                            <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                                ✨ Premium
-                            </span>
-                        </div>
-                    )}
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-white mb-2 text-balance">
+                        {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}!
+                    </h1>
+                    <p className="text-gray-400 text-lg text-left">
+                        {t('dashboard.welcome_subtitle')}
+                    </p>
                 </div>
+                {subscriptionTier === 'premium' && (
+                    <div className="hidden md:block">
+                        <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
+                            ✨ Premium
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* Quick Actions */}
@@ -271,8 +269,8 @@ const EnhancedDashboard = () => {
                                 🤖
                             </div>
                             <div>
-                                <h4 className="text-yellow-400 font-bold">{t('dashboard.smart_categorization_active')}</h4>
-                                <p className="text-gray-300 text-sm">{t('dashboard.ai_categorization_desc')}</p>
+                                <h4 className="text-yellow-400 font-medium text-sm">{t('dashboard.smart_categorization_active')}</h4>
+                                <p className="text-gray-300 text-xs">{t('dashboard.ai_categorization_desc')}</p>
                             </div>
                         </div>
                     </div>

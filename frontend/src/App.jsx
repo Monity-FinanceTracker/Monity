@@ -22,7 +22,6 @@ import {
   SavingsGoals, 
   TotalExpenses, 
   DateRangeFilter, 
-  LanguageSwitcher, 
   Groups, 
   CreateGroup, 
   GroupPage, 
@@ -132,22 +131,34 @@ function App() {
 }
 
 // Main layout for protected pages
-const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => (
-  <div className="flex flex-col min-h-screen bg-[#191E29]">
-    <UnifiedTopBar 
-      onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-      isMobileMenuOpen={isMobileMenuOpen} 
-    />
-    <div className="flex flex-1">
+const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  return (
+    <div className="flex min-h-screen bg-[#191E29] font-sans">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#01C38D] text-[#191E29] p-2 z-50 rounded">
         Skip to main content
       </a>
-      <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
-      <main id="main-content" className={`flex-1 p-4 md:p-6 pt-4 md:pt-6 md:ml-64 overflow-y-auto transition-all duration-300 ${isMobileMenuOpen ? 'ml-64 md:ml-0' : 'ml-0'}`} aria-live="polite">
-        {children}
-      </main>
+      {/* Sidebar - Full height */}
+      <Sidebar 
+        isMobileMenuOpen={isMobileMenuOpen} 
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+      />
+      
+      {/* Main content area with topbar */}
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
+        <UnifiedTopBar 
+          onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+          isMobileMenuOpen={isMobileMenuOpen} 
+        />
+        <main id="main-content" className="flex-1 p-4 md:p-6 overflow-y-auto" aria-live="polite">
+          {children}
+        </main>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default App;
