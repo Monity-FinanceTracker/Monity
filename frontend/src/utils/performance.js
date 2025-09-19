@@ -49,7 +49,7 @@ export const reportWebVitals = (onPerfEntry) => {
 export const logMemoryUsage = () => {
   if (process.env.NODE_ENV === 'development' && 'memory' in performance) {
     const memory = performance.memory;
-    console.log('📊 Memory Usage:', {
+    console.log('[PERFORMANCE] Memory Usage:', {
       used: `${Math.round(memory.usedJSHeapSize / 1048576)} MB`,
       total: `${Math.round(memory.totalJSHeapSize / 1048576)} MB`,
       limit: `${Math.round(memory.jsHeapSizeLimit / 1048576)} MB`

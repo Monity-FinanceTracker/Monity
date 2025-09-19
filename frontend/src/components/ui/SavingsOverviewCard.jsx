@@ -65,13 +65,17 @@ const SavingsOverviewCard = () => {
                             {t('savings_goals.title')}
                         </h3>
                     <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">💰</span>
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
                     </div>
                 </div>
                 
                 <div className="text-center py-8">
                     <div className="mb-4">
-                        <span className="text-4xl">💰</span>
+                        <svg className="w-16 h-16 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
                     </div>
                     <p className="text-gray-400 mb-6 text-lg">
                         {t('savings_goals.no_goals_yet')}
@@ -94,7 +98,9 @@ const SavingsOverviewCard = () => {
                             {t('savings_goals.title')}
                         </h3>
                 <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">💰</span>
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                    </svg>
                 </div>
             </div>
 
