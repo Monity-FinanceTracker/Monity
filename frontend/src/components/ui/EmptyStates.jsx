@@ -71,20 +71,20 @@ export const EmptyTransactions = () => {
     
     return (
         <EmptyStateBase
-            icon="📊"
+            icon={<svg className="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>}
             title={t('emptyStates.transactions.title')}
             description={t('emptyStates.transactions.description')}
             actions={[
                 {
                     label: t('emptyStates.transactions.add_expense'),
                     href: '/add-expense',
-                    icon: '💸',
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.transactions.add_income'),
                     href: '/add-income',
-                    icon: '💰'
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>
                 }
             ]}
         />
@@ -96,20 +96,20 @@ export const EmptyExpenses = () => {
     
     return (
         <EmptyStateBase
-            icon="💸"
+            icon={<svg className="w-16 h-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>}
             title={t('emptyStates.expenses.title')}
             description={t('emptyStates.expenses.description')}
             actions={[
                 {
                     label: t('emptyStates.expenses.add_first'),
                     href: '/add-expense',
-                    icon: '➕',
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.expenses.import_csv'),
                     onClick: () => {/* Import CSV logic */},
-                    icon: '📥'
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" /></svg>
                 }
             ]}
         />
@@ -121,7 +121,7 @@ export const EmptyIncome = () => {
     
     return (
         <EmptyStateBase
-            icon="💰"
+            icon={<svg className="w-16 h-16 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>}
             title={t('emptyStates.income.title')}
             description={t('emptyStates.income.description')}
             actions={[
@@ -146,7 +146,7 @@ export const EmptyCategories = () => {
     
     return (
         <EmptyStateBase
-            icon="🏷️"
+            icon={<svg className="w-16 h-16 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>}
             title={t('emptyStates.categories.title')}
             description={t('emptyStates.categories.description')}
             actions={[
@@ -171,7 +171,7 @@ export const EmptyGroups = () => {
     
     return (
         <EmptyStateBase
-            icon="👥"
+            icon={<svg className="w-16 h-16 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>}
             title={t('emptyStates.groups.title')}
             description={t('emptyStates.groups.description')}
             actions={[
@@ -196,7 +196,7 @@ export const EmptyBudgets = () => {
     
     return (
         <EmptyStateBase
-            icon="🎯"
+            icon={<svg className="w-16 h-16 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
             title={t('emptyStates.budgets.title')}
             description={t('emptyStates.budgets.description')}
         />
@@ -215,13 +215,13 @@ export const EmptySearchResults = ({ query }) => {
                 {
                     label: t('emptyStates.search.clear_filters'),
                     onClick: () => {/* Clear filters */},
-                    icon: '🗑️',
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.search.browse_all'),
                     href: '/transactions',
-                    icon: '📊'
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
                 }
             ]}
         />
@@ -240,13 +240,13 @@ export const EmptyDashboard = () => {
                 {
                     label: t('emptyStates.dashboard.add_expense'),
                     href: '/add-expense',
-                    icon: '💸',
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.dashboard.add_income'),
                     href: '/add-income',
-                    icon: '💰'
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" /></svg>
                 },
                 {
                     label: t('emptyStates.dashboard.watch_tutorial'),
@@ -264,7 +264,7 @@ export const ErrorState = ({ title, description, onRetry }) => {
     
     return (
         <EmptyStateBase
-            icon="⚠️"
+            icon={<svg className="w-16 h-16 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>}
             title={title || t('errorStates.generic.title')}
             description={description || t('errorStates.generic.description')}
             actions={[

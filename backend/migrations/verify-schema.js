@@ -30,11 +30,11 @@ class SchemaVerifier {
         // Sample some data to see encryption patterns
         await this.sampleEncryptedData();
         
-        console.log('\n✅ Schema verification completed!');
+        console.log('\n[SUCCESS] Schema verification completed!');
     }
 
     async verifyTable(tableName, encryptedFields) {
-        console.log(`📋 Checking table: ${tableName}`);
+        console.log(`[INFO] Checking table: ${tableName}`);
         
         try {
             // Check if table exists and get sample data
@@ -44,11 +44,11 @@ class SchemaVerifier {
                 .limit(3);
 
             if (error) {
-                console.log(`   ❌ Error accessing ${tableName}: ${error.message}`);
+                console.log(`   [ERROR] Error accessing ${tableName}: ${error.message}`);
                 return;
             }
 
-            console.log(`   ✅ Table exists with ${count} records`);
+            console.log(`   [SUCCESS] Table exists with ${count} records`);
             
             // Check if encrypted fields exist in the schema
             if (data && data.length > 0) {
@@ -58,17 +58,17 @@ class SchemaVerifier {
                     if (field in sampleRecord) {
                         const value = sampleRecord[field];
                         const encryptionStatus = this.analyzeEncryption(value);
-                        console.log(`   📄 Field '${field}': ${encryptionStatus}`);
+                        console.log(`   [FIELD] Field '${field}': ${encryptionStatus}`);
                     } else {
-                        console.log(`   ⚠️  Field '${field}' not found in ${tableName}`);
+                        console.log(`   [WARNING] Field '${field}' not found in ${tableName}`);
                     }
                 }
             } else {
-                console.log(`   ℹ️  No data in ${tableName} to analyze`);
+                console.log(`   [INFO] No data in ${tableName} to analyze`);
             }
 
         } catch (error) {
-            console.log(`   ❌ Unexpected error with ${tableName}: ${error.message}`);
+            console.log(`   [ERROR] Unexpected error with ${tableName}: ${error.message}`);
         }
         
         console.log('');
@@ -82,10 +82,10 @@ class SchemaVerifier {
         // Check if it looks like encrypted data (format: iv:authTag:encrypted)
         const parts = value.split(':');
         if (parts.length === 3 && parts.every(part => /^[0-9a-fA-F]+$/.test(part))) {
-            return `🔒 Likely encrypted (${value.length} chars)`;
+            return `[ENCRYPTED] Likely encrypted (${value.length} chars)`;
         }
         
-        return `📝 Plain text: "${value.substring(0, 30)}${value.length > 30 ? '...' : ''}"`;
+        return `[PLAIN] Plain text: "${value.substring(0, 30)}${value.length > 30 ? '...' : ''}"`;
     }
 
     async sampleEncryptedData() {
@@ -121,7 +121,7 @@ class SchemaVerifier {
             }
 
         } catch (error) {
-            console.log('❌ Error sampling data:', error.message);
+            console.log('[ERROR] Error sampling data:', error.message);
         }
     }
 }
@@ -130,7 +130,7 @@ async function main() {
     try {
         console.log('Database Schema Verification');
         console.log('============================');
-        console.log(`Encryption key configured: ${process.env.ENCRYPTION_KEY ? '✅ Yes' : '❌ No'}`);
+        console.log(`Encryption key configured: ${process.env.ENCRYPTION_KEY ? '[YES]' : '[NO]'}`);
         console.log(`Key length: ${process.env.ENCRYPTION_KEY?.length || 0} characters\n`);
         
         const verifier = new SchemaVerifier();
