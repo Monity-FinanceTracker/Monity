@@ -7,6 +7,7 @@ import formatDate from '../../utils/formatDate';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
+import { TransactionSkeleton } from '../ui';
 
 /**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
@@ -230,7 +231,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     // Transaction card component
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (
-        <div className={`bg-[#23263a] border border-[#31344d] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
+        <div className={`bg-[#23263a] border border-[#31344d] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <input
@@ -297,8 +298,34 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <div className="w-12 h-12 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+            <div className="space-y-6">
+                {/* Header skeleton */}
+                <div className="bg-gradient-to-r from-[#23263a] to-[#31344d] rounded-xl p-6 border border-[#31344d]">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        {Array.from({ length: 4 }).map((_, index) => (
+                            <div key={index} className="text-center">
+                                <div className="h-8 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+                                <div className="h-4 bg-gray-700/30 rounded animate-pulse"></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                
+                {/* Search and filters skeleton */}
+                <div className="bg-gray-900 rounded-xl p-6">
+                    <div className="flex flex-col md:flex-row gap-4 mb-4">
+                        <div className="flex-1 h-12 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                        <div className="h-12 w-32 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                    </div>
+                    <div className="flex gap-2 mb-4">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                            <div key={index} className="h-8 w-20 bg-gray-700/30 rounded-full animate-pulse"></div>
+                        ))}
+                    </div>
+                </div>
+                
+                {/* Transactions skeleton */}
+                <TransactionSkeleton count={8} />
             </div>
         );
     }
@@ -468,7 +495,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             )}
 
             {/* Transaction list */}
-            <div className="space-y-4">
+            <div className="space-y-4 dynamic-list">
                 {/* Select all checkbox - only show when there are transactions */}
                 {filteredTransactions.length > 0 && (
                     <div className="flex items-center justify-between">

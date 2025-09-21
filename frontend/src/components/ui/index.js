@@ -14,4 +14,5 @@ export { default as DateRangeFilter } from './DateRangeFilter';
 export { default as EmptyStates } from './EmptyStates';
 export { default as NotificationSystem, NotificationProvider } from './NotificationSystem';
 export { default as Spinner } from './Spinner';
+export { default as Skeleton, CardSkeleton, TransactionSkeleton, DashboardSkeleton } from './Skeleton';
 export { default as FormField, Input, Textarea, Select, FormGroup, FormActions, FormSection } from './FormField';

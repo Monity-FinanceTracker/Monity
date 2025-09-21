@@ -11,7 +11,7 @@ export const measureComponentRender = (componentName, renderFn) => {
     const endTime = performance.now();
     
     if (endTime - startTime > 16) { // Only log if render takes more than 16ms (60fps threshold)
-      console.log(`🐌 Slow render: ${componentName} took ${(endTime - startTime).toFixed(2)}ms`);
+      console.log(`[PERFORMANCE] Slow render: ${componentName} took ${(endTime - startTime).toFixed(2)}ms`);
     }
     
     return result;
@@ -61,10 +61,10 @@ export const logMemoryUsage = () => {
 export const analyzeBundleSize = () => {
   if (process.env.NODE_ENV === 'development') {
     // Log the approximate size of major dependencies
-    console.log('📦 Major Dependencies:');
-    console.log('- React:', typeof React !== 'undefined' ? '✅' : '❌');
-    console.log('- React Router:', typeof window?.history?.pushState !== 'undefined' ? '✅' : '❌');
-    console.log('- React Query:', typeof window?.ReactQuery !== 'undefined' ? '✅' : '❌');
+    console.log('[BUNDLE] Major Dependencies:');
+    console.log('- React:', typeof React !== 'undefined' ? '[OK]' : '[ERROR]');
+    console.log('- React Router:', typeof window?.history?.pushState !== 'undefined' ? '[OK]' : '[ERROR]');
+    console.log('- React Query:', typeof window?.ReactQuery !== 'undefined' ? '[OK]' : '[ERROR]');
   }
 };
 

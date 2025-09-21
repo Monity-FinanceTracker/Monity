@@ -25,7 +25,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
 
   return (
     <>
-      <aside className={`fixed top-0 left-0 h-screen bg-[#23263a] text-white border-r border-[#31344d] z-40 transform transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+      <aside className={`fixed top-0 left-0 h-screen bg-[#23263a] text-white border-r border-[#31344d] z-40 transform transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'}`} style={{ willChange: 'transform' }}>
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className={`flex items-center p-4 border-b border-[#31344d] ${isCollapsed ? 'justify-center' : 'justify-between'}`}>

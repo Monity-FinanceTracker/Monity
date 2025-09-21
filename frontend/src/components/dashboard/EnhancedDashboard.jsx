@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { get } from '../../utils/api';
-import { BalanceCard, Savings, SavingsOverviewCard } from '../ui';
+import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 import { BalanceChart, ExpenseChart } from '../charts';
 import { getIcon, Icon } from '../../utils/iconMapping.jsx';
 
@@ -200,6 +200,11 @@ const EnhancedDashboard = () => {
             </div>
         </EnhancedCard>
     );
+
+    // Show skeleton while loading to prevent CLS
+    if (isLoading) {
+        return <DashboardSkeleton />;
+    }
 
     return (
         <div className="space-y-8">

@@ -87,11 +87,11 @@ export const LazyDashboard = lazy(() =>
     }))
 );
 
-export const LazyEnhancedDashboard = lazy(() => 
-    import('./dashboard/EnhancedDashboard').then(module => ({
-        default: module.default
-    }))
-);
+// Removed duplicate lazy imports - these components are now statically imported
+// export const LazyEnhancedDashboard = lazy(() => import('./dashboard/EnhancedDashboard'));
+// export const LazyAdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
+// export const LazyFinancialHealth = lazy(() => import('./dashboard/FinancialHealth'));
+// export const LazyVirtualizedTransactionList = lazy(() => import('./transactions/VirtualizedTransactionList'));
 
 export const LazyPerformanceDashboard = lazy(() => 
     import('./dashboard/PerformanceDashboard').then(module => ({
@@ -99,26 +99,8 @@ export const LazyPerformanceDashboard = lazy(() =>
     }))
 );
 
-export const LazyAdminDashboard = lazy(() => 
-    import('./dashboard/AdminDashboard').then(module => ({
-        default: module.default
-    }))
-);
-
-export const LazyFinancialHealth = lazy(() => 
-    import('./dashboard/FinancialHealth').then(module => ({
-        default: module.default
-    }))
-);
-
 export const LazyTransactions = lazy(() => 
     import('./transactions/Transactions').then(module => ({
-        default: module.default
-    }))
-);
-
-export const LazyVirtualizedTransactionList = lazy(() => 
-    import('./transactions/VirtualizedTransactionList').then(module => ({
         default: module.default
     }))
 );
