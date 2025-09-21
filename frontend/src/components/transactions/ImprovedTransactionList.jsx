@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { get, del } from '../../utils/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
 import formatDate from '../../utils/formatDate';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
+import { monitorApiCall } from '../../utils/performanceMonitor';
 
 /**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
@@ -30,31 +32,48 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
     const [viewMode, setViewMode] = useState('card'); // 'card' or 'table'
 
-    // Fetch transactions
-    useEffect(() => {
-        fetchTransactions();
-    }, []);
-
-    const fetchTransactions = async () => {
-        try {
-            const { data } = await get('/transactions');
-            let transactionData = Array.isArray(data) ? data : [];
-            
-            // Filter by transaction type if specified
-            if (transactionType === 'expenses') {
-                transactionData = transactionData.filter(t => t.typeId === 1);
-            } else if (transactionType === 'income') {
-                transactionData = transactionData.filter(t => t.typeId === 2);
+    // React Query for server state management
+    const { 
+        data: transactionsData = [], 
+        isLoading: queryLoading, 
+        error: queryError,
+        refetch 
+    } = useQuery({
+        queryKey: ['transactions', 'list', transactionType],
+        queryFn: async () => {
+            const startTime = performance.now();
+            try {
+                const response = await optimizedGet('/transactions');
+                const endTime = performance.now();
+                
+                monitorApiCall('transactions-list', startTime, endTime, true);
+                
+                let transactionData = Array.isArray(response.data) ? response.data : [];
+                
+                // Filter by transaction type if specified
+                if (transactionType === 'expenses') {
+                    transactionData = transactionData.filter(t => t.typeId === 1);
+                } else if (transactionType === 'income') {
+                    transactionData = transactionData.filter(t => t.typeId === 2);
+                }
+                
+                return transactionData;
+            } catch (err) {
+                const endTime = performance.now();
+                monitorApiCall('transactions-list', startTime, endTime, false);
+                throw err;
             }
-            
-            setTransactions(transactionData);
-            setFilteredTransactions(transactionData);
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+        },
+        staleTime: 2 * 60 * 1000, // 2 minutes
+        gcTime: 5 * 60 * 1000, // 5 minutes
+    });
+
+    // Update local state when query data changes
+    useEffect(() => {
+        setTransactions(transactionsData);
+        setLoading(queryLoading);
+        setError(queryError?.message || null);
+    }, [transactionsData, queryLoading, queryError]);
 
     // Memoized filtering and search with debounced search
     const filteredAndSortedTransactions = useMemo(() => {
@@ -134,6 +153,30 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     useEffect(() => {
         setFilteredTransactions(filteredAndSortedTransactions);
     }, [filteredAndSortedTransactions]);
+
+    // Optimized delete mutation with React Query
+    const queryClient = useQueryClient();
+    const deleteTransactionMutation = useMutation({
+        mutationFn: async (transactionId) => {
+            const startTime = performance.now();
+            try {
+                await optimizedDel(`/transactions/${transactionId}`);
+                const endTime = performance.now();
+                monitorApiCall('delete-transaction', startTime, endTime, true);
+            } catch (error) {
+                const endTime = performance.now();
+                monitorApiCall('delete-transaction', startTime, endTime, false);
+                throw error;
+            }
+        },
+        onSuccess: () => {
+            // Invalidate and refetch transactions
+            queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        },
+        onError: (error) => {
+            console.error('Delete transaction error:', error);
+        }
+    });
 
     // Bulk operations
     const handleSelectAll = () => {
