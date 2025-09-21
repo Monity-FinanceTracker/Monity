@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { get } from '../../utils/api';
 import { getPerformanceSummary, enablePerformanceDebug, disablePerformanceDebug } from '../../utils/webVitals';
 import Spinner from '../ui/Spinner';
+import { CheckCircle, XCircle, AlertTriangle, AlertCircle, Rocket } from 'lucide-react';
+import { Icon } from '../../utils/iconMapping.jsx';
 
 /**
  * Performance Dashboard Component
@@ -92,7 +94,7 @@ const PerformanceDashboard = React.memo(() => {
         }
         
         if (typeof value === 'boolean') {
-            return value ? '✅' : '❌';
+            return value ? <CheckCircle className="w-5 h-5 text-green-400" /> : <XCircle className="w-5 h-5 text-red-400" />;
         }
         
         return String(value);
@@ -185,7 +187,7 @@ const PerformanceDashboard = React.memo(() => {
             return (
                 <div className="bg-green-800/20 border border-green-600 rounded-lg p-4">
                     <div className="flex items-center">
-                        <span className="text-green-400 text-xl mr-2">✅</span>
+                        <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
                         <span className="text-green-300">No active alerts</span>
                     </div>
                 </div>
@@ -207,7 +209,7 @@ const PerformanceDashboard = React.memo(() => {
                             <span className={`text-xl mr-2 ${
                                 alert.severity === 'high' ? 'text-red-400' : 'text-yellow-400'
                             }`}>
-                                {alert.severity === 'high' ? '🚨' : '⚠️'}
+                                {alert.severity === 'high' ? <AlertCircle className="w-5 h-5 text-red-400" /> : <AlertTriangle className="w-5 h-5 text-yellow-400" />}
                             </span>
                             <div className="flex-1">
                                 <p className={`font-medium ${
@@ -264,7 +266,7 @@ const PerformanceDashboard = React.memo(() => {
                                 : 'bg-gray-600 hover:bg-gray-700 text-white'
                         }`}
                     >
-                        {autoRefresh ? '⏸️ ' + t('performanceDashboard.pause') : '▶️ ' + t('performanceDashboard.auto_refresh')}
+                        {autoRefresh ? <><Icon name="Pause" size="sm" className="mr-1" /> {t('performanceDashboard.pause')}</> : <><Icon name="Play" size="sm" className="mr-1" /> {t('performanceDashboard.auto_refresh')}</>}
                     </button>
                     <button
                         onClick={fetchPerformanceData}
@@ -331,7 +333,7 @@ const PerformanceDashboard = React.memo(() => {
                     <MetricsCard
                         title={t('performanceDashboard.backend_metrics')}
                         metrics={performanceData.health.performance.requests}
-                        icon="🚀"
+                        icon={<Rocket className="w-5 h-5" />}
                         className="col-span-1"
                     />
                 )}
@@ -341,7 +343,7 @@ const PerformanceDashboard = React.memo(() => {
                     <MetricsCard
                         title="Database Performance"
                         metrics={performanceData.health.performance.queries}
-                        icon="🗄️"
+                        icon={<Icon name="Archive" size="sm" />}
                         className="col-span-1"
                     />
                 )}

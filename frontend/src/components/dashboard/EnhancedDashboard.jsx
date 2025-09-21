@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { get } from '../../utils/api';
 import { BalanceCard, Savings, SavingsOverviewCard } from '../ui';
 import { BalanceChart, ExpenseChart } from '../charts';
+import { getIcon, Icon } from '../../utils/iconMapping.jsx';
 
 /**
  * Enhanced Dashboard with improved UX, quick actions, and better visual hierarchy
@@ -49,7 +50,7 @@ const EnhancedDashboard = () => {
             id: 'add-expense',
             title: t('quickActions.add_expense'),
             description: t('quickActions.add_expense_desc'),
-            icon: <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>,
+            icon: <Icon name="CreditCard" size="xl" className="text-white" />,
             color: 'from-red-500 to-red-600',
             path: '/add-expense',
             shortcut: 'E'
@@ -58,7 +59,7 @@ const EnhancedDashboard = () => {
             id: 'add-income',
             title: t('quickActions.add_income'),
             description: t('quickActions.add_income_desc'),
-            icon: <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" /></svg>,
+            icon: <Icon name="TrendingUp" size="xl" className="text-white" />,
             color: 'from-green-500 to-green-600',
             path: '/add-income',
             shortcut: 'I'
@@ -67,7 +68,7 @@ const EnhancedDashboard = () => {
             id: 'view-transactions',
             title: t('quickActions.view_transactions'),
             description: t('quickActions.view_transactions_desc'),
-            icon: <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
+            icon: <Icon name="BarChart3" size="xl" className="text-white" />,
             color: 'from-blue-500 to-blue-600',
             path: '/transactions',
             shortcut: 'T'
@@ -76,7 +77,7 @@ const EnhancedDashboard = () => {
             id: 'manage-budgets',
             title: t('quickActions.manage_budgets'),
             description: t('quickActions.manage_budgets_desc'),
-            icon: <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+            icon: <Icon name="Target" size="xl" className="text-white" />,
             color: 'from-purple-500 to-purple-600',
             path: '/budgets',
             shortcut: 'B'
@@ -136,13 +137,9 @@ const EnhancedDashboard = () => {
                                     transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                                 }`}>
                                     {transaction.typeId === 1 ? (
-                                        <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                        </svg>
+                                        <Icon name="CreditCard" size="sm" className="text-red-400" />
                                     ) : (
-                                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                        </svg>
+                                        <Icon name="TrendingUp" size="sm" className="text-green-400" />
                                     )}
                                 </div>
                                 <div>
@@ -219,9 +216,7 @@ const EnhancedDashboard = () => {
                 {subscriptionTier === 'premium' && (
                     <div className="hidden md:block">
                         <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
+                            <Icon name="Star" size="sm" className="mr-1" />
                             Premium
                         </span>
                     </div>

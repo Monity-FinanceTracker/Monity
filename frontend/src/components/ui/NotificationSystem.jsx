@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 
 /**
  * Notification Context and Provider for app-wide notifications
@@ -144,25 +145,25 @@ const NotificationCard = ({ notification, onClose }) => {
             case 'success':
                 return {
                     bg: 'bg-green-500/10 border-green-500/20',
-                    icon: '✅',
+                    icon: <CheckCircle className="w-5 h-5" />,
                     iconBg: 'bg-green-500/20 text-green-400'
                 };
             case 'error':
                 return {
                     bg: 'bg-red-500/10 border-red-500/20',
-                    icon: '❌',
+                    icon: <XCircle className="w-5 h-5" />,
                     iconBg: 'bg-red-500/20 text-red-400'
                 };
             case 'warning':
                 return {
                     bg: 'bg-yellow-500/10 border-yellow-500/20',
-                    icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>,
+                    icon: <AlertTriangle className="w-5 h-5" />,
                     iconBg: 'bg-yellow-500/20 text-yellow-400'
                 };
             default: // info
                 return {
                     bg: 'bg-blue-500/10 border-blue-500/20',
-                    icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>,
+                    icon: <Info className="w-5 h-5" />,
                     iconBg: 'bg-blue-500/20 text-blue-400'
                 };
         }
@@ -178,7 +179,7 @@ const NotificationCard = ({ notification, onClose }) => {
                 <div className="flex items-start gap-3">
                     {/* Icon */}
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${styles.iconBg} flex-shrink-0`}>
-                        <span className="text-sm">{styles.icon}</span>
+                        {styles.icon}
                     </div>
 
                     {/* Content */}
@@ -217,9 +218,7 @@ const NotificationCard = ({ notification, onClose }) => {
                         onClick={handleClose}
                         className="text-gray-400 hover:text-white transition-colors flex-shrink-0 p-1"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <X className="w-4 h-4" />
                     </button>
                 </div>
 

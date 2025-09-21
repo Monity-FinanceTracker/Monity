@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { get, del } from '../../utils/api';
 import formatDate from '../../utils/formatDate';
+import { Icon } from '../../utils/iconMapping.jsx';
 
 /**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
@@ -192,13 +193,9 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                         transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                     }`}>
                         {transaction.typeId === 1 ? (
-                            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                            </svg>
+                            <Icon name="CreditCard" size="md" className="text-red-400" />
                         ) : (
-                            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                            </svg>
+                            <Icon name="TrendingUp" size="md" className="text-green-400" />
                         )}
                     </div>
                     
@@ -446,9 +443,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                 {filteredTransactions.length === 0 ? (
                     <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-12 text-center">
                         <div className="mb-4">
-                            <svg className="w-16 h-16 mx-auto text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
+                            <Icon name="BarChart3" size="xxl" className="mx-auto text-blue-400" />
                         </div>
                         <h3 className="text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
                         <p className="text-gray-400 mb-6">{t('transactions.no_transactions_desc')}</p>
@@ -457,18 +452,14 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                                 to="/add-expense"
                                 className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors"
                             >
-                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                </svg>
+                                <Icon name="CreditCard" size="md" className="mr-2" />
                                 {t('transactions.add_expense')}
                             </Link>
                             <Link
                                 to="/add-income"
                                 className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
                             >
-                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                </svg>
+                                <Icon name="TrendingUp" size="md" className="mr-2" />
                                 {t('transactions.add_income')}
                             </Link>
                         </div>
