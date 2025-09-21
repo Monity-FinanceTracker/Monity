@@ -28,11 +28,13 @@ export const dynamicImport = (importFn, retries = 3, delay = 1000) => {
  */
 export const preloadCriticalChunks = () => {
     // Preload dashboard components (most commonly accessed)
+    // Note: These components are now statically imported, so we only preload truly lazy components
     const criticalImports = [
-        () => import('../components/dashboard/EnhancedDashboard'),
-        () => import('../components/transactions/ImprovedTransactionList'),
-        () => import('../components/forms/AddExpense'),
-        () => import('../components/forms/AddIncome')
+        // Only include components that are actually lazy loaded
+        () => import('../components/groups/Groups'),
+        () => import('../components/settings/EnhancedSettings'),
+        () => import('../components/settings/EnhancedBudgets')
+        // Removed ImprovedTransactionList - it's now statically imported
     ];
 
     criticalImports.forEach((importFn, index) => {
@@ -57,14 +59,13 @@ export const optimizeChunkLoading = () => {
                     const link = entry.target;
                     const href = link.getAttribute('href');
                     
-                    // Preload route-specific chunks
-                    if (href === '/transactions') {
-                        import('../components/transactions/ImprovedTransactionList').catch(() => {});
-                    } else if (href === '/settings') {
+                    // Preload route-specific chunks (only for lazy-loaded components)
+                    if (href === '/settings') {
                         import('../components/settings/EnhancedSettings').catch(() => {});
                     } else if (href === '/groups') {
                         import('../components/groups/Groups').catch(() => {});
                     }
+                    // Removed /transactions preload - ImprovedTransactionList is now statically imported
                 }
             });
         }, { rootMargin: '50px' });
@@ -158,7 +159,7 @@ export const monitorPerformanceBudget = () => {
         const loadTime = performance.navigation.loadEventEnd - performance.navigation.navigationStart;
         
         if (loadTime > 3000) {
-            console.warn(`⚠️ Initial load time exceeded budget: ${loadTime}ms`);
+            console.warn(`[PERFORMANCE] Initial load time exceeded budget: ${loadTime}ms`);
         }
     }
 

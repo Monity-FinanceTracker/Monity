@@ -7,15 +7,6 @@ import { useAuth } from './context/AuthContext';
 import { isPremium } from './utils/premium';
 import { preloadComponents } from './components/LazyWrapper';
 
-// Lazy load heavy components for better performance
-const EnhancedDashboard = lazy(() => import('./components/dashboard/EnhancedDashboard'));
-const ImprovedTransactionList = lazy(() => import('./components/transactions/ImprovedTransactionList'));
-const AdminDashboard = lazy(() => import('./components/dashboard/AdminDashboard'));
-const FinancialHealth = lazy(() => import('./components/dashboard/FinancialHealth'));
-const Groups = lazy(() => import('./components/groups/Groups'));
-const EnhancedSettings = lazy(() => import('./components/settings/EnhancedSettings'));
-const EnhancedBudgets = lazy(() => import('./components/settings/EnhancedBudgets'));
-
 // Keep frequently used components as regular imports for faster loading
 import { 
   AddExpense, 
@@ -23,6 +14,10 @@ import {
   Sidebar, 
   Login, 
   Signup, 
+  EnhancedDashboard,
+  ImprovedTransactionList,
+  AdminDashboard,
+  FinancialHealth,
   EnhancedCategories, 
   Subscription, 
   PremiumPage, 
@@ -36,6 +31,11 @@ import {
   GroupPage, 
   Savings 
 } from './components';
+
+// Lazy load heavy components for better performance (only those not in regular imports)
+const Groups = lazy(() => import('./components/groups/Groups'));
+const EnhancedSettings = lazy(() => import('./components/settings/EnhancedSettings'));
+const EnhancedBudgets = lazy(() => import('./components/settings/EnhancedBudgets'));
 
 
 // Protected route component
@@ -79,6 +79,40 @@ const AdminRoute = ({ children }) => {
   }
   return children;
 }
+
+// Main layout for protected pages
+const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  return (
+    <div className="flex min-h-screen bg-[#191E29] font-sans">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#01C38D] text-[#191E29] p-2 z-50 rounded">
+        Skip to main content
+      </a>
+      {/* Sidebar - Full height */}
+      <Sidebar 
+        isMobileMenuOpen={isMobileMenuOpen} 
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+      />
+      
+      {/* Main content area */}
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 sidebar-transition ${isSidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
+        {/* Top navigation bar */}
+        <UnifiedTopBar 
+          isMobileMenuOpen={isMobileMenuOpen}
+          onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        />
+
+        {/* Main content */}
+        <main id="main-content" className="flex-1 p-6 content-container">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+};
 
 const App = React.memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -128,7 +162,7 @@ const App = React.memo(() => {
         <Route path="/savings-goals" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><SavingsGoals /></MainLayout></ProtectedRoute>} />
         <Route path="/savings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Savings /></MainLayout></ProtectedRoute>} />
         <Route path="/financial-health" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><FinancialHealth /></MainLayout></ProtectedRoute>} />
-        <Route path="/groups" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Groups /></MainLayout></ProtectedRoute>} />
+        <Route path="/groups" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Groups /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><CreateGroup /></MainLayout></ProtectedRoute>} />
         <Route path="/groups/:id" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><GroupPage /></MainLayout></ProtectedRoute>} />
 
@@ -143,37 +177,6 @@ const App = React.memo(() => {
       </Routes>
     </NotificationProvider>
   );
-}
-
-// Main layout for protected pages
-const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
-  return (
-    <div className="flex min-h-screen bg-[#191E29] font-sans">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#01C38D] text-[#191E29] p-2 z-50 rounded">
-        Skip to main content
-      </a>
-      {/* Sidebar - Full height */}
-      <Sidebar 
-        isMobileMenuOpen={isMobileMenuOpen} 
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-        isCollapsed={isSidebarCollapsed}
-        setIsCollapsed={setIsSidebarCollapsed}
-      />
-      
-      {/* Main content area with topbar */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
-        <UnifiedTopBar 
-          onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-          isMobileMenuOpen={isMobileMenuOpen} 
-        />
-        <main id="main-content" className="flex-1 p-4 md:p-6 overflow-y-auto" aria-live="polite">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
-};
+});
 
 export default App;
