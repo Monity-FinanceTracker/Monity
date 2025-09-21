@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { get, del } from '../../utils/api';
 import formatDate from '../../utils/formatDate';
 import { Icon } from '../../utils/iconMapping.jsx';
+import { useSearchDebounce } from '../../hooks/useDebounce';
 
 /**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
  */
-const ImprovedTransactionList = ({ transactionType = 'all' }) => {
+const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const { t } = useTranslation();
     const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -17,6 +18,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
     
     // Filter and search states
     const [searchQuery, setSearchQuery] = useState('');
+    const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
     const [categoryFilter, setCategoryFilter] = useState('');
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [amountRange, setAmountRange] = useState({ min: '', max: '' });
@@ -54,15 +56,16 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
         }
     };
 
-    // Advanced filtering and search
-    useEffect(() => {
+    // Memoized filtering and search with debounced search
+    const filteredAndSortedTransactions = useMemo(() => {
         let filtered = [...transactions];
 
-        // Text search
-        if (searchQuery) {
+        // Text search (using debounced query)
+        if (debouncedSearchQuery) {
+            const searchLower = debouncedSearchQuery.toLowerCase();
             filtered = filtered.filter(transaction =>
-                transaction.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                transaction.category?.toLowerCase().includes(searchQuery.toLowerCase())
+                transaction.description?.toLowerCase().includes(searchLower) ||
+                transaction.category?.toLowerCase().includes(searchLower)
             );
         }
 
@@ -97,7 +100,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
             );
         }
 
-        // Sorting
+        // Optimized sorting
         filtered.sort((a, b) => {
             let aValue, bValue;
             
@@ -124,8 +127,13 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
             return 0;
         });
 
-        setFilteredTransactions(filtered);
-    }, [transactions, searchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
+        return filtered;
+    }, [transactions, debouncedSearchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
+
+    // Update filteredTransactions when memoized value changes
+    useEffect(() => {
+        setFilteredTransactions(filteredAndSortedTransactions);
+    }, [filteredAndSortedTransactions]);
 
     // Bulk operations
     const handleSelectAll = () => {
@@ -477,6 +485,6 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
             </div>
         </div>
     );
-};
+});
 
 export default ImprovedTransactionList; 

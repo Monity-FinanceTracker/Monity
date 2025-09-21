@@ -1,13 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSmartCategorization } from '../../hooks/useSmartCategorization';
 import { useNotifications } from '../ui/NotificationSystem';
 import { useCategories, useAddTransaction } from '../../hooks/useQueries';
 import { Button } from '../ui';
-import { FaPlus, FaArrowTrendDown } from 'react-icons/fa6';
-import { FaDollarSign, FaCalendarAlt, FaListUl, FaEdit, FaBrain } from 'react-icons/fa';
+import { Icon } from '../../utils/iconMapping.jsx';
 
-function AddExpense({ onAdd }) {
+const AddExpense = React.memo(({ onAdd }) => {
     const { t } = useTranslation();
     const { success, error: notifyError } = useNotifications();
     
@@ -36,9 +35,10 @@ function AddExpense({ onAdd }) {
     const [selectedAISuggestion, setSelectedAISuggestion] = useState(null);
     const [debounceTimer, setDebounceTimer] = useState(null);
 
-    const expenseCategories = categories
+    // Memoize filtered categories
+    const expenseCategories = useMemo(() => categories, [categories]);
 
-    // Debounced AI suggestion fetching
+    // Optimized debounced AI suggestion fetching
     const handleDescriptionChange = useCallback((value) => {
         setDescription(value);
         
@@ -341,6 +341,6 @@ function AddExpense({ onAdd }) {
             </div>
         </div>
     );
-}
+});
 
 export default AddExpense;

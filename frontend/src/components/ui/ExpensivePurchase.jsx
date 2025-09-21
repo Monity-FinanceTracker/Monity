@@ -1,10 +1,10 @@
 import Spinner from "./Spinner"
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { get, del } from '../../utils/api';
 import formatDate from "../../utils/formatDate";
 import { useTranslation } from "react-i18next";
 
-function ExpensivePurchase() {
+const ExpensivePurchase = React.memo(() => {
     const { t } = useTranslation();
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -51,9 +51,12 @@ function ExpensivePurchase() {
         return <p>{t('expensivePurchase.error')}: {error}</p>
     }
 
-    const topExpenses = expenses
-        .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))
-        .slice(0, 5)
+    // Memoize expensive calculation
+    const topExpenses = useMemo(() => {
+        return expenses
+            .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))
+            .slice(0, 5);
+    }, [expenses]);
 
     if (topExpenses.length === 0) {
         return <p className="text-white text-center py-4">{t('expensivePurchase.no_expenses')}</p>;
@@ -117,6 +120,6 @@ function ExpensivePurchase() {
             </div>
         </div>
     )
-}
+});
 
 export default ExpensivePurchase;

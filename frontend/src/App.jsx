@@ -1,19 +1,29 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import './App.css'
+import React, { Suspense, lazy, useEffect, useState } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { useAuth } from './context/AuthContext';
+import { isPremium } from './utils/premium';
+import { preloadComponents } from './components/LazyWrapper';
+
+// Lazy load heavy components for better performance
+const EnhancedDashboard = lazy(() => import('./components/dashboard/EnhancedDashboard'));
+const ImprovedTransactionList = lazy(() => import('./components/transactions/ImprovedTransactionList'));
+const AdminDashboard = lazy(() => import('./components/dashboard/AdminDashboard'));
+const FinancialHealth = lazy(() => import('./components/dashboard/FinancialHealth'));
+const Groups = lazy(() => import('./components/groups/Groups'));
+const EnhancedSettings = lazy(() => import('./components/settings/EnhancedSettings'));
+const EnhancedBudgets = lazy(() => import('./components/settings/EnhancedBudgets'));
+
+// Keep frequently used components as regular imports for faster loading
 import { 
   AddExpense, 
   AddIncome, 
-  EnhancedDashboard, 
-  ImprovedTransactionList, 
   Sidebar, 
   Login, 
   Signup, 
   EnhancedCategories, 
-  EnhancedSettings, 
-  AdminDashboard, 
-  EnhancedBudgets, 
   Subscription, 
   PremiumPage, 
   Spinner, 
@@ -22,15 +32,10 @@ import {
   SavingsGoals, 
   TotalExpenses, 
   DateRangeFilter, 
-  Groups, 
   CreateGroup, 
   GroupPage, 
-  Savings, 
-  FinancialHealth 
-} from './components'
-import { useAuth } from './context/AuthContext'
-import { useEffect, useState } from 'react'
-import { isPremium } from './utils/premium'
+  Savings 
+} from './components';
 
 
 // Protected route component
@@ -75,12 +80,22 @@ const AdminRoute = ({ children }) => {
   return children;
 }
 
-function App() {
+const App = React.memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Preload components after initial render
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      preloadComponents();
+    }, 2000); // Preload after 2 seconds to not block initial load
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [useLocation().pathname]);
+  }, [location.pathname]);
 
   return (
     <NotificationProvider>
@@ -107,8 +122,8 @@ function App() {
         <Route path="/add-expense" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddExpense /></MainLayout></ProtectedRoute>} />
         <Route path="/add-income" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddIncome /></MainLayout></ProtectedRoute>} />
         <Route path="/categories" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><EnhancedCategories /></MainLayout></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><EnhancedSettings /></MainLayout></ProtectedRoute>} />
-        <Route path="/budgets" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><EnhancedBudgets /></MainLayout></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><EnhancedSettings /></Suspense></MainLayout></ProtectedRoute>} />
+        <Route path="/budgets" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><EnhancedBudgets /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/subscription" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Subscription /></MainLayout></ProtectedRoute>} />
         <Route path="/savings-goals" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><SavingsGoals /></MainLayout></ProtectedRoute>} />
         <Route path="/savings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Savings /></MainLayout></ProtectedRoute>} />
