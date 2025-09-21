@@ -1,6 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { 
+    Home, Play, RotateCcw, MessageCircle, Search, Plus, 
+    Upload, RefreshCw, Bot, BookOpen, TrendingUp, DollarSign 
+} from 'lucide-react';
+import { Icon } from '../../utils/iconMapping.jsx';
 
 /**
  * Reusable empty state components for better UX when there's no data
@@ -128,13 +133,13 @@ export const EmptyIncome = () => {
                 {
                     label: t('emptyStates.income.add_first'),
                     href: '/add-income',
-                    icon: '➕',
+                    icon: <Plus className="w-4 h-4" />,
                     primary: true
                 },
                 {
                     label: t('emptyStates.income.setup_recurring'),
                     href: '/budgets',
-                    icon: '🔄'
+                    icon: <RefreshCw className="w-4 h-4" />
                 }
             ]}
         />
@@ -153,13 +158,13 @@ export const EmptyCategories = () => {
                 {
                     label: t('emptyStates.categories.create_first'),
                     href: '/categories',
-                    icon: '➕',
+                    icon: <Plus className="w-4 h-4" />,
                     primary: true
                 },
                 {
                     label: t('emptyStates.categories.use_ai'),
                     onClick: () => {/* Enable AI categorization */},
-                    icon: '🤖'
+                    icon: <Bot className="w-4 h-4" />
                 }
             ]}
         />
@@ -178,13 +183,13 @@ export const EmptyGroups = () => {
                 {
                     label: t('emptyStates.groups.create_first'),
                     href: '/groups/create',
-                    icon: '➕',
+                    icon: <Plus className="w-4 h-4" />,
                     primary: true
                 },
                 {
                     label: t('emptyStates.groups.learn_more'),
                     onClick: () => {/* Show groups tutorial */},
-                    icon: '📖'
+                    icon: <BookOpen className="w-4 h-4" />
                 }
             ]}
         />
@@ -208,7 +213,7 @@ export const EmptySearchResults = ({ query }) => {
     
     return (
         <EmptyStateBase
-            icon="🔍"
+            icon={<Search className="w-16 h-16 text-muted-foreground" />}
             title={t('emptyStates.search.title')}
             description={t('emptyStates.search.description', { query })}
             actions={[
@@ -233,7 +238,7 @@ export const EmptyDashboard = () => {
     
     return (
         <EmptyStateBase
-            icon="🏠"
+            icon={<Home className="w-16 h-16 text-muted-foreground" />}
             title={t('emptyStates.dashboard.title')}
             description={t('emptyStates.dashboard.description')}
             actions={[
@@ -251,7 +256,7 @@ export const EmptyDashboard = () => {
                 {
                     label: t('emptyStates.dashboard.watch_tutorial'),
                     onClick: () => {/* Show tutorial */},
-                    icon: '🎥'
+                    icon: <Play className="w-4 h-4" />
                 }
             ]}
         />
@@ -264,20 +269,20 @@ export const ErrorState = ({ title, description, onRetry }) => {
     
     return (
         <EmptyStateBase
-            icon={<svg className="w-16 h-16 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>}
+            icon={<Icon name="AlertTriangle" size="xxl" className="text-yellow-400" />}
             title={title || t('errorStates.generic.title')}
             description={description || t('errorStates.generic.description')}
             actions={[
                 {
                     label: t('errorStates.generic.retry'),
                     onClick: onRetry,
-                    icon: '🔄',
+                    icon: <RotateCcw className="w-4 h-4" />,
                     primary: true
                 },
                 {
                     label: t('errorStates.generic.contact_support'),
                     href: '/settings',
-                    icon: '💬'
+                    icon: <MessageCircle className="w-4 h-4" />
                 }
             ]}
             className="bg-red-500/5 border border-red-500/10 rounded-xl"

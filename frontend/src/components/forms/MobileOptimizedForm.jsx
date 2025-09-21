@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { Icon } from '../../utils/iconMapping.jsx';
 
 /**
  * Mobile-optimized form component with enhanced UX patterns
@@ -209,18 +211,10 @@ const MobileOptimizedForm = ({
                     {/* Status Icons */}
                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                         {hasError && (
-                            <div className="text-red-400">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                </svg>
-                            </div>
+                            <AlertTriangle className="w-5 h-5 text-red-400" />
                         )}
                         {isSuccess && (
-                            <div className="text-green-400">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                            </div>
+                            <CheckCircle className="w-5 h-5 text-green-400" />
                         )}
                     </div>
                 </div>
@@ -233,9 +227,7 @@ const MobileOptimizedForm = ({
                 {/* Error Message */}
                 {hasError && (
                     <p className="text-red-400 text-sm flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                        </svg>
+                        <Icon name="AlertTriangle" size="sm" />
                         {errors[field.name]}
                     </p>
                 )}

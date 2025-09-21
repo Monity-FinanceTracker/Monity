@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { get } from '../../utils/api';
 import Spinner from '../ui/Spinner';
 import { useTranslation } from 'react-i18next';
+import { CreditCard, DollarSign, Star, BarChart3, TrendingDown, TrendingUp, Lightbulb } from 'lucide-react';
+import { Icon } from '../../utils/iconMapping.jsx';
 
 function AdminDashboard() {
   const { t } = useTranslation();
@@ -90,28 +92,28 @@ function AdminDashboard() {
           value={analytics?.users.total || 0}
           color="text-[#01C38D]"
           bgGradient="from-[#01C38D]/20 to-[#01C38D]/5"
-          icon="👥"
+          icon={<Icon name="Users" size="sm" />}
         />
         <MetricCard
           title={t('adminDashboard.total_transactions')}
           value={formatNumber(analytics?.transactions.total)}
           color="text-[#36A2EB]"
           bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
-          icon="💳"
+          icon={<CreditCard className="w-5 h-5" />}
         />
         <MetricCard
           title={t('adminDashboard.total_volume')}
           value={formatCurrency(analytics?.transactions.byType.expenses + analytics?.transactions.byType.income + analytics?.transactions.byType.savings)}
           color="text-[#FF6384]"
           bgGradient="from-[#FF6384]/20 to-[#FF6384]/5"
-          icon="💰"
+          icon={<DollarSign className="w-5 h-5" />}
         />
         <MetricCard
           title={t('adminDashboard.conversion_rate')}
           value={`${conversionRate}%`}
           color="text-[#FFCE56]"
           bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5"
-          icon="⭐"
+          icon={<Star className="w-5 h-5" />}
         />
       </div>
 
@@ -119,7 +121,7 @@ function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <span className="mr-2">📊</span>
+            <BarChart3 className="w-5 h-5 mr-2" />
             {t('adminDashboard.growth_metrics')}
           </h2>
           <div className="grid grid-cols-2 gap-4">
@@ -177,14 +179,14 @@ function AdminDashboard() {
           value={formatCurrency(analytics?.transactions.byType.expenses)}
           color="text-red-400"
           bgGradient="from-red-500/20 to-red-500/5"
-          icon="📉"
+          icon={<TrendingDown className="w-5 h-5" />}
         />
         <MetricCard
           title={t('adminDashboard.income_volume')}
           value={formatCurrency(analytics?.transactions.byType.income)}
           color="text-green-400"
           bgGradient="from-green-500/20 to-green-500/5"
-          icon="📈"
+          icon={<TrendingUp className="w-5 h-5" />}
         />
         <MetricCard
           title={t('adminDashboard.savings_volume')}
@@ -198,7 +200,7 @@ function AdminDashboard() {
       {/* Top Categories */}
       <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <span className="mr-2">🏷️</span>
+          <Icon name="Tag" size="sm" className="mr-2" />
           {t('adminDashboard.top_categories')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -219,12 +221,12 @@ function AdminDashboard() {
       {/* Monthly Growth Chart Placeholder */}
       <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <span className="mr-2">📊</span>
+          <BarChart3 className="w-5 h-5 mr-2" />
           {t('adminDashboard.monthly_growth')}
         </h2>
         <div className="h-64 flex items-center justify-center bg-[#1a1d2e] rounded-xl">
           <div className="text-center text-gray-400">
-            <div className="text-4xl mb-2">📈</div>
+            <TrendingUp className="w-16 h-16 mx-auto mb-2 text-gray-400" />
             <div className="text-sm">Growth chart visualization</div>
             <div className="text-xs mt-1">
               {analytics?.growth.monthlyData?.length || 0} months of data available
@@ -237,7 +239,7 @@ function AdminDashboard() {
       {financialHealth && (
         <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <span className="mr-2">💡</span>
+            <Lightbulb className="w-5 h-5 mr-2" />
             Financial Health Overview
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
