@@ -1,150 +1,64 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getCategories, addTransaction } from '../../utils/api';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useSmartCategorization } from '../../hooks/useSmartCategorization';
-import { useNotifications } from '../ui/NotificationSystem';
-import { useCategories, useAddTransaction } from '../../hooks/useQueries';
 import { Button } from '../ui';
-import { Icon } from '../../utils/iconMapping.jsx';
+import { FaPlus, FaArrowTrendDown } from 'react-icons/fa6';
+import { FaDollarSign, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
 
-const AddExpense = React.memo(({ onAdd }) => {
+const AddExpense = () => {
+    const navigate = useNavigate();
     const { t } = useTranslation();
-    const { success, error: notifyError } = useNotifications();
-    
-    // React Query hooks
-    const { data: categories = [], isLoading: categoriesLoading } = useCategories(1); // Expense categories
-    const addTransactionMutation = useAddTransaction();
-    
-    const [description, setDescription] = useState('');
-    const [amount, setAmount] = useState('');
-    const [category, setCategory] = useState('');
-    const [date, setDate] = useState('');
+    const [expense, setExpense] = useState({
+        description: '',
+        amount: '',
+        date: new Date().toISOString().slice(0, 10),
+        categoryId: '',
+        typeId: 1 // 1 for expense
+    });
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
-    // Smart Categorization
-    const { 
-        suggestions, 
-        isLoading: aiLoading, 
-        getSuggestions, 
-        recordFeedback, 
-        clearSuggestions,
-        getTopSuggestion,
-        hasHighConfidenceSuggestion 
-    } = useSmartCategorization();
-    
-    const [showAISuggestions, setShowAISuggestions] = useState(false);
-    const [selectedAISuggestion, setSelectedAISuggestion] = useState(null);
-    const [debounceTimer, setDebounceTimer] = useState(null);
 
-    // Memoize filtered categories
-    const expenseCategories = useMemo(() => categories, [categories]);
-
-    // Optimized debounced AI suggestion fetching
-    const handleDescriptionChange = useCallback((value) => {
-        setDescription(value);
-        
-        // Clear previous timer
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
-        }
-        
-        // Clear suggestions if description is too short
-        if (value.trim().length < 3) {
-            clearSuggestions();
-            setShowAISuggestions(false);
-            return;
-        }
-        
-        // Set new timer for AI suggestions
-        const timer = setTimeout(async () => {
-            const amountValue = parseFloat(amount) || 0;
-            await getSuggestions(value, amountValue, 1);
-            setShowAISuggestions(true);
-        }, 800); // 800ms debounce
-        
-        setDebounceTimer(timer);
-    }, [amount, getSuggestions, debounceTimer, clearSuggestions]);
-
-    // Handle AI suggestion selection
-    const handleSelectAISuggestion = (suggestion) => {
-        setCategory(suggestion.category);
-        setSelectedAISuggestion(suggestion);
-        setShowAISuggestions(false);
-        
-        // Check if category exists in the current categories list
-        const categoryExists = expenseCategories.some(cat => cat.name === suggestion.category);
-        
-        if (!categoryExists) {
-            // Add the AI suggested category to the local state so user can see it in dropdown
-            const newCategory = {
-                id: `temp-${Date.now()}`, // Temporary ID
-                name: suggestion.category,
-                typeId: 1, // Expense type
-                userId: 'current-user'
-            };
-            setCategories(prev => [...prev, newCategory]);
-        }
-    };
-
-    // Handle manual category selection (when user chooses different category)
-    const handleCategoryChange = (selectedCategory) => {
-        setCategory(selectedCategory);
-        
-        // If user had an AI suggestion but chose different category, record feedback
-        if (selectedAISuggestion && selectedAISuggestion.category !== selectedCategory) {
-            recordFeedback(
-                description,
-                selectedAISuggestion.category,
-                selectedCategory,
-                false,
-                selectedAISuggestion.confidence,
-                parseFloat(amount) || 0
-            );
-        }
-        
-        setSelectedAISuggestion(null);
-    };
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const fetchedCategories = await getCategories();
+                setCategories(fetchedCategories);
+            } catch (err) {
+                setError(t('addExpense.failed_load_categories'));
+                toast.error(t('addExpense.failed_load_categories'));
+            }
+        };
+        fetchCategories();
+    }, [t]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
-        success('');
-        
-        // Prepare data with AI feedback information
-        const transactionData = {
-            description, 
-            amount, 
-            category, 
-            date,
-            wasAISuggested: !!selectedAISuggestion,
-            aiConfidence: selectedAISuggestion?.confidence || null,
-            suggestedCategory: selectedAISuggestion?.category || null
-        };
+        setLoading(true);
+        const expenseData = { ...expense, amount: parseFloat(expense.amount) };
 
-        addTransactionMutation.mutate(transactionData, {
-            onSuccess: () => {
-                // Use notification system instead of local state
-                if (selectedAISuggestion && selectedAISuggestion.category === category) {
-                    success(t('addExpense.success_with_ai_category', { category }));
-                } else {
-                    success(t('addExpense.success'));
-                }
-                
-                // Reset form
-                setDescription('');
-                setAmount('');
-                setCategory('');
-                setDate('');
-                setShowAISuggestions(false);
-                setSelectedAISuggestion(null);
-                clearSuggestions();
+        if (!expenseData.description || !expenseData.amount || !expenseData.categoryId) {
+            toast.error(t('addTransaction.fill_all_fields'));
+            setLoading(false);
+            return;
+        }
 
-                if (onAdd) onAdd();
-            },
-            onError: (err) => {
-                notifyError(err.response?.data?.message || t('addExpense.failed'));
-            }
-        });
+        try {
+            await addTransaction(expenseData);
+            toast.success(t('addExpense.success'));
+            navigate('/');
+        } catch (err) {
+            toast.error(err.response?.data?.message || t('addExpense.failed'));
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (error) {
+        return <div className="text-red-500 text-center p-4">{error}</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#191E29] via-[#1a1f2e] to-[#23263a] p-4 md:p-6">
@@ -174,132 +88,58 @@ const AddExpense = React.memo(({ onAdd }) => {
                                 Description
                             </label>
                             <div className="relative">
+                                <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                     placeholder={t('addExpense.description')}
-                                    value={description}
-                                    onChange={e => handleDescriptionChange(e.target.value)}
+                                    value={expense.description}
+                                    onChange={e => setExpense(prev => ({ ...prev, description: e.target.value }))}
                                     required
                                 />
-                                <FaEdit className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                {aiLoading && (
-                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                        <div className="w-5 h-5 border-2 border-[#01C38D]/30 border-t-[#01C38D] rounded-full animate-spin"></div>
-                                    </div>
-                                )}
                             </div>
                         </div>
-                        
-                        {/* AI Suggestions */}
-                        {showAISuggestions && suggestions.length > 0 && (
-                            <div className="bg-[#191E29]/60 border border-[#31344d]/30 rounded-xl p-4 backdrop-blur-sm">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-8 h-8 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                                        <FaBrain className="text-[#01C38D] text-sm" />
-                                    </div>
-                                    <span className="text-[#01C38D] text-sm font-medium">{t('smartCategorization.ai_suggestions')}</span>
-                                </div>
-                                <div className="grid gap-2">
-                                    {suggestions.slice(0, 3).map((suggestion, index) => (
-                                        <button
-                                            key={index}
-                                            type="button"
-                                            onClick={() => handleSelectAISuggestion(suggestion)}
-                                            className="w-full text-left p-3 bg-[#23263a]/60 hover:bg-[#2a2d4a]/80 rounded-lg border border-[#31344d]/30 transition-all duration-200 group"
-                                        >
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-white font-medium">{suggestion.category}</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-xs text-gray-400 bg-[#191E29]/50 px-2 py-1 rounded">
-                                                        {Math.round(suggestion.confidence * 100)}%
-                                                    </span>
-                                                    <div className="w-12 h-1.5 bg-gray-600/50 rounded-full overflow-hidden">
-                                                        <div 
-                                                            className="h-full bg-[#01C38D] transition-all duration-300"
-                                                            style={{ width: `${suggestion.confidence * 100}%` }}
-                                                        ></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {suggestion.source && (
-                                                <span className="text-xs text-gray-500 capitalize mt-1 block">
-                                                    {t(`smartCategorization.${suggestion.source}`, suggestion.source.replace('_', ' '))}
-                                                </span>
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
 
-                        {/* Amount Input */}
-                        <div className="space-y-2">
-                            <label className="block text-white font-medium text-sm uppercase tracking-wide">
-                                Amount
-                            </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="relative">
+                                <FaDollarSign className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     type="number"
                                     step="0.01"
                                     className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                     placeholder={t('addExpense.amount')}
-                                    value={amount}
-                                    onChange={e => setAmount(e.target.value)}
+                                    value={expense.amount}
+                                    onChange={e => setExpense(prev => ({ ...prev, amount: e.target.value }))}
                                     required
                                 />
-                                <FaDollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             </div>
-                        </div>
-
-                        {/* Category Selection */}
-                        <div className="space-y-2">
-                            <label className="block text-white font-medium text-sm uppercase tracking-wide">
-                                Expense Category
-                            </label>
                             <div className="relative">
-                                <select 
-                                    className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 appearance-none"
-                                    value={category}
-                                    onChange={e => handleCategoryChange(e.target.value)}
-                                    required
-                                >
-                                    <option value="" className="text-gray-400">{t('addExpense.select_category')}</option>
-                                    {expenseCategories.map((cat, index) => (
-                                        <option key={index} value={cat.name}>{cat.name}</option>
-                                    ))}
-                                </select>
-                                <FaListUl className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
-                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </div>
-                                {selectedAISuggestion && (
-                                    <div className="absolute -top-8 left-0">
-                                        <span className="text-xs text-[#01C38D] bg-[#191E29]/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-[#31344d]/50 flex items-center gap-2">
-                                            <FaBrain className="text-[#01C38D]" />
-                                            {t('smartCategorization.ai_selected')}: {selectedAISuggestion.category} ({Math.round(selectedAISuggestion.confidence * 100)}%)
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Date Input */}
-                        <div className="space-y-2">
-                            <label className="block text-white font-medium text-sm uppercase tracking-wide">
-                                Date
-                            </label>
-                            <div className="relative">
+                                <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     type="date"
-                                    className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
-                                    value={date}
-                                    onChange={e => setDate(e.target.value)}
+                                    className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
+                                    value={expense.date}
+                                    onChange={e => setExpense(prev => ({ ...prev, date: e.target.value }))}
                                     required
                                 />
-                                <FaCalendarAlt className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                <FaCalendarAlt className="absolute top-1/2 right-4 -translate-y-1/2 text-white pointer-events-none" />
                             </div>
+                        </div>
+                        
+                        <div className="relative">
+                            <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
+                            <select
+                                className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 appearance-none"
+                                value={expense.categoryId}
+                                onChange={e => setExpense(prev => ({ ...prev, categoryId: e.target.value }))}
+                                required
+                            >
+                                <option value="" className="bg-[#191E29] text-white">{t('addExpense.select_category')}</option>
+                                {categories.map(category => (
+                                    <option key={category.id} value={category.id} className="bg-[#191E29] text-white">
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         {/* Submit Button */}
@@ -308,39 +148,17 @@ const AddExpense = React.memo(({ onAdd }) => {
                             variant="danger"
                             size="lg"
                             fullWidth
-                            loading={addTransactionMutation.isPending}
-                            disabled={addTransactionMutation.isPending}
-                            leftIcon={!addTransactionMutation.isPending ? <FaPlus className="text-lg" /> : null}
+                            loading={loading}
+                            disabled={loading}
+                            leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
                         >
-                            {addTransactionMutation.isPending ? t('addExpense.adding') : t('addExpense.add_expense')}
+                            {loading ? t('addExpense.adding') : t('addExpense.add_expense')}
                         </Button>
-
-                        {/* Error Message */}
-                        {error && (
-                            <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl flex items-center gap-3">
-                                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                                {error}
-                            </div>
-                        )}
                     </form>
-
-                    {/* Quick Tips with AI Features */}
-                    <div className="mt-8 p-4 bg-[#191E29]/30 rounded-xl border border-[#31344d]/30">
-                        <h3 className="text-white font-medium mb-3 flex items-center gap-2">
-                            <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                            Smart Features & Tips
-                        </h3>
-                        <ul className="text-gray-400 text-sm space-y-1">
-                            <li>• AI will suggest categories as you type descriptions</li>
-                            <li>• Add detailed descriptions for better categorization</li>
-                            <li>• Use the exact amount you spent</li>
-                            <li>• Select the actual date of the expense</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
     );
-});
+};
 
 export default AddExpense;

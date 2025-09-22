@@ -94,14 +94,15 @@ const AddIncome = () => {
                         />
                     </div>
                     <div className="relative">
-                        <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
+                        <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                         <input
                             type="date"
-                            className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                            className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
                             value={income.date}
                             onChange={e => setIncome(prev => ({ ...prev, date: e.target.value }))}
                             required
                         />
+                        <FaCalendarAlt className="absolute top-1/2 right-4 -translate-y-1/2 text-white pointer-events-none" />
                     </div>
                 </div>
                 <div className="relative">
