@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { getCategories, addTransaction } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,7 @@ import { FaDollarSign, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons
 const AddExpense = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const [expense, setExpense] = useState({
         description: '',
         amount: '',
@@ -52,7 +54,7 @@ const AddExpense = () => {
         };
         delete expenseData.categoryId; // Remove categoryId as backend expects 'category'
 
-        if (!expenseData.description || !expenseData.amount || !expenseData.categoryId) {
+        if (!expenseData.description || !expenseData.amount || !expenseData.category) {
             toast.error(t('addTransaction.fill_all_fields'));
             setLoading(false);
             return;
@@ -60,6 +62,13 @@ const AddExpense = () => {
 
         try {
             await addTransaction(expenseData);
+            
+            // Invalidate and refetch all transaction-related queries
+            await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            await queryClient.invalidateQueries({ queryKey: ['balance'] });
+            await queryClient.invalidateQueries({ queryKey: ['savings'] });
+            await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            
             toast.success(t('addExpense.success'));
             navigate('/');
         } catch (err) {

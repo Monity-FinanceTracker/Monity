@@ -166,13 +166,43 @@ class GroupController {
                 return res.status(403).json({ error: 'You must be a member of the group to send invitations.' });
             }
 
+            // Find the user by email
+            const { data: invitedUser, error: userError } = await this.supabase
+                .from('profiles')
+                .select('id, name, email')
+                .eq('email', email)
+                .single();
+
+            if (userError || !invitedUser) {
+                return res.status(404).json({ error: 'User with this email not found.' });
+            }
+
+            // Check if user is already a member
+            const isAlreadyMember = await this.groupModel.isUserMember(groupId, invitedUser.id);
+            if (isAlreadyMember) {
+                return res.status(409).json({ error: 'User is already a member of this group.' });
+            }
+
+            // Check if there's already a pending invitation
+            const { data: existingInvitation } = await this.supabase
+                .from('group_invitations')
+                .select('id')
+                .eq('group_id', groupId)
+                .eq('invited_user', invitedUser.id)
+                .eq('status', 'pending')
+                .single();
+
+            if (existingInvitation) {
+                return res.status(409).json({ error: 'User already has a pending invitation to this group.' });
+            }
+
             // Create invitation record
             const { data: invitation, error: invitationError } = await this.supabase
                 .from('group_invitations')
                 .insert({
                     group_id: groupId,
                     invited_by: userId,
-                    invited_email: email,
+                    invited_user: invitedUser.id,
                     status: 'pending',
                     created_at: new Date().toISOString()
                 })
@@ -189,6 +219,7 @@ class GroupController {
             res.json({ 
                 message: 'Invitation sent successfully', 
                 email,
+                invitedUser: invitedUser.name,
                 invitationId: invitation.id 
             });
         } catch (error) {

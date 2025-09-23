@@ -18,7 +18,7 @@ class FinancialHealthService {
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-            const { data: transactions, error } = await this.supabase
+            const { data: transactionsData, error } = await this.supabase
                 .from('transactions')
                 .select('amount, typeId, category')
                 .eq('userId', userId)
@@ -28,6 +28,10 @@ class FinancialHealthService {
                 logger.error('Error fetching transactions for financial health score', { userId, error });
                 throw new Error('Could not retrieve transaction data.');
             }
+
+            // Decrypt the transactions data
+            const { decryptObject } = require('../middleware/encryption');
+            const transactions = decryptObject('transactions', transactionsData || []);
 
             const totalIncome = transactions.filter(t => t.typeId === 2).reduce((sum, t) => sum + t.amount, 0);
             const totalExpenses = transactions.filter(t => t.typeId === 1).reduce((sum, t) => sum + t.amount, 0);

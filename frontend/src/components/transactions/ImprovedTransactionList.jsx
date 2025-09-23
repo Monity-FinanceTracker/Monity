@@ -210,6 +210,12 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             
             setTransactions(prev => prev.filter(t => !selectedTransactions.has(t.id)));
             setSelectedTransactions(new Set());
+            
+            // Invalidate queries to refresh all related data
+            await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            await queryClient.invalidateQueries({ queryKey: ['balance'] });
+            await queryClient.invalidateQueries({ queryKey: ['savings'] });
+            await queryClient.invalidateQueries({ queryKey: ['budgets'] });
         } catch (error) {
             console.error('Bulk delete failed:', error);
             alert(t('transactions.bulk_delete_failed'));

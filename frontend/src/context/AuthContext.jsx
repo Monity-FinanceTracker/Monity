@@ -7,6 +7,7 @@ import {
 } from "react";
 import { supabase } from "../utils/supabase";
 import { checkSubscription, clearSubscriptionCache } from "../utils/subscription";
+import { queryClient } from "../lib/queryClient";
 
 const AuthContext = createContext();
 
@@ -64,21 +65,30 @@ export function AuthProvider({ children }) {
 
     setInitialSession();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      setIsAdmin(currentUser?.user_metadata?.role === "admin");
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((_event, session) => {
+    const currentUser = session?.user ?? null;
+    const previousUser = user;
+    
+    setUser(currentUser);
+    setIsAdmin(currentUser?.user_metadata?.role === "admin");
 
-      if (currentUser) {
-        refreshSubscription();
-      } else {
-        // Clear subscription cache when user logs out
-        clearSubscriptionCache();
-        setSubscriptionTier("free");
-      }
-    });
+    // Clear all caches when user changes (including switching between accounts)
+    if (previousUser?.id !== currentUser?.id) {
+      clearSubscriptionCache();
+      queryClient.clear(); // Clear React Query cache
+      console.log('🧹 Cleared all caches due to user change');
+    }
+
+    if (currentUser) {
+      refreshSubscription();
+    } else {
+      // Clear subscription cache when user logs out
+      clearSubscriptionCache();
+      setSubscriptionTier("free");
+    }
+  });
 
     return () => {
       subscription?.unsubscribe();
@@ -93,6 +103,11 @@ export function AuthProvider({ children }) {
     if (error) {
       throw new Error(error.message);
     }
+    
+    // Clear caches to ensure fresh data for the new user
+    clearSubscriptionCache();
+    queryClient.clear();
+    
     await refreshSubscription();
   };
 
@@ -114,8 +129,9 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    // Clear subscription cache before logging out
+    // Clear all caches before logging out
     clearSubscriptionCache();
+    queryClient.clear(); // Clear React Query cache
     await supabase.auth.signOut();
     setUser(null);
   };
