@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { get } from '../../utils/api';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
-import { BalanceChart, ExpenseChart } from '../charts';
+// Removed static imports - using lazy components instead
 import { getIcon, Icon } from '../../utils/iconMapping.jsx';
+import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 
 /**
  * Enhanced Dashboard with improved UX, quick actions, and better visual hierarchy
@@ -246,7 +247,7 @@ const EnhancedDashboard = () => {
                     accent="text-red-400"
                     isLoading={isLoading}
                 >
-                    <ExpenseChart selectedRange="all_time" />
+                    <LazyExpenseChart selectedRange="all_time" />
                 </EnhancedCard>
 
                 <SavingsOverviewCard />
@@ -261,7 +262,7 @@ const EnhancedDashboard = () => {
                     isLoading={isLoading}
                     className="xl:col-span-1"
                 >
-                    <BalanceChart selectedRange="all_time" />
+                    <LazyBalanceChart selectedRange="all_time" />
                 </EnhancedCard>
 
                 <RecentTransactionsPreview />
