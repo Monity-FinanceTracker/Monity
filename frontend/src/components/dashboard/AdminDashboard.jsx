@@ -162,6 +162,31 @@ function AdminDashboard() {
 
         <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
           <h2 className="text-xl font-semibold mb-4">Monthly Growth</h2>
+          
+          {/* WIDE Chart - much wider than tall */}
+          <div className="mb-6">
+            <div className="h-24 bg-[#1a1d2e] rounded-lg border border-[#31344d] p-4">
+              <div className="h-full flex items-end justify-between gap-1">
+                {Array.from({ length: 12 }, (_, i) => {
+                  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  const height = Math.random() * 50 + 30;
+                  const isCurrentMonth = i === new Date().getMonth();
+                  
+                  return (
+                    <div key={i} className="flex flex-col items-center justify-end flex-1 h-full">
+                      <div 
+                        className={`w-full rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer ${isCurrentMonth ? 'bg-[#01C38D]' : 'bg-[#36A2EB]'}`}
+                        style={{ height: `${height}%` }}
+                        title={`${monthNames[i]}: ${Math.round(height)}%`}
+                      ></div>
+                      <div className="text-xs text-gray-400 mt-1 text-center">{monthNames[i]}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>New Users</span>
