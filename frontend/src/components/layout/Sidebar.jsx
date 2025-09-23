@@ -196,24 +196,9 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
 
           </div>
 
-          {/* Settings and Admin at bottom */}
+          {/* Admin and Settings at bottom */}
           <div className="border-t border-[#31344d] p-4 space-y-2">
-            <NavLink
-              to="/settings"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                  ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                  : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
-                }`
-              }
-              onClick={() => setIsMobileMenuOpen(false)}
-              title={isCollapsed ? t('sidebar.settings') : ''}
-            >
-              <Settings className="w-5 h-5 flex-shrink-0" />
-              {!isCollapsed && <span className="font-medium truncate">{t('sidebar.settings')}</span>}
-            </NavLink>
-            
-            {/* Admin Dashboard at very bottom */}
+            {/* Admin Dashboard first */}
             {isAdmin && (
               <NavLink
                 to="/admin"
@@ -231,6 +216,21 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 {!isCollapsed && <span className="font-medium truncate">{t('sidebar.admin_dashboard')}</span>}
               </NavLink>
             )}
+            
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                  ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                  : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                }`
+              }
+              onClick={() => setIsMobileMenuOpen(false)}
+              title={isCollapsed ? t('sidebar.settings') : ''}
+            >
+              <Settings className="w-5 h-5 flex-shrink-0" />
+              {!isCollapsed && <span className="font-medium truncate">{t('sidebar.settings')}</span>}
+            </NavLink>
           </div>
         </div>
       </aside>
