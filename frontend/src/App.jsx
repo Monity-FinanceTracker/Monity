@@ -87,6 +87,7 @@ const AdminRoute = ({ children }) => {
 const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { preloadCriticalComponents } = useComponentPreloader();
+  const { user } = useAuth();
 
   // Preload critical components after layout is mounted
   useEffect(() => {
@@ -119,7 +120,7 @@ const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
         />
 
         {/* Main content */}
-        <main id="main-content" className="flex-1 p-6 content-container">
+        <main id="main-content" key={user?.id || 'no-user'} className="flex-1 p-6 content-container">
           {children}
         </main>
       </div>

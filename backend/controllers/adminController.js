@@ -210,11 +210,15 @@ class AdminController {
             }
 
             // --- Transaction Analytics ---
-            const { data: transactionsData, error: transactionsError } = await this.supabase
+            const { data: transactionsRawData, error: transactionsError } = await this.supabase
                 .from('transactions')
                 .select('amount, typeId, category');
 
             if (transactionsError) throw transactionsError;
+
+            // Decrypt the transactions data
+            const { decryptObject } = require('../middleware/encryption');
+            const transactionsData = decryptObject('transactions', transactionsRawData || []);
 
             const totalTransactions = transactionsData.length;
             const totalVolume = transactionsData.reduce((sum, t) => sum + Math.abs(t.amount), 0);

@@ -23,7 +23,8 @@ const createServer = (supabaseClient) => {
       if (!origin) return callback(null, true);
 
       const allowedOrigins = [
-        "http://localhost:5173", // Desenvolvimento local
+        "http://localhost:5173", // Desenvolvimento local (Vite padrão)
+        "http://localhost:5174", // Desenvolvimento local (Vite alternativo)
         "http://localhost:3000", // Porta local alternativa
         "https://firstmonity.vercel.app", // Frontend de produção
         process.env.CLIENT_URL, // Variável de ambiente

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { getCategories, addTransaction } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -10,16 +11,25 @@ import { FaDollarSign, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons
 const AddIncome = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const [income, setIncome] = useState({
         description: '',
         amount: '',
-        date: new Date().toISOString().slice(0, 10),
+        date: '', // Initialize empty, set with useEffect to avoid hydration issues
         categoryId: '',
         typeId: 2 // 2 for income
     });
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    // Set default date after component mounts to avoid hydration issues
+    useEffect(() => {
+        setIncome(prev => ({
+            ...prev,
+            date: new Date().toISOString().slice(0, 10)
+        }));
+    }, []);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -44,7 +54,7 @@ const AddIncome = () => {
         };
         delete incomeData.categoryId; // Remove categoryId as backend expects 'category'
 
-        if (!incomeData.description || !incomeData.amount || !incomeData.categoryId) {
+        if (!incomeData.description || !incomeData.amount || !incomeData.category) {
             toast.error(t('addTransaction.fill_all_fields'));
             setLoading(false);
             return;
@@ -52,6 +62,13 @@ const AddIncome = () => {
 
         try {
             await addTransaction(incomeData);
+            
+            // Invalidate and refetch all transaction-related queries
+            await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            await queryClient.invalidateQueries({ queryKey: ['balance'] });
+            await queryClient.invalidateQueries({ queryKey: ['savings'] });
+            await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            
             toast.success(t('addIncome.success'));
             navigate('/');
         } catch (err) {
