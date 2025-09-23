@@ -15,7 +15,7 @@ const AddIncome = () => {
         amount: '',
         date: new Date().toISOString().slice(0, 10),
         categoryId: '',
-        typeId: 1 // 1 for income
+        typeId: 2 // 2 for income
     });
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -37,7 +37,12 @@ const AddIncome = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const incomeData = { ...income, amount: parseFloat(income.amount) };
+        const incomeData = { 
+            ...income, 
+            amount: parseFloat(income.amount),
+            category: income.categoryId // Map categoryId to category for backend
+        };
+        delete incomeData.categoryId; // Remove categoryId as backend expects 'category'
 
         if (!incomeData.description || !incomeData.amount || !incomeData.categoryId) {
             toast.error(t('addTransaction.fill_all_fields'));
@@ -60,7 +65,7 @@ const AddIncome = () => {
         return <div className="text-red-500 text-center p-4">{error}</div>;
     }
 
-    const incomeCategories = categories.filter(c => c.typeId === 1);
+    const incomeCategories = categories.filter(c => c.typeId === 2);
 
     return (
         <div className="max-w-2xl mx-auto p-4 md:p-6 bg-[#1f2937] text-white rounded-2xl shadow-lg">

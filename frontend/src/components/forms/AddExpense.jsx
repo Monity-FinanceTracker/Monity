@@ -37,7 +37,12 @@ const AddExpense = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const expenseData = { ...expense, amount: parseFloat(expense.amount) };
+        const expenseData = { 
+            ...expense, 
+            amount: parseFloat(expense.amount),
+            category: expense.categoryId // Map categoryId to category for backend
+        };
+        delete expenseData.categoryId; // Remove categoryId as backend expects 'category'
 
         if (!expenseData.description || !expenseData.amount || !expenseData.categoryId) {
             toast.error(t('addTransaction.fill_all_fields'));
@@ -134,7 +139,7 @@ const AddExpense = () => {
                                 required
                             >
                                 <option value="" className="bg-[#191E29] text-white">{t('addExpense.select_category')}</option>
-                                {categories.map(category => (
+                                {categories.filter(c => c.typeId === 1).map(category => (
                                     <option key={category.id} value={category.id} className="bg-[#191E29] text-white">
                                         {category.name}
                                     </option>
