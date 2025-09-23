@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BalanceCard, ExpensivePurchase, Savings, Container, Grid, Heading, Text } from "../ui";
-import { BalanceChart, ExpenseChart } from "../charts";
+// Removed static imports - using lazy components instead
+import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "../../hooks/useResponsive";
@@ -88,7 +89,7 @@ function Dashboard() {
                         </svg>
                     }
                 >
-                    <ExpenseChart selectedRange="all_time" />
+                    <LazyExpenseChart selectedRange="all_time" />
                 </ModernCard>
 
                 <ModernCard 
@@ -128,7 +129,7 @@ function Dashboard() {
                         </Link>
                     }
                 >
-                    <BalanceChart selectedRange="all_time" />
+                    <LazyBalanceChart selectedRange="all_time" />
                 </ModernCard>
 
                 <ModernCard 
