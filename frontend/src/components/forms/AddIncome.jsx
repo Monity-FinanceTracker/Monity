@@ -13,13 +13,21 @@ const AddIncome = () => {
     const [income, setIncome] = useState({
         description: '',
         amount: '',
-        date: new Date().toISOString().slice(0, 10),
+        date: '', // Initialize empty, set with useEffect to avoid hydration issues
         categoryId: '',
         typeId: 2 // 2 for income
     });
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    // Set default date after component mounts to avoid hydration issues
+    useEffect(() => {
+        setIncome(prev => ({
+            ...prev,
+            date: new Date().toISOString().slice(0, 10)
+        }));
+    }, []);
 
     useEffect(() => {
         const fetchCategories = async () => {
