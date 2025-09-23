@@ -30,11 +30,15 @@ class DataExportService {
                 query = query.lte('date', options.endDate);
             }
 
-            const { data: transactions, error } = await query;
+            const { data: transactionsData, error } = await query;
             if (error) throw error;
-            if (!transactions || transactions.length === 0) {
+            if (!transactionsData || transactionsData.length === 0) {
                 throw new Error('No transactions found for the given criteria.');
             }
+
+            // Decrypt the transactions data
+            const { decryptObject } = require('../middleware/encryption');
+            const transactions = decryptObject('transactions', transactionsData);
 
             switch (format) {
                 case 'csv':

@@ -5,6 +5,7 @@ module.exports = (controllers) => {
     const { invitationController } = controllers;
 
     router.get('/pending', (req, res) => invitationController.getPendingInvitations(req, res));
+    router.post('/:invitationId/respond', (req, res) => invitationController.respondToInvitation(req, res));
 
     return router;
 };

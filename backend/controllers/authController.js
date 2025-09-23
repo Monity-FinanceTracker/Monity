@@ -100,9 +100,9 @@ class AuthController {
             
             const healthData = await financialHealthService.getFinancialHealthScore(userId);
 
-            // Get additional metrics for the user
+            // Get additional metrics for the user using the Transaction model for proper decryption
             const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-            const { data: transactions, error: transactionsError } = await this.supabase
+            const { data: transactionsData, error: transactionsError } = await this.supabase
                 .from('transactions')
                 .select('amount, typeId, category, date')
                 .eq('userId', userId)
@@ -112,6 +112,10 @@ class AuthController {
                 logger.error('Failed to get transactions for financial health', { userId, error: transactionsError.message });
                 return res.status(500).json({ error: 'Failed to fetch financial data.' });
             }
+
+            // Decrypt the transactions data
+            const { decryptObject } = require('../middleware/encryption');
+            const transactions = decryptObject('transactions', transactionsData || []);
 
             // Calculate detailed metrics
             const totalIncome = transactions.filter(t => t.typeId === 2).reduce((sum, t) => sum + t.amount, 0);

@@ -59,8 +59,15 @@ function decrypt(text) {
         const authTag = Buffer.from(authTagHex, 'hex');
         const encryptedText = Buffer.from(encryptedHex, 'hex');
         const decipher = crypto.createDecipheriv(ALGORITHM, KEY, iv);
+        
+        // Process the encrypted data first
+        let decrypted = decipher.update(encryptedText);
+        
+        // Set auth tag AFTER processing the data but BEFORE final()
         decipher.setAuthTag(authTag);
-        const decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
+        
+        // Finalize decryption
+        decrypted = Buffer.concat([decrypted, decipher.final()]);
         return decrypted.toString('utf8');
     } catch (error) {
         logger.error('Decryption failed for text', { text, error });
