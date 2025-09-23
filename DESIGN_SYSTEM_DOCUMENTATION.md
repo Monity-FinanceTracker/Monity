@@ -1,5 +1,4 @@
 # 🎨 Monity Design System Documentation
-#
 
 ## 🎉 **ALL TODOS COMPLETED!** 
 
