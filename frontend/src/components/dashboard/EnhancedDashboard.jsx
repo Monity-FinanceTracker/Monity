@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { get } from '../../utils/api';
-import { BalanceCard, Savings, SavingsOverviewCard } from '../ui';
-import { BalanceChart, ExpenseChart } from '../charts';
+import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
+// Removed static imports - using lazy components instead
+import { getIcon, Icon } from '../../utils/iconMapping.jsx';
+import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 
 /**
  * Enhanced Dashboard with improved UX, quick actions, and better visual hierarchy
@@ -49,7 +51,7 @@ const EnhancedDashboard = () => {
             id: 'add-expense',
             title: t('quickActions.add_expense'),
             description: t('quickActions.add_expense_desc'),
-            icon: '💸',
+            icon: <Icon name="CreditCard" size="xl" className="text-white" />,
             color: 'from-red-500 to-red-600',
             path: '/add-expense',
             shortcut: 'E'
@@ -58,7 +60,7 @@ const EnhancedDashboard = () => {
             id: 'add-income',
             title: t('quickActions.add_income'),
             description: t('quickActions.add_income_desc'),
-            icon: '💰',
+            icon: <Icon name="TrendingUp" size="xl" className="text-white" />,
             color: 'from-green-500 to-green-600',
             path: '/add-income',
             shortcut: 'I'
@@ -67,7 +69,7 @@ const EnhancedDashboard = () => {
             id: 'view-transactions',
             title: t('quickActions.view_transactions'),
             description: t('quickActions.view_transactions_desc'),
-            icon: '📊',
+            icon: <Icon name="BarChart3" size="xl" className="text-white" />,
             color: 'from-blue-500 to-blue-600',
             path: '/transactions',
             shortcut: 'T'
@@ -76,7 +78,7 @@ const EnhancedDashboard = () => {
             id: 'manage-budgets',
             title: t('quickActions.manage_budgets'),
             description: t('quickActions.manage_budgets_desc'),
-            icon: '🎯',
+            icon: <Icon name="Target" size="xl" className="text-white" />,
             color: 'from-purple-500 to-purple-600',
             path: '/budgets',
             shortcut: 'B'
@@ -135,7 +137,11 @@ const EnhancedDashboard = () => {
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                     transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                                 }`}>
-                                    {transaction.typeId === 1 ? '💸' : '💰'}
+                                    {transaction.typeId === 1 ? (
+                                        <Icon name="CreditCard" size="sm" className="text-red-400" />
+                                    ) : (
+                                        <Icon name="TrendingUp" size="sm" className="text-green-400" />
+                                    )}
                                 </div>
                                 <div>
                                     <p className="text-white font-medium">{transaction.description}</p>
@@ -196,6 +202,11 @@ const EnhancedDashboard = () => {
         </EnhancedCard>
     );
 
+    // Show skeleton while loading to prevent CLS
+    if (isLoading) {
+        return <DashboardSkeleton />;
+    }
+
     return (
         <div className="space-y-8">
             {/* Welcome Section */}
@@ -211,7 +222,8 @@ const EnhancedDashboard = () => {
                 {subscriptionTier === 'premium' && (
                     <div className="hidden md:block">
                         <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                            ✨ Premium
+                            <Icon name="Star" size="sm" className="mr-1" />
+                            Premium
                         </span>
                     </div>
                 )}
@@ -235,7 +247,7 @@ const EnhancedDashboard = () => {
                     accent="text-red-400"
                     isLoading={isLoading}
                 >
-                    <ExpenseChart selectedRange="all_time" />
+                    <LazyExpenseChart selectedRange="all_time" />
                 </EnhancedCard>
 
                 <SavingsOverviewCard />
@@ -250,7 +262,7 @@ const EnhancedDashboard = () => {
                     isLoading={isLoading}
                     className="xl:col-span-1"
                 >
-                    <BalanceChart selectedRange="all_time" />
+                    <LazyBalanceChart selectedRange="all_time" />
                 </EnhancedCard>
 
                 <RecentTransactionsPreview />

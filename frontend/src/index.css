@@ -1,5 +1,5 @@
-@import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import 'tailwindcss';
 
 :root {
   /* Font variables to match prototype setup */
@@ -148,6 +148,99 @@ button:focus-visible {
 
 /* Remove old color variables and media queries - now using CSS variables */
 
+/* CLS Prevention Rules */
+/* Prevent layout shift during font loading */
+.font-loading {
+  font-display: swap;
+}
 
+/* Ensure images have dimensions to prevent layout shift */
+img {
+  max-width: 100%;
+  height: auto;
+}
 
+/* Prevent layout shift for dynamic content */
+.skeleton-container {
+  min-height: 200px;
+}
 
+/* Smooth transitions for dynamic content */
+.transition-smooth {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Prevent content jumping during loading */
+.loading-placeholder {
+  min-height: inherit;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Ensure consistent spacing */
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+/* Prevent text reflow during font loading */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Additional CLS Prevention */
+/* Prevent layout shift from sidebar transitions */
+.sidebar-transition {
+  will-change: transform;
+  contain: layout;
+}
+
+/* Optimize rendering for dynamic content */
+.content-container {
+  contain: layout style;
+}
+
+/* Prevent layout shift from dynamic content */
+.dynamic-content {
+  min-height: 100px;
+  contain: layout;
+}
+
+/* Optimize animations to prevent layout shift */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Ensure consistent spacing for dynamic lists */
+.dynamic-list {
+  min-height: 200px;
+}
+
+.dynamic-list-item {
+  min-height: 60px;
+  contain: layout;
+}

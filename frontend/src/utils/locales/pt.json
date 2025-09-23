@@ -73,7 +73,9 @@
     "add_income": "Adicionar Receita",
     "failed_load_categories": "Falha ao carregar categorias",
     "success": "Receita adicionada!",
-    "failed": "Falha ao adicionar receita"
+    "failed": "Falha ao adicionar receita",
+    "subtitle": "Adicione uma nova receita para monitorar suas finanças",
+    "description": "Descrição"
   },
   "savings_goals": {
     "title": "Metas de Poupança",
@@ -381,6 +383,8 @@
     "bulk_delete_success": "{{count}} transações excluídas com sucesso",
     "bulk_delete_error": "Falha ao excluir transações",
     "add_new": "Adicionar Novo",
+    "add_income": "Adicionar Receita",
+    "add_expense": "Adicionar Despesa",
     "total_transactions": "Total de Transações",
     "total_income": "Receita Total",
     "total_expenses": "Despesas Totais",
@@ -388,6 +392,7 @@
     "sort_by_date": "Ordenar por Data",
     "sort_by_amount": "Ordenar por Valor",
     "sort_by_description": "Ordenar por Descrição",
+    "sort_by_category": "Ordenar por Categoria",
     "filters": "Filtros",
     "delete": "Excluir",
     "error": "Erro"
