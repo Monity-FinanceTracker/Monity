@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../ui/NotificationSystem';
 import { get, post, del } from '../../utils/api';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
+import { Plus, Search, X, Trash2 } from 'lucide-react';
+import { iconMap, categoryIconOptions, getIcon } from '../../utils/iconMapping.jsx';
 
 /**
  * Enhanced Categories Component with modern UI and improved functionality
@@ -20,7 +22,7 @@ const EnhancedCategories = () => {
         name: '',
         typeId: 1,
         color: '#01C38D',
-        icon: '📦'
+        icon: 'Package'
     });
     
     const categoryTypes = [
@@ -36,10 +38,8 @@ const EnhancedCategories = () => {
         '#6366F1', '#84CC16', '#06B6D4', '#EAB308'
     ];
 
-    const iconOptions = [
-        '🏠', '🍕', '🚗', '💰', '🎬', '🛒', '🏥', '📚',
-        '✈️', '⚡', '🎵', '🏋️', '👔', '🎮', '🍔', '📱'
-    ];
+    // Use centralized icon options
+    const iconOptions = categoryIconOptions;
 
     useEffect(() => {
         fetchCategories();
@@ -63,7 +63,7 @@ const EnhancedCategories = () => {
         try {
             const { data } = await post('/categories', newCategory);
             setCategories(prev => [...prev, data]);
-            setNewCategory({ name: '', typeId: 1, color: '#01C38D', icon: '📦' });
+            setNewCategory({ name: '', typeId: 1, color: '#01C38D', icon: 'Package' });
             setShowAddForm(false);
             success(t('categories.add_success'));
         } catch (error) {
@@ -109,7 +109,7 @@ const EnhancedCategories = () => {
                     onClick={() => setShowAddForm(true)}
                     className="mt-4 sm:mt-0 bg-[#01C38D] text-white px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors flex items-center gap-2 font-medium"
                 >
-                    <span className="text-lg">+</span>
+                    <Plus className="w-4 h-4" />
                     {t('categories.add_new')}
                 </button>
             </div>
@@ -126,9 +126,7 @@ const EnhancedCategories = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                             />
-                            <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                         </div>
                     </div>
                     <div className="sm:w-48">
@@ -151,7 +149,7 @@ const EnhancedCategories = () => {
             {filteredCategories.length === 0 ? (
                 searchQuery ? (
                     <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-12 text-center">
-                        <div className="text-4xl mb-4">🔍</div>
+                        <Search className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                         <h3 className="text-white text-lg font-medium mb-2">{t('categories.no_results')}</h3>
                         <p className="text-gray-400">{t('categories.no_results_desc')}</p>
                     </div>
@@ -168,10 +166,13 @@ const EnhancedCategories = () => {
                             <div className="flex items-start justify-between mb-3">
                                 <div className="flex items-center gap-3">
                                     <div 
-                                        className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
+                                        className="w-10 h-10 rounded-lg flex items-center justify-center"
                                         style={{ backgroundColor: category.color || '#01C38D' }}
                                     >
-                                        {category.icon || '📦'}
+                                        {(() => {
+                                            const IconComponent = getIcon(category.icon);
+                                            return <IconComponent className="w-5 h-5 text-white" />;
+                                        })()}
                                     </div>
                                     <div>
                                         <h3 className="text-white font-medium">{category.name}</h3>
@@ -185,9 +186,7 @@ const EnhancedCategories = () => {
                                     className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all p-1"
                                     title={t('categories.delete')}
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
+                                    <Trash2 className="w-4 h-4" />
                                 </button>
                             </div>
                             <div className="text-gray-400 text-sm">
@@ -208,9 +207,7 @@ const EnhancedCategories = () => {
                                 onClick={() => setShowAddForm(false)}
                                 className="text-gray-400 hover:text-white transition-colors"
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                <X className="w-6 h-6" />
                             </button>
                         </div>
 
@@ -250,21 +247,25 @@ const EnhancedCategories = () => {
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('categories.icon')}
                                 </label>
-                                <div className="grid grid-cols-8 gap-2">
-                                    {iconOptions.map((icon) => (
-                                        <button
-                                            key={icon}
-                                            type="button"
-                                            onClick={() => setNewCategory(prev => ({ ...prev, icon }))}
-                                            className={`p-2 rounded-lg border transition-all ${
-                                                newCategory.icon === icon 
-                                                    ? 'border-[#01C38D] bg-[#01C38D]/20' 
-                                                    : 'border-[#31344d] hover:border-[#01C38D]/50'
-                                            }`}
-                                        >
-                                            {icon}
-                                        </button>
-                                    ))}
+                                <div className="grid grid-cols-5 gap-2">
+                                    {iconOptions.map((iconOption) => {
+                                        const IconComponent = iconOption.icon;
+                                        return (
+                                            <button
+                                                key={iconOption.name}
+                                                type="button"
+                                                onClick={() => setNewCategory(prev => ({ ...prev, icon: iconOption.name }))}
+                                                className={`p-3 rounded-lg border transition-all flex items-center justify-center ${
+                                                    newCategory.icon === iconOption.name 
+                                                        ? 'border-[#01C38D] bg-[#01C38D]/20 text-[#01C38D]' 
+                                                        : 'border-[#31344d] hover:border-[#01C38D]/50 text-gray-400 hover:text-white'
+                                                }`}
+                                                title={iconOption.label}
+                                            >
+                                                <IconComponent className="w-5 h-5" />
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 

@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { get, del } from '../../utils/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
 import formatDate from '../../utils/formatDate';
+import { Icon } from '../../utils/iconMapping.jsx';
+import { useSearchDebounce } from '../../hooks/useDebounce';
+import { monitorApiCall } from '../../utils/performanceMonitor';
+import { TransactionSkeleton } from '../ui';
 
 /**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
  */
-const ImprovedTransactionList = ({ transactionType = 'all' }) => {
+const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const { t } = useTranslation();
     const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -16,6 +21,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
     
     // Filter and search states
     const [searchQuery, setSearchQuery] = useState('');
+    const debouncedSearchQuery = useSearchDebounce(searchQuery, 300);
     const [categoryFilter, setCategoryFilter] = useState('');
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [amountRange, setAmountRange] = useState({ min: '', max: '' });
@@ -27,41 +33,59 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
     const [viewMode, setViewMode] = useState('card'); // 'card' or 'table'
 
-    // Fetch transactions
-    useEffect(() => {
-        fetchTransactions();
-    }, []);
-
-    const fetchTransactions = async () => {
-        try {
-            const { data } = await get('/transactions');
-            let transactionData = Array.isArray(data) ? data : [];
-            
-            // Filter by transaction type if specified
-            if (transactionType === 'expenses') {
-                transactionData = transactionData.filter(t => t.typeId === 1);
-            } else if (transactionType === 'income') {
-                transactionData = transactionData.filter(t => t.typeId === 2);
+    // React Query for server state management
+    const { 
+        data: transactionsData = [], 
+        isLoading: queryLoading, 
+        error: queryError,
+        refetch 
+    } = useQuery({
+        queryKey: ['transactions', 'list', transactionType],
+        queryFn: async () => {
+            const startTime = performance.now();
+            try {
+                const response = await optimizedGet('/transactions');
+                const endTime = performance.now();
+                
+                monitorApiCall('transactions-list', startTime, endTime, true);
+                
+                let transactionData = Array.isArray(response.data) ? response.data : [];
+                
+                // Filter by transaction type if specified
+                if (transactionType === 'expenses') {
+                    transactionData = transactionData.filter(t => t.typeId === 1);
+                } else if (transactionType === 'income') {
+                    transactionData = transactionData.filter(t => t.typeId === 2);
+                }
+                
+                return transactionData;
+            } catch (err) {
+                const endTime = performance.now();
+                monitorApiCall('transactions-list', startTime, endTime, false);
+                throw err;
             }
-            
-            setTransactions(transactionData);
-            setFilteredTransactions(transactionData);
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+        },
+        staleTime: 2 * 60 * 1000, // 2 minutes
+        gcTime: 5 * 60 * 1000, // 5 minutes
+    });
 
-    // Advanced filtering and search
+    // Update local state when query data changes
     useEffect(() => {
+        setTransactions(transactionsData);
+        setLoading(queryLoading);
+        setError(queryError?.message || null);
+    }, [transactionsData, queryLoading, queryError]);
+
+    // Memoized filtering and search with debounced search
+    const filteredAndSortedTransactions = useMemo(() => {
         let filtered = [...transactions];
 
-        // Text search
-        if (searchQuery) {
+        // Text search (using debounced query)
+        if (debouncedSearchQuery) {
+            const searchLower = debouncedSearchQuery.toLowerCase();
             filtered = filtered.filter(transaction =>
-                transaction.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                transaction.category?.toLowerCase().includes(searchQuery.toLowerCase())
+                transaction.description?.toLowerCase().includes(searchLower) ||
+                transaction.category?.toLowerCase().includes(searchLower)
             );
         }
 
@@ -96,7 +120,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
             );
         }
 
-        // Sorting
+        // Optimized sorting
         filtered.sort((a, b) => {
             let aValue, bValue;
             
@@ -123,8 +147,37 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
             return 0;
         });
 
-        setFilteredTransactions(filtered);
-    }, [transactions, searchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
+        return filtered;
+    }, [transactions, debouncedSearchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
+
+    // Update filteredTransactions when memoized value changes
+    useEffect(() => {
+        setFilteredTransactions(filteredAndSortedTransactions);
+    }, [filteredAndSortedTransactions]);
+
+    // Optimized delete mutation with React Query
+    const queryClient = useQueryClient();
+    const deleteTransactionMutation = useMutation({
+        mutationFn: async (transactionId) => {
+            const startTime = performance.now();
+            try {
+                await optimizedDel(`/transactions/${transactionId}`);
+                const endTime = performance.now();
+                monitorApiCall('delete-transaction', startTime, endTime, true);
+            } catch (error) {
+                const endTime = performance.now();
+                monitorApiCall('delete-transaction', startTime, endTime, false);
+                throw error;
+            }
+        },
+        onSuccess: () => {
+            // Invalidate and refetch transactions
+            queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        },
+        onError: (error) => {
+            console.error('Delete transaction error:', error);
+        }
+    });
 
     // Bulk operations
     const handleSelectAll = () => {
@@ -178,7 +231,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
 
     // Transaction card component
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (
-        <div className={`bg-[#23263a] border border-[#31344d] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
+        <div className={`bg-[#23263a] border border-[#31344d] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <input
@@ -191,7 +244,11 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                         transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                     }`}>
-                        {transaction.typeId === 1 ? '💸' : '💰'}
+                        {transaction.typeId === 1 ? (
+                            <Icon name="CreditCard" size="md" className="text-red-400" />
+                        ) : (
+                            <Icon name="TrendingUp" size="md" className="text-green-400" />
+                        )}
                     </div>
                     
                     <div>
@@ -241,8 +298,34 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <div className="w-12 h-12 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+            <div className="space-y-6">
+                {/* Header skeleton */}
+                <div className="bg-gradient-to-r from-[#23263a] to-[#31344d] rounded-xl p-6 border border-[#31344d]">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        {Array.from({ length: 4 }).map((_, index) => (
+                            <div key={index} className="text-center">
+                                <div className="h-8 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+                                <div className="h-4 bg-gray-700/30 rounded animate-pulse"></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                
+                {/* Search and filters skeleton */}
+                <div className="bg-gray-900 rounded-xl p-6">
+                    <div className="flex flex-col md:flex-row gap-4 mb-4">
+                        <div className="flex-1 h-12 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                        <div className="h-12 w-32 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                    </div>
+                    <div className="flex gap-2 mb-4">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                            <div key={index} className="h-8 w-20 bg-gray-700/30 rounded-full animate-pulse"></div>
+                        ))}
+                    </div>
+                </div>
+                
+                {/* Transactions skeleton */}
+                <TransactionSkeleton count={8} />
             </div>
         );
     }
@@ -412,7 +495,7 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
             )}
 
             {/* Transaction list */}
-            <div className="space-y-4">
+            <div className="space-y-4 dynamic-list">
                 {/* Select all checkbox - only show when there are transactions */}
                 {filteredTransactions.length > 0 && (
                     <div className="flex items-center justify-between">
@@ -437,7 +520,9 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
 
                 {filteredTransactions.length === 0 ? (
                     <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-12 text-center">
-                        <div className="text-6xl mb-4">📊</div>
+                        <div className="mb-4">
+                            <Icon name="BarChart3" size="xxl" className="mx-auto text-blue-400" />
+                        </div>
                         <h3 className="text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
                         <p className="text-gray-400 mb-6">{t('transactions.no_transactions_desc')}</p>
                         <div className="flex gap-4 justify-center">
@@ -445,13 +530,15 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
                                 to="/add-expense"
                                 className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors"
                             >
-                                💸 {t('transactions.add_expense')}
+                                <Icon name="CreditCard" size="md" className="mr-2" />
+                                {t('transactions.add_expense')}
                             </Link>
                             <Link
                                 to="/add-income"
                                 className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
                             >
-                                💰 {t('transactions.add_income')}
+                                <Icon name="TrendingUp" size="md" className="mr-2" />
+                                {t('transactions.add_income')}
                             </Link>
                         </div>
                     </div>
@@ -468,6 +555,6 @@ const ImprovedTransactionList = ({ transactionType = 'all' }) => {
             </div>
         </div>
     );
-};
+});
 
 export default ImprovedTransactionList; 

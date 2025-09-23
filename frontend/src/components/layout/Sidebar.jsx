@@ -25,7 +25,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
 
   return (
     <>
-      <aside className={`fixed top-0 left-0 h-screen bg-[#23263a] text-white border-r border-[#31344d] z-40 transform transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+      <aside className={`fixed top-0 left-0 h-screen bg-[#23263a] text-white border-r border-[#31344d] z-40 transform transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'}`} style={{ willChange: 'transform' }}>
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className={`flex items-center p-4 border-b border-[#31344d] ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
@@ -66,7 +66,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.dashboard') : ''}
               >
                 <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium">{t('sidebar.dashboard')}</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.dashboard')}</span>}
               </NavLink>
               <NavLink
                 to="/transactions"
@@ -80,7 +80,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.transactions') : ''}
               >
                 <CreditCard className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium">{t('sidebar.transactions')}</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.transactions')}</span>}
               </NavLink>
               <NavLink
                 to="/groups"
@@ -94,7 +94,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.groups') : ''}
               >
                 <Users className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium">{t('sidebar.groups')}</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.groups')}</span>}
               </NavLink>
               <NavLink
                 to="/categories"
@@ -108,7 +108,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.categories') : ''}
               >
                 <Tag className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium">{t('sidebar.categories')}</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.categories')}</span>}
               </NavLink>
               <NavLink
                 to="/budgets"
@@ -122,7 +122,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.budgets') : ''}
               >
                 <PieChart className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium">{t('sidebar.budgets')}</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.budgets')}</span>}
               </NavLink>
 
               <NavLink
@@ -137,7 +137,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.savings_goals') : ''}
               >
                 <Target className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium">{t('sidebar.savings_goals')}</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.savings_goals')}</span>}
               </NavLink>
 
               <NavLink
@@ -152,7 +152,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.financial_health') : ''}
               >
                 <TrendingUp className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium">{t('sidebar.financial_health')}</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.financial_health')}</span>}
               </NavLink>
 
             </nav>
@@ -171,7 +171,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Sparkles className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium">{t('sidebar.go_premium')}</span>
+                  <span className="font-medium truncate">{t('sidebar.go_premium')}</span>
                 </NavLink>
               </div>
             )}
@@ -189,38 +189,34 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Sparkles className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium">{t('sidebar.premium')}</span>
-                </NavLink>
-              </div>
-            )}
-
-            {/* Admin Section */}
-            {isAdmin && !isCollapsed && (
-              <div className="mt-6">
-                <div className="px-3 mb-3">
-                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('sidebar.admin')}</span>
-                </div>
-                <NavLink
-                  to="/admin"
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                      ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                      : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
-                    }`
-                  }
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Settings className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium">{t('sidebar.admin_dashboard')}</span>
+                  <span className="font-medium truncate">{t('sidebar.premium')}</span>
                 </NavLink>
               </div>
             )}
 
           </div>
 
-          {/* Settings at bottom */}
-          <div className="border-t border-[#31344d] p-4">
+          {/* Admin and Settings at bottom */}
+          <div className="border-t border-[#31344d] p-4 space-y-2">
+            {/* Admin Dashboard first */}
+            {isAdmin && (
+              <NavLink
+                to="/admin"
+                end
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                  }`
+                }
+                onClick={() => setIsMobileMenuOpen(false)}
+                title={isCollapsed ? t('sidebar.admin_dashboard') : ''}
+              >
+                <span className="material-symbols-outlined text-lg">eye_tracking</span>
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.admin_dashboard')}</span>}
+              </NavLink>
+            )}
+            
             <NavLink
               to="/settings"
               className={({ isActive }) =>
@@ -233,7 +229,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               title={isCollapsed ? t('sidebar.settings') : ''}
             >
               <Settings className="w-5 h-5 flex-shrink-0" />
-              {!isCollapsed && <span className="font-medium">{t('sidebar.settings')}</span>}
+              {!isCollapsed && <span className="font-medium truncate">{t('sidebar.settings')}</span>}
             </NavLink>
           </div>
         </div>

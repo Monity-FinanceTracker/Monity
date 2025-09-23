@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { get } from '../../utils/api';
 import Spinner from '../ui/Spinner';
+import { DollarSign, Lightbulb, BarChart3 } from 'lucide-react';
+import { Icon } from '../../utils/iconMapping.jsx';
 
 /**
  * Financial Health Component - Personal financial health dashboard
@@ -164,7 +166,7 @@ const FinancialHealth = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
                     <h3 className="text-lg font-semibold mb-4 flex items-center">
-                        <span className="mr-2">💰</span>
+                        <DollarSign className="w-5 h-5 mr-2" />
                         {t('financialHealth.income')}
                     </h3>
                     <div className="text-3xl font-bold text-green-400 mb-2">
@@ -175,7 +177,7 @@ const FinancialHealth = () => {
 
                 <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
                     <h3 className="text-lg font-semibold mb-4 flex items-center">
-                        <span className="mr-2">💸</span>
+                        <Icon name="CreditCard" size="sm" className="mr-2" />
                         {t('financialHealth.expenses')}
                     </h3>
                     <div className="text-3xl font-bold text-red-400 mb-2">
@@ -199,7 +201,7 @@ const FinancialHealth = () => {
             {/* Recommendations */}
             <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
                 <h2 className="text-xl font-semibold mb-6 flex items-center">
-                    <span className="mr-2">💡</span>
+                    <Lightbulb className="w-5 h-5 mr-2" />
                     {t('financialHealth.personalized_recommendations')}
                 </h2>
                 
@@ -227,7 +229,7 @@ const FinancialHealth = () => {
             {/* Health Score Explanation */}
             <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
                 <h2 className="text-xl font-semibold mb-4 flex items-center">
-                    <span className="mr-2">📊</span>
+                    <BarChart3 className="w-5 h-5 mr-2" />
                     {t('financialHealth.how_score_calculated')}
                 </h2>
                 

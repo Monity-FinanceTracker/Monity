@@ -1,5 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import { Icon } from "../../utils/iconMapping.jsx";
 
 export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { t } = useTranslation();
@@ -14,9 +15,7 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         aria-label={t('topbar.toggle_menu')}
         aria-expanded={isMobileMenuOpen}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
+        <Icon name="Menu" size="lg" />
       </button>
 
       <div className="flex items-center gap-2">
@@ -25,7 +24,9 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         </span>
         <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
           <span className="text-[#191E29] text-lg font-bold">
-            {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : '👤'}
+            {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
+              <Icon name="User" size="sm" className="text-[#191E29]" />
+            )}
           </span>
         </div>
       </div>

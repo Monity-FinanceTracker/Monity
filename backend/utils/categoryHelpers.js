@@ -46,7 +46,7 @@ function createLocalizedSavingsCategories(locale = 'en', userId) {
             typeId: 3,
             userId: userId,
             color: '#3B82F6',
-            icon: '📈',
+            icon: 'trending_up',
             metadata: {
                 savings_behavior: 'investment',
                 description: 'Moving money from savings to investments',
@@ -60,7 +60,7 @@ function createLocalizedSavingsCategories(locale = 'en', userId) {
             typeId: 3,
             userId: userId,
             color: '#EF4444',
-            icon: '📉',
+            icon: 'trending_down',
             metadata: {
                 savings_behavior: 'divestment',
                 description: 'Moving money from investments back to savings',
@@ -89,7 +89,7 @@ function createLocalizedSavingsCategories(locale = 'en', userId) {
             typeId: 3,
             userId: userId,
             color: '#10B981',
-            icon: '🏖️',
+            icon: 'beach_access',
             metadata: {
                 savings_behavior: 'deposit',
                 description: 'Long-term retirement savings',
