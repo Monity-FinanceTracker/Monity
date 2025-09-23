@@ -22,13 +22,16 @@ export const checkSubscription = async (options = {}) => {
   const { force = false } = options;
   const now = Date.now();
   
-  // Temporarily return 'free' to prevent API errors during development
+  // Note: Development mode override removed to allow premium testing
+  // Uncomment the block below if you need to force free tier in development
+  /*
   if (process.env.NODE_ENV === 'development') {
     console.log('Subscription check temporarily disabled in development');
     subscriptionCache = "free";
     cacheTimestamp = now;
     return "free";
   }
+  */
   
   if (
     !force &&

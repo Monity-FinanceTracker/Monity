@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { List } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { get, del } from '../../utils/api';
 import formatDate from '../../utils/formatDate';
@@ -17,6 +18,7 @@ const VirtualizedTransactionList = React.memo(({
     itemHeight = 80 
 }) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const [transactions, setTransactions] = useState([]);
     const [hasNextPage, setHasNextPage] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
@@ -101,6 +103,12 @@ const VirtualizedTransactionList = React.memo(({
             await del(`/transactions/${transactionId}`);
             setTransactions(prev => prev.filter(t => t.id !== transactionId));
             setTotalItems(prev => prev - 1);
+            
+            // Invalidate queries to refresh all related data
+            await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            await queryClient.invalidateQueries({ queryKey: ['balance'] });
+            await queryClient.invalidateQueries({ queryKey: ['savings'] });
+            await queryClient.invalidateQueries({ queryKey: ['budgets'] });
         } catch (err) {
             console.error('Error deleting transaction:', err);
             alert(t('transactions.delete_error'));

@@ -17,10 +17,14 @@ export const useNotifications = () => {
 
 export const NotificationProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);
+    const [notificationCounter, setNotificationCounter] = useState(0);
     const { t } = useTranslation();
 
     const addNotification = (notification) => {
-        const id = Date.now() + Math.random();
+        // Use a counter-based ID to avoid hydration mismatches
+        const id = `notification-${notificationCounter}`;
+        setNotificationCounter(prev => prev + 1);
+        
         const newNotification = {
             id,
             type: 'info', // 'success', 'error', 'warning', 'info'

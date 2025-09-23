@@ -1,11 +1,13 @@
 import Spinner from "./Spinner"
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { get, del } from '../../utils/api';
 import formatDate from "../../utils/formatDate";
 import { useTranslation } from "react-i18next";
 
 const ExpensivePurchase = React.memo(() => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -36,6 +38,13 @@ const ExpensivePurchase = React.memo(() => {
 
         try {
             await del(`/transactions/${transactionId}`);
+            
+            // Invalidate queries to refresh all related data
+            await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            await queryClient.invalidateQueries({ queryKey: ['balance'] });
+            await queryClient.invalidateQueries({ queryKey: ['savings'] });
+            await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            
             // Refetch expenses after deletion, respecting the current filter
             fetchExpenses();
         } catch(err) {
