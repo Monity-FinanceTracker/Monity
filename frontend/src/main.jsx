@@ -14,6 +14,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { initWebVitalsMonitoring } from './utils/performanceMonitor';
 import { preloadCriticalChunks } from './utils/bundleOptimization';
+import { preloadCriticalUtilities } from './utils/importOptimizer.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -37,7 +38,10 @@ initWebVitalsMonitoring();
 // Performance monitoring
 reportWebVitals(console.log);
 
-// Preload critical chunks after initial render
-setTimeout(() => {
-    preloadCriticalChunks();
+// Preload critical chunks and utilities after initial render
+setTimeout(async () => {
+    await Promise.all([
+        preloadCriticalChunks(),
+        preloadCriticalUtilities()
+    ]);
 }, 1000);
