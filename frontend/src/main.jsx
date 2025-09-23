@@ -12,6 +12,9 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from './utils/i18n';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { initWebVitalsMonitoring } from './utils/performanceMonitor';
+import { preloadCriticalChunks } from './utils/bundleOptimization';
+import { preloadCriticalUtilities } from './utils/importOptimizer.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -29,5 +32,16 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
+// Initialize performance monitoring
+initWebVitalsMonitoring();
+
 // Performance monitoring
 reportWebVitals(console.log);
+
+// Preload critical chunks and utilities after initial render
+setTimeout(async () => {
+    await Promise.all([
+        preloadCriticalChunks(),
+        preloadCriticalUtilities()
+    ]);
+}, 1000);
