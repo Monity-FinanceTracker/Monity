@@ -1,2 +1,2 @@
-export { default as BalanceChart } from './BalanceChart';
-export { default as ExpenseChart } from './ExpenseChart';
+// Removed exports to prevent conflicts with lazy loading
+// Components are now imported directly via LazyComponents

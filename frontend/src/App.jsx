@@ -5,19 +5,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useAuth } from './context/AuthContext';
 import { isPremium } from './utils/premium';
-import { preloadComponents } from './components/LazyWrapper';
+// Removed preloadComponents import - now using useComponentPreloader hook
 
-// Keep frequently used components as regular imports for faster loading
+// Keep only critical components as regular imports for faster initial loading
 import { 
   AddExpense, 
   AddIncome, 
   Sidebar, 
   Login, 
   Signup, 
-  EnhancedDashboard,
-  ImprovedTransactionList,
-  AdminDashboard,
-  FinancialHealth,
   EnhancedCategories, 
   Subscription, 
   PremiumPage, 
@@ -27,15 +23,22 @@ import {
   SavingsGoals, 
   TotalExpenses, 
   DateRangeFilter, 
-  CreateGroup, 
-  GroupPage, 
   Savings 
 } from './components';
 
-// Lazy load heavy components for better performance (only those not in regular imports)
-const Groups = lazy(() => import('./components/groups/Groups'));
-const EnhancedSettings = lazy(() => import('./components/settings/EnhancedSettings'));
-const EnhancedBudgets = lazy(() => import('./components/settings/EnhancedBudgets'));
+// Import lazy components with optimized loading
+import {
+  LazyEnhancedDashboard,
+  LazyImprovedTransactionList,
+  LazyAdminDashboard,
+  LazyFinancialHealth,
+  LazyGroups,
+  LazyEnhancedSettings,
+  LazyEnhancedBudgets,
+  LazyCreateGroup,
+  LazyGroupPage,
+  useComponentPreloader
+} from './components/LazyComponents';
 
 
 // Protected route component
@@ -83,6 +86,16 @@ const AdminRoute = ({ children }) => {
 // Main layout for protected pages
 const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const { preloadCriticalComponents } = useComponentPreloader();
+
+  // Preload critical components after layout is mounted
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      preloadCriticalComponents();
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [preloadCriticalComponents]);
 
   return (
     <div className="flex min-h-screen bg-[#191E29] font-sans">
@@ -118,14 +131,7 @@ const App = React.memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  // Preload components after initial render
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      preloadComponents();
-    }, 2000); // Preload after 2 seconds to not block initial load
-
-    return () => clearTimeout(timer);
-  }, []);
+  // Component preloading is now handled in MainLayout
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -150,27 +156,27 @@ const App = React.memo(() => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected routes */}
-        <Route path="/" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><EnhancedDashboard /></MainLayout></ProtectedRoute>} />
-        <Route path="/transactions" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><ImprovedTransactionList /></MainLayout></ProtectedRoute>} />
+        {/* Protected routes - using lazy components */}
+        <Route path="/" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedDashboard /></MainLayout></ProtectedRoute>} />
+        <Route path="/transactions" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyImprovedTransactionList /></MainLayout></ProtectedRoute>} />
         <Route path="/add-expense" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddExpense /></MainLayout></ProtectedRoute>} />
         <Route path="/add-income" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddIncome /></MainLayout></ProtectedRoute>} />
         <Route path="/categories" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><EnhancedCategories /></MainLayout></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><EnhancedSettings /></Suspense></MainLayout></ProtectedRoute>} />
-        <Route path="/budgets" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><EnhancedBudgets /></Suspense></MainLayout></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedSettings /></MainLayout></ProtectedRoute>} />
+        <Route path="/budgets" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ProtectedRoute>} />
         <Route path="/subscription" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Subscription /></MainLayout></ProtectedRoute>} />
         <Route path="/savings-goals" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><SavingsGoals /></MainLayout></ProtectedRoute>} />
         <Route path="/savings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Savings /></MainLayout></ProtectedRoute>} />
-        <Route path="/financial-health" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><FinancialHealth /></MainLayout></ProtectedRoute>} />
-        <Route path="/groups" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Groups /></Suspense></MainLayout></ProtectedRoute>} />
-        <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><CreateGroup /></MainLayout></ProtectedRoute>} />
-        <Route path="/groups/:id" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><GroupPage /></MainLayout></ProtectedRoute>} />
+        <Route path="/financial-health" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ProtectedRoute>} />
+        <Route path="/groups" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroups /></MainLayout></ProtectedRoute>} />
+        <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyCreateGroup /></MainLayout></ProtectedRoute>} />
+        <Route path="/groups/:id" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroupPage /></MainLayout></ProtectedRoute>} />
 
         {/* Premium route */}
         <Route path="/premium" element={<PremiumRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><PremiumPage /></MainLayout></PremiumRoute>} />
 
         {/* Admin route */}
-        <Route path="/admin" element={<AdminRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AdminDashboard /></MainLayout></AdminRoute>} />
+        <Route path="/admin" element={<AdminRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyAdminDashboard /></MainLayout></AdminRoute>} />
 
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />
