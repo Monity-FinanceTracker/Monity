@@ -15,37 +15,21 @@ function AdminDashboard() {
       setLoading(true);
       setError(null);
       try {
-        // Fetch all admin data with fallbacks
+        // Fetch real data only - no mocked fallbacks
         const [analyticsRes, trendsRes, aiStatsRes, healthRes, financialHealthRes] = await Promise.allSettled([
-          get('/admin/analytics').catch(() => ({ data: { 
-            users: { total: 0, premium: 0, free: 0, recentSignups: 0 }, 
-            transactions: { total: 0, byType: { expenses: 0, income: 0, savings: 0 } }, 
-            categories: { total: 0, mostUsed: [] } 
-          } })),
-          get('/admin/trends?days=30').catch(() => ({ data: { 
-            summary: { avgDailyTransactions: 0, avgDailyVolume: 0 },
-            monthlyGrowth: { users: 0, transactions: 0, revenue: 0 }
-          } })),
-          get('/ai/stats').catch(() => ({ data: { stats: { accuracy: 0, totalPredictions: 0 } } })),
-          get('/admin/health').catch(() => ({ data: { checks: { database: { status: 'healthy', uptime: '99.9%' }, api: { status: 'healthy', avgResponseTime: '50ms' }, memory: { status: 'warning', usage: '75%' }, storage: { status: 'healthy', free: '2.5GB' } } } })),
-          get('/admin/financial-health').catch(() => ({ data: { avgMonthlyIncome: 0, avgMonthlyExpenses: 0, savingsRate: 0, totalSavings: 0 } }))
+          get('/admin/analytics'),
+          get('/admin/trends?days=30'),
+          get('/ai/stats'),
+          get('/admin/health'),
+          get('/admin/financial-health')
         ]);
 
-        // Set data with fallbacks
-        setAnalytics(analyticsRes.status === 'fulfilled' ? analyticsRes.value.data : analyticsRes.value?.data || { 
-          users: { total: 0, premium: 0, free: 0, recentSignups: 0 }, 
-          transactions: { total: 0, byType: { expenses: 0, income: 0, savings: 0 } }, 
-          categories: { total: 0, mostUsed: [] } 
-        });
-        
-        setTrends(trendsRes.status === 'fulfilled' ? trendsRes.value.data : trendsRes.value?.data || { 
-          summary: { avgDailyTransactions: 0, avgDailyVolume: 0 },
-          monthlyGrowth: { users: 0, transactions: 0, revenue: 0 }
-        });
-        
+        // Set only real data
+        setAnalytics(analyticsRes.status === 'fulfilled' ? analyticsRes.value.data : null);
+        setTrends(trendsRes.status === 'fulfilled' ? trendsRes.value.data : null);
         setAiStats(aiStatsRes.status === 'fulfilled' ? aiStatsRes.value.data?.stats : null);
-        setHealthData(healthRes.status === 'fulfilled' ? healthRes.value.data : healthRes.value?.data);
-        setFinancialHealth(financialHealthRes.status === 'fulfilled' ? financialHealthRes.value.data : financialHealthRes.value?.data);
+        setHealthData(healthRes.status === 'fulfilled' ? healthRes.value.data : null);
+        setFinancialHealth(financialHealthRes.status === 'fulfilled' ? financialHealthRes.value.data : null);
 
       } catch (err) {
         console.error('Admin data fetch error:', err);
@@ -163,27 +147,34 @@ function AdminDashboard() {
         <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
           <h2 className="text-xl font-semibold mb-4">Monthly Growth</h2>
           
-          {/* WIDE Chart - much wider than tall */}
+          {/* Chart Area - Real Data Only */}
           <div className="mb-6">
-            <div className="h-24 bg-[#1a1d2e] rounded-lg border border-[#31344d] p-4">
-              <div className="h-full flex items-end justify-between gap-1">
-                {Array.from({ length: 12 }, (_, i) => {
-                  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                  const height = Math.random() * 50 + 30;
-                  const isCurrentMonth = i === new Date().getMonth();
-                  
-                  return (
-                    <div key={i} className="flex flex-col items-center justify-end flex-1 h-full">
-                      <div 
-                        className={`w-full rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer ${isCurrentMonth ? 'bg-[#01C38D]' : 'bg-[#36A2EB]'}`}
-                        style={{ height: `${height}%` }}
-                        title={`${monthNames[i]}: ${Math.round(height)}%`}
-                      ></div>
-                      <div className="text-xs text-gray-400 mt-1 text-center">{monthNames[i]}</div>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="h-24 bg-[#1a1d2e] rounded-lg border border-[#31344d] p-4 flex items-center justify-center">
+              {trends?.monthlyData && trends.monthlyData.length > 0 ? (
+                <div className="h-full flex items-end justify-between gap-1 w-full">
+                  {trends.monthlyData.map((monthData, i) => {
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const maxValue = Math.max(...trends.monthlyData.map(m => m.value));
+                    const height = (monthData.value / maxValue) * 80;
+                    const isCurrentMonth = i === new Date().getMonth();
+                    
+                    return (
+                      <div key={i} className="flex flex-col items-center justify-end flex-1 h-full">
+                        <div 
+                          className={`w-full rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer ${isCurrentMonth ? 'bg-[#01C38D]' : 'bg-[#36A2EB]'}`}
+                          style={{ height: `${height}%` }}
+                          title={`${monthNames[i]}: ${monthData.value}`}
+                        ></div>
+                        <div className="text-xs text-gray-400 mt-1 text-center">{monthNames[i]}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center text-gray-400">
+                  <div className="text-sm">No monthly data available</div>
+                </div>
+              )}
             </div>
           </div>
           
