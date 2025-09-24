@@ -240,12 +240,25 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         <div className={`bg-[#171717] border border-[#262626] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => onSelect(transaction.id)}
-                        className="rounded border-[#31344d] text-[#01C38D] focus:ring-[#01C38D]"
-                    />
+                    <div className="relative cursor-pointer" onClick={() => onSelect(transaction.id)}>
+                        <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => onSelect(transaction.id)}
+                            className="sr-only"
+                        />
+                        <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
+                            isSelected 
+                                ? 'bg-[#01C38D] border-[#01C38D]' 
+                                : 'border-[#31344d] hover:border-[#01C38D] bg-transparent'
+                        }`}>
+                            {isSelected && (
+                                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                            )}
+                        </div>
+                    </div>
                     
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                         transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
@@ -358,12 +371,12 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-gray-400 text-sm">{t('transactions.total_income')}</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-red-400">${totals.expenses.toFixed(2)}</div>
+                        <div className="text-2xl font-bold text-red-400">-${Math.abs(totals.expenses).toFixed(2)}</div>
                         <div className="text-gray-400 text-sm">{t('transactions.total_expenses')}</div>
                     </div>
                     <div className="text-center">
                         <div className={`text-2xl font-bold ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            ${balance.toFixed(2)}
+                            {balance >= 0 ? '$' : '-$'}{Math.abs(balance).toFixed(2)}
                         </div>
                         <div className="text-gray-400 text-sm">{t('transactions.net_balance')}</div>
                     </div>
@@ -411,9 +424,10 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
                         <button
                             onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
+                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors flex items-center gap-2"
                         >
-                            🔍 {t('transactions.filters')}
+                            <Icon name="Filter" size="sm" />
+                            {t('transactions.filters')}
                         </button>
                     </div>
                 </div>
@@ -505,13 +519,26 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 {/* Select all checkbox - only show when there are transactions */}
                 {filteredTransactions.length > 0 && (
                     <div className="flex items-center justify-between">
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0}
-                                onChange={handleSelectAll}
-                                className="rounded border-[#31344d] text-[#01C38D] focus:ring-[#01C38D]"
-                            />
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0}
+                                    onChange={handleSelectAll}
+                                    className="sr-only"
+                                />
+                                <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
+                                    selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0
+                                        ? 'bg-[#01C38D] border-[#01C38D]' 
+                                        : 'border-[#31344d] hover:border-[#01C38D] bg-transparent'
+                                }`}>
+                                    {selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0 && (
+                                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    )}
+                                </div>
+                            </div>
                             <span className="text-white">{t('transactions.select_all')}</span>
                         </label>
                         
