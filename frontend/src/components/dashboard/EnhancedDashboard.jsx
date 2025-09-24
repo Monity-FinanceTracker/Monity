@@ -32,7 +32,7 @@ const EnhancedDashboard = () => {
             // Fetch recent transactions
             const { data: transactions } = await get('/transactions');
             const recentTransactions = Array.isArray(transactions) 
-                ? transactions.slice(0, 5) 
+                ? transactions.slice(0, 3) 
                 : [];
 
             setDashboardData(prev => ({
@@ -118,7 +118,7 @@ const EnhancedDashboard = () => {
     const RecentTransactionsPreview = () => (
         <EnhancedCard
             title={t('dashboard.recent_transactions')}
-            subtitle={t('dashboard.last_5_transactions')}
+            subtitle={t('dashboard.last_3_transactions')}
             accent="text-white"
             action={
                 <Link
@@ -221,9 +221,6 @@ const EnhancedDashboard = () => {
                 </div>
             </div>
 
-            {/* Quick Actions */}
-            <QuickActionsGrid />
-
             {/* Financial Overview Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <EnhancedCard 
@@ -234,16 +231,13 @@ const EnhancedDashboard = () => {
                     <BalanceCard selectedRange="all_time" />
                 </EnhancedCard>
 
-                <EnhancedCard 
-                    title={t('dashboardPage.expense_chart_title')} 
-                    accent="text-red-400"
-                    isLoading={isLoading}
-                >
-                    <LazyExpenseChart selectedRange="all_time" />
-                </EnhancedCard>
+                <RecentTransactionsPreview />
 
                 <SavingsOverviewCard />
             </div>
+
+            {/* Quick Actions */}
+            <QuickActionsGrid />
 
             {/* Detailed Charts */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -257,7 +251,13 @@ const EnhancedDashboard = () => {
                     <LazyBalanceChart selectedRange="all_time" />
                 </EnhancedCard>
 
-                <RecentTransactionsPreview />
+                <EnhancedCard 
+                    title={t('dashboardPage.expense_chart_title')} 
+                    accent="text-red-400"
+                    isLoading={isLoading}
+                >
+                    <LazyExpenseChart selectedRange="all_time" />
+                </EnhancedCard>
             </div>
 
             {/* AI Suggestions Card (Premium Feature) */}

@@ -480,7 +480,7 @@
     "quick_actions": "Quick Actions",
     "common_tasks": "Common tasks at your fingertips",
     "recent_transactions": "Recent Transactions",
-    "last_5_transactions": "Your 5 most recent transactions",
+    "last_3_transactions": "Your 3 most recent transactions",
     "view_all": "View All",
     "no_recent_transactions": "No recent transactions",
     "add_first_transaction": "Add your first transaction",
