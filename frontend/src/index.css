@@ -6,7 +6,7 @@
   --font-dm-sans: 'DM Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
   --font-sans: var(--font-dm-sans);
   /* Dark theme - matching v0 prototype: black background, dark gray containers, white text */
-  --background: oklch(0.145 0 0); /* True black background */
+  --background: #0A0A0A; /* Very dark background */
   --foreground: oklch(0.985 0 0); /* White text */
   --card: oklch(0.205 0 0); /* Dark gray card background */
   --card-foreground: oklch(0.985 0 0); /* White text on cards */
@@ -22,7 +22,7 @@
   --accent-foreground: oklch(0.985 0 0); /* White text on accent */
   --destructive: oklch(0.577 0.245 27.325); /* Red for destructive actions */
   --destructive-foreground: oklch(0.985 0 0); /* White text on destructive */
-  --border: oklch(0.269 0 0); /* Dark gray borders */
+  --border: #262626; /* Dark gray borders */
   --input: oklch(0.269 0 0); /* Dark gray input background */
   --ring: oklch(0.708 0 0); /* Light gray focus ring */
   --chart-1: oklch(0.646 0.222 41.116); /* Chart colors */
@@ -37,7 +37,7 @@
   --sidebar-primary-foreground: oklch(0.145 0 0); /* Black text on sidebar primary */
   --sidebar-accent: oklch(0.269 0 0); /* Medium dark gray accent in sidebar */
   --sidebar-accent-foreground: oklch(0.985 0 0); /* White text on sidebar accent */
-  --sidebar-border: oklch(0.269 0 0); /* Dark gray sidebar border */
+  --sidebar-border: #262626; /* Dark gray sidebar border */
   --sidebar-ring: oklch(0.708 0 0); /* Light gray sidebar focus ring */
   
   /* Font and rendering settings */
@@ -72,7 +72,7 @@
   --accent-foreground: oklch(0.205 0 0); /* Dark text on accent */
   --destructive: oklch(0.577 0.245 27.325); /* Red for destructive actions */
   --destructive-foreground: oklch(0.985 0 0); /* Light text on destructive */
-  --border: oklch(0.922 0 0); /* Light gray borders */
+  --border: #262626; /* Dark gray borders */
   --input: oklch(0.922 0 0); /* Light gray input background */
   --ring: oklch(0.708 0 0); /* Medium gray focus ring */
   --chart-1: oklch(0.488 0.243 264.376); /* Light mode chart colors */
@@ -86,7 +86,7 @@
   --sidebar-primary-foreground: oklch(0.985 0 0); /* Light text on sidebar primary */
   --sidebar-accent: oklch(0.97 0 0); /* Light accent in sidebar */
   --sidebar-accent-foreground: oklch(0.205 0 0); /* Dark text on sidebar accent */
-  --sidebar-border: oklch(0.922 0 0); /* Light sidebar border */
+  --sidebar-border: #262626; /* Dark sidebar border */
   --sidebar-ring: oklch(0.708 0 0); /* Medium gray sidebar focus ring */
 }
 
@@ -111,7 +111,7 @@ a:hover {
 }
 
 body {
-  background-color: var(--background);
+  background-color: #0A0A0A;
   color: var(--foreground);
   margin: 0;
   padding: 0;

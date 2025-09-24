@@ -32,7 +32,7 @@ const EnhancedDashboard = () => {
             // Fetch recent transactions
             const { data: transactions } = await get('/transactions');
             const recentTransactions = Array.isArray(transactions) 
-                ? transactions.slice(0, 5) 
+                ? transactions.slice(0, 3) 
                 : [];
 
             setDashboardData(prev => ({
@@ -88,7 +88,7 @@ const EnhancedDashboard = () => {
     // Enhanced card wrapper with loading states
     const EnhancedCard = ({ children, title, subtitle, accent, isLoading = false, action, className = '' }) => {
         return (
-            <div className={`bg-gradient-to-br from-[#23263a] via-[#23263a]/80 to-[#31344d] border border-[#31344d] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${className}`}>
+            <div className={`bg-[#171717] border border-[#262626] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${className}`}>
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                         <div>
@@ -118,7 +118,7 @@ const EnhancedDashboard = () => {
     const RecentTransactionsPreview = () => (
         <EnhancedCard
             title={t('dashboard.recent_transactions')}
-            subtitle={t('dashboard.last_5_transactions')}
+            subtitle={t('dashboard.last_3_transactions')}
             accent="text-white"
             action={
                 <Link
@@ -219,18 +219,7 @@ const EnhancedDashboard = () => {
                         {t('dashboard.welcome_subtitle')}
                     </p>
                 </div>
-                {subscriptionTier === 'premium' && (
-                    <div className="hidden md:block">
-                        <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                            <Icon name="Star" size="sm" className="mr-1" />
-                            Premium
-                        </span>
-                    </div>
-                )}
             </div>
-
-            {/* Quick Actions */}
-            <QuickActionsGrid />
 
             {/* Financial Overview Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -242,16 +231,13 @@ const EnhancedDashboard = () => {
                     <BalanceCard selectedRange="all_time" />
                 </EnhancedCard>
 
-                <EnhancedCard 
-                    title={t('dashboardPage.expense_chart_title')} 
-                    accent="text-red-400"
-                    isLoading={isLoading}
-                >
-                    <LazyExpenseChart selectedRange="all_time" />
-                </EnhancedCard>
+                <RecentTransactionsPreview />
 
                 <SavingsOverviewCard />
             </div>
+
+            {/* Quick Actions */}
+            <QuickActionsGrid />
 
             {/* Detailed Charts */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -265,7 +251,13 @@ const EnhancedDashboard = () => {
                     <LazyBalanceChart selectedRange="all_time" />
                 </EnhancedCard>
 
-                <RecentTransactionsPreview />
+                <EnhancedCard 
+                    title={t('dashboardPage.expense_chart_title')} 
+                    accent="text-red-400"
+                    isLoading={isLoading}
+                >
+                    <LazyExpenseChart selectedRange="all_time" />
+                </EnhancedCard>
             </div>
 
             {/* AI Suggestions Card (Premium Feature) */}
