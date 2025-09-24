@@ -102,14 +102,14 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     const quickActions = getQuickActions(searchQuery);
 
     return (
-        <header className="sticky top-0 z-30 bg-[#191E29] border-b border-[#31344d] w-full">
+        <header className="sticky top-0 z-30 bg-[#0A0A0A] border-b border-[#262626] w-full">
             <div className="flex items-center justify-between px-6 py-4">
                 {/* Left Section: Mobile menu + Search */}
                 <div className="flex items-center gap-4 flex-1">
                     {/* Mobile menu toggle */}
                     <button
                         onClick={onMobileMenuToggle}
-                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#31344d]"
+                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#171717]"
                         aria-label={t('topbar.toggle_menu')}
                     >
                         {isMobileMenuOpen ? (
@@ -124,10 +124,10 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
-                            className="w-full rounded-lg px-4 py-2.5 text-left transition-all duration-200 focus:outline-none hover:bg-[#31344d]"
+                            className="w-full rounded-lg px-4 py-2.5 text-left transition-all duration-200 focus:outline-none hover:bg-[#171717]"
                             style={{
-                                backgroundColor: 'transparent',
-                                border: '1px solid #31344d',
+                                backgroundColor: '#262626',
+                                border: '1px solid #262626',
                                 color: '#9ca3af',
                                 fontSize: '14px',
                                 fontWeight: '400'
@@ -140,16 +140,16 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         </button>
 
                         {isSearchOpen && (
-                            <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#23263a', border: '1px solid #31344d' }}>
-                                <div className="max-h-64 overflow-y-auto" style={{ backgroundColor: '#23263a' }}>
+                            <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#171717', border: '1px solid #262626' }}>
+                                <div className="max-h-64 overflow-y-auto" style={{ backgroundColor: '#171717' }}>
                                     {quickActions.map((action, index) => (
                                         <button
                                             key={action.path}
                                             onClick={() => handleQuickActionSelect(action.path)}
-                                            className="w-full text-left px-4 py-3 transition-all duration-200 group hover:bg-[#31344d]"
+                                            className="w-full text-left px-4 py-3 transition-all duration-200 group hover:bg-[#171717]"
                                             style={{
                                                 backgroundColor: 'transparent',
-                                                borderBottom: index < quickActions.length - 1 ? '1px solid #31344d' : 'none',
+                                                borderBottom: index < quickActions.length - 1 ? '1px solid #262626' : 'none',
                                                 color: '#9ca3af',
                                                 border: 'none',
                                                 fontSize: '14px',
@@ -169,32 +169,40 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </div>
                 </div>
 
-                {/* Right Section: Notifications + User Menu */}
-                <div className="flex items-center gap-8">
+                {/* Right Section: Notifications + PRO Badge + User Menu */}
+                <div className="flex items-center gap-4">
                     {/* Notifications */}
                     <Bell className="w-5 h-5 text-white hover:text-gray-300 transition-colors cursor-pointer" />
 
+                    {/* PRO Badge - Only for premium users */}
+                    {subscriptionTier === 'premium' && (
+                        <div className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">
+                            PRO
+                        </div>
+                    )}
+
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
-                        <button
-                            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                            style={{
-                                width: '40px',
-                                height: '40px',
-                                backgroundColor: '#01C38D',
-                                borderRadius: '50%',
-                                border: 'none',
-                                outline: 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                            }}
-                            onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
-                            onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}
-                            className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
-                        >
+                        <div className={`p-0.5 rounded-full ${subscriptionTier === 'premium' ? 'bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 to-blue-500' : ''}`}>
+                            <button
+                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    backgroundColor: '#01C38D',
+                                    borderRadius: '50%',
+                                    border: 'none',
+                                    outline: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
+                                onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}
+                                className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
+                            >
                             <span style={{ 
                                 color: '#191E29', 
                                 fontSize: '14px', 
@@ -207,12 +215,13 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     </svg>
                                 )}
                             </span>
-                        </button>
+                            </button>
+                        </div>
 
                         {isUserMenuOpen && (
-                            <div className="absolute right-0 top-full mt-3 w-56 bg-[#23263a] border border-[#31344d] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
+                            <div className="absolute right-0 top-full mt-3 w-56 bg-[#171717] border border-[#262626] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
                                 {/* User Info Header */}
-                                <div className="px-3 py-3 border-b border-[#31344d]">
+                                <div className="px-3 py-3 border-b border-[#262626]">
                                     <div className="flex flex-col space-y-1">
                                         <p className="text-sm font-medium text-white leading-none text-left">
                                             {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
@@ -221,11 +230,6 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             <p className="text-xs text-gray-400 leading-none">
                                                 {user?.email}
                                             </p>
-                                            {subscriptionTier === 'premium' && (
-                                                <span className="text-xs bg-[#01C38D] text-white px-2 py-0.5 rounded font-medium">
-                                                    Premium
-                                                </span>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -273,7 +277,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     </Link>
 
                                     
-                                    <hr className="border-[#31344d] my-1" />
+                                    <hr className="border-[#262626] my-1" />
                                     
                                     <button
                                         onClick={handleLogout}

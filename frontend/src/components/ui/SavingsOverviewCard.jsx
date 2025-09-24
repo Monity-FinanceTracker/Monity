@@ -34,7 +34,7 @@ const SavingsOverviewCard = () => {
 
     if (loading) {
         return (
-            <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
+            <div className="bg-[#171717] border border-[#262626] rounded-xl p-6">
                 <div className="animate-pulse">
                     <div className="h-4 bg-gray-700 rounded w-1/3 mb-4"></div>
                     <div className="h-8 bg-gray-700 rounded w-1/2 mb-6"></div>
@@ -49,7 +49,7 @@ const SavingsOverviewCard = () => {
 
     if (error) {
         return (
-            <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
+            <div className="bg-[#171717] border border-[#262626] rounded-xl p-6">
                 <div className="text-center py-4">
                     <p className="text-red-400">{error}</p>
                 </div>
@@ -59,7 +59,7 @@ const SavingsOverviewCard = () => {
 
     if (savingsData.totalGoals === 0) {
         return (
-            <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
+            <div className="bg-[#171717] border border-[#262626] rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                         <h3 className="text-sm font-medium text-white">
                             {t('savings_goals.title')}
@@ -92,7 +92,7 @@ const SavingsOverviewCard = () => {
     }
 
     return (
-        <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6">
+        <div className="bg-[#171717] border border-[#262626] rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
                         <h3 className="text-sm font-medium text-white">
                             {t('savings_goals.title')}

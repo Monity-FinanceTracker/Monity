@@ -38,7 +38,7 @@ const GroupInvitations = () => {
 
     if (loading) {
         return (
-            <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-6">
+            <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
                 <div className="text-center text-gray-400">{t('groups.loading')}</div>
             </div>
         );
@@ -49,7 +49,7 @@ const GroupInvitations = () => {
     }
 
     return (
-        <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-6 mb-6">
+        <div className="bg-[#171717] rounded-lg border border-[#262626] p-6 mb-6">
             <h2 className="text-xl font-semibold text-white mb-4">
                 {t('groups.pending_invitations')} ({invitations.length})
             </h2>

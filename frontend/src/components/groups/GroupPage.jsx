@@ -203,7 +203,7 @@ const GroupPage = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Members Section */}
-                <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-6">
+                <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
                     <h2 className="text-xl font-semibold text-white mb-4">{t('groups.members')}</h2>
                     
                     <div className="space-y-3 mb-6">
@@ -214,7 +214,7 @@ const GroupPage = () => {
                         ))}
                     </div>
                     
-                    <div className="border-t border-[#31344d] pt-4">
+                    <div className="border-t border-[#262626] pt-4">
                         <h3 className="text-lg font-medium text-white mb-3">{t('groups.invite_member')}</h3>
                         
                         <div className="space-y-3">
@@ -227,11 +227,11 @@ const GroupPage = () => {
                                     setShowUserSearch(e.target.value.length >= 2);
                                 }}
                                 placeholder={t('groups.enter_email')}
-                                className="w-full px-4 py-2 bg-[#191E29] border border-[#31344d] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#191E29] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
                             />
                             
                             {showUserSearch && (
-                                <div className="bg-[#191E29] border border-[#31344d] rounded-lg max-h-40 overflow-y-auto">
+                                <div className="bg-[#191E29] border border-[#262626] rounded-lg max-h-40 overflow-y-auto">
                                     {searchLoading ? (
                                         <div className="p-3 text-gray-400 text-center">{t('groups.searching')}</div>
                                     ) : userSearchResults.length > 0 ? (
@@ -240,7 +240,7 @@ const GroupPage = () => {
                                                 key={user.id}
                                                 onClick={() => handleSendInvitation(user.email)}
                                                 disabled={inviteLoading}
-                                                className="w-full text-left p-3 hover:bg-[#24293A] transition-colors border-b border-[#31344d] last:border-b-0"
+                                                className="w-full text-left p-3 hover:bg-[#171717] transition-colors border-b border-[#262626] last:border-b-0"
                                             >
                                                 <div className="text-white">{user.name}</div>
                                                 <div className="text-gray-400 text-sm">{user.email}</div>
@@ -265,7 +265,7 @@ const GroupPage = () => {
                 </div>
 
                 {/* Expenses Section - Same as before */}
-                <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-6">
+                <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
                     <h2 className="text-xl font-semibold text-white mb-4">{t('groups.expenses')}</h2>
                     
                     <div className="space-y-4 mb-6 max-h-80 overflow-y-auto">
@@ -303,7 +303,7 @@ const GroupPage = () => {
                         )}
                     </div>
                     
-                    <form onSubmit={handleAddExpense} className="border-t border-[#31344d] pt-4 space-y-4">
+                    <form onSubmit={handleAddExpense} className="border-t border-[#262626] pt-4 space-y-4">
                         <h3 className="text-lg font-medium text-white">{t('groups.add_expense')}</h3>
                         
                         <div>
@@ -313,7 +313,7 @@ const GroupPage = () => {
                                 id="description"
                                 value={expenseDescription}
                                 onChange={(e) => setExpenseDescription(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#191E29] border border-[#31344d] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#191E29] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
                                 required
                             />
                         </div>
@@ -326,7 +326,7 @@ const GroupPage = () => {
                                 id="amount"
                                 value={expenseAmount}
                                 onChange={(e) => setExpenseAmount(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#191E29] border border-[#31344d] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#191E29] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
                                 required
                             />
                         </div>
@@ -351,7 +351,7 @@ const GroupPage = () => {
                                             step="0.01"
                                             value={share.amount_owed}
                                             onChange={(e) => handleShareChange(share.user_id, e.target.value)}
-                                            className="w-24 px-2 py-1 bg-[#191E29] border border-[#31344d] rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#01C38D]"
+                                            className="w-24 px-2 py-1 bg-[#191E29] border border-[#262626] rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#01C38D]"
                                             placeholder="0.00"
                                         />
                                     </div>

@@ -101,7 +101,7 @@ const FinancialHealth = () => {
             </div>
 
             {/* Health Score Card */}
-            <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-8 rounded-2xl border border-[#31344d]">
+            <div className="bg-[#171717] p-8 rounded-2xl border border-[#262626]">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold">{t('financialHealth.health_score')}</h2>
                     <span className="text-sm bg-[#01C38D]/20 text-[#01C38D] px-3 py-1 rounded-full">
@@ -120,7 +120,7 @@ const FinancialHealth = () => {
                         </div>
                         
                         {/* Progress Bar */}
-                        <div className="w-full bg-[#1a1d2e] rounded-full h-3 mb-4">
+                        <div className="w-full bg-[#171717] rounded-full h-3 mb-4 border border-[#262626]">
                             <div 
                                 className={`h-3 rounded-full bg-gradient-to-r ${getScoreGradient(healthData.score)} transition-all duration-1000`}
                                 style={{ width: `${healthData.score}%` }}
@@ -134,25 +134,25 @@ const FinancialHealth = () => {
 
                     {/* Quick Metrics */}
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-[#1a1d2e] p-4 rounded-xl">
+                        <div className="bg-[#171717] p-4 rounded-xl border border-[#262626]">
                             <div className="text-2xl font-bold text-[#01C38D]">
                                 {healthData.metrics.savingsRate}%
                             </div>
                             <div className="text-sm text-gray-400">{t('financialHealth.savings_rate')}</div>
                         </div>
-                        <div className="bg-[#1a1d2e] p-4 rounded-xl">
+                        <div className="bg-[#171717] p-4 rounded-xl border border-[#262626]">
                             <div className="text-2xl font-bold text-[#36A2EB]">
                                 {healthData.metrics.expenseRatio}%
                             </div>
                             <div className="text-sm text-gray-400">{t('financialHealth.expense_ratio')}</div>
                         </div>
-                        <div className="bg-[#1a1d2e] p-4 rounded-xl">
+                        <div className="bg-[#171717] p-4 rounded-xl border border-[#262626]">
                             <div className="text-2xl font-bold text-[#FFCE56]">
                                 {formatCurrency(healthData.metrics.totalSavings)}
                             </div>
                             <div className="text-sm text-gray-400">{t('financialHealth.total_savings')}</div>
                         </div>
-                        <div className="bg-[#1a1d2e] p-4 rounded-xl">
+                        <div className="bg-[#171717] p-4 rounded-xl border border-[#262626]">
                             <div className="text-2xl font-bold text-[#FF6384]">
                                 {healthData.metrics.transactionCount}
                             </div>
@@ -164,7 +164,7 @@ const FinancialHealth = () => {
 
             {/* Detailed Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+                <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
                     <h3 className="text-lg font-semibold mb-4 flex items-center">
                         <DollarSign className="w-5 h-5 mr-2" />
                         {t('financialHealth.income')}
@@ -175,7 +175,7 @@ const FinancialHealth = () => {
                     <p className="text-gray-400 text-sm">{t('financialHealth.total_income_period', { period: healthData.period })}</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+                <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
                     <h3 className="text-lg font-semibold mb-4 flex items-center">
                         <Icon name="CreditCard" size="sm" className="mr-2" />
                         {t('financialHealth.expenses')}
@@ -186,7 +186,7 @@ const FinancialHealth = () => {
                     <p className="text-gray-400 text-sm">{t('financialHealth.total_expenses_period', { period: healthData.period })}</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+                <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
                     <h3 className="text-lg font-semibold mb-4 flex items-center">
                         <span className="mr-2">🏦</span>
                         {t('financialHealth.net_savings')}
@@ -199,7 +199,7 @@ const FinancialHealth = () => {
             </div>
 
             {/* Recommendations */}
-            <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+            <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
                 <h2 className="text-xl font-semibold mb-6 flex items-center">
                     <Lightbulb className="w-5 h-5 mr-2" />
                     {t('financialHealth.personalized_recommendations')}
@@ -227,7 +227,7 @@ const FinancialHealth = () => {
             </div>
 
             {/* Health Score Explanation */}
-            <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+            <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
                 <h2 className="text-xl font-semibold mb-4 flex items-center">
                     <BarChart3 className="w-5 h-5 mr-2" />
                     {t('financialHealth.how_score_calculated')}
@@ -254,7 +254,7 @@ const FinancialHealth = () => {
                     </div>
                 </div>
                 
-                <div className="mt-6 p-4 bg-[#1a1d2e] rounded-lg">
+                <div className="mt-6 p-4 bg-[#171717] rounded-lg border border-[#262626]">
                     <h4 className="font-semibold mb-2">{t('financialHealth.score_ranges')}:</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                         <div><span className="text-green-400">80-100:</span> {t('financialHealth.excellent')}</div>

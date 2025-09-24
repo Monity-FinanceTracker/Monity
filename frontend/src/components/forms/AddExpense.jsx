@@ -112,7 +112,7 @@ const AddExpense = () => {
                             <div className="relative">
                                 <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
-                                    className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                    className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                     placeholder={t('addExpense.description')}
                                     value={expense.description}
                                     onChange={e => setExpense(prev => ({ ...prev, description: e.target.value }))}
@@ -127,7 +127,7 @@ const AddExpense = () => {
                                 <input
                                     type="number"
                                     step="0.01"
-                                    className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                    className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                     placeholder={t('addExpense.amount')}
                                     value={expense.amount}
                                     onChange={e => setExpense(prev => ({ ...prev, amount: e.target.value }))}
@@ -138,7 +138,7 @@ const AddExpense = () => {
                                 <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     type="date"
-                                    className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
+                                    className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
                                     value={expense.date}
                                     onChange={e => setExpense(prev => ({ ...prev, date: e.target.value }))}
                                     required
@@ -150,7 +150,7 @@ const AddExpense = () => {
                         <div className="relative">
                             <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                             <select
-                                className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 appearance-none"
+                                className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 appearance-none"
                                 value={expense.categoryId}
                                 onChange={e => setExpense(prev => ({ ...prev, categoryId: e.target.value }))}
                                 required

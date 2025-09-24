@@ -15,16 +15,16 @@ const Card = memo(({
   variant = 'default'
 }) => {
   const variants = {
-    default: 'bg-[#23263a] border border-[#31344d]',
-    elevated: 'bg-[#23263a] border border-[#31344d] shadow-lg',
-    outline: 'bg-transparent border-2 border-[#31344d]',
-    glass: 'bg-[#23263a]/80 border border-[#31344d]/50 backdrop-blur-sm'
+    default: 'bg-[#171717] border border-[#262626]',
+    elevated: 'bg-[#171717] border border-[#262626] shadow-lg',
+    outline: 'bg-transparent border-2 border-[#262626]',
+    glass: 'bg-[#171717]/80 border border-[#262626]/50 backdrop-blur-sm'
   };
 
   const paddingClass = noPadding ? '' : 'p-6';
   
   return (
-    <div className={`${variants[variant]} rounded-xl transition-all duration-200 hover:border-[#31344d]/80 ${paddingClass} ${className}`}>
+    <div className={`${variants[variant]} rounded-xl transition-all duration-200 hover:border-[#262626]/80 ${paddingClass} ${className}`}>
       {(title || headerAction) && (
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
