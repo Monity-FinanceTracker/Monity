@@ -201,7 +201,7 @@ const EnhancedCategories = () => {
             {/* Add Category Modal */}
             {showAddForm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
-                    <div className="bg-[#24293A] rounded-lg border border-[#31344d] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto">
+                    <div className="bg-[#24293A] rounded-lg border border-[#31344d] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
                             <button

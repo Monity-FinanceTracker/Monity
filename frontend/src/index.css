@@ -1,6 +1,82 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 @import 'tailwindcss';
 
+/* Custom Scrollbar Styling - Applied to ALL scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #171717;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #31344d;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #01C38D;
+}
+
+::-webkit-scrollbar-corner {
+  background: #171717;
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #31344d #171717;
+}
+
+/* Ensure scrollbars are styled in all containers */
+html, body, div, section, article, aside, nav, main, header, footer {
+  scrollbar-width: thin;
+  scrollbar-color: #31344d #171717;
+}
+
+/* Force scrollbar styling on all overflow containers */
+[class*="overflow-y-auto"], 
+[class*="overflow-y-scroll"], 
+[class*="overflow-auto"], 
+[class*="overflow-scroll"] {
+  scrollbar-width: thin;
+  scrollbar-color: #31344d #171717;
+}
+
+/* Custom scrollbar class for explicit application */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #31344d #171717;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #171717;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #31344d;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #01C38D;
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: #171717;
+}
+
 :root {
   /* Font variables to match prototype setup */
   --font-dm-sans: 'DM Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;

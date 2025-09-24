@@ -142,7 +142,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
                         {isSearchOpen && (
                             <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#171717', border: '1px solid #262626' }}>
-                                <div className="max-h-64 overflow-y-auto" style={{ backgroundColor: '#171717' }}>
+                                <div className="max-h-64 overflow-y-auto custom-scrollbar" style={{ backgroundColor: '#171717' }}>
                                     {quickActions.map((action, index) => (
                                         <button
                                             key={action.path}

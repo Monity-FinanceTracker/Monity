@@ -231,7 +231,7 @@ const GroupPage = () => {
                             />
                             
                             {showUserSearch && (
-                                <div className="bg-[#191E29] border border-[#262626] rounded-lg max-h-40 overflow-y-auto">
+                                <div className="bg-[#191E29] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar">
                                     {searchLoading ? (
                                         <div className="p-3 text-gray-400 text-center">{t('groups.searching')}</div>
                                     ) : userSearchResults.length > 0 ? (
@@ -268,7 +268,7 @@ const GroupPage = () => {
                 <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
                     <h2 className="text-xl font-semibold text-white mb-4">{t('groups.expenses')}</h2>
                     
-                    <div className="space-y-4 mb-6 max-h-80 overflow-y-auto">
+                    <div className="space-y-4 mb-6 max-h-80 overflow-y-auto custom-scrollbar">
                         {group.group_expenses.length === 0 ? (
                             <p className="text-gray-400 text-center py-8">{t('groups.no_expenses')}</p>
                         ) : (
