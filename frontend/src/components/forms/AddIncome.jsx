@@ -95,7 +95,7 @@ const AddIncome = () => {
                      <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
                      <input
                          type="text"
-                         className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                         className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                          placeholder={t('addIncome.description')}
                          value={income.description}
                          onChange={e => setIncome(prev => ({ ...prev, description: e.target.value }))}
@@ -108,7 +108,7 @@ const AddIncome = () => {
                         <input
                             type="number"
                             step="0.01"
-                            className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                             placeholder={t('addIncome.amount')}
                             value={income.amount}
                             onChange={e => setIncome(prev => ({ ...prev, amount: e.target.value }))}
@@ -119,7 +119,7 @@ const AddIncome = () => {
                         <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                         <input
                             type="date"
-                            className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
                             value={income.date}
                             onChange={e => setIncome(prev => ({ ...prev, date: e.target.value }))}
                             required
@@ -130,7 +130,7 @@ const AddIncome = () => {
                 <div className="relative">
                     <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
                     <select
-                        className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
+                        className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
                         value={income.categoryId}
                         onChange={e => setIncome(prev => ({ ...prev, categoryId: e.target.value }))}
                         required

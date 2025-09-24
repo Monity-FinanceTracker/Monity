@@ -48,7 +48,7 @@ function Settings() {
     };
 
     return (
-        <div className="bg-[#23263a] p-4 md:p-6 rounded-xl shadow-lg">
+        <div className="bg-[#171717] p-4 md:p-6 rounded-xl shadow-lg">
             <h2 className="text-2xl font-bold text-[#01C38D] mb-6">{t('settingsPage.title')}</h2>
             {/* Language Toggle */}
             <div className="flex flex-col items-center mb-8">
@@ -68,7 +68,7 @@ function Settings() {
                             id="currentPassword"
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
                             required
                         />
                     </div>
@@ -79,7 +79,7 @@ function Settings() {
                             id="newPassword"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
                             required
                         />
                     </div>
@@ -90,7 +90,7 @@ function Settings() {
                             id="confirmNewPassword"
                             value={confirmNewPassword}
                             onChange={(e) => setConfirmNewPassword(e.target.value)}
-                            className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
                             required
                         />
                     </div>
