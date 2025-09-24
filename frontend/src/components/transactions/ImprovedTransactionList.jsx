@@ -237,7 +237,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     // Transaction card component
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (
-        <div className={`bg-[#23263a] border border-[#31344d] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
+        <div className={`bg-[#171717] border border-[#262626] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <input
@@ -306,7 +306,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         return (
             <div className="space-y-6">
                 {/* Header skeleton */}
-                <div className="bg-gradient-to-r from-[#23263a] to-[#31344d] rounded-xl p-6 border border-[#31344d]">
+                <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {Array.from({ length: 4 }).map((_, index) => (
                             <div key={index} className="text-center">
@@ -347,7 +347,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     return (
         <div className="space-y-6">
             {/* Header with stats */}
-            <div className="bg-gradient-to-r from-[#23263a] to-[#31344d] rounded-xl p-6 border border-[#31344d]">
+            <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="text-center">
                         <div className="text-2xl font-bold text-white">{filteredTransactions.length}</div>
@@ -371,7 +371,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             </div>
 
             {/* Search and filters */}
-            <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-4">
+            <div className="bg-[#171717] border border-[#262626] rounded-xl p-4">
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* Search */}
                     <div className="flex-1">
@@ -381,7 +381,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                 placeholder={t('transactions.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-4 py-2 pl-10 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D]"
+                                className="w-full bg-[#262626] border border-[#262626] rounded-lg px-4 py-2 pl-10 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D]"
                             />
                             <svg className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -394,7 +394,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#01C38D]"
+                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#01C38D]"
                         >
                             <option value="date">{t('transactions.sort_by_date')}</option>
                             <option value="amount">{t('transactions.sort_by_amount')}</option>
@@ -404,14 +404,14 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
                         <button
                             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                            className="bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
+                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
                         >
                             {sortOrder === 'asc' ? '↑' : '↓'}
                         </button>
 
                         <button
                             onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                            className="bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
+                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
                         >
                             🔍 {t('transactions.filters')}
                         </button>
@@ -428,7 +428,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                     type="text"
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white"
+                                    className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
                                     placeholder={t('transactions.any_category')}
                                 />
                             </div>
@@ -440,13 +440,13 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                         type="date"
                                         value={dateRange.start}
                                         onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white"
+                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
                                     />
                                     <input
                                         type="date"
                                         value={dateRange.end}
                                         onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white"
+                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
                                     />
                                 </div>
                             </div>
@@ -459,14 +459,14 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                         placeholder={t('transactions.min_amount')}
                                         value={amountRange.min}
                                         onChange={(e) => setAmountRange(prev => ({ ...prev, min: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white"
+                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
                                     />
                                     <input
                                         type="number"
                                         placeholder={t('transactions.max_amount')}
                                         value={amountRange.max}
                                         onChange={(e) => setAmountRange(prev => ({ ...prev, max: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#31344d] rounded-lg px-3 py-2 text-white"
+                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
                                     />
                                 </div>
                             </div>
@@ -525,7 +525,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 )}
 
                 {filteredTransactions.length === 0 ? (
-                    <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-12 text-center">
+                    <div className="bg-[#171717] border border-[#262626] rounded-xl p-12 text-center">
                         <div className="mb-4">
                             <Icon name="BarChart3" size="xxl" className="mx-auto text-blue-400" />
                         </div>

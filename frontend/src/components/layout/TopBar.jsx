@@ -7,7 +7,7 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { user, subscriptionTier } = useAuth();
 
   return (
-    <header className="md:hidden sticky top-0 bg-[#191E29] p-4 z-30 flex items-center justify-between shadow-md">
+    <header className="md:hidden sticky top-0 bg-[#0A0A0A] p-4 z-30 flex items-center justify-between shadow-md">
       {/* Mobile menu toggle */}
       <button 
         className="text-white"

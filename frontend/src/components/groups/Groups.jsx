@@ -94,15 +94,15 @@ const Groups = () => {
             {/* Group Invitations */}
             <GroupInvitations />
 
-            <div className="bg-[#24293A] rounded-lg border border-[#31344d] overflow-hidden">
+            <div className="bg-[#171717] rounded-lg border border-[#262626] overflow-hidden">
                 {loading ? (
                     <LoadingState message={t('groups.loading')} />
                 ) : groups.length === 0 ? (
                     <EmptyGroups />
                 ) : (
-                    <div className="divide-y divide-[#31344d]">
+                    <div className="divide-y divide-[#262626]">
                         {groups.map(group => (
-                            <div key={group.id} className="p-6 hover:bg-[#31344d] transition-colors duration-200">
+                            <div key={group.id} className="p-6 hover:bg-[#171717] transition-colors duration-200">
                                 <Link 
                                     to={`/groups/${group.id}`} 
                                     className="block"

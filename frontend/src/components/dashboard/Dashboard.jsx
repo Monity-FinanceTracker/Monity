@@ -8,7 +8,7 @@ import { useResponsive } from "../../hooks/useResponsive";
 
 function ModernCard({ children, title, subtitle, icon, accent, isLoading = false, action }) {
     return (
-        <div className="bg-[#23263a] border border-[#31344d] rounded-xl p-6 hover:border-[#31344d]/80 transition-all duration-200 group">
+        <div className="bg-[#171717] border border-[#262626] rounded-xl p-6 hover:border-[#262626]/80 transition-all duration-200 group">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
@@ -171,10 +171,10 @@ function Dashboard() {
                     <div 
                         className={`absolute bottom-full right-0 mb-4 transition-all duration-300 ${isFabMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}
                     >
-                        <div className="bg-[#23263a] rounded-xl shadow-xl border border-[#31344d] overflow-hidden min-w-[200px]">
+                        <div className="bg-[#171717] rounded-xl shadow-xl border border-[#262626] overflow-hidden min-w-[200px]">
                             <Link 
                                 to="/add-income" 
-                                className="flex items-center gap-3 px-4 py-3 text-green-400 hover:bg-[#31344d] transition-colors"
+                                className="flex items-center gap-3 px-4 py-3 text-green-400 hover:bg-[#171717] transition-colors"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,7 +184,7 @@ function Dashboard() {
                             </Link>
                             <Link 
                                 to="/add-expense" 
-                                className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-[#31344d] transition-colors border-t border-[#31344d]/50"
+                                className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-[#171717] transition-colors border-t border-[#262626]/50"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,7 +194,7 @@ function Dashboard() {
                             </Link>
                             <Link 
                                 to="/categories" 
-                                className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#31344d] transition-colors border-t border-[#31344d]/50"
+                                className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#171717] transition-colors border-t border-[#262626]/50"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -115,7 +115,7 @@ const EnhancedCategories = () => {
             </div>
 
             {/* Search and Filter Bar */}
-            <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-4 mb-6">
+            <div className="bg-[#171717] rounded-lg border border-[#262626] p-4 mb-6">
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
                         <div className="relative">
@@ -124,7 +124,7 @@ const EnhancedCategories = () => {
                                 placeholder={t('categories.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                             />
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                         </div>
@@ -133,7 +133,7 @@ const EnhancedCategories = () => {
                         <select
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                            className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                         >
                             {categoryTypes.map((type) => (
                                 <option key={type.id} value={type.id}>
@@ -148,7 +148,7 @@ const EnhancedCategories = () => {
             {/* Categories Grid */}
             {filteredCategories.length === 0 ? (
                 searchQuery ? (
-                    <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-12 text-center">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] p-12 text-center">
                         <Search className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                         <h3 className="text-white text-lg font-medium mb-2">{t('categories.no_results')}</h3>
                         <p className="text-gray-400">{t('categories.no_results_desc')}</p>
@@ -161,7 +161,7 @@ const EnhancedCategories = () => {
                     {filteredCategories.map((category) => (
                         <div
                             key={category.id}
-                            className="bg-[#24293A] rounded-lg border border-[#31344d] p-4 hover:border-[#01C38D]/30 transition-all group"
+                            className="bg-[#171717] rounded-lg border border-[#262626] p-4 hover:border-[#01C38D]/30 transition-all group"
                         >
                             <div className="flex items-start justify-between mb-3">
                                 <div className="flex items-center gap-3">

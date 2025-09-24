@@ -58,7 +58,7 @@ function Login() {
                 </div>
 
                 {/* Login Card with Enhanced Design */}
-                <div className="bg-gradient-to-br from-[#23263a]/90 to-[#31344d]/90 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#31344d]/50 transform animate-fade-in-up delay-200">
+                <div className="bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
                     <div className="text-center mb-8">
                         <h2 className="text-3xl font-bold text-white mb-2">{t('loginPage.welcome')}</h2>
                         <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
@@ -96,8 +96,8 @@ function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setEmailFocused(true)}
                                     onBlur={() => setEmailFocused(false)}
-                                    className={`w-full bg-[#191E29]/80 border-2 ${
-                                        emailFocused ? 'border-[#01C38D]' : 'border-[#31344d]'
+                                    className={`w-full bg-[#171717] border-2 ${
+                                        emailFocused ? 'border-[#01C38D]' : 'border-[#262626]'
                                     } text-white rounded-xl pl-10 pr-4 py-3 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="your@email.com"
                                     required
@@ -131,8 +131,8 @@ function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setPasswordFocused(true)}
                                     onBlur={() => setPasswordFocused(false)}
-                                    className={`w-full bg-[#191E29]/80 border-2 ${
-                                        passwordFocused ? 'border-[#01C38D]' : 'border-[#31344d]'
+                                    className={`w-full bg-[#171717] border-2 ${
+                                        passwordFocused ? 'border-[#01C38D]' : 'border-[#262626]'
                                     } text-white rounded-xl pl-10 pr-12 py-3 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required

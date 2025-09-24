@@ -122,34 +122,34 @@ function AdminDashboard() {
 
       {/* User Metrics and Monthly Growth */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+        <div className="lg:col-span-2 bg-[#171717] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Growth Metrics</h2>
           <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#01C38D]">{analytics?.users.premium || 0}</div>
               <div className="text-sm text-gray-400">Premium Users</div>
             </div>
-            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#36A2EB]">{analytics?.users.free || 0}</div>
               <div className="text-sm text-gray-400">Free Users</div>
             </div>
-            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#FFCE56]">{analytics?.users.recentSignups || 0}</div>
               <div className="text-sm text-gray-400">Recent Signups</div>
             </div>
-            <div className="text-center p-4 bg-[#1a1d2e] rounded-xl">
+            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#FF6384]">{analytics?.categories.total || 0}</div>
               <div className="text-sm text-gray-400">Categories</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Monthly Growth</h2>
           
           {/* Chart Area - Real Data Only */}
           <div className="mb-6">
-            <div className="h-24 bg-[#1a1d2e] rounded-lg border border-[#31344d] p-4 flex items-center justify-center">
+            <div className="h-24 bg-[#171717] rounded-lg border border-[#262626] p-4 flex items-center justify-center">
               {trends?.monthlyData && trends.monthlyData.length > 0 ? (
                 <div className="h-full flex items-end justify-between gap-1 w-full">
                   {trends.monthlyData.map((monthData, i) => {
@@ -204,7 +204,7 @@ function AdminDashboard() {
         <h2 className="text-xl font-semibold mb-4">Most Used Categories</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {(analytics?.categories.mostUsed || []).slice(0, 6).map((category, index) => (
-            <div key={index} className="bg-[#1a1d2e] p-4 rounded-xl">
+            <div key={index} className="bg-[#171717] p-4 rounded-xl border border-[#262626]">
               <div className="flex items-start justify-between mb-2">
                 <span className="font-medium text-white flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>{category.name || 'Category'}</span>
                 <span className="text-sm text-gray-400 flex-shrink-0 mt-0.5">#{index + 1}</span>
@@ -223,7 +223,7 @@ function AdminDashboard() {
 
       {/* Financial Health Overview */}
       {financialHealth && (
-        <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Financial Health Overview</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <MetricCard
@@ -256,7 +256,7 @@ function AdminDashboard() {
 
       {/* AI Statistics */}
       {aiStats && (
-        <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">AI Performance</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <MetricCard
@@ -277,7 +277,7 @@ function AdminDashboard() {
 
       {/* Engagement Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Engagement Metrics</h2>
           <div className="space-y-4">
             <div className="flex justify-between items-start">
@@ -300,7 +300,7 @@ function AdminDashboard() {
         </div>
 
         {/* System Health */}
-        <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">System Health</h2>
           <div className="grid grid-cols-2 gap-4">
             <HealthIndicator 

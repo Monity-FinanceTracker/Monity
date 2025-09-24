@@ -186,7 +186,7 @@ const EnhancedSettings = () => {
                                             type="text"
                                             value={profileData.name}
                                             onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                             placeholder={t('settings.enter_name')}
                                         />
                                     </div>
@@ -197,7 +197,7 @@ const EnhancedSettings = () => {
                                         <input
                                             type="email"
                                             value={profileData.email}
-                                            className="w-full bg-[#191E29] border border-[#31344d] text-gray-400 rounded-lg p-3 cursor-not-allowed"
+                                            className="w-full bg-[#191E29] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed"
                                             disabled
                                         />
                                         <p className="text-xs text-gray-500 mt-1">{t('settings.email_readonly')}</p>
@@ -210,7 +210,7 @@ const EnhancedSettings = () => {
                                     <textarea
                                         value={profileData.bio}
                                         onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                         rows="3"
                                         placeholder={t('settings.enter_bio')}
                                     />
@@ -241,7 +241,7 @@ const EnhancedSettings = () => {
                                         type="password"
                                         value={passwordData.currentPassword}
                                         onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                         required
                                     />
                                 </div>
@@ -254,7 +254,7 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.newPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                             required
                                         />
                                     </div>
@@ -266,7 +266,7 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.confirmPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                             required
                                         />
                                     </div>
@@ -286,7 +286,7 @@ const EnhancedSettings = () => {
             case 'subscription':
                 return (
                     <div className="space-y-6">
-                        <div className="bg-[#2A2F3A] rounded-lg p-6 border border-[#31344d]">
+                        <div className="bg-[#2A2F3A] rounded-lg p-6 border border-[#262626]">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 className="text-xl font-semibold text-white">{t('subscription.current_plan')}</h3>
@@ -364,7 +364,7 @@ const EnhancedSettings = () => {
                         <div>
                             <h3 className="text-xl font-semibold text-white mb-4">{t('settings.general_preferences')}</h3>
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#31344d]">
+                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.language')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.language_desc')}</p>
@@ -372,7 +372,7 @@ const EnhancedSettings = () => {
                                     <LanguageSwitcher />
                                 </div>
                                 
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#31344d]">
+                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.notifications')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.notifications_desc')}</p>
@@ -388,7 +388,7 @@ const EnhancedSettings = () => {
                                     </label>
                                 </div>
                                 
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#31344d]">
+                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.email_updates')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.email_updates_desc')}</p>
@@ -456,9 +456,9 @@ const EnhancedSettings = () => {
                 <p className="text-gray-400">{t('settings.subtitle')}</p>
             </div>
 
-            <div className="bg-[#24293A] rounded-lg border border-[#31344d] overflow-hidden">
+            <div className="bg-[#171717] rounded-lg border border-[#262626] overflow-hidden">
                 {/* Tab Navigation */}
-                <div className="border-b border-[#31344d]">
+                <div className="border-b border-[#262626]">
                     <nav className="flex space-x-8 px-6" aria-label="Settings tabs">
                         {tabs.map((tab) => (
                             <button

@@ -64,7 +64,7 @@ export const Skeleton = ({
  * Card skeleton for dashboard cards
  */
 export const CardSkeleton = ({ className = '' }) => (
-    <div className={`bg-[#23263a] border border-[#31344d] rounded-xl p-6 ${className}`}>
+    <div className={`bg-[#171717] border border-[#262626] rounded-xl p-6 ${className}`}>
         <div className="flex items-center gap-3 mb-4">
             <Skeleton variant="avatar" width={40} height={40} />
             <div className="flex-1">
@@ -86,7 +86,7 @@ export const CardSkeleton = ({ className = '' }) => (
 export const TransactionSkeleton = ({ count = 5 }) => (
     <div className="space-y-4">
         {Array.from({ length: count }).map((_, index) => (
-            <div key={index} className="flex items-center gap-4 p-4 bg-[#23263a] rounded-lg">
+            <div key={index} className="flex items-center gap-4 p-4 bg-[#171717] rounded-lg">
                 <Skeleton variant="avatar" width={40} height={40} />
                 <div className="flex-1 space-y-2">
                     <Skeleton variant="text" width="70%" height={16} />
