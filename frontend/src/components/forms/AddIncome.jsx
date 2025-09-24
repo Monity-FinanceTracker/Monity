@@ -16,7 +16,7 @@ const AddIncome = () => {
         description: '',
         amount: '',
         date: '', // Initialize empty, set with useEffect to avoid hydration issues
-        categoryId: '',
+        categoryName: '',
         typeId: 2 // 2 for income
     });
     const [categories, setCategories] = useState([]);
@@ -50,9 +50,9 @@ const AddIncome = () => {
         const incomeData = { 
             ...income, 
             amount: parseFloat(income.amount),
-            category: income.categoryId // Map categoryId to category for backend
+            category: income.categoryName // Map categoryId to category for backend
         };
-        delete incomeData.categoryId; // Remove categoryId as backend expects 'category'
+        //delete incomeData.categoryId; // Remove categoryId as backend expects 'category'
 
         if (!incomeData.description || !incomeData.amount || !incomeData.category) {
             toast.error(t('addTransaction.fill_all_fields'));
@@ -131,13 +131,13 @@ const AddIncome = () => {
                     <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
                     <select
                         className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
-                        value={income.categoryId}
-                        onChange={e => setIncome(prev => ({ ...prev, categoryId: e.target.value }))}
+                        value={income.categoryName}
+                        onChange={e => setIncome(prev => ({ ...prev, categoryName: e.target.value }))}
                         required
                     >
                         <option value="" className="text-gray-400">{t('addIncome.select_category')}</option>
                         {incomeCategories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            <option key={cat.id} value={cat.name}>{cat.name}</option>
                         ))}
                     </select>
                 </div>

@@ -16,7 +16,7 @@ const AddExpense = () => {
         description: '',
         amount: '',
         date: '', // Initialize empty, set with useEffect to avoid hydration issues
-        categoryId: '',
+        categoryName: '',
         typeId: 1 // 1 for expense
     });
     const [categories, setCategories] = useState([]);
@@ -50,9 +50,9 @@ const AddExpense = () => {
         const expenseData = { 
             ...expense, 
             amount: parseFloat(expense.amount),
-            category: expense.categoryId // Map categoryId to category for backend
+            category: expense.categoryName // Map categoryId to category for backend
         };
-        delete expenseData.categoryId; // Remove categoryId as backend expects 'category'
+        //delete expenseData.categoryId; // Remove categoryId as backend expects 'category'
 
         if (!expenseData.description || !expenseData.amount || !expenseData.category) {
             toast.error(t('addTransaction.fill_all_fields'));
@@ -151,13 +151,13 @@ const AddExpense = () => {
                             <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                             <select
                                 className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 appearance-none"
-                                value={expense.categoryId}
-                                onChange={e => setExpense(prev => ({ ...prev, categoryId: e.target.value }))}
+                                value={expense.categoryName}
+                                onChange={e => setExpense(prev => ({ ...prev, categoryName: e.target.value }))}
                                 required
                             >
                                 <option value="" className="bg-[#191E29] text-white">{t('addExpense.select_category')}</option>
                                 {categories.filter(c => c.typeId === 1).map(category => (
-                                    <option key={category.id} value={category.id} className="bg-[#191E29] text-white">
+                                    <option key={category.id} value={category.name} className="bg-[#191E29] text-white">
                                         {category.name}
                                     </option>
                                 ))}
