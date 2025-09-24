@@ -5,6 +5,8 @@ import { get, post, put, del } from '../../utils/api';
 import { EmptyBudgets, LoadingState } from '../ui/EmptyStates';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { X } from 'lucide-react';
 
 /**
  * Enhanced Budgets Component with modern UI and improved functionality
@@ -263,7 +265,7 @@ const EnhancedBudgets = () => {
                                         </span>
                                     </div>
                                     
-                                    <div className="w-full bg-[#191E29] rounded-full h-3">
+                                    <div className="w-full bg-[#232323] rounded-full h-3">
                                         <div
                                             className={`h-3 rounded-full transition-all duration-300 ${getProgressColor(percentage)}`}
                                             style={{ width: `${percentage}%` }}
@@ -293,11 +295,14 @@ const EnhancedBudgets = () => {
                             <h2 className="text-xl font-bold text-white">{t('budgets.add_new')}</h2>
                             <button
                                 onClick={() => setShowAddForm(false)}
-                                className="text-gray-400 hover:text-white transition-colors"
+                                className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
+                                style={{ 
+                                    border: 'none', 
+                                    outline: 'none', 
+                                    background: 'transparent'
+                                }}
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                <X className="w-6 h-6 text-white" />
                             </button>
                         </div>
 
@@ -310,7 +315,7 @@ const EnhancedBudgets = () => {
                                     type="text"
                                     value={newBudget.name}
                                     onChange={(e) => setNewBudget(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                     placeholder={t('budgets.name_placeholder')}
                                     required
                                 />
@@ -320,15 +325,36 @@ const EnhancedBudgets = () => {
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('budgets.amount')}
                                 </label>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    value={newBudget.amount}
-                                    onChange={(e) => setNewBudget(prev => ({ ...prev, amount: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
-                                    placeholder="0.00"
-                                    required
-                                />
+                                <div className="relative">
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={newBudget.amount}
+                                        onChange={(e) => setNewBudget(prev => ({ ...prev, amount: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 pr-10 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        placeholder="0.00"
+                                        required
+                                    />
+                                    {/* Custom spinner arrows */}
+                                    <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setNewBudget(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                        >
+                                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setNewBudget(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                        >
+                                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div>
@@ -338,7 +364,7 @@ const EnhancedBudgets = () => {
                                 <select
                                     value={newBudget.categoryId}
                                     onChange={(e) => setNewBudget(prev => ({ ...prev, categoryId: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                     required
                                 >
                                     <option value="">{t('budgets.select_category')}</option>
@@ -357,7 +383,7 @@ const EnhancedBudgets = () => {
                                 <select
                                     value={newBudget.period}
                                     onChange={(e) => setNewBudget(prev => ({ ...prev, period: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                 >
                                     {periods.map((period) => (
                                         <option key={period.value} value={period.value}>
@@ -395,11 +421,14 @@ const EnhancedBudgets = () => {
                             <h2 className="text-xl font-bold text-white">{t('budgets.edit')}</h2>
                             <button
                                 onClick={() => setEditingBudget(null)}
-                                className="text-gray-400 hover:text-white transition-colors"
+                                className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
+                                style={{ 
+                                    border: 'none', 
+                                    outline: 'none', 
+                                    background: 'transparent'
+                                }}
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                <X className="w-6 h-6 text-white" />
                             </button>
                         </div>
 
@@ -412,7 +441,7 @@ const EnhancedBudgets = () => {
                                     type="text"
                                     value={editingBudget.name}
                                     onChange={(e) => setEditingBudget(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                     required
                                 />
                             </div>
@@ -421,14 +450,35 @@ const EnhancedBudgets = () => {
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('budgets.amount')}
                                 </label>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    value={editingBudget.amount}
-                                    onChange={(e) => setEditingBudget(prev => ({ ...prev, amount: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
-                                    required
-                                />
+                                <div className="relative">
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={editingBudget.amount}
+                                        onChange={(e) => setEditingBudget(prev => ({ ...prev, amount: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 pr-10 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        required
+                                    />
+                                    {/* Custom spinner arrows */}
+                                    <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setEditingBudget(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                        >
+                                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setEditingBudget(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                        >
+                                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="flex gap-3 pt-4">
