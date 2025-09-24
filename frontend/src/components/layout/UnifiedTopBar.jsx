@@ -185,40 +185,56 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
                         <div className={subscriptionTier === 'premium' ? 'premium-spinning-border' : ''}>
-                            <button
-                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    backgroundColor: '#01C38D',
-                                    borderRadius: '50%',
-                                    border: 'none',
-                                    outline: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease',
-                                    position: 'relative',
-                                    zIndex: 2
-                                }}
-                                onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
-                                onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}
-                                className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
-                            >
-                            <span style={{ 
-                                color: '#191E29', 
-                                fontSize: '14px', 
-                                fontWeight: 'bold',
-                                userSelect: 'none'
-                            }}>
-                                {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                    </svg>
-                                )}
-                            </span>
-                            </button>
+                            <div className="relative group">
+                                <button
+                                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                    style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        backgroundColor: '#01C38D',
+                                        borderRadius: '50%',
+                                        border: 'none',
+                                        outline: 'none',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        zIndex: 2
+                                    }}
+                                    className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
+                                >
+                                <span style={{ 
+                                    color: '#191E29', 
+                                    fontSize: '14px', 
+                                    fontWeight: 'bold',
+                                    userSelect: 'none'
+                                }}>
+                                    {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                        </svg>
+                                    )}
+                                </span>
+                                </button>
+                                
+                                {/* Hover Tooltip */}
+                                <div className="absolute top-full right-0 mt-2 px-3 py-2 bg-[#171717] border border-[#262626] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap">
+                                    <div className="text-white text-sm text-left">
+                                        <div className="font-medium">
+                                            Monity Account
+                                        </div>
+                                        <div className="text-gray-300 text-xs">
+                                            {user?.user_metadata?.name || 'User'}
+                                        </div>
+                                        <div className="text-gray-400 text-xs">
+                                            {user?.email}
+                                        </div>
+                                    </div>
+                                    {/* Tooltip arrow */}
+                                    <div className="absolute bottom-full right-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent border-b-[#262626]"></div>
+                                </div>
+                            </div>
                         </div>
 
                         {isUserMenuOpen && (
