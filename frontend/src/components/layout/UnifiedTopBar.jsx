@@ -184,7 +184,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
-                        <div className={`p-0.5 rounded-full ${subscriptionTier === 'premium' ? 'bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 to-blue-500' : ''}`}>
+                        <div className={subscriptionTier === 'premium' ? 'premium-spinning-border' : ''}>
                             <button
                                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                                 style={{
@@ -198,7 +198,9 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s ease'
+                                    transition: 'all 0.2s ease',
+                                    position: 'relative',
+                                    zIndex: 2
                                 }}
                                 onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
                                 onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}

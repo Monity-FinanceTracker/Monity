@@ -320,3 +320,38 @@ img {
   min-height: 60px;
   contain: layout;
 }
+
+/* Static segmented border for premium users with random sizes */
+.premium-spinning-border {
+  position: relative;
+  display: inline-block;
+}
+
+.premium-spinning-border::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #d1d5db 0deg,
+    #d1d5db 45deg,
+    #9ca3af 45deg,
+    #9ca3af 120deg,
+    #6b7280 120deg,
+    #6b7280 200deg,
+    #4b5563 200deg,
+    #4b5563 280deg,
+    #d1d5db 280deg,
+    #d1d5db 360deg
+  );
+  z-index: 1;
+}
+
+.premium-spinning-border > * {
+  position: relative;
+  z-index: 2;
+}
