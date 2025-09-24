@@ -60,7 +60,7 @@ function AddCategory() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#191E29] via-[#1a1f2e] to-[#23263a] p-4 md:p-6">
+        <div className="min-h-screen bg-[#0A0A0A] p-4 md:p-6">
             <div className="max-w-4xl mx-auto space-y-8">
                 {/* Header Section */}
                 <div className="text-center mb-8">
