@@ -16,7 +16,6 @@ import { TransactionSkeleton } from '../ui';
 const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const { t } = useTranslation();
     const [transactions, setTransactions] = useState([]);
-    const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
@@ -151,10 +150,6 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         return filtered;
     }, [transactions, debouncedSearchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
 
-    // Update filteredTransactions when memoized value changes
-    useEffect(() => {
-        setFilteredTransactions(filteredAndSortedTransactions);
-    }, [filteredAndSortedTransactions]);
 
     // Optimized delete mutation with React Query
     const queryClient = useQueryClient();
@@ -182,10 +177,10 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     // Bulk operations
     const handleSelectAll = () => {
-        if (selectedTransactions.size === filteredTransactions.length) {
+        if (selectedTransactions.size === filteredAndSortedTransactions.length) {
             setSelectedTransactions(new Set());
         } else {
-            setSelectedTransactions(new Set(filteredTransactions.map(t => t.id)));
+            setSelectedTransactions(new Set(filteredAndSortedTransactions.map(t => t.id)));
         }
     };
 
@@ -224,7 +219,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     };
 
     // Calculate totals
-    const totals = filteredTransactions.reduce((acc, transaction) => {
+    const totals = filteredAndSortedTransactions.reduce((acc, transaction) => {
         const amount = parseFloat(transaction.amount);
         if (transaction.typeId === 1) { // Expense
             acc.expenses += amount;
@@ -364,7 +359,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-white">{filteredTransactions.length}</div>
+                        <div className="text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
                         <div className="text-gray-400 text-sm">{t('transactions.total_transactions')}</div>
                     </div>
                     <div className="text-center">
@@ -518,22 +513,22 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             {/* Transaction list */}
             <div className="space-y-4 dynamic-list">
                 {/* Select all checkbox - only show when there are transactions */}
-                {filteredTransactions.length > 0 && (
+                {filteredAndSortedTransactions.length > 0 && (
                     <div className="flex items-center justify-between">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <div className="relative">
                                 <input
                                     type="checkbox"
-                                    checked={selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0}
+                                    checked={selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0}
                                     onChange={handleSelectAll}
                                     className="sr-only"
                                 />
                                 <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
-                                    selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0
+                                    selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0
                                         ? 'bg-[#01C38D] border-[#01C38D]' 
                                         : 'border-[#31344d] hover:border-[#01C38D] bg-transparent'
                                 }`}>
-                                    {selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0 && (
+                                    {selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0 && (
                                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                         </svg>
@@ -555,7 +550,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     </Link>
                 </div>
 
-                {filteredTransactions.length === 0 ? (
+                {filteredAndSortedTransactions.length === 0 ? (
                     <div className="bg-[#171717] border border-[#262626] rounded-xl p-12 text-center">
                         <div className="mb-4">
                             <Icon name="BarChart3" size="xxl" className="mx-auto text-blue-400" />
@@ -580,7 +575,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         </div>
                     </div>
                 ) : (
-                    filteredTransactions.map((transaction) => (
+                    filteredAndSortedTransactions.map((transaction) => (
                         <TransactionCard
                             key={transaction.id}
                             transaction={transaction}
