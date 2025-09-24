@@ -156,12 +156,6 @@ export const EmptyCategories = () => {
             description={t('emptyStates.categories.description')}
             actions={[
                 {
-                    label: t('emptyStates.categories.create_first'),
-                    href: '/categories',
-                    icon: <Plus className="w-4 h-4" />,
-                    primary: true
-                },
-                {
                     label: t('emptyStates.categories.use_ai'),
                     onClick: () => {/* Enable AI categorization */},
                     icon: <Bot className="w-4 h-4" />

@@ -51,7 +51,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 py-6 px-4 overflow-y-auto min-h-0">
+          <div className="flex-1 py-6 px-4 overflow-y-auto min-h-0 custom-scrollbar">
             <nav className="space-y-1">
               <NavLink
                 to="/"

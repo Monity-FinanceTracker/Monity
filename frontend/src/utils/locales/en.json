@@ -75,7 +75,10 @@
     "success": "Income added!",
     "failed": "Failed to add income",
     "subtitle": "Add a new income to track your finances",
-    "description": "Description"
+    "description": "Description",
+    "no_income_categories": "No income categories found",
+    "no_categories_message": "Create income categories first.",
+    "create_category": "Create Category"
   },
   "savings_goals": {
     "title": "Savings Goals",

@@ -24,6 +24,7 @@ const EnhancedCategories = () => {
         color: '#01C38D',
         icon: 'Package'
     });
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
     const categoryTypes = [
         { id: 'all', label: t('categories.all'), value: 'all' },
@@ -133,7 +134,7 @@ const EnhancedCategories = () => {
                         <select
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg px-4 py-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                         >
                             {categoryTypes.map((type) => (
                                 <option key={type.id} value={type.id}>
@@ -199,19 +200,27 @@ const EnhancedCategories = () => {
 
             {/* Add Category Modal */}
             {showAddForm && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#24293A] rounded-lg border border-[#31344d] w-full max-w-md p-6">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
+                    <div className="bg-[#24293A] rounded-lg border border-[#31344d] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
                             <button
                                 onClick={() => setShowAddForm(false)}
-                                className="text-gray-400 hover:text-white transition-colors"
+                                className="text-white hover:text-gray-300 transition-colors focus:outline-none"
+                                style={{ 
+                                    background: 'none', 
+                                    border: 'none', 
+                                    padding: 0, 
+                                    margin: 0,
+                                    outline: 'none',
+                                    boxShadow: 'none'
+                                }}
                             >
-                                <X className="w-6 h-6" />
+                                <X className="w-6 h-6 text-white" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleAddCategory} className="space-y-4">
+                        <form onSubmit={handleAddCategory} className="space-y-3 sm:space-y-4">
                             <div>
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('categories.name')}
@@ -220,7 +229,7 @@ const EnhancedCategories = () => {
                                     type="text"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                     placeholder={t('categories.name_placeholder')}
                                     required
                                 />
@@ -230,24 +239,50 @@ const EnhancedCategories = () => {
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('categories.type')}
                                 </label>
-                                <select
-                                    value={newCategory.typeId}
-                                    onChange={(e) => setNewCategory(prev => ({ ...prev, typeId: parseInt(e.target.value) }))}
-                                    className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
-                                >
-                                    {categoryTypes.slice(1).map((type) => (
-                                        <option key={type.id} value={type.id}>
-                                            {type.label}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="relative" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                                    <select
+                                        value={newCategory.typeId}
+                                        onChange={(e) => {
+                                            setNewCategory(prev => ({ ...prev, typeId: parseInt(e.target.value) }));
+                                            setIsDropdownOpen(false);
+                                        }}
+                                        onFocus={() => setIsDropdownOpen(true)}
+                                        onBlur={() => {
+                                            setTimeout(() => setIsDropdownOpen(false), 150);
+                                        }}
+                                        className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#31344d] transition-all cursor-pointer"
+                                        style={{ 
+                                            background: '#191E29',
+                                            color: 'white',
+                                            appearance: 'none',
+                                            WebkitAppearance: 'none',
+                                            MozAppearance: 'none'
+                                        }}
+                                    >
+                                        {categoryTypes.slice(1).map((type) => (
+                                            <option key={type.id} value={type.id}>
+                                                {type.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                        <svg 
+                                            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
 
                             <div>
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('categories.icon')}
                                 </label>
-                                <div className="grid grid-cols-5 gap-2">
+                                <div className="grid grid-cols-5 gap-1 sm:gap-2">
                                     {iconOptions.map((iconOption) => {
                                         const IconComponent = iconOption.icon;
                                         return (
@@ -255,14 +290,14 @@ const EnhancedCategories = () => {
                                                 key={iconOption.name}
                                                 type="button"
                                                 onClick={() => setNewCategory(prev => ({ ...prev, icon: iconOption.name }))}
-                                                className={`p-3 rounded-lg border transition-all flex items-center justify-center ${
+                                                className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${
                                                     newCategory.icon === iconOption.name 
                                                         ? 'border-[#01C38D] bg-[#01C38D]/20 text-[#01C38D]' 
                                                         : 'border-[#31344d] hover:border-[#01C38D]/50 text-gray-400 hover:text-white'
                                                 }`}
                                                 title={iconOption.label}
                                             >
-                                                <IconComponent className="w-5 h-5" />
+                                                <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
                                             </button>
                                         );
                                     })}
@@ -273,13 +308,13 @@ const EnhancedCategories = () => {
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('categories.color')}
                                 </label>
-                                <div className="grid grid-cols-6 gap-2">
+                                <div className="grid grid-cols-6 gap-1 sm:gap-2">
                                     {colorOptions.map((color) => (
                                         <button
                                             key={color}
                                             type="button"
                                             onClick={() => setNewCategory(prev => ({ ...prev, color }))}
-                                            className={`w-8 h-8 rounded-lg border-2 transition-all ${
+                                            className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 transition-all ${
                                                 newCategory.color === color 
                                                     ? 'border-white' 
                                                     : 'border-transparent hover:border-gray-400'
@@ -290,17 +325,17 @@ const EnhancedCategories = () => {
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 pt-4">
+                            <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4">
                                 <button
                                     type="button"
                                     onClick={() => setShowAddForm(false)}
-                                    className="flex-1 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition-colors"
+                                    className="flex-1 bg-gray-600 text-white py-2 sm:py-3 rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
                                 >
                                     {t('categories.cancel')}
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-[#01C38D] text-white py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
+                                    className="flex-1 bg-[#01C38D] text-white py-2 sm:py-3 rounded-lg hover:bg-[#00b37e] transition-colors text-sm sm:text-base"
                                 >
                                     {t('categories.add')}
                                 </button>

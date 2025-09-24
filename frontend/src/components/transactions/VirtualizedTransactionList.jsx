@@ -196,7 +196,7 @@ const VirtualizedTransactionList = React.memo(({
                     </div>
                     <div className="flex items-center space-x-2">
                         <span className={`font-bold text-lg ${getTypeColor(transaction.typeId)}`}>
-                            {transaction.typeId === 1 ? '-' : '+'}${Math.abs(transaction.amount).toFixed(2)}
+                            {transaction.typeId === 1 ? '-$' : '+$'}{Math.abs(transaction.amount).toFixed(2)}
                         </span>
                         <button
                             onClick={() => handleDelete(transaction.id)}
