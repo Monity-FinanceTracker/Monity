@@ -25,10 +25,10 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
 
   return (
     <>
-      <aside className={`fixed top-0 left-0 h-screen bg-[#23263a] text-white border-r border-[#31344d] z-40 transform transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'}`} style={{ willChange: 'transform' }}>
-        <div className="flex flex-col h-full">
+      <aside className={`fixed top-0 left-0 h-screen bg-[#23263a] text-white border-r border-[#31344d] z-40 transform transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'} overflow-hidden`} style={{ willChange: 'transform' }}>
+        <div className="flex flex-col h-full min-h-0">
           {/* Header */}
-          <div className={`flex items-center p-4 border-b border-[#31344d] ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+          <div className={`flex items-center p-4 border-b border-[#31344d] flex-shrink-0 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
             {!isCollapsed && (
               <Link to="/" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="w-8 h-8 bg-[#01C38D] rounded-lg flex items-center justify-center">
@@ -51,7 +51,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 py-6 px-4">
+          <div className="flex-1 py-6 px-4 overflow-y-auto min-h-0">
             <nav className="space-y-1">
               <NavLink
                 to="/"
@@ -158,7 +158,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
             </nav>
 
             {/* Premium/Subscription Section */}
-            {!premiumUser && !isCollapsed && (
+            {!premiumUser && (
               <div className="mt-6 px-3">
                 <NavLink
                   to="/subscription"
@@ -169,14 +169,15 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                     } ${isCollapsed ? 'justify-center' : ''}`
                   }
                   onClick={() => setIsMobileMenuOpen(false)}
+                  title={isCollapsed ? t('sidebar.go_premium') : ''}
                 >
                   <Sparkles className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium truncate">{t('sidebar.go_premium')}</span>
+                  {!isCollapsed && <span className="font-medium truncate">{t('sidebar.go_premium')}</span>}
                 </NavLink>
               </div>
             )}
 
-            {premiumUser && !isCollapsed && (
+            {premiumUser && (
               <div className="mt-6 px-3">
                 <NavLink
                   to="/premium"
@@ -187,9 +188,10 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                     } ${isCollapsed ? 'justify-center' : ''}`
                   }
                   onClick={() => setIsMobileMenuOpen(false)}
+                  title={isCollapsed ? t('sidebar.premium') : ''}
                 >
                   <Sparkles className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium truncate">{t('sidebar.premium')}</span>
+                  {!isCollapsed && <span className="font-medium truncate">{t('sidebar.premium')}</span>}
                 </NavLink>
               </div>
             )}
@@ -197,7 +199,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
           </div>
 
           {/* Admin and Settings at bottom */}
-          <div className="border-t border-[#31344d] p-4 space-y-2">
+          <div className="border-t border-[#31344d] p-4 space-y-2 flex-shrink-0">
             {/* Admin Dashboard first */}
             {isAdmin && (
               <NavLink
@@ -207,7 +209,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
                     : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
-                  }`
+                  } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
                 title={isCollapsed ? t('sidebar.admin_dashboard') : ''}
@@ -223,7 +225,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                   ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
                   : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
-                }`
+                } ${isCollapsed ? 'justify-center' : ''}`
               }
               onClick={() => setIsMobileMenuOpen(false)}
               title={isCollapsed ? t('sidebar.settings') : ''}
