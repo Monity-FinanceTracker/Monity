@@ -10,12 +10,13 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
     <header className="md:hidden sticky top-0 bg-[#0A0A0A] p-4 z-30 flex items-center justify-between shadow-md">
       {/* Mobile menu toggle */}
       <button 
-        className="text-white"
+        className="text-white bg-transparent border-none p-0 m-0"
+        style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label={t('topbar.toggle_menu')}
         aria-expanded={isMobileMenuOpen}
       >
-        <Icon name="Menu" size="lg" />
+        <Icon name="Menu" size="lg" className="text-white" />
       </button>
 
       <div className="flex items-center gap-3">

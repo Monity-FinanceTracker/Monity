@@ -109,13 +109,14 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     {/* Mobile menu toggle */}
                     <button
                         onClick={onMobileMenuToggle}
-                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#171717]"
+                        className="md:hidden text-white hover:text-gray-300 transition-colors bg-transparent border-none p-0 m-0"
+                        style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
                         aria-label={t('topbar.toggle_menu')}
                     >
                         {isMobileMenuOpen ? (
-                            <Icon name="X" size="md" />
+                            <Icon name="X" size="md" className="text-white" />
                         ) : (
-                            <Icon name="Menu" size="md" />
+                            <Icon name="Menu" size="md" className="text-white" />
                         )}
                     </button>
 
