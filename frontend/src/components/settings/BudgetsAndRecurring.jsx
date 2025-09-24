@@ -50,12 +50,12 @@ function Budget() {
             // Filter for expense categories, assuming typeId for Expense is 1
             setCategories(categoriesData.filter(c => c.typeId === 1)); 
         } catch (err) {
-            setError(t('budgets.fetch_error'));
+            setError('Failed to fetch budgets and categories');
             console.error(err);
         } finally {
             setIsLoading(false);
         }
-    }, [user, t]);
+    }, [user]);
 
     useEffect(() => {
         fetchBudgetsAndCategories();
@@ -230,11 +230,11 @@ function RecurringTransactions() {
             setCategories(catData);
             setTypes(typeData);
         } catch (err) {
-            setError(t('recurring.fetch_error'));
+            setError('Failed to fetch recurring transactions');
         } finally {
             setIsLoading(false);
         }
-    }, [user, t]);
+    }, [user]);
 
     useEffect(() => {
         fetchData();
