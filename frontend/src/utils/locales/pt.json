@@ -75,7 +75,10 @@
     "success": "Receita adicionada!",
     "failed": "Falha ao adicionar receita",
     "subtitle": "Adicione uma nova receita para monitorar suas finanças",
-    "description": "Descrição"
+    "description": "Descrição",
+    "no_income_categories": "Nenhuma categoria de receita encontrada",
+    "no_categories_message": "Crie categorias de receita primeiro.",
+    "create_category": "Criar Categoria"
   },
   "savings_goals": {
     "title": "Metas de Poupança",

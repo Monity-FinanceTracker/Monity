@@ -106,7 +106,7 @@ function AddCategory() {
                                         id="categoryName"
                                         value={categoryName}
                                         onChange={(e) => setCategoryName(e.target.value)}
-                                        className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                        className="w-full bg-[#232323] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                         placeholder="e.g., Groceries, Salary, etc."
                                         required
                                     />
@@ -122,7 +122,7 @@ function AddCategory() {
                                         id="categoryType"
                                         value={categoryType}
                                         onChange={(e) => setCategoryType(e.target.value)}
-                                        className="w-full bg-[#191E29] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 appearance-none"
+                                        className="w-full bg-[#232323] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-0 focus:ring-transparent focus:border-[#31344d]/50 transition-all duration-200 appearance-none"
                                     >
                                         <option value="expense">{t('addCategory.expenseOption')}</option>
                                         <option value="income">{t('addCategory.incomeOption')}</option>

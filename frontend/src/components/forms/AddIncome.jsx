@@ -5,7 +5,7 @@ import { getCategories, addTransaction } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui';
-import { FaPlus, FaArrowTrendUp } from 'react-icons/fa6';
+import { FaPlus, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { FaDollarSign, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
 
 const AddIncome = () => {
@@ -85,7 +85,7 @@ const AddIncome = () => {
     const incomeCategories = categories.filter(c => c.typeId === 2);
 
     return (
-        <div className="max-w-2xl mx-auto p-4 md:p-6 bg-[#1f2937] text-white rounded-2xl shadow-lg">
+        <div className="max-w-2xl mx-auto p-4 md:p-6 bg-[#171717] text-white rounded-2xl shadow-lg">
             <header className="mb-6 text-center">
                  <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('addIncome.title')}</h1>
                  <p className="text-gray-400">{t('addIncome.subtitle')}</p>
@@ -95,7 +95,7 @@ const AddIncome = () => {
                      <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
                      <input
                          type="text"
-                         className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                         className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                          placeholder={t('addIncome.description')}
                          value={income.description}
                          onChange={e => setIncome(prev => ({ ...prev, description: e.target.value }))}
@@ -108,29 +108,47 @@ const AddIncome = () => {
                         <input
                             type="number"
                             step="0.01"
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                             placeholder={t('addIncome.amount')}
                             value={income.amount}
                             onChange={e => setIncome(prev => ({ ...prev, amount: e.target.value }))}
                             required
                         />
+                        {/* Custom spinner arrows */}
+                        <div className="absolute top-1/2 right-3 -translate-y-1/2 flex flex-col gap-0.5">
+                            <button
+                                type="button"
+                                onClick={() => setIncome(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
+                                className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                            >
+                                <FaChevronUp className="w-3 h-3 text-white stroke-2" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setIncome(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
+                                className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                            >
+                                <FaChevronDown className="w-3 h-3 text-white stroke-2" />
+                            </button>
+                        </div>
                     </div>
                     <div className="relative">
                         <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                         <input
                             type="date"
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
+                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
                             value={income.date}
                             onChange={e => setIncome(prev => ({ ...prev, date: e.target.value }))}
                             required
                         />
-                        <FaCalendarAlt className="absolute top-1/2 right-4 -translate-y-1/2 text-white pointer-events-none" />
                     </div>
                 </div>
                 <div className="relative">
                     <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
                     <select
-                        className="w-full bg-[#171717] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
+                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
                         value={income.categoryName}
                         onChange={e => setIncome(prev => ({ ...prev, categoryName: e.target.value }))}
                         required

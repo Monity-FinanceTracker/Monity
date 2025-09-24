@@ -134,7 +134,7 @@ const EnhancedCategories = () => {
                         <select
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg px-4 py-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                         >
                             {categoryTypes.map((type) => (
                                 <option key={type.id} value={type.id}>

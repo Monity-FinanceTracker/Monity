@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { X } from 'lucide-react';
 
 // A simple modal component
 const Modal = ({ children, onClose }) => {
@@ -10,7 +12,17 @@ const Modal = ({ children, onClose }) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center px-4">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl relative w-full max-w-md">
-                <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold">&times;</button>
+                <button 
+                    onClick={onClose} 
+                    className="absolute top-3 right-3 border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
+                    style={{ 
+                        border: 'none', 
+                        outline: 'none', 
+                        background: 'transparent'
+                    }}
+                >
+                    <X className="w-6 h-6 text-white" />
+                </button>
                 {children}
             </div>
         </div>
@@ -231,13 +243,34 @@ const SavingsGoals = () => {
                                 </div>
                                 {addingMoney[goal.id]?.isAdding && (
                                     <div className="mt-4 flex items-center">
-                                        <input
-                                            type="number"
-                                            value={addingMoney[goal.id].amount}
-                                            onChange={(e) => handleAmountChange(e, goal.id)}
-                                            placeholder={t('savings_goals.amount_placeholder')}
-                                            className="p-2 border rounded w-full"
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                type="number"
+                                                value={addingMoney[goal.id].amount}
+                                                onChange={(e) => handleAmountChange(e, goal.id)}
+                                                placeholder={t('savings_goals.amount_placeholder')}
+                                                className="p-2 pr-8 border rounded w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                            />
+                                            {/* Custom spinner arrows */}
+                                            <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleAmountChange({ target: { value: ((parseFloat(addingMoney[goal.id].amount) || 0) + 0.01).toFixed(2) } }, goal.id)}
+                                                    className="w-4 h-3 flex items-center justify-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                    style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                                >
+                                                    <FaChevronUp className="w-3 h-3 text-gray-600 stroke-2" />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleAmountChange({ target: { value: Math.max(0, (parseFloat(addingMoney[goal.id].amount) || 0) - 0.01).toFixed(2) } }, goal.id)}
+                                                    className="w-4 h-3 flex items-center justify-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                    style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                                >
+                                                    <FaChevronDown className="w-3 h-3 text-gray-600 stroke-2" />
+                                                </button>
+                                            </div>
+                                        </div>
                                         <button
                                             onClick={() => {
                                                 const amountToAdd = parseFloat(addingMoney[goal.id].amount);

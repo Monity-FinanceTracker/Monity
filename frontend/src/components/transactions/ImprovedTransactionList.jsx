@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
+import { del } from '../../utils/api';
 import formatDate from '../../utils/formatDate';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
@@ -407,7 +408,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#01C38D]"
+                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#262626]"
                         >
                             <option value="date">{t('transactions.sort_by_date')}</option>
                             <option value="amount">{t('transactions.sort_by_amount')}</option>
@@ -541,15 +542,18 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             </div>
                             <span className="text-white">{t('transactions.select_all')}</span>
                         </label>
-                        
-                        <Link
-                            to={transactionType === 'expenses' ? '/add-expense' : transactionType === 'income' ? '/add-income' : '/transactions'}
-                            className="bg-[#01C38D] text-[#191E29] px-4 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors"
-                        >
-                            + {t('transactions.add_new')}
-                        </Link>
                     </div>
                 )}
+
+                {/* Add New Button - navigate to dashboard */}
+                <div className="flex justify-end mb-4">
+                    <Link
+                        to="/"
+                        className="bg-[#01C38D] text-[#191E29] px-4 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors"
+                    >
+                        + {t('transactions.add_new')}
+                    </Link>
+                </div>
 
                 {filteredTransactions.length === 0 ? (
                     <div className="bg-[#171717] border border-[#262626] rounded-xl p-12 text-center">
@@ -590,4 +594,4 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     );
 });
 
-export default ImprovedTransactionList; 
+export default ImprovedTransactionList;
