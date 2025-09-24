@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 function CardWrapper({ children, title, accent }) {
     return (
-        <div className="flex-1 min-w-[250px] p-6 rounded-2xl shadow-lg border border-[#31344d] bg-gradient-to-br from-[#23263a] via-[#23263a]/80 to-[#31344d] flex flex-col items-center justify-center">
+        <div className="flex-1 min-w-[250px] p-6 rounded-2xl shadow-lg border border-[#262626] bg-[#171717] flex flex-col items-center justify-center">
             <h2 className={`text-2xl font-bold mb-4 ${accent}`}>{title}</h2>
             <div className="w-full flex justify-center items-center">
                 {children}
@@ -117,7 +117,7 @@ function Budget() {
                 <select 
                     value={selectedCategory} 
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="p-3 rounded bg-[#31344d] text-white w-full"
+                    className="p-3 rounded bg-[#171717] text-white w-full"
                     required
                 >
                     <option value="">{t('budgets.select_category')}</option>
@@ -130,14 +130,14 @@ function Budget() {
                     value={amount} 
                     onChange={(e) => setAmount(e.target.value)} 
                     placeholder={t('budgets.amount_placeholder')}
-                    className="p-3 rounded bg-[#31344d] text-white w-full"
+                    className="p-3 rounded bg-[#171717] text-white w-full"
                     required
                 />
                 <input 
                     type="month" 
                     value={month} 
                     onChange={(e) => setMonth(e.target.value)}
-                    className="p-3 rounded bg-[#31344d] text-white w-full"
+                    className="p-3 rounded bg-[#171717] text-white w-full"
                     required
                 />
                 <button 
@@ -157,7 +157,7 @@ function Budget() {
             ) : (
                 <ul className="space-y-2">
                     {budgets.map(budget => (
-                        <li key={budget.id} className="flex justify-between items-center p-3 bg-[#23263a] rounded-lg">
+                        <li key={budget.id} className="flex justify-between items-center p-3 bg-[#171717] rounded-lg">
                             <div>
                                 <span className="font-bold">{budget.categories.name}</span>
                                 <span className="text-sm text-gray-400 block">{new Date(budget.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>

@@ -100,7 +100,7 @@ function Signup() {
                 </div>
 
                 {/* Signup Card with Enhanced Design */}
-                <div className="bg-gradient-to-br from-[#23263a]/90 to-[#31344d]/90 backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#31344d]/50 transform animate-fade-in-up delay-200">
+                <div className="bg-[#171717] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
                     <div className="text-center mb-6">
                         <h2 className="text-2xl font-bold text-white mb-2">{t('signupPage.create_account')}</h2>
                         <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
@@ -137,8 +137,8 @@ function Signup() {
                                     onChange={(e) => setName(e.target.value)}
                                     onFocus={() => setFocusedField('name')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#191E29]/80 border-2 ${
-                                        focusedField === 'name' ? 'border-[#01C38D]' : 'border-[#31344d]'
+                                    className={`w-full bg-[#171717] border-2 ${
+                                        focusedField === 'name' ? 'border-[#01C38D]' : 'border-[#262626]'
                                     } text-white rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="Your full name"
                                     required
@@ -171,8 +171,8 @@ function Signup() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setFocusedField('email')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#191E29]/80 border-2 ${
-                                        focusedField === 'email' ? 'border-[#01C38D]' : 'border-[#31344d]'
+                                    className={`w-full bg-[#171717] border-2 ${
+                                        focusedField === 'email' ? 'border-[#01C38D]' : 'border-[#262626]'
                                     } text-white rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="your@email.com"
                                     required
@@ -205,8 +205,8 @@ function Signup() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setFocusedField('password')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#191E29]/80 border-2 ${
-                                        focusedField === 'password' ? 'border-[#01C38D]' : 'border-[#31344d]'
+                                    className={`w-full bg-[#171717] border-2 ${
+                                        focusedField === 'password' ? 'border-[#01C38D]' : 'border-[#262626]'
                                     } text-white rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
@@ -270,10 +270,10 @@ function Signup() {
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#191E29]/80 border-2 ${
+                                    className={`w-full bg-[#171717] border-2 ${
                                         focusedField === 'confirmPassword' ? 'border-[#01C38D]' : 
                                         confirmPassword && !passwordsMatch ? 'border-red-400' :
-                                        'border-[#31344d]'
+                                        'border-[#262626]'
                                     } text-white rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
@@ -345,10 +345,10 @@ function Signup() {
                     <div className="mt-6 text-center">
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-[#31344d]"></div>
+                                <div className="w-full border-t border-[#262626]"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-gradient-to-br from-[#23263a]/90 to-[#31344d]/90 text-gray-400">
+                                <span className="px-4 bg-[#171717] text-gray-400">
                                     {t('signupPage.already_account')}
                                 </span>
                             </div>

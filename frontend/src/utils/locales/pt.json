@@ -405,7 +405,7 @@
     "quick_actions_desc": "Tarefas comuns ao seu alcance",
     "common_tasks": "Tarefas comuns ao seu alcance",
     "recent_transactions": "Transações Recentes",
-    "last_5_transactions": "Suas 5 transações mais recentes",
+    "last_3_transactions": "Suas 3 transações mais recentes",
     "view_all": "Ver Tudo",
     "no_recent_transactions": "Nenhuma transação recente",
     "add_first_transaction": "Adicione sua primeira transação",

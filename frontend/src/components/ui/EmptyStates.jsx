@@ -48,7 +48,7 @@ const EmptyStateBase = ({
                     {actions.map((action, index) => {
                         const baseClasses = "px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center";
                         const primaryClasses = "bg-[#01C38D] text-[#191E29] hover:bg-[#01A071] hover:scale-105";
-                        const secondaryClasses = "bg-[#31344d] text-white hover:bg-[#3a3f56] border border-[#31344d]";
+                        const secondaryClasses = "bg-[#171717] text-white hover:bg-[#262626] border border-[#262626]";
 
                         const Component = action.href ? Link : 'button';
                         const linkProps = action.href ? { to: action.href } : { onClick: action.onClick };
@@ -297,7 +297,7 @@ export const LoadingState = ({ message }) => {
     return (
         <div className="animate-pulse space-y-4 p-6">
             <div className="flex justify-center">
-                <div className="w-12 h-12 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-[#262626] border-t-[#01C38D] animate-spin"></div>
             </div>
             <p className="text-center text-gray-400">
                 {message || t('loadingStates.generic')}

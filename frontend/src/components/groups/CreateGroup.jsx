@@ -31,7 +31,7 @@ const CreateGroup = () => {
             <div className="max-w-md mx-auto">
                 <h1 className="text-3xl font-bold text-white mb-8 text-center">{t('groups.create_title')}</h1>
                 
-                <div className="bg-[#24293A] rounded-lg border border-[#31344d] p-8">
+                <div className="bg-[#171717] rounded-lg border border-[#262626] p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label htmlFor="name" className="block text-white font-medium mb-2">
@@ -42,7 +42,7 @@ const CreateGroup = () => {
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-3 bg-[#191E29] border border-[#31344d] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-3 bg-[#191E29] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
                                 placeholder={t('groups.group_name')}
                                 required
                             />

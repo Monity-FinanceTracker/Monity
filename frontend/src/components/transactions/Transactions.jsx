@@ -16,7 +16,7 @@ function Transactions() {
             <label className="relative inline-flex items-center cursor-pointer">
                 <input onChange={handleChoice} type="checkbox" className="sr-only peer" />
                 <div
-                    className="group peer rounded-full duration-300 w-14 h-8 bg-[#23263a] ring-2 ring-[#31344d] after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 after:rounded-full after:absolute after:h-6 after:w-6 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-6 peer-hover:after:scale-95"
+                    className="group peer rounded-full duration-300 w-14 h-8 bg-[#171717] ring-2 ring-[#262626] after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 after:rounded-full after:absolute after:h-6 after:w-6 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-6 peer-hover:after:scale-95"
                 ></div>
             </label>
             <span className={`text-white ml-3 font-semibold ${!choice ? 'text-[#01C38D]' : 'text-gray-400'}`}>{t('transactionsPage.incomes')}</span>

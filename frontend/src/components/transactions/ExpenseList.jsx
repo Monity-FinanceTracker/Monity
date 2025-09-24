@@ -66,12 +66,12 @@ function ListExpenses() {
     const reversedExpenses = [...filtered].reverse();
     if (!filtered.length) {
         return (
-            <div className="bg-[#23263a] border-1 p-4 rounded-xl shadow-lg shadow-red-400 ring-2 ring-red-400/50">
+            <div className="bg-[#171717] border-1 p-4 rounded-xl shadow-lg shadow-red-400 ring-2 ring-red-400/50">
                 <div className='flex flex-col md:flex-row items-center justify-between gap-6 mb-4'>
                     <h3 className="text-lg font-bold text-[#FF6384]">{t('expenseList.total_expenses')}: <span className="text-white">${sum.toFixed(2)}</span></h3>
                     <div className="flex gap-2">
-                        <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#191E29] border border-[#31344d] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_category')} />
-                        <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#191E29] border border-[#31344d] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_date')} />
+                        <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_category')} />
+                        <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_date')} />
                     </div>
                     <Link
                         to="/add-expense"
@@ -91,7 +91,7 @@ function ListExpenses() {
     }
 
     return (
-        <div className="bg-[#23263a] p-4 rounded-xl shadow-lg ring-2 ring-red-400/50">
+        <div className="bg-[#171717] p-4 rounded-xl shadow-lg ring-2 ring-red-400/50">
             {/* Header */}
             <div className='flex flex-col md:flex-row items-center justify-between gap-4 mb-4'>
                 <h3 className="text-lg font-bold text-white">{t('expenseList.total_expenses')}: <span className="text-[#FF6384]">${sum.toFixed(2)}</span></h3>
@@ -108,9 +108,9 @@ function ListExpenses() {
 
             {/* Desktop Table */}
             <div className="hidden md:block">
-                <table className="w-full text-left bg-[#23263a] text-white rounded-lg overflow-hidden">
+                <table className="w-full text-left bg-[#171717] text-white rounded-lg overflow-hidden">
                     <thead>
-                        <tr className="bg-[#191E29] text-[#FF6384]">
+                        <tr className="bg-[#171717] text-[#FF6384]">
                             <th className="py-3 px-4">{t('expenseList.date')}</th>
                             <th className="py-3 px-4">{t('expenseList.category')}</th>
                             <th className="py-3 px-4">{t('expenseList.description')}</th>
@@ -141,7 +141,7 @@ function ListExpenses() {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
                 {reversedExpenses.map((expense) => (
-                    <div key={expense.id} className="bg-[#191E29] p-4 rounded-lg border border-[#31344d]">
+                    <div key={expense.id} className="bg-[#171717] p-4 rounded-lg border border-[#262626]">
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
