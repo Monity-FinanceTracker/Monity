@@ -5,6 +5,7 @@ import { getGroupById, addGroupExpense, searchUsers, sendGroupInvitation, settle
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../utils/supabase';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 
 const GroupPage = () => {
     const { t } = useTranslation();
@@ -208,7 +209,7 @@ const GroupPage = () => {
                     
                     <div className="space-y-3 mb-6">
                         {group.group_members.map(member => (
-                            <div key={member.profiles.id} className="flex items-center justify-between p-3 bg-[#191E29] rounded-lg">
+                            <div key={member.profiles.id} className="flex items-center justify-between p-3 bg-[#232323] rounded-lg">
                                 <span className="text-white">{member.profiles.name}</span>
                             </div>
                         ))}
@@ -227,11 +228,11 @@ const GroupPage = () => {
                                     setShowUserSearch(e.target.value.length >= 2);
                                 }}
                                 placeholder={t('groups.enter_email')}
-                                className="w-full px-4 py-2 bg-[#191E29] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#232323] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
                             />
                             
                             {showUserSearch && (
-                                <div className="bg-[#191E29] border border-[#262626] rounded-lg max-h-40 overflow-y-auto">
+                                <div className="bg-[#232323] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar">
                                     {searchLoading ? (
                                         <div className="p-3 text-gray-400 text-center">{t('groups.searching')}</div>
                                     ) : userSearchResults.length > 0 ? (
@@ -268,12 +269,12 @@ const GroupPage = () => {
                 <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
                     <h2 className="text-xl font-semibold text-white mb-4">{t('groups.expenses')}</h2>
                     
-                    <div className="space-y-4 mb-6 max-h-80 overflow-y-auto">
+                    <div className="space-y-4 mb-6 max-h-80 overflow-y-auto custom-scrollbar">
                         {group.group_expenses.length === 0 ? (
                             <p className="text-gray-400 text-center py-8">{t('groups.no_expenses')}</p>
                         ) : (
                             group.group_expenses.map(expense => (
-                                <div key={expense.id} className="p-4 bg-[#191E29] rounded-lg">
+                                <div key={expense.id} className="p-4 bg-[#232323] rounded-lg">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-white font-medium">{expense.description}</span>
                                         <span className="text-[#01C38D] font-bold">${expense.amount.toFixed(2)}</span>
@@ -313,7 +314,7 @@ const GroupPage = () => {
                                 id="description"
                                 value={expenseDescription}
                                 onChange={(e) => setExpenseDescription(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#191E29] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#232323] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
                                 required
                             />
                         </div>
@@ -326,7 +327,7 @@ const GroupPage = () => {
                                 id="amount"
                                 value={expenseAmount}
                                 onChange={(e) => setExpenseAmount(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#191E29] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#232323] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
                                 required
                             />
                         </div>
@@ -346,14 +347,35 @@ const GroupPage = () => {
                                 {shares.map(share => (
                                     <div key={share.user_id} className="flex items-center justify-between">
                                         <label className="text-gray-300 text-sm">{share.username}</label>
-                                        <input
-                                            type="number"
-                                            step="0.01"
-                                            value={share.amount_owed}
-                                            onChange={(e) => handleShareChange(share.user_id, e.target.value)}
-                                            className="w-24 px-2 py-1 bg-[#191E29] border border-[#262626] rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#01C38D]"
-                                            placeholder="0.00"
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                value={share.amount_owed}
+                                                onChange={(e) => handleShareChange(share.user_id, e.target.value)}
+                                                className="w-24 px-2 py-1 pr-6 bg-[#232323] border border-[#262626] rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#01C38D] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                                placeholder="0.00"
+                                            />
+                                            {/* Custom spinner arrows */}
+                                            <div className="absolute top-1/2 right-1 -translate-y-1/2 flex flex-col gap-0.5">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleShareChange(share.user_id, ((parseFloat(share.amount_owed) || 0) + 0.01).toFixed(2))}
+                                                    className="w-3 h-2 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                    style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                                >
+                                                    <FaChevronUp className="w-2 h-2 text-white stroke-2" />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleShareChange(share.user_id, Math.max(0, (parseFloat(share.amount_owed) || 0) - 0.01).toFixed(2))}
+                                                    className="w-3 h-2 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                    style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                                >
+                                                    <FaChevronDown className="w-2 h-2 text-white stroke-2" />
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

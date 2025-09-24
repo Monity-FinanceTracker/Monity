@@ -68,7 +68,7 @@ function ListExpenses() {
         return (
             <div className="bg-[#171717] border-1 p-4 rounded-xl shadow-lg shadow-red-400 ring-2 ring-red-400/50">
                 <div className='flex flex-col md:flex-row items-center justify-between gap-6 mb-4'>
-                    <h3 className="text-lg font-bold text-[#FF6384]">{t('expenseList.total_expenses')}: <span className="text-white">${sum.toFixed(2)}</span></h3>
+                    <h3 className="text-lg font-bold text-[#FF6384]">{t('expenseList.total_expenses')}: <span className="text-white">-${Math.abs(sum).toFixed(2)}</span></h3>
                     <div className="flex gap-2">
                         <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_category')} />
                         <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_date')} />
@@ -94,7 +94,7 @@ function ListExpenses() {
         <div className="bg-[#171717] p-4 rounded-xl shadow-lg ring-2 ring-red-400/50">
             {/* Header */}
             <div className='flex flex-col md:flex-row items-center justify-between gap-4 mb-4'>
-                <h3 className="text-lg font-bold text-white">{t('expenseList.total_expenses')}: <span className="text-[#FF6384]">${sum.toFixed(2)}</span></h3>
+                <h3 className="text-lg font-bold text-white">{t('expenseList.total_expenses')}: <span className="text-[#FF6384]">-${Math.abs(sum).toFixed(2)}</span></h3>
                 <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#191E29] border border-[#31344d] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_category')} />
                     <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#191E29] border border-[#31344d] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_date')} />
@@ -124,7 +124,7 @@ function ListExpenses() {
                                 <td className="py-3 px-4">{formatDate(expense.date)}</td>
                                 <td className="py-3 px-4">{expense.category}</td>
                                 <td className="py-3 px-4">{expense.description}</td>
-                                <td className="text-red-400 py-3 px-4 text-right">${expense.amount.toFixed(2)}</td>
+                                <td className="text-red-400 py-3 px-4 text-right">-${Math.abs(expense.amount).toFixed(2)}</td>
                                 <td className="py-3 px-4 text-center">
                                     <button className="text-red-400 hover:text-red-300 font-semibold transition-colors" onClick={() => handleDelete(expense.id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -147,7 +147,7 @@ function ListExpenses() {
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
                                 <p className="text-sm text-gray-400">{expense.category}</p>
                             </div>
-                            <p className="text-red-400 font-bold text-lg">${expense.amount.toFixed(2)}</p>
+                            <p className="text-red-400 font-bold text-lg">-${Math.abs(expense.amount).toFixed(2)}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{formatDate(expense.date)}</p>

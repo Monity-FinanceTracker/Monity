@@ -10,12 +10,13 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
     <header className="md:hidden sticky top-0 bg-[#0A0A0A] p-4 z-30 flex items-center justify-between shadow-md">
       {/* Mobile menu toggle */}
       <button 
-        className="text-white"
+        className="text-white bg-transparent border-none p-0 m-0"
+        style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label={t('topbar.toggle_menu')}
         aria-expanded={isMobileMenuOpen}
       >
-        <Icon name="Menu" size="lg" />
+        <Icon name="Menu" size="lg" className="text-white" />
       </button>
 
       <div className="flex items-center gap-3">
@@ -31,12 +32,14 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         )}
         
         {/* Profile Picture */}
-        <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
-          <span className="text-[#191E29] text-lg font-bold">
-            {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
-              <Icon name="User" size="sm" className="text-[#191E29]" />
-            )}
-          </span>
+        <div className={subscriptionTier === 'premium' ? 'premium-spinning-border' : ''}>
+          <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md relative z-10">
+            <span className="text-[#191E29] text-lg font-bold">
+              {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
+                <Icon name="User" size="sm" className="text-[#191E29]" />
+              )}
+            </span>
+          </div>
         </div>
       </div>
     </header>
