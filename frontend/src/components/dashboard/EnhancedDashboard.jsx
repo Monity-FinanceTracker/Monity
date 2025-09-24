@@ -219,14 +219,6 @@ const EnhancedDashboard = () => {
                         {t('dashboard.welcome_subtitle')}
                     </p>
                 </div>
-                {subscriptionTier === 'premium' && (
-                    <div className="hidden md:block">
-                        <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                            <Icon name="Star" size="sm" className="mr-1" />
-                            Premium
-                        </span>
-                    </div>
-                )}
             </div>
 
             {/* Quick Actions */}

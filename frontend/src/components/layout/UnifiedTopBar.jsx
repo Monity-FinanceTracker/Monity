@@ -169,32 +169,40 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </div>
                 </div>
 
-                {/* Right Section: Notifications + User Menu */}
-                <div className="flex items-center gap-8">
+                {/* Right Section: Notifications + PRO Badge + User Menu */}
+                <div className="flex items-center gap-4">
                     {/* Notifications */}
                     <Bell className="w-5 h-5 text-white hover:text-gray-300 transition-colors cursor-pointer" />
 
+                    {/* PRO Badge - Only for premium users */}
+                    {subscriptionTier === 'premium' && (
+                        <div className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">
+                            PRO
+                        </div>
+                    )}
+
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
-                        <button
-                            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                            style={{
-                                width: '40px',
-                                height: '40px',
-                                backgroundColor: '#01C38D',
-                                borderRadius: '50%',
-                                border: 'none',
-                                outline: 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                            }}
-                            onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
-                            onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}
-                            className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
-                        >
+                        <div className={`p-0.5 rounded-full ${subscriptionTier === 'premium' ? 'bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 to-blue-500' : ''}`}>
+                            <button
+                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    backgroundColor: '#01C38D',
+                                    borderRadius: '50%',
+                                    border: 'none',
+                                    outline: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
+                                onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}
+                                className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
+                            >
                             <span style={{ 
                                 color: '#191E29', 
                                 fontSize: '14px', 
@@ -207,7 +215,8 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     </svg>
                                 )}
                             </span>
-                        </button>
+                            </button>
+                        </div>
 
                         {isUserMenuOpen && (
                             <div className="absolute right-0 top-full mt-3 w-56 bg-[#23263a] border border-[#31344d] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
@@ -221,11 +230,6 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             <p className="text-xs text-gray-400 leading-none">
                                                 {user?.email}
                                             </p>
-                                            {subscriptionTier === 'premium' && (
-                                                <span className="text-xs bg-[#01C38D] text-white px-2 py-0.5 rounded font-medium">
-                                                    Premium
-                                                </span>
-                                            )}
                                         </div>
                                     </div>
                                 </div>

@@ -4,7 +4,7 @@ import { Icon } from "../../utils/iconMapping.jsx";
 
 export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, subscriptionTier } = useAuth();
 
   return (
     <header className="md:hidden sticky top-0 bg-[#191E29] p-4 z-30 flex items-center justify-between shadow-md">
@@ -18,10 +18,19 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         <Icon name="Menu" size="lg" />
       </button>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <span className="text-white font-medium text-sm hidden sm:block">
           {user?.user_metadata?.name || t('topbar.user')}
         </span>
+        
+        {/* PRO Badge - Only for premium users */}
+        {subscriptionTier === 'premium' && (
+          <div className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs font-bold">
+            PRO
+          </div>
+        )}
+        
+        {/* Profile Picture */}
         <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md">
           <span className="text-[#191E29] text-lg font-bold">
             {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
