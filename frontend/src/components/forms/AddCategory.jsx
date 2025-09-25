@@ -72,7 +72,7 @@ function AddCategory() {
                 </div>
 
                 {/* Add Category Form */}
-                <div className="bg-gradient-to-r from-[#23263a] to-[#2a2f45] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#31344d]/50 backdrop-blur-sm">
+                <div className="bg-gradient-to-r from-[#23263a] to-[#2a2f45] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#262626]/50 backdrop-blur-sm">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
                             <FaPlus className="text-[#01C38D] text-lg" />
@@ -106,7 +106,7 @@ function AddCategory() {
                                         id="categoryName"
                                         value={categoryName}
                                         onChange={(e) => setCategoryName(e.target.value)}
-                                        className="w-full bg-[#232323] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                        className="w-full bg-[#232323] border border-[#262626]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                         placeholder="e.g., Groceries, Salary, etc."
                                         required
                                     />
@@ -122,7 +122,7 @@ function AddCategory() {
                                         id="categoryType"
                                         value={categoryType}
                                         onChange={(e) => setCategoryType(e.target.value)}
-                                        className="w-full bg-[#232323] border border-[#31344d]/50 text-white rounded-xl p-4 pl-12 focus:ring-0 focus:ring-transparent focus:border-[#31344d]/50 transition-all duration-200 appearance-none"
+                                        className="w-full bg-[#232323] border border-[#262626]/50 text-white rounded-xl p-4 pl-12 focus:ring-0 focus:ring-transparent focus:border-[#262626]/50 transition-all duration-200 appearance-none"
                                     >
                                         <option value="expense">{t('addCategory.expenseOption')}</option>
                                         <option value="income">{t('addCategory.incomeOption')}</option>
@@ -146,7 +146,7 @@ function AddCategory() {
                 </div>
 
                 {/* Categories List */}
-                <div className="bg-gradient-to-r from-[#23263a] to-[#2a2f45] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#31344d]/50 backdrop-blur-sm">
+                <div className="bg-gradient-to-r from-[#23263a] to-[#2a2f45] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#262626]/50 backdrop-blur-sm">
                     <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                         <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
                             <FaTag className="text-[#01C38D]" />
@@ -165,7 +165,7 @@ function AddCategory() {
                     ) : (
                         <div className="grid gap-3">
                             {categories.map(category => (
-                                <div key={category.id} className="bg-[#191E29]/60 backdrop-blur-sm border border-[#31344d]/30 p-4 rounded-xl hover:bg-[#191E29]/80 transition-all duration-200 group">
+                                <div key={category.id} className="bg-[#191E29]/60 backdrop-blur-sm border border-[#262626]/30 p-4 rounded-xl hover:bg-[#191E29]/80 transition-all duration-200 group">
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center gap-4">
                                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${

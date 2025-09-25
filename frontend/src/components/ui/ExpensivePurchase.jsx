@@ -87,7 +87,7 @@ const ExpensivePurchase = React.memo(() => {
                     </thead>
                     <tbody>
                         {topExpenses.map((expense) => (
-                            <tr key={expense.id} className="border-t border-[#31344d] hover:bg-[#2a2d44] transition-colors">
+                            <tr key={expense.id} className="border-t border-[#262626] hover:bg-[#262626] transition-colors">
                                 <td className="py-3 px-4">{formatDate(expense.date)}</td>
                                 <td className="py-3 px-4">{expense.category}</td>
                                 <td className="py-3 px-4">{expense.description}</td>
@@ -108,7 +108,7 @@ const ExpensivePurchase = React.memo(() => {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
                 {topExpenses.map((expense) => (
-                    <div key={expense.id} className="bg-[#191E29] p-4 rounded-lg border border-[#31344d]">
+                    <div key={expense.id} className="bg-[#191E29] p-4 rounded-lg border border-[#262626]">
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>

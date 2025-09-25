@@ -201,7 +201,7 @@ const EnhancedCategories = () => {
             {/* Add Category Modal */}
             {showAddForm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
-                    <div className="bg-[#24293A] rounded-lg border border-[#31344d] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
+                    <div className="bg-[#24293A] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
                             <button
@@ -229,7 +229,7 @@ const EnhancedCategories = () => {
                                     type="text"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                     placeholder={t('categories.name_placeholder')}
                                     required
                                 />
@@ -250,7 +250,7 @@ const EnhancedCategories = () => {
                                         onBlur={() => {
                                             setTimeout(() => setIsDropdownOpen(false), 150);
                                         }}
-                                        className="w-full bg-[#191E29] border border-[#31344d] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#31344d] transition-all cursor-pointer"
+                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer"
                                         style={{ 
                                             background: '#191E29',
                                             color: 'white',
@@ -293,7 +293,7 @@ const EnhancedCategories = () => {
                                                 className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${
                                                     newCategory.icon === iconOption.name 
                                                         ? 'border-[#01C38D] bg-[#01C38D]/20 text-[#01C38D]' 
-                                                        : 'border-[#31344d] hover:border-[#01C38D]/50 text-gray-400 hover:text-white'
+                                                        : 'border-[#262626] hover:border-[#01C38D]/50 text-gray-400 hover:text-white'
                                                 }`}
                                                 title={iconOption.label}
                                             >
