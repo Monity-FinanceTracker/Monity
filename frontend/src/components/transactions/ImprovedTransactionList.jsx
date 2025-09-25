@@ -246,7 +246,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
                             isSelected 
                                 ? 'bg-[#01C38D] border-[#01C38D]' 
-                                : 'border-[#31344d] hover:border-[#01C38D] bg-transparent'
+                                : 'border-[#262626] hover:border-[#01C38D] bg-transparent'
                         }`}>
                             {isSelected && (
                                 <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -430,7 +430,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
                 {/* Advanced filters panel */}
                 {isFilterPanelOpen && (
-                    <div className="mt-4 pt-4 border-t border-[#31344d]">
+                    <div className="mt-4 pt-4 border-t border-[#262626]">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label className="block text-gray-400 text-sm mb-2">{t('transactions.filter_category')}</label>
@@ -526,7 +526,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                 <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
                                     selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0
                                         ? 'bg-[#01C38D] border-[#01C38D]' 
-                                        : 'border-[#31344d] hover:border-[#01C38D] bg-transparent'
+                                        : 'border-[#262626] hover:border-[#01C38D] bg-transparent'
                                 }`}>
                                     {selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0 && (
                                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

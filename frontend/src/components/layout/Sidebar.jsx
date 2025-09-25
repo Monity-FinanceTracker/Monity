@@ -59,7 +59,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -73,7 +73,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -87,7 +87,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -101,7 +101,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -115,7 +115,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -130,7 +130,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -145,7 +145,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -208,7 +208,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -224,7 +224,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
                   ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                  : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                  : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                 } ${isCollapsed ? 'justify-center' : ''}`
               }
               onClick={() => setIsMobileMenuOpen(false)}
