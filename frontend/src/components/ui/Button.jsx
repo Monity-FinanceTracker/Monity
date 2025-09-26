@@ -17,14 +17,14 @@ const Button = memo(({
   fullWidth = false,
   ...props 
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#191E29] disabled:opacity-50 disabled:cursor-not-allowed select-none';
+  const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#232323] disabled:opacity-50 disabled:cursor-not-allowed select-none';
   
   const variants = {
-    primary: 'bg-[#01C38D] hover:bg-[#01A071] text-[#191E29] focus:ring-[#01C38D]/20 shadow-sm hover:shadow-md',
+    primary: 'bg-[#01C38D] hover:bg-[#01A071] text-[#232323] focus:ring-[#01C38D]/20 shadow-sm hover:shadow-md',
     secondary: 'bg-[#171717] hover:bg-[#262626] text-white border border-[#262626] hover:border-[#262626]/80 focus:ring-[#01C38D]/20',
     danger: 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500/20 shadow-sm hover:shadow-md',
     ghost: 'text-[#01C38D] hover:bg-[#01C38D]/10 hover:text-[#01A071] focus:ring-[#01C38D]/20',
-    outline: 'border-2 border-[#01C38D] text-[#01C38D] hover:bg-[#01C38D] hover:text-[#191E29] focus:ring-[#01C38D]/20',
+    outline: 'border-2 border-[#01C38D] text-[#01C38D] hover:bg-[#01C38D] hover:text-[#232323] focus:ring-[#01C38D]/20',
     minimal: 'text-gray-300 hover:text-white hover:bg-[#171717] focus:ring-[#01C38D]/20'
   };
   

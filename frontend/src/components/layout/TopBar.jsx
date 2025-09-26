@@ -34,9 +34,9 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         {/* Profile Picture */}
         <div className={subscriptionTier === 'premium' ? 'premium-spinning-border' : ''}>
           <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center shadow-md relative z-10">
-            <span className="text-[#191E29] text-lg font-bold">
+            <span className="text-[#232323] text-lg font-bold">
               {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
-                <Icon name="User" size="sm" className="text-[#191E29]" />
+                <Icon name="User" size="sm" className="text-[#232323]" />
               )}
             </span>
           </div>

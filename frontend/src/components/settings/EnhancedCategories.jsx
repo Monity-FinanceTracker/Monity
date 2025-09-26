@@ -5,6 +5,7 @@ import { get, post, del } from '../../utils/api';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
 import { Plus, Search, X, Trash2 } from 'lucide-react';
 import { iconMap, categoryIconOptions, getIcon } from '../../utils/iconMapping.jsx';
+import { Dropdown } from '../ui';
 
 /**
  * Enhanced Categories Component with modern UI and improved functionality
@@ -125,23 +126,21 @@ const EnhancedCategories = () => {
                                 placeholder={t('categories.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                className="w-full h-12 bg-[#171717] border border-[#262626] text-white rounded-xl pl-10 pr-4 text-base font-medium focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                             />
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                         </div>
                     </div>
-                    <div className="sm:w-48">
-                        <select
+                    <div className="sm:w-64">
+                        <Dropdown
                             value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg px-4 py-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
-                        >
-                            {categoryTypes.map((type) => (
-                                <option key={type.id} value={type.id}>
-                                    {type.label}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={(value) => setSelectedType(value === 'all' ? 'all' : parseInt(value))}
+                            options={categoryTypes.map(type => ({
+                                value: type.id,
+                                label: type.label
+                            }))}
+                            placeholder={t('categories.all')}
+                        />
                     </div>
                 </div>
             </div>
@@ -201,7 +200,7 @@ const EnhancedCategories = () => {
             {/* Add Category Modal */}
             {showAddForm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
-                    <div className="bg-[#24293A] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
                             <button
@@ -229,7 +228,7 @@ const EnhancedCategories = () => {
                                     type="text"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                     placeholder={t('categories.name_placeholder')}
                                     required
                                 />
@@ -250,9 +249,9 @@ const EnhancedCategories = () => {
                                         onBlur={() => {
                                             setTimeout(() => setIsDropdownOpen(false), 150);
                                         }}
-                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer"
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer"
                                         style={{ 
-                                            background: '#191E29',
+                                            background: '#232323',
                                             color: 'white',
                                             appearance: 'none',
                                             WebkitAppearance: 'none',

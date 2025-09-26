@@ -136,7 +136,7 @@ const MobileOptimizedForm = ({
 
         const baseInputClasses = `
             w-full px-4 py-4 text-lg
-            bg-[#191E29] border rounded-xl 
+            bg-[#232323] border rounded-xl 
             text-white placeholder-gray-400
             transition-all duration-200
             focus:outline-none focus:ring-2
@@ -268,7 +268,7 @@ const MobileOptimizedForm = ({
                         transition-all duration-200 
                         flex items-center justify-center gap-3
                         ${isValid && !isLoading
-                            ? 'bg-[#01C38D] text-[#191E29] hover:bg-[#01A071] hover:scale-[1.02] shadow-lg hover:shadow-xl'
+                            ? 'bg-[#01C38D] text-[#232323] hover:bg-[#01A071] hover:scale-[1.02] shadow-lg hover:shadow-xl'
                             : 'bg-[#31344d] text-gray-400 cursor-not-allowed'
                         }
                     `}

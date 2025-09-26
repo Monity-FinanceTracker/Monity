@@ -14,17 +14,17 @@ import {
   Sidebar, 
   Login, 
   Signup, 
-  EnhancedCategories, 
-  Subscription, 
-  PremiumPage, 
   Spinner, 
   UnifiedTopBar, 
-  NotificationProvider, 
-  SavingsGoals, 
-  TotalExpenses, 
-  DateRangeFilter, 
-  Savings 
+  NotificationProvider
 } from './components';
+
+// Lazy load non-critical components
+const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
+const Subscription = lazy(() => import('./components/navigation/Subscription'));
+const PremiumPage = lazy(() => import('./components/navigation/PremiumPage'));
+const SavingsGoals = lazy(() => import('./components/ui/SavingsGoals'));
+const Savings = lazy(() => import('./components/ui/Savings'));
 
 // Import lazy components with optimized loading
 import {
@@ -100,7 +100,7 @@ const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
 
   return (
     <div className="flex min-h-screen bg-[#0A0A0A] font-sans">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#01C38D] text-[#191E29] p-2 z-50 rounded">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#01C38D] text-[#232323] p-2 z-50 rounded">
         Skip to main content
       </a>
       {/* Sidebar - Full height */}
@@ -162,19 +162,19 @@ const App = React.memo(() => {
         <Route path="/transactions" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyImprovedTransactionList /></MainLayout></ProtectedRoute>} />
         <Route path="/add-expense" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddExpense /></MainLayout></ProtectedRoute>} />
         <Route path="/add-income" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddIncome /></MainLayout></ProtectedRoute>} />
-        <Route path="/categories" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><EnhancedCategories /></MainLayout></ProtectedRoute>} />
+        <Route path="/categories" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><EnhancedCategories /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedSettings /></MainLayout></ProtectedRoute>} />
         <Route path="/budgets" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ProtectedRoute>} />
-        <Route path="/subscription" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Subscription /></MainLayout></ProtectedRoute>} />
-        <Route path="/savings-goals" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><SavingsGoals /></MainLayout></ProtectedRoute>} />
-        <Route path="/savings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Savings /></MainLayout></ProtectedRoute>} />
+        <Route path="/subscription" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Subscription /></Suspense></MainLayout></ProtectedRoute>} />
+        <Route path="/savings-goals" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><SavingsGoals /></Suspense></MainLayout></ProtectedRoute>} />
+        <Route path="/savings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Savings /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/financial-health" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ProtectedRoute>} />
         <Route path="/groups" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroups /></MainLayout></ProtectedRoute>} />
         <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyCreateGroup /></MainLayout></ProtectedRoute>} />
         <Route path="/groups/:id" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroupPage /></MainLayout></ProtectedRoute>} />
 
         {/* Premium route */}
-        <Route path="/premium" element={<PremiumRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><PremiumPage /></MainLayout></PremiumRoute>} />
+        <Route path="/premium" element={<PremiumRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><PremiumPage /></Suspense></MainLayout></PremiumRoute>} />
 
         {/* Admin route */}
         <Route path="/admin" element={<AdminRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyAdminDashboard /></MainLayout></AdminRoute>} />

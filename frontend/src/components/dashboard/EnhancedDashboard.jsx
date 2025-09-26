@@ -132,7 +132,7 @@ const EnhancedDashboard = () => {
             <div className="space-y-3">
                 {dashboardData.recentTransactions.length > 0 ? (
                     dashboardData.recentTransactions.map((transaction, index) => (
-                        <div key={transaction.id || index} className="flex items-center justify-between p-3 bg-[#191E29] rounded-lg">
+                        <div key={transaction.id || index} className="flex items-center justify-between p-3 bg-[#232323] rounded-lg">
                             <div className="flex items-center gap-3">
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                     transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
