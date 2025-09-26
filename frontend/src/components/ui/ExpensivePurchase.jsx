@@ -108,7 +108,7 @@ const ExpensivePurchase = React.memo(() => {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
                 {topExpenses.map((expense) => (
-                    <div key={expense.id} className="bg-[#191E29] p-4 rounded-lg border border-[#262626]">
+                    <div key={expense.id} className="bg-[#232323] p-4 rounded-lg border border-[#262626]">
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>

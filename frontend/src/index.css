@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+/* Fonts are loaded via HTML preload for better performance */
 @import 'tailwindcss';
 
 /* Custom Scrollbar Styling - Applied to ALL scrollbars */
@@ -354,4 +354,99 @@ img {
 .premium-spinning-border > * {
   position: relative;
   z-index: 2;
+}
+
+/* Custom Dropdown Styling - Override browser defaults */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: none !important;
+}
+
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+select option {
+  background-color: #171717 !important;
+  color: white !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+}
+
+select option:hover {
+  background-color: #262626 !important;
+  color: white !important;
+}
+
+select option:checked {
+  background-color: #01C38D !important;
+  color: white !important;
+}
+
+select option:focus {
+  background-color: #262626 !important;
+  color: white !important;
+}
+
+/* Specific styling for different dropdown backgrounds */
+select[class*="bg-[#232323]"] option {
+  background-color: #232323 !important;
+}
+
+select[class*="bg-[#262626]"] option {
+  background-color: #262626 !important;
+}
+
+/* Additional dropdown styling for better browser compatibility */
+select option:active {
+  background-color: #01C38D !important;
+  color: white !important;
+}
+
+select option:selected {
+  background-color: #01C38D !important;
+  color: white !important;
+}
+
+/* Override any browser-specific styling */
+select option::-moz-focus-inner {
+  border: 0 !important;
+}
+
+select option::-webkit-outer-spin-button,
+select option::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* Ensure consistent styling across all browsers */
+select option {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Force override of browser default blue highlight */
+select option:hover,
+select option:focus,
+select option:active,
+select option:checked,
+select option:selected {
+  background: #262626 !important;
+  background-color: #262626 !important;
+  color: white !important;
+  outline: none !important;
+  border: none !important;
+}
+
+/* Specific override for selected option */
+select option[selected] {
+  background: #01C38D !important;
+  background-color: #01C38D !important;
+  color: white !important;
 }

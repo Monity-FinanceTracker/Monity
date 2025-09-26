@@ -168,18 +168,39 @@ const AddExpense = () => {
                         <div className="relative">
                             <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                             <select
-                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 appearance-none"
+                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium"
+                                style={{
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }}
                                 value={expense.categoryName}
                                 onChange={e => setExpense(prev => ({ ...prev, categoryName: e.target.value }))}
                                 required
                             >
-                                <option value="" className="bg-[#191E29] text-white">{t('addExpense.select_category')}</option>
+                                <option 
+                                    value="" 
+                                    className="bg-[#232323] text-white font-medium"
+                                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
+                                >
+                                    {t('addExpense.select_category')}
+                                </option>
                                 {categories.filter(c => c.typeId === 1).map(category => (
-                                    <option key={category.id} value={category.name} className="bg-[#191E29] text-white">
+                                    <option 
+                                        key={category.id} 
+                                        value={category.name} 
+                                        className="bg-[#232323] text-white font-medium"
+                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
+                                    >
                                         {category.name}
                                     </option>
                                 ))}
                             </select>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
 
                         {/* Submit Button */}

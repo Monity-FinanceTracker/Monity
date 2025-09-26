@@ -96,8 +96,8 @@ function ListExpenses() {
             <div className='flex flex-col md:flex-row items-center justify-between gap-4 mb-4'>
                 <h3 className="text-lg font-bold text-white">{t('expenseList.total_expenses')}: <span className="text-[#FF6384]">-${Math.abs(sum).toFixed(2)}</span></h3>
                 <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                    <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#191E29] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_category')} />
-                    <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#191E29] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_date')} />
+                    <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_category')} />
+                    <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_date')} />
                 </div>
                 <Link
                     to="/add-expense"

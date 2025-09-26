@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
@@ -8,16 +8,21 @@ import formatDate from '../../utils/formatDate';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
-import { TransactionSkeleton } from '../ui';
+import { TransactionSkeleton, Dropdown } from '../ui';
 
 /**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
  */
 const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
+    // Dropdown state
+    const [isAddNewDropdownOpen, setIsAddNewDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
     
     // Filter and search states
     const [searchQuery, setSearchQuery] = useState('');
@@ -75,6 +80,23 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         setLoading(queryLoading);
         setError(queryError?.message || null);
     }, [transactionsData, queryLoading, queryError]);
+
+    // Handle click outside dropdown
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsAddNewDropdownOpen(false);
+            }
+        };
+
+        if (isAddNewDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isAddNewDropdownOpen]);
 
     // Memoized filtering and search with debounced search
     const filteredAndSortedTransactions = useMemo(() => {
@@ -311,6 +333,22 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         }
     };
 
+    // Dropdown handlers
+    const handleAddNewClick = () => {
+        setIsAddNewDropdownOpen(!isAddNewDropdownOpen);
+    };
+
+    const handleAddIncome = () => {
+        setIsAddNewDropdownOpen(false);
+        navigate('/add-income');
+    };
+
+    const handleAddExpense = () => {
+        setIsAddNewDropdownOpen(false);
+        navigate('/add-expense');
+    };
+
+
     if (loading) {
         return (
             <div className="space-y-6">
@@ -390,9 +428,9 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                 placeholder={t('transactions.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-[#262626] border border-[#262626] rounded-lg px-4 py-2 pl-10 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D]"
+                                className="w-full h-12 bg-[#262626] border border-[#262626] rounded-xl px-4 pl-10 text-white placeholder-gray-400 text-base font-medium focus:outline-none focus:border-[#01C38D]"
                             />
-                            <svg className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
@@ -400,16 +438,18 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
                     {/* Quick filters */}
                     <div className="flex gap-2">
-                        <select
+                        <Dropdown
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#262626]"
-                        >
-                            <option value="date">{t('transactions.sort_by_date')}</option>
-                            <option value="amount">{t('transactions.sort_by_amount')}</option>
-                            <option value="category">{t('transactions.sort_by_category')}</option>
-                            <option value="description">{t('transactions.sort_by_description')}</option>
-                        </select>
+                            onChange={setSortBy}
+                            options={[
+                                { value: 'date', label: t('transactions.sort_by_date') },
+                                { value: 'amount', label: t('transactions.sort_by_amount') },
+                                { value: 'category', label: t('transactions.sort_by_category') },
+                                { value: 'description', label: t('transactions.sort_by_description') }
+                            ]}
+                            placeholder={t('transactions.sort_by_date')}
+                            className="w-40"
+                        />
 
                         <button
                             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
@@ -512,9 +552,9 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
             {/* Transaction list */}
             <div className="space-y-4 dynamic-list">
-                {/* Select all checkbox - only show when there are transactions */}
+                {/* Select All and Add New on same line */}
                 {filteredAndSortedTransactions.length > 0 && (
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-4">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <div className="relative">
                                 <input
@@ -537,18 +577,62 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             </div>
                             <span className="text-white">{t('transactions.select_all')}</span>
                         </label>
+
+                        {/* Add New Dropdown */}
+                        <div className="relative" ref={dropdownRef}>
+                        <button
+                            onClick={handleAddNewClick}
+                            className="bg-[#01C38D] text-[#232323] px-4 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors flex items-center gap-2"
+                        >
+                            + {t('transactions.add_new')}
+                            <svg 
+                                className={`w-4 h-4 transition-transform ${isAddNewDropdownOpen ? 'rotate-180' : ''}`} 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        
+                        {isAddNewDropdownOpen && (
+                            <div className="absolute right-0 mt-2 w-48 bg-[#171717] border border-[#262626] rounded-lg shadow-lg z-50">
+                                <div className="py-1">
+                                    <button
+                                        onClick={handleAddIncome}
+                                        className="w-full text-left px-4 py-3 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div className="font-medium">Add Income</div>
+                                            <div className="text-sm text-gray-400">Record money received</div>
+                                        </div>
+                                    </button>
+                                    
+                                    <button
+                                        onClick={handleAddExpense}
+                                        className="w-full text-left px-4 py-3 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div className="font-medium">Add Expense</div>
+                                            <div className="text-sm text-gray-400">Record money spent</div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        </div>
                     </div>
                 )}
-
-                {/* Add New Button - navigate to dashboard */}
-                <div className="flex justify-end mb-4">
-                    <Link
-                        to="/"
-                        className="bg-[#01C38D] text-[#191E29] px-4 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors"
-                    >
-                        + {t('transactions.add_new')}
-                    </Link>
-                </div>
 
                 {filteredAndSortedTransactions.length === 0 ? (
                     <div className="bg-[#171717] border border-[#262626] rounded-xl p-12 text-center">

@@ -205,7 +205,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
                                 >
                                 <span style={{ 
-                                    color: '#191E29', 
+                                    color: '#232323', 
                                     fontSize: '14px', 
                                     fontWeight: 'bold',
                                     userSelect: 'none'

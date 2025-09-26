@@ -186,7 +186,7 @@ const EnhancedSettings = () => {
                                             type="text"
                                             value={profileData.name}
                                             onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                             placeholder={t('settings.enter_name')}
                                         />
                                     </div>
@@ -197,7 +197,7 @@ const EnhancedSettings = () => {
                                         <input
                                             type="email"
                                             value={profileData.email}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed"
+                                            className="w-full bg-[#232323] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed"
                                             disabled
                                         />
                                         <p className="text-xs text-gray-500 mt-1">{t('settings.email_readonly')}</p>
@@ -210,7 +210,7 @@ const EnhancedSettings = () => {
                                     <textarea
                                         value={profileData.bio}
                                         onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                         rows="3"
                                         placeholder={t('settings.enter_bio')}
                                     />
@@ -241,7 +241,7 @@ const EnhancedSettings = () => {
                                         type="password"
                                         value={passwordData.currentPassword}
                                         onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                         required
                                     />
                                 </div>
@@ -254,7 +254,7 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.newPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                             required
                                         />
                                     </div>
@@ -266,7 +266,7 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.confirmPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                             required
                                         />
                                     </div>
