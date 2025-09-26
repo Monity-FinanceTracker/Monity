@@ -179,7 +179,7 @@ const EnhancedSettings = () => {
                             <form onSubmit={handleProfileUpdate} className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                             {t('settings.full_name')}
                                         </label>
                                         <input
@@ -191,7 +191,7 @@ const EnhancedSettings = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                             {t('settings.email')}
                                         </label>
                                         <input
@@ -204,7 +204,7 @@ const EnhancedSettings = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                         {t('settings.bio')}
                                     </label>
                                     <textarea
@@ -419,22 +419,22 @@ const EnhancedSettings = () => {
             case 'account':
                 return (
                     <div className="space-y-6">
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                            <h3 className="text-xl font-semibold text-red-800 mb-4">{t('settings.danger_zone')}</h3>
+                        <div className="bg-[#232323] border border-[#262626] rounded-lg p-6">
+                            <h3 className="text-xl font-semibold text-white mb-4">{t('settings.danger_zone')}</h3>
                             <div className="space-y-4">
                                 <div>
-                                    <h4 className="text-red-700 font-medium mb-2">{t('settings.export_data')}</h4>
-                                    <p className="text-red-600 text-sm mb-3">{t('settings.export_data_desc')}</p>
+                                    <h4 className="text-white font-medium mb-2">{t('settings.export_data')}</h4>
+                                    <p className="text-gray-300 text-sm mb-3">{t('settings.export_data_desc')}</p>
                                     <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
                                         {t('settings.export_button')}
                                     </button>
                                 </div>
                                 
-                                <hr className="border-red-200" />
+                                <hr className="border-[#262626]" />
                                 
                                 <div>
-                                    <h4 className="text-red-700 font-medium mb-2">{t('settings.delete_account')}</h4>
-                                    <p className="text-red-600 text-sm mb-3">{t('settings.delete_account_desc')}</p>
+                                    <h4 className="text-white font-medium mb-2">{t('settings.delete_account')}</h4>
+                                    <p className="text-gray-300 text-sm mb-3">{t('settings.delete_account_desc')}</p>
                                     <button className="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors">
                                         {t('settings.delete_button')}
                                     </button>
@@ -459,7 +459,7 @@ const EnhancedSettings = () => {
             <div className="bg-[#171717] rounded-lg border border-[#262626] overflow-hidden">
                 {/* Tab Navigation */}
                 <div className="border-b border-[#262626]">
-                    <nav className="flex space-x-8 px-6" aria-label="Settings tabs">
+                    <nav className="flex space-x-8 px-6 py-4.5" aria-label="Settings tabs">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}

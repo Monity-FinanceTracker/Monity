@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
@@ -71,7 +71,7 @@ const SavingsGoals = () => {
 
     const isLimited = subscriptionTier === 'free' && goals.length >= 2;
 
-    const fetchGoalsAndBalance = async () => {
+    const fetchGoalsAndBalance = useCallback(async () => {
         try {
             const [goalsResponse, balanceResponse] = await Promise.all([
                 api.get('/savings-goals'),
@@ -82,11 +82,11 @@ const SavingsGoals = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchGoalsAndBalance();
-    }, []);
+    }, [fetchGoalsAndBalance]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
