@@ -58,7 +58,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 end
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -72,7 +72,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/transactions"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -86,7 +86,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/groups"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -100,7 +100,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/categories"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -114,7 +114,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/budgets"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -129,7 +129,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/savings-goals"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -144,7 +144,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/financial-health"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -207,7 +207,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 end
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
@@ -223,7 +223,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               to="/settings"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                  ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
+                  ? 'bg-[#01C38D]/10 text-[#01C38D] '
                   : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                 } ${isCollapsed ? 'justify-center' : ''}`
               }
