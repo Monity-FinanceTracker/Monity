@@ -286,7 +286,7 @@ const EnhancedSettings = () => {
             case 'subscription':
                 return (
                     <div className="space-y-6">
-                        <div className="bg-[#2A2F3A] rounded-lg p-6 border border-[#262626]">
+                        <div className="bg-[#262626] rounded-lg p-6 border border-[#262626]">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 className="text-xl font-semibold text-white">{t('subscription.current_plan')}</h3>
@@ -364,7 +364,7 @@ const EnhancedSettings = () => {
                         <div>
                             <h3 className="text-xl font-semibold text-white mb-4">{t('settings.general_preferences')}</h3>
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
+                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.language')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.language_desc')}</p>
@@ -372,7 +372,7 @@ const EnhancedSettings = () => {
                                     <LanguageSwitcher />
                                 </div>
                                 
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
+                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.notifications')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.notifications_desc')}</p>
@@ -388,7 +388,7 @@ const EnhancedSettings = () => {
                                     </label>
                                 </div>
                                 
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
+                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.email_updates')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.email_updates_desc')}</p>

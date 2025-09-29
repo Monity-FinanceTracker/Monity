@@ -65,30 +65,34 @@ export function AuthProvider({ children }) {
 
     setInitialSession();
 
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((_event, session) => {
-    const currentUser = session?.user ?? null;
-    const previousUser = user;
-    
-    setUser(currentUser);
-    setIsAdmin(currentUser?.user_metadata?.role === "admin");
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const currentUser = session?.user ?? null;
+      
+      setUser(prevUser => {
+        const previousUser = prevUser;
+        
+        // Clear all caches when user changes (including switching between accounts)
+        if (previousUser?.id !== currentUser?.id) {
+          clearSubscriptionCache();
+          queryClient.clear(); // Clear React Query cache
+          console.log('🧹 Cleared all caches due to user change');
+        }
+        
+        return currentUser;
+      });
+      
+      setIsAdmin(currentUser?.user_metadata?.role === "admin");
 
-    // Clear all caches when user changes (including switching between accounts)
-    if (previousUser?.id !== currentUser?.id) {
-      clearSubscriptionCache();
-      queryClient.clear(); // Clear React Query cache
-      console.log('🧹 Cleared all caches due to user change');
-    }
-
-    if (currentUser) {
-      refreshSubscription();
-    } else {
-      // Clear subscription cache when user logs out
-      clearSubscriptionCache();
-      setSubscriptionTier("free");
-    }
-  });
+      if (currentUser) {
+        refreshSubscription();
+      } else {
+        // Clear subscription cache when user logs out
+        clearSubscriptionCache();
+        setSubscriptionTier("free");
+      }
+    });
 
     return () => {
       subscription?.unsubscribe();
