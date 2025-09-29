@@ -120,7 +120,7 @@ const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
         />
 
         {/* Main content */}
-        <main id="main-content" key={user?.id || 'no-user'} className="flex-1 p-6 content-container">
+        <main id="main-content" key={user?.id || 'no-user'} className="flex-1 p-4 sm:p-6 content-container overflow-x-hidden">
           {children}
         </main>
       </div>

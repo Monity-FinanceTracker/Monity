@@ -1,6 +1,24 @@
 /* Fonts are loaded via HTML preload for better performance */
 @import 'tailwindcss';
 
+/* Responsive text handling */
+* {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Prevent horizontal overflow on small screens */
+body, html {
+  overflow-x: hidden;
+}
+
+/* Ensure all containers respect viewport width */
+.container, .max-w-6xl, .max-w-7xl {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
 /* Custom Scrollbar Styling - Applied to ALL scrollbars */
 ::-webkit-scrollbar {
   width: 8px;

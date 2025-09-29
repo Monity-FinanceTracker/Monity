@@ -213,7 +213,7 @@ const SavingsGoals = () => {
                     
                     <form onSubmit={handleAddGoal} className="space-y-6">
                         <div className="space-y-2">
-                            <label htmlFor="goal_name" className="block text-white font-medium text-sm uppercase tracking-wide">
+                            <label htmlFor="goal_name" className="block text-gray-300 text-sm font-medium mb-2">
                                 {t('savings_goals.goal_name')}
                             </label>
                             <input
@@ -229,7 +229,7 @@ const SavingsGoals = () => {
                         </div>
                         
                         <div className="space-y-2">
-                            <label htmlFor="target_amount" className="block text-white font-medium text-sm uppercase tracking-wide">
+                            <label htmlFor="target_amount" className="block text-gray-300 text-sm font-medium mb-2">
                                 {t('savings_goals.target_amount')}
                             </label>
                             <input
@@ -245,7 +245,7 @@ const SavingsGoals = () => {
                         </div>
                         
                         <div className="space-y-2">
-                            <label htmlFor="target_date" className="block text-white font-medium text-sm uppercase tracking-wide">
+                            <label htmlFor="target_date" className="block text-gray-300 text-sm font-medium mb-2">
                                 {t('savings_goals.target_date')}
                             </label>
                             <input
@@ -260,7 +260,7 @@ const SavingsGoals = () => {
                         </div>
                         
                         <div className="space-y-2">
-                            <label htmlFor="current_amount" className="block text-white font-medium text-sm uppercase tracking-wide">
+                            <label htmlFor="current_amount" className="block text-gray-300 text-sm font-medium mb-2">
                                 {t('savings_goals.initial_saved_amount')} <span className="text-gray-400 text-xs">(Optional)</span>
                             </label>
                             <input
@@ -284,7 +284,7 @@ const SavingsGoals = () => {
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 bg-gradient-to-r from-[#01C38D] to-[#00A876] text-white font-semibold py-4 rounded-xl hover:from-[#00A876] hover:to-[#01C38D] transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                                className="flex-1 bg-white text-[#171717] font-semibold py-4 rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                             >
                                 {t('savings_goals.create_goal')}
                             </button>
