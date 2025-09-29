@@ -177,8 +177,8 @@ const EnhancedSettings = () => {
                         <div>
                             <h3 className="text-xl font-semibold text-white mb-8">{t('settings.profile_info')}</h3>
                             <form onSubmit={handleProfileUpdate} className="space-y-4">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    <div className="min-w-0">
                                         <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                             {t('settings.full_name')}
                                         </label>
@@ -186,21 +186,21 @@ const EnhancedSettings = () => {
                                             type="text"
                                             value={profileData.name}
                                             onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
                                             placeholder={t('settings.enter_name')}
                                         />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0">
                                         <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                             {t('settings.email')}
                                         </label>
                                         <input
                                             type="email"
                                             value={profileData.email}
-                                            className="w-full bg-[#232323] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed"
+                                            className="w-full bg-[#232323] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed min-w-0"
                                             disabled
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">{t('settings.email_readonly')}</p>
+                                        <p className="text-xs text-gray-500 mt-1 truncate">{t('settings.email_readonly')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -245,8 +245,8 @@ const EnhancedSettings = () => {
                                         required
                                     />
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    <div className="min-w-0">
                                         <label className="block text-gray-300 text-sm font-medium mb-2">
                                             {t('settings.new_password')}
                                         </label>
@@ -254,11 +254,11 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.newPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
                                             required
                                         />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0">
                                         <label className="block text-gray-300 text-sm font-medium mb-2">
                                             {t('settings.confirm_password')}
                                         </label>
@@ -266,7 +266,7 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.confirmPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
                                             required
                                         />
                                     </div>
@@ -450,35 +450,35 @@ const EnhancedSettings = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">{t('settings.title')}</h1>
-                <p className="text-gray-400">{t('settings.subtitle')}</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t('settings.title')}</h1>
+                <p className="text-gray-400 text-sm sm:text-base">{t('settings.subtitle')}</p>
             </div>
 
             <div className="bg-[#171717] rounded-lg border border-[#262626] overflow-hidden">
                 {/* Tab Navigation */}
                 <div className="border-b border-[#262626]">
-                    <nav className="flex space-x-8 px-6 py-4.5" aria-label="Settings tabs">
+                    <nav className="flex flex-wrap gap-x-4 gap-y-2 px-4 sm:px-6 py-4" aria-label="Settings tabs">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`py-4 px-1 text-sm font-medium border-b-2 transition-colors ${
+                                className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center ${
                                     activeTab === tab.id
                                         ? 'border-[#01C38D] text-[#01C38D]'
                                         : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300'
                                 }`}
                             >
-                                <span className="mr-2">{tab.icon}</span>
-                                {tab.label}
+                                <span className="mr-2 flex-shrink-0">{tab.icon}</span>
+                                <span className="truncate">{tab.label}</span>
                             </button>
                         ))}
                     </nav>
                 </div>
 
                 {/* Tab Content */}
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                     {renderTabContent()}
                 </div>
             </div>
