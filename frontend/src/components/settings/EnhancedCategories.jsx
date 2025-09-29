@@ -176,7 +176,7 @@ const EnhancedCategories = () => {
                                     </div>
                                     <div>
                                         <h3 className="text-white font-medium">{category.name}</h3>
-                                        <span className="text-xs px-2 py-1 rounded-full bg-[#31344d] text-gray-300">
+                                        <span className="text-xs px-2 py-1 rounded-full bg-[#242532] text-gray-300">
                                             {getTypeLabel(category.typeId)}
                                         </span>
                                     </div>

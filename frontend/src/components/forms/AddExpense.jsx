@@ -95,7 +95,7 @@ const AddExpense = () => {
                 </div>
 
                 {/* Add Expense Form */}
-                <div className="bg-[#171717] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#31344d]/50 backdrop-blur-sm">
+                <div className="bg-[#171717] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm">
                     <div className="flex items-center justify-center gap-3 mb-8">
                         <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
                             <FaPlus className="text-red-400 text-lg" />

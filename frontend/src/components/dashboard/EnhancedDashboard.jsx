@@ -104,7 +104,7 @@ const EnhancedDashboard = () => {
                     
                     {isLoading ? (
                         <div className="flex justify-center items-center h-32">
-                            <div className="w-8 h-8 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                            <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
                         </div>
                     ) : (
                         children

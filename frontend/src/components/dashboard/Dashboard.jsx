@@ -33,7 +33,7 @@ function ModernCard({ children, title, subtitle, icon, accent, isLoading = false
             <div className="min-h-[120px] flex items-center justify-center">
                 {isLoading ? (
                     <div className="flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                        <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
                     </div>
                 ) : (
                     children

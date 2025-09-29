@@ -266,7 +266,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                         onClick={() => {
                                             setIsUserMenuOpen(false);
@@ -287,7 +287,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             backgroundColor: 'transparent',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
@@ -310,7 +310,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     >
                                         <Icon name="LogOut" size="sm" className="text-white" />
