@@ -239,7 +239,7 @@ function AdminDashboard() {
       </div>
 
       {/* Most Used Categories */}
-      <div className="bg-gradient-to-br from-[##171717] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+      <div className="bg-gradient-to-br from-[##171717] to-[#242532] p-6 rounded-2xl border border-[#242532]">
         <h2 className="text-xl font-semibold mb-4">Most Used Categories</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {(analytics?.categories.mostUsed || []).slice(0, 6).map((category, index) => (
@@ -372,7 +372,7 @@ function AdminDashboard() {
 // Helper Components
 function MetricCard({ title, value, color, bgGradient }) {
   return (
-    <div className={`bg-gradient-to-br ${bgGradient} p-4 md:p-6 rounded-2xl border border-[#31344d] flex flex-col`}>
+    <div className={`bg-gradient-to-br ${bgGradient} p-4 md:p-6 rounded-2xl border border-[#242532] flex flex-col`}>
       <h4 className="text-2xl font-semibold text-white mb-2 leading-tight min-h-[2.5rem] flex items-center justify-center text-center" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>{title}</h4>
       <p className={`text-lg md:text-xl font-bold ${color} mt-auto`} style={{ wordBreak: 'keep-all' }}>{value}</p>
     </div>

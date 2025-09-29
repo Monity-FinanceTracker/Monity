@@ -59,7 +59,7 @@ main {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #31344d;
+  background: #242532;
   border-radius: 4px;
   transition: background 0.2s ease;
 }
@@ -75,13 +75,13 @@ main {
 /* Firefox scrollbar styling */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #31344d #171717;
+  scrollbar-color: #242532 #171717;
 }
 
 /* Ensure scrollbars are styled in all containers */
 html, body, div, section, article, aside, nav, main, header, footer {
   scrollbar-width: thin;
-  scrollbar-color: #31344d #171717;
+  scrollbar-color: #242532 #171717;
 }
 
 /* Force scrollbar styling on all overflow containers */
@@ -90,13 +90,13 @@ html, body, div, section, article, aside, nav, main, header, footer {
 [class*="overflow-auto"], 
 [class*="overflow-scroll"] {
   scrollbar-width: thin;
-  scrollbar-color: #31344d #171717;
+  scrollbar-color: #242532 #171717;
 }
 
 /* Custom scrollbar class for explicit application */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #31344d #171717;
+  scrollbar-color: #242532 #171717;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -110,7 +110,7 @@ html, body, div, section, article, aside, nav, main, header, footer {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #31344d;
+  background: #242532;
   border-radius: 4px;
   transition: background 0.2s ease;
 }

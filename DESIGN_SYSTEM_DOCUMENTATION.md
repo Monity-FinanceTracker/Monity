@@ -200,7 +200,7 @@ function MyComponent() {
 /* Primary Colors */
 --primary-bg: #191E29        /* Main background */
 --secondary-bg: #23263a      /* Card backgrounds */
---border: #31344d           /* Borders and dividers */
+--border: #242532           /* Borders and dividers */
 --accent: #01C38D           /* Primary accent (teal) */
 --accent-hover: #01A071     /* Accent hover state */
 

@@ -174,7 +174,7 @@ function Budget() {
             <h3 className="text-xl font-bold mb-4 text-[#01C38D]">{t('budgets.your_budgets')}</h3>
             {isLoading && budgets.length === 0 ? (
                  <div className="w-full h-40 flex justify-center items-center">
-                    <div className="w-12 h-12 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                    <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
                 </div>
             ) : (
                 <ul className="space-y-2">
@@ -308,7 +308,7 @@ function RecurringTransactions() {
     if (isLoading && recurring.length === 0) {
         return (
             <div className="w-full h-40 flex justify-center items-center">
-                <div className="w-12 h-12 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
             </div>
         );
     }
