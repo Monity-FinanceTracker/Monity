@@ -13,6 +13,34 @@ body, html {
   overflow-x: hidden;
 }
 
+/* Prevent layout shifts */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure consistent spacing and prevent CLS */
+main {
+  min-height: calc(100vh - 0px);
+  contain: layout style;
+}
+
+/* Prevent layout shifts during loading */
+.loading-container {
+  min-height: 200px;
+  contain: layout style;
+}
+
+/* Smooth transitions for dynamic content */
+.dynamic-content {
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Prevent layout shifts in cards */
+.card-container {
+  min-height: 120px;
+  contain: layout style;
+}
+
 /* Ensure all containers respect viewport width */
 .container, .max-w-6xl, .max-w-7xl {
   max-width: 100vw;

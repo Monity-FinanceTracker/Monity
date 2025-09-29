@@ -84,7 +84,7 @@ const AdminRoute = ({ children }) => {
 }
 
 // Main layout for protected pages
-const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { preloadCriticalComponents } = useComponentPreloader();
   const { user } = useAuth();
@@ -120,13 +120,13 @@ const MainLayout = ({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
         />
 
         {/* Main content */}
-        <main id="main-content" key={user?.id || 'no-user'} className="flex-1 p-4 sm:p-6 content-container overflow-x-hidden">
+        <main id="main-content" className="flex-1 p-4 sm:p-6 content-container overflow-x-hidden">
           {children}
         </main>
       </div>
     </div>
   );
-};
+});
 
 const App = React.memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
