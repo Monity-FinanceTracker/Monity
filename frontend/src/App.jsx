@@ -18,6 +18,8 @@ import {
   UnifiedTopBar, 
   NotificationProvider
 } from './components';
+import ErrorBoundary from './components/ui/ErrorBoundary';
+import ConfigCheck from './components/ui/ConfigCheck';
 
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
@@ -139,8 +141,10 @@ const App = React.memo(() => {
   }, [location.pathname]);
 
   return (
-    <NotificationProvider>
-      <ToastContainer
+    <ErrorBoundary>
+      <ConfigCheck />
+      <NotificationProvider>
+        <ToastContainer
         position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -182,7 +186,8 @@ const App = React.memo(() => {
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </NotificationProvider>
+      </NotificationProvider>
+    </ErrorBoundary>
   );
 });
 
