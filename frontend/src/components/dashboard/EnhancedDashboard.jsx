@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { get } from '../../utils/api';
+import { formatCurrency, getAmountColor } from '../../utils/currency';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
 import { getIcon, Icon } from '../../utils/iconMapping.jsx';
@@ -149,8 +150,8 @@ const EnhancedDashboard = () => {
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className={`font-bold ${transaction.typeId === 1 ? 'text-red-400' : 'text-green-400'}`}>
-                                    {transaction.typeId === 1 ? '-$' : '+$'}{Math.abs(transaction.amount || 0).toFixed(2)}
+                                <p className={`font-bold ${getAmountColor(transaction.typeId)}`}>
+                                    {formatCurrency(transaction.amount || 0, transaction.typeId)}
                                 </p>
                                 <p className="text-gray-400 text-xs">{new Date(transaction.date).toLocaleDateString()}</p>
                             </div>

@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
 import { del } from '../../utils/api';
 import formatDate from '../../utils/formatDate';
+import { formatCurrency, formatSimpleCurrency, getAmountColor } from '../../utils/currency';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
@@ -300,10 +301,8 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 
                 <div className="flex items-center gap-3">
                     <div className="text-right">
-                        <div className={`font-bold text-lg ${
-                            transaction.typeId === 1 ? 'text-red-400' : 'text-green-400'
-                        }`}>
-                            {transaction.typeId === 1 ? '-' : '+'}${parseFloat(transaction.amount).toFixed(2)}
+                        <div className={`font-bold text-lg ${getAmountColor(transaction.typeId)}`}>
+                            {formatCurrency(transaction.amount, transaction.typeId)}
                         </div>
                     </div>
                     
@@ -405,7 +404,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-gray-400 text-sm">{t('transactions.total_income')}</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-red-400">-${Math.abs(totals.expenses).toFixed(2)}</div>
+                        <div className="text-2xl font-bold text-red-400">{formatSimpleCurrency(totals.expenses, true)}</div>
                         <div className="text-gray-400 text-sm">{t('transactions.total_expenses')}</div>
                     </div>
                     <div className="text-center">
