@@ -103,7 +103,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
     return (
         <header className="sticky top-0 z-30 bg-[#0A0A0A] border-b border-[#262626] w-full">
-            <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4">
                 {/* Left Section: Mobile menu + Search */}
                 <div className="flex items-center gap-4 flex-1">
                     {/* Mobile menu toggle */}
@@ -121,7 +121,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     </button>
 
                     {/* Search - moved to left */}
-                    <div className="flex-1 max-w-lg relative" ref={searchRef}>
+                    <div className="flex-1 max-w-sm sm:max-w-lg relative" ref={searchRef}>
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -205,7 +205,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
                                 >
                                 <span style={{ 
-                                    color: '#191E29', 
+                                    color: '#232323', 
                                     fontSize: '14px', 
                                     fontWeight: 'bold',
                                     userSelect: 'none'
@@ -238,7 +238,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         </div>
 
                         {isUserMenuOpen && (
-                            <div className="absolute right-0 top-full mt-3 w-56 bg-[#171717] border border-[#262626] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
+                            <div className="absolute right-0 top-full mt-3 w-56 sm:w-64 bg-[#171717] border border-[#262626] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
                                 {/* User Info Header */}
                                 <div className="px-3 py-3 border-b border-[#262626]">
                                     <div className="flex flex-col space-y-1">
@@ -266,7 +266,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                         onClick={() => {
                                             setIsUserMenuOpen(false);
@@ -287,7 +287,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             backgroundColor: 'transparent',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
@@ -310,7 +310,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     >
                                         <Icon name="LogOut" size="sm" className="text-white" />

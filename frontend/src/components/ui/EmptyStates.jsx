@@ -47,7 +47,7 @@ const EmptyStateBase = ({
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     {actions.map((action, index) => {
                         const baseClasses = "px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center";
-                        const primaryClasses = "bg-[#01C38D] text-[#191E29] hover:bg-[#01A071] hover:scale-105";
+                        const primaryClasses = "bg-[#01C38D] text-[#232323] hover:bg-[#01A071] hover:scale-105";
                         const secondaryClasses = "bg-[#171717] text-white hover:bg-[#262626] border border-[#262626]";
 
                         const Component = action.href ? Link : 'button';

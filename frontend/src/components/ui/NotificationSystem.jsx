@@ -203,7 +203,7 @@ const NotificationCard = ({ notification, onClose }) => {
                                         className={`px-3 py-1 text-xs rounded font-medium transition-colors ${
                                             action.primary
                                                 ? 'bg-[#01C38D] text-white hover:bg-[#01a87a]'
-                                                : 'bg-[#262626] text-white hover:bg-[#31344d] border border-[#31344d]'
+                                                : 'bg-[#262626] text-white hover:bg-[#262626] border border-[#262626]'
                                         }`}
                                     >
                                         {action.label}

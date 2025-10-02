@@ -383,7 +383,7 @@ const GroupPage = () => {
                         
                         <button 
                             type="submit" 
-                            className="w-full bg-[#01C38D] text-[#191E29] font-bold py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
+                            className="w-full bg-[#01C38D] text-[#232323] font-bold py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
                         >
                             {t('groups.add_expense_button')}
                         </button>

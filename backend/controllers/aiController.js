@@ -93,6 +93,29 @@ class AIController {
     async getAIStats(req, res) {
         const userId = req.user.id;
         try {
+            // Check if AI columns exist in the transactions table
+            const { data: sampleTransaction, error: sampleError } = await this.supabase
+                .from('transactions')
+                .select('*')
+                .eq('userId', userId)
+                .limit(1)
+                .single();
+
+            if (sampleError && sampleError.code !== 'PGRST116') {
+                throw sampleError;
+            }
+
+            // If no transactions exist or AI columns don't exist, return default stats
+            if (!sampleTransaction || !sampleTransaction.hasOwnProperty('ai_suggested_category')) {
+                return res.json({
+                    totalSuggestions: 0,
+                    acceptedSuggestions: 0,
+                    accuracy: 0,
+                    averageConfidence: 0,
+                    message: 'AI categorization not yet implemented'
+                });
+            }
+
             // Get actual AI categorization statistics
             const { data: categorizedTransactions, error: categorizationError } = await this.supabase
                 .from('transactions')
