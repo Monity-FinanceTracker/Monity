@@ -83,7 +83,7 @@ const Groups = () => {
                     )}
                     <Link
                         to="/groups/create"
-                        className={`bg-[#01C38D] text-[#191E29] font-bold px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#01C38D] text-[#232323] font-bold px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={(e) => isLimited && e.preventDefault()}
                     >
                         {t('groups.create')}
@@ -124,7 +124,7 @@ const Groups = () => {
                                                 </div>
                                             )}
                                             <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
-                                                <span className="text-[#191E29] font-bold text-sm">
+                                                <span className="text-[#232323] font-bold text-sm">
                                                     {group.memberCount || 0}
                                                 </span>
                                             </div>

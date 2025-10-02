@@ -56,7 +56,7 @@ const CreateGroup = () => {
                         
                         <button
                             type="submit"
-                            className="w-full bg-[#01C38D] text-[#191E29] font-bold px-4 py-3 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#01C38D] text-[#232323] font-bold px-4 py-3 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={loading}
                         >
                             {loading ? t('groups.creating') : t('groups.create')}

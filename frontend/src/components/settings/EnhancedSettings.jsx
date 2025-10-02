@@ -175,42 +175,42 @@ const EnhancedSettings = () => {
                 return (
                     <div className="space-y-6">
                         <div>
-                            <h3 className="text-xl font-semibold text-white mb-4">{t('settings.profile_info')}</h3>
+                            <h3 className="text-xl font-semibold text-white mb-8">{t('settings.profile_info')}</h3>
                             <form onSubmit={handleProfileUpdate} className="space-y-4">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    <div className="min-w-0">
+                                        <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                             {t('settings.full_name')}
                                         </label>
                                         <input
                                             type="text"
                                             value={profileData.name}
                                             onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
                                             placeholder={t('settings.enter_name')}
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    <div className="min-w-0">
+                                        <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                             {t('settings.email')}
                                         </label>
                                         <input
                                             type="email"
                                             value={profileData.email}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed"
+                                            className="w-full bg-[#232323] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed min-w-0"
                                             disabled
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">{t('settings.email_readonly')}</p>
+                                        <p className="text-xs text-gray-500 mt-1 truncate">{t('settings.email_readonly')}</p>
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
                                         {t('settings.bio')}
                                     </label>
                                     <textarea
                                         value={profileData.bio}
                                         onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                         rows="3"
                                         placeholder={t('settings.enter_bio')}
                                     />
@@ -241,12 +241,12 @@ const EnhancedSettings = () => {
                                         type="password"
                                         value={passwordData.currentPassword}
                                         onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                                        className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
                                         required
                                     />
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    <div className="min-w-0">
                                         <label className="block text-gray-300 text-sm font-medium mb-2">
                                             {t('settings.new_password')}
                                         </label>
@@ -254,11 +254,11 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.newPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
                                             required
                                         />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0">
                                         <label className="block text-gray-300 text-sm font-medium mb-2">
                                             {t('settings.confirm_password')}
                                         </label>
@@ -266,7 +266,7 @@ const EnhancedSettings = () => {
                                             type="password"
                                             value={passwordData.confirmPassword}
                                             onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                            className="w-full bg-[#191E29] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
                                             required
                                         />
                                     </div>
@@ -286,7 +286,7 @@ const EnhancedSettings = () => {
             case 'subscription':
                 return (
                     <div className="space-y-6">
-                        <div className="bg-[#2A2F3A] rounded-lg p-6 border border-[#262626]">
+                        <div className="bg-[#262626] rounded-lg p-6 border border-[#262626]">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 className="text-xl font-semibold text-white">{t('subscription.current_plan')}</h3>
@@ -364,7 +364,7 @@ const EnhancedSettings = () => {
                         <div>
                             <h3 className="text-xl font-semibold text-white mb-4">{t('settings.general_preferences')}</h3>
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
+                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.language')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.language_desc')}</p>
@@ -372,7 +372,7 @@ const EnhancedSettings = () => {
                                     <LanguageSwitcher />
                                 </div>
                                 
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
+                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.notifications')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.notifications_desc')}</p>
@@ -388,7 +388,7 @@ const EnhancedSettings = () => {
                                     </label>
                                 </div>
                                 
-                                <div className="flex items-center justify-between p-4 bg-[#2A2F3A] rounded-lg border border-[#262626]">
+                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
                                     <div>
                                         <h4 className="text-white font-medium">{t('settings.email_updates')}</h4>
                                         <p className="text-gray-400 text-sm">{t('settings.email_updates_desc')}</p>
@@ -419,22 +419,22 @@ const EnhancedSettings = () => {
             case 'account':
                 return (
                     <div className="space-y-6">
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                            <h3 className="text-xl font-semibold text-red-800 mb-4">{t('settings.danger_zone')}</h3>
+                        <div className="bg-[#232323] border border-[#262626] rounded-lg p-6">
+                            <h3 className="text-xl font-semibold text-white mb-4">{t('settings.danger_zone')}</h3>
                             <div className="space-y-4">
                                 <div>
-                                    <h4 className="text-red-700 font-medium mb-2">{t('settings.export_data')}</h4>
-                                    <p className="text-red-600 text-sm mb-3">{t('settings.export_data_desc')}</p>
+                                    <h4 className="text-white font-medium mb-2">{t('settings.export_data')}</h4>
+                                    <p className="text-gray-300 text-sm mb-3">{t('settings.export_data_desc')}</p>
                                     <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
                                         {t('settings.export_button')}
                                     </button>
                                 </div>
                                 
-                                <hr className="border-red-200" />
+                                <hr className="border-[#262626]" />
                                 
                                 <div>
-                                    <h4 className="text-red-700 font-medium mb-2">{t('settings.delete_account')}</h4>
-                                    <p className="text-red-600 text-sm mb-3">{t('settings.delete_account_desc')}</p>
+                                    <h4 className="text-white font-medium mb-2">{t('settings.delete_account')}</h4>
+                                    <p className="text-gray-300 text-sm mb-3">{t('settings.delete_account_desc')}</p>
                                     <button className="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors">
                                         {t('settings.delete_button')}
                                     </button>
@@ -450,35 +450,35 @@ const EnhancedSettings = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">{t('settings.title')}</h1>
-                <p className="text-gray-400">{t('settings.subtitle')}</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t('settings.title')}</h1>
+                <p className="text-gray-400 text-sm sm:text-base">{t('settings.subtitle')}</p>
             </div>
 
             <div className="bg-[#171717] rounded-lg border border-[#262626] overflow-hidden">
                 {/* Tab Navigation */}
                 <div className="border-b border-[#262626]">
-                    <nav className="flex space-x-8 px-6" aria-label="Settings tabs">
+                    <nav className="flex flex-wrap gap-x-4 gap-y-2 px-4 sm:px-6 py-4" aria-label="Settings tabs">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`py-4 px-1 text-sm font-medium border-b-2 transition-colors ${
+                                className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center ${
                                     activeTab === tab.id
                                         ? 'border-[#01C38D] text-[#01C38D]'
                                         : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300'
                                 }`}
                             >
-                                <span className="mr-2">{tab.icon}</span>
-                                {tab.label}
+                                <span className="mr-2 flex-shrink-0">{tab.icon}</span>
+                                <span className="truncate">{tab.label}</span>
                             </button>
                         ))}
                     </nav>
                 </div>
 
                 {/* Tab Content */}
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                     {renderTabContent()}
                 </div>
             </div>
