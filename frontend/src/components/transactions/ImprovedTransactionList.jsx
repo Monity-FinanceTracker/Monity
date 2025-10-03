@@ -1,23 +1,29 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
+import { del } from '../../utils/api';
 import formatDate from '../../utils/formatDate';
+import { formatCurrency, formatSimpleCurrency, getAmountColor } from '../../utils/currency';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
-import { TransactionSkeleton } from '../ui';
+import { TransactionSkeleton, Dropdown } from '../ui';
 
 /**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
  */
 const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [transactions, setTransactions] = useState([]);
-    const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
+    // Dropdown state
+    const [isAddNewDropdownOpen, setIsAddNewDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
     
     // Filter and search states
     const [searchQuery, setSearchQuery] = useState('');
@@ -75,6 +81,23 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         setLoading(queryLoading);
         setError(queryError?.message || null);
     }, [transactionsData, queryLoading, queryError]);
+
+    // Handle click outside dropdown
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsAddNewDropdownOpen(false);
+            }
+        };
+
+        if (isAddNewDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isAddNewDropdownOpen]);
 
     // Memoized filtering and search with debounced search
     const filteredAndSortedTransactions = useMemo(() => {
@@ -150,10 +173,6 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         return filtered;
     }, [transactions, debouncedSearchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
 
-    // Update filteredTransactions when memoized value changes
-    useEffect(() => {
-        setFilteredTransactions(filteredAndSortedTransactions);
-    }, [filteredAndSortedTransactions]);
 
     // Optimized delete mutation with React Query
     const queryClient = useQueryClient();
@@ -181,10 +200,10 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     // Bulk operations
     const handleSelectAll = () => {
-        if (selectedTransactions.size === filteredTransactions.length) {
+        if (selectedTransactions.size === filteredAndSortedTransactions.length) {
             setSelectedTransactions(new Set());
         } else {
-            setSelectedTransactions(new Set(filteredTransactions.map(t => t.id)));
+            setSelectedTransactions(new Set(filteredAndSortedTransactions.map(t => t.id)));
         }
     };
 
@@ -223,7 +242,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     };
 
     // Calculate totals
-    const totals = filteredTransactions.reduce((acc, transaction) => {
+    const totals = filteredAndSortedTransactions.reduce((acc, transaction) => {
         const amount = parseFloat(transaction.amount);
         if (transaction.typeId === 1) { // Expense
             acc.expenses += amount;
@@ -235,44 +254,55 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     const balance = totals.income - totals.expenses;
 
-    // Transaction card component
+    // Transaction card component - Responsive for different screen sizes
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (
-        <div className={`bg-[#171717] border border-[#262626] rounded-lg p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => onSelect(transaction.id)}
-                        className="rounded border-[#31344d] text-[#01C38D] focus:ring-[#01C38D]"
-                    />
+        <div className={`bg-[#171717] border border-[#262626] rounded-lg p-3 sm:p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item w-full max-w-full min-w-0 flex-shrink-0 ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
+            <div className="flex items-start sm:items-center justify-between gap-3 w-full max-w-full min-w-0">
+                <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+                    <div className="relative cursor-pointer flex-shrink-0" onClick={() => onSelect(transaction.id)}>
+                        <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => onSelect(transaction.id)}
+                            className="sr-only"
+                        />
+                        <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
+                            isSelected 
+                                ? 'bg-[#01C38D] border-[#01C38D]' 
+                                : 'border-[#262626] hover:border-[#01C38D] bg-transparent'
+                        }`}>
+                            {isSelected && (
+                                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                            )}
+                        </div>
+                    </div>
                     
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                         transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                     }`}>
                         {transaction.typeId === 1 ? (
-                            <Icon name="CreditCard" size="md" className="text-red-400" />
+                            <Icon name="CreditCard" size="sm" className="text-red-400" />
                         ) : (
-                            <Icon name="TrendingUp" size="md" className="text-green-400" />
+                            <Icon name="TrendingUp" size="sm" className="text-green-400" />
                         )}
                     </div>
                     
-                    <div>
-                        <h4 className="text-white font-medium">{transaction.description}</h4>
-                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <span>{transaction.category}</span>
-                            <span>•</span>
+                    <div className="flex-1 min-w-0 text-left">
+                        <h4 className="text-white font-medium text-sm sm:text-base truncate text-left">{transaction.description}</h4>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-400 text-left">
+                            <span className="truncate">{transaction.category}</span>
+                            <span className="hidden sm:inline">•</span>
                             <span>{formatDate(transaction.date)}</span>
                         </div>
                     </div>
                 </div>
                 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                     <div className="text-right">
-                        <div className={`font-bold text-lg ${
-                            transaction.typeId === 1 ? 'text-red-400' : 'text-green-400'
-                        }`}>
-                            {transaction.typeId === 1 ? '-' : '+'}${parseFloat(transaction.amount).toFixed(2)}
+                        <div className={`font-bold text-base sm:text-lg ${getAmountColor(transaction.typeId)}`}>
+                            {formatCurrency(transaction.amount, transaction.typeId)}
                         </div>
                     </div>
                     
@@ -302,31 +332,46 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         }
     };
 
+    // Dropdown handlers
+    const handleAddNewClick = () => {
+        setIsAddNewDropdownOpen(!isAddNewDropdownOpen);
+    };
+
+    const handleAddIncome = () => {
+        setIsAddNewDropdownOpen(false);
+        navigate('/add-income');
+    };
+
+    const handleAddExpense = () => {
+        setIsAddNewDropdownOpen(false);
+        navigate('/add-expense');
+    };
+
+
     if (loading) {
         return (
-            <div className="space-y-6">
-                {/* Header skeleton */}
-                <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
+                {/* Header skeleton - Mobile responsive */}
+                <div className="bg-[#171717] rounded-xl p-4 sm:p-6 border border-[#262626]">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         {Array.from({ length: 4 }).map((_, index) => (
-                            <div key={index} className="text-center">
-                                <div className="h-8 bg-gray-700/50 rounded animate-pulse mb-2"></div>
-                                <div className="h-4 bg-gray-700/30 rounded animate-pulse"></div>
+                            <div key={index} className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg">
+                                <div className="h-6 sm:h-8 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+                                <div className="h-3 sm:h-4 bg-gray-700/30 rounded animate-pulse"></div>
                             </div>
                         ))}
                     </div>
                 </div>
                 
-                {/* Search and filters skeleton */}
-                <div className="bg-gray-900 rounded-xl p-6">
-                    <div className="flex flex-col md:flex-row gap-4 mb-4">
-                        <div className="flex-1 h-12 bg-gray-700/50 rounded-lg animate-pulse"></div>
-                        <div className="h-12 w-32 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                {/* Search and filters skeleton - Mobile responsive */}
+                <div className="bg-gray-900 rounded-xl p-4 sm:p-6">
+                    <div className="space-y-4">
+                        <div className="h-12 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                            <div className="flex-1 h-10 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                            <div className="h-10 w-12 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                            <div className="h-10 w-20 bg-gray-700/50 rounded-lg animate-pulse"></div>
                     </div>
-                    <div className="flex gap-2 mb-4">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                            <div key={index} className="h-8 w-20 bg-gray-700/30 rounded-full animate-pulse"></div>
-                        ))}
                     </div>
                 </div>
                 
@@ -345,83 +390,87 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     }
 
     return (
-        <div className="space-y-6">
-            {/* Header with stats */}
-            <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-white">{filteredTransactions.length}</div>
-                        <div className="text-gray-400 text-sm">{t('transactions.total_transactions')}</div>
+        <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
+            {/* Header with stats - Responsive for different screen sizes */}
+            <div className="bg-[#171717] rounded-xl p-4 sm:p-6 border border-[#262626] w-full max-w-full min-w-0 flex-shrink-0">
+                <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
+                    <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
+                        <div className="text-lg sm:text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
+                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
                     </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-green-400">${totals.income.toFixed(2)}</div>
-                        <div className="text-gray-400 text-sm">{t('transactions.total_income')}</div>
+                    <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
+                        <div className="text-lg sm:text-2xl font-bold text-green-400">${totals.income.toFixed(2)}</div>
+                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_income')}</div>
                     </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-red-400">${totals.expenses.toFixed(2)}</div>
-                        <div className="text-gray-400 text-sm">{t('transactions.total_expenses')}</div>
+                    <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
+                        <div className="text-lg sm:text-2xl font-bold text-red-400">{formatSimpleCurrency(totals.expenses, true)}</div>
+                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
                     </div>
-                    <div className="text-center">
-                        <div className={`text-2xl font-bold ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            ${balance.toFixed(2)}
+                    <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
+                        <div className={`text-lg sm:text-2xl font-bold ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {balance >= 0 ? '$' : '-$'}{Math.abs(balance).toFixed(2)}
                         </div>
-                        <div className="text-gray-400 text-sm">{t('transactions.net_balance')}</div>
+                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.net_balance')}</div>
                     </div>
                 </div>
             </div>
 
-            {/* Search and filters */}
-            <div className="bg-[#171717] border border-[#262626] rounded-xl p-4">
-                <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search and filters - Responsive for different screen sizes */}
+            <div className="bg-[#171717] border border-[#262626] rounded-xl p-4 w-full max-w-full min-w-0 flex-shrink-0">
+                <div className="space-y-4">
                     {/* Search */}
-                    <div className="flex-1">
                         <div className="relative">
                             <input
                                 type="text"
                                 placeholder={t('transactions.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-[#262626] border border-[#262626] rounded-lg px-4 py-2 pl-10 text-white placeholder-gray-400 focus:outline-none focus:border-[#01C38D]"
+                            className="w-full h-12 bg-[#262626] border border-[#262626] rounded-xl px-4 pl-10 text-white placeholder-gray-400 text-base font-medium focus:outline-none focus:border-[#01C38D] min-w-0 max-w-full"
                             />
-                            <svg className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
-                        </div>
                     </div>
 
-                    {/* Quick filters */}
-                    <div className="flex gap-2">
-                        <select
+                    {/* Quick filters - Responsive for different screen sizes */}
+                    <div className="flex flex-col md:flex-row gap-2 min-w-0 w-full max-w-full">
+                        <div className="flex gap-2 flex-1 min-w-0 w-full max-w-full">
+                        <Dropdown
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#01C38D]"
-                        >
-                            <option value="date">{t('transactions.sort_by_date')}</option>
-                            <option value="amount">{t('transactions.sort_by_amount')}</option>
-                            <option value="category">{t('transactions.sort_by_category')}</option>
-                            <option value="description">{t('transactions.sort_by_description')}</option>
-                        </select>
+                            onChange={setSortBy}
+                            options={[
+                                { value: 'date', label: t('transactions.sort_by_date') },
+                                { value: 'amount', label: t('transactions.sort_by_amount') },
+                                { value: 'category', label: t('transactions.sort_by_category') },
+                                { value: 'description', label: t('transactions.sort_by_description') }
+                            ]}
+                            placeholder={t('transactions.sort_by_date')}
+                                className="flex-1 md:w-40 min-w-0 max-w-full"
+                        />
 
                         <button
                             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
+                                className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors min-w-[48px] flex-shrink-0"
+                                title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                         >
                             {sortOrder === 'asc' ? '↑' : '↓'}
                         </button>
+                        </div>
 
                         <button
                             onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors"
+                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors flex items-center justify-center gap-2 w-full md:w-auto flex-shrink-0"
                         >
-                            🔍 {t('transactions.filters')}
+                            <Icon name="Filter" size="sm" />
+                            <span>{t('transactions.filters')}</span>
                         </button>
                     </div>
                 </div>
 
-                {/* Advanced filters panel */}
+                {/* Advanced filters panel - Mobile responsive */}
                 {isFilterPanelOpen && (
-                    <div className="mt-4 pt-4 border-t border-[#31344d]">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="mt-4 pt-4 border-t border-[#262626]">
+                        <div className="space-y-4">
                             <div>
                                 <label className="block text-gray-400 text-sm mb-2">{t('transactions.filter_category')}</label>
                                 <input
@@ -435,7 +484,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             
                             <div>
                                 <label className="block text-gray-400 text-sm mb-2">{t('transactions.date_range')}</label>
-                                <div className="flex gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     <input
                                         type="date"
                                         value={dateRange.start}
@@ -453,7 +502,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             
                             <div>
                                 <label className="block text-gray-400 text-sm mb-2">{t('transactions.amount_range')}</label>
-                                <div className="flex gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     <input
                                         type="number"
                                         placeholder={t('transactions.min_amount')}
@@ -475,23 +524,23 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 )}
             </div>
 
-            {/* Bulk actions */}
+            {/* Bulk actions - Responsive for different screen sizes */}
             {selectedTransactions.size > 0 && (
-                <div className="bg-[#01C38D]/10 border border-[#01C38D]/20 rounded-xl p-4">
-                    <div className="flex items-center justify-between">
+                <div className="bg-[#01C38D]/10 border border-[#01C38D]/20 rounded-xl p-4 w-full max-w-full min-w-0">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full max-w-full min-w-0">
                         <span className="text-[#01C38D] font-medium">
                             {t('transactions.selected_count', { count: selectedTransactions.size })}
                         </span>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 w-full sm:w-auto">
                             <button
                                 onClick={() => setSelectedTransactions(new Set())}
-                                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                className="flex-1 sm:flex-none px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
                             >
                                 {t('transactions.clear_selection')}
                             </button>
                             <button
                                 onClick={handleBulkDelete}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                className="flex-1 sm:flex-none px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
                             >
                                 {t('transactions.delete_selected')}
                             </button>
@@ -501,55 +550,115 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             )}
 
             {/* Transaction list */}
-            <div className="space-y-4 dynamic-list">
-                {/* Select all checkbox - only show when there are transactions */}
-                {filteredTransactions.length > 0 && (
-                    <div className="flex items-center justify-between">
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={selectedTransactions.size === filteredTransactions.length && filteredTransactions.length > 0}
-                                onChange={handleSelectAll}
-                                className="rounded border-[#31344d] text-[#01C38D] focus:ring-[#01C38D]"
-                            />
-                            <span className="text-white">{t('transactions.select_all')}</span>
+            <div className="flex flex-col space-y-4 dynamic-list w-full max-w-full min-w-0 flex-1">
+                {/* Select All and Add New - Responsive for different screen sizes */}
+                {filteredAndSortedTransactions.length > 0 && (
+                    <div className="flex items-center justify-between gap-3 mb-4 min-w-0 w-full max-w-full flex-shrink-0">
+                        <label className="flex items-center gap-2 cursor-pointer flex-shrink-0">
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0}
+                                    onChange={handleSelectAll}
+                                    className="sr-only"
+                                />
+                                <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
+                                    selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0
+                                        ? 'bg-[#01C38D] border-[#01C38D]' 
+                                        : 'border-[#262626] hover:border-[#01C38D] bg-transparent'
+                                }`}>
+                                    {selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0 && (
+                                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    )}
+                                </div>
+                            </div>
+                            <span className="text-white text-sm whitespace-nowrap">{t('transactions.select_all')}</span>
                         </label>
-                        
-                        <Link
-                            to={transactionType === 'expenses' ? '/add-expense' : transactionType === 'income' ? '/add-income' : '/transactions'}
-                            className="bg-[#01C38D] text-[#191E29] px-4 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors"
+
+                        {/* Add New Dropdown - Always visible */}
+                        <div className="relative flex-shrink-0" ref={dropdownRef}>
+                        <button
+                            onClick={handleAddNewClick}
+                            className="bg-[#01C38D] text-[#232323] px-3 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors flex items-center gap-2 whitespace-nowrap flex-shrink-0"
                         >
-                            + {t('transactions.add_new')}
-                        </Link>
+                            <span>+ {t('transactions.add_new')}</span>
+                            <svg 
+                                className={`w-4 h-4 transition-transform ${isAddNewDropdownOpen ? 'rotate-180' : ''}`} 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        
+                        {isAddNewDropdownOpen && (
+                            <div className="absolute right-0 mt-2 w-48 bg-[#171717] border border-[#262626] rounded-lg shadow-lg z-50">
+                                <div className="py-1">
+                                    <button
+                                        onClick={handleAddIncome}
+                                        className="w-full text-left px-4 py-3 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div className="font-medium">Add Income</div>
+                                            <div className="text-sm text-gray-400">Record money received</div>
+                                        </div>
+                                    </button>
+                                    
+                                    <button
+                                        onClick={handleAddExpense}
+                                        className="w-full text-left px-4 py-3 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div className="font-medium">Add Expense</div>
+                                            <div className="text-sm text-gray-400">Record money spent</div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        </div>
                     </div>
                 )}
 
-                {filteredTransactions.length === 0 ? (
-                    <div className="bg-[#171717] border border-[#262626] rounded-xl p-12 text-center">
+                {filteredAndSortedTransactions.length === 0 ? (
+                    <div className="bg-[#171717] border border-[#262626] rounded-xl p-6 sm:p-12 text-center w-full max-w-full min-w-0">
                         <div className="mb-4">
                             <Icon name="BarChart3" size="xxl" className="mx-auto text-blue-400" />
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
-                        <p className="text-gray-400 mb-6">{t('transactions.no_transactions_desc')}</p>
-                        <div className="flex gap-4 justify-center">
+                        <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
+                        <p className="text-gray-400 mb-6 text-sm sm:text-base">{t('transactions.no_transactions_desc')}</p>
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                             <Link
                                 to="/add-expense"
-                                className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors"
+                                className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
                             >
-                                <Icon name="CreditCard" size="md" className="mr-2" />
-                                {t('transactions.add_expense')}
+                                <Icon name="CreditCard" size="md" />
+                                <span className="text-sm sm:text-base">{t('transactions.add_expense')}</span>
                             </Link>
                             <Link
                                 to="/add-income"
-                                className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                                className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
                             >
-                                <Icon name="TrendingUp" size="md" className="mr-2" />
-                                {t('transactions.add_income')}
+                                <Icon name="TrendingUp" size="md" />
+                                <span className="text-sm sm:text-base">{t('transactions.add_income')}</span>
                             </Link>
                         </div>
                     </div>
                 ) : (
-                    filteredTransactions.map((transaction) => (
+                    filteredAndSortedTransactions.map((transaction) => (
                         <TransactionCard
                             key={transaction.id}
                             transaction={transaction}
@@ -563,4 +672,4 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     );
 });
 
-export default ImprovedTransactionList; 
+export default ImprovedTransactionList;

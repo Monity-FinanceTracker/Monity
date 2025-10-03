@@ -148,27 +148,23 @@ const NotificationCard = ({ notification, onClose }) => {
         switch (notification.type) {
             case 'success':
                 return {
-                    bg: 'bg-green-500/10 border-green-500/20',
-                    icon: <CheckCircle className="w-5 h-5" />,
-                    iconBg: 'bg-green-500/20 text-green-400'
+                    icon: <CheckCircle className="w-5 h-5 text-[#01C38D]" />,
+                    iconBg: 'bg-[#01C38D]/10'
                 };
             case 'error':
                 return {
-                    bg: 'bg-red-500/10 border-red-500/20',
-                    icon: <XCircle className="w-5 h-5" />,
-                    iconBg: 'bg-red-500/20 text-red-400'
+                    icon: <XCircle className="w-5 h-5 text-red-400" />,
+                    iconBg: 'bg-red-500/10'
                 };
             case 'warning':
                 return {
-                    bg: 'bg-yellow-500/10 border-yellow-500/20',
-                    icon: <AlertTriangle className="w-5 h-5" />,
-                    iconBg: 'bg-yellow-500/20 text-yellow-400'
+                    icon: <AlertTriangle className="w-5 h-5 text-yellow-400" />,
+                    iconBg: 'bg-yellow-500/10'
                 };
             default: // info
                 return {
-                    bg: 'bg-blue-500/10 border-blue-500/20',
-                    icon: <Info className="w-5 h-5" />,
-                    iconBg: 'bg-blue-500/20 text-blue-400'
+                    icon: <Info className="w-5 h-5 text-blue-400" />,
+                    iconBg: 'bg-blue-500/10'
                 };
         }
     };
@@ -179,7 +175,7 @@ const NotificationCard = ({ notification, onClose }) => {
         <div className={`transform transition-all duration-300 ${
             isVisible && !isLeaving ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         }`}>
-            <div className={`${styles.bg} border rounded-lg p-4 shadow-lg backdrop-blur-sm`}>
+            <div className="bg-[#171717] border border-[#262626] rounded-lg p-4 shadow-lg">
                 <div className="flex items-start gap-3">
                     {/* Icon */}
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${styles.iconBg} flex-shrink-0`}>
@@ -206,8 +202,8 @@ const NotificationCard = ({ notification, onClose }) => {
                                         onClick={action.onClick}
                                         className={`px-3 py-1 text-xs rounded font-medium transition-colors ${
                                             action.primary
-                                                ? 'bg-[#01C38D] text-[#191E29] hover:bg-[#01A071]'
-                                                : 'bg-gray-600 text-white hover:bg-gray-700'
+                                                ? 'bg-[#01C38D] text-white hover:bg-[#01a87a]'
+                                                : 'bg-[#262626] text-white hover:bg-[#262626] border border-[#262626]'
                                         }`}
                                     >
                                         {action.label}
@@ -220,17 +216,22 @@ const NotificationCard = ({ notification, onClose }) => {
                     {/* Close button */}
                     <button
                         onClick={handleClose}
-                        className="text-gray-400 hover:text-white transition-colors flex-shrink-0 p-1"
+                        className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors flex-shrink-0"
+                        style={{ 
+                            border: 'none', 
+                            outline: 'none', 
+                            background: 'transparent'
+                        }}
                     >
-                        <X className="w-4 h-4" />
+                        <X className="w-4 h-4 text-white" />
                     </button>
                 </div>
 
                 {/* Progress bar for timed notifications */}
                 {!notification.persistent && (
-                    <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
+                    <div className="mt-3 h-1 bg-[#262626] rounded-full overflow-hidden">
                         <div 
-                            className="h-full bg-current opacity-30 rounded-full"
+                            className="h-full bg-[#01C38D] rounded-full"
                             style={{
                                 animation: `shrink ${notification.duration}ms linear forwards`
                             }}

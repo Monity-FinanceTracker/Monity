@@ -89,8 +89,8 @@ function ListIncomes() {
             <div className='flex flex-col md:flex-row items-center justify-between gap-4 mb-4'>
                 <h3 className="text-lg font-bold text-white">{t('incomeList.total_incomes')}: <span className="text-[#01C38D]">${sum.toFixed(2)}</span></h3>
                 <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                    <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#191E29] border border-[#31344d] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_category_placeholder')} />
-                    <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#191E29] border border-[#31344d] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_date_placeholder')} />
+                    <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_category_placeholder')} />
+                    <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_date_placeholder')} />
                 </div>
                 <Link
                     to="/add-income"
@@ -113,7 +113,7 @@ function ListIncomes() {
                     </thead>
                     <tbody>
                         {reversedIncomes.map((income) => (
-                            <tr key={income.id} className="border-t border-[#31344d] hover:bg-[#2a2d44] transition-colors">
+                            <tr key={income.id} className="border-t border-[#262626] hover:bg-[#262626] transition-colors">
                                 <td className="py-3 px-4">{formatDate(income.date)}</td>
                                 <td className="py-3 px-4">{income.category}</td>
                                 <td className="py-3 px-4">{income.description}</td>

@@ -78,7 +78,7 @@ function Signup() {
     const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#191E29] via-[#1a1f2e] to-[#23263a] p-4 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#232323] via-[#1a1f2e] to-[#23263a] p-4 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>

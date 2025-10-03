@@ -32,7 +32,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
             {!isCollapsed && (
               <Link to="/" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="w-8 h-8 bg-[#01C38D] rounded-lg flex items-center justify-center">
-                  <Wallet className="w-5 h-5 text-[#191E29]" />
+                  <Wallet className="w-5 h-5 text-[#232323]" />
                 </div>
                 <span className="text-lg font-semibold text-white">Monity</span>
               </Link>
@@ -51,15 +51,15 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 py-6 px-4 overflow-y-auto min-h-0">
+          <div className="flex-1 py-6 px-4 overflow-y-auto min-h-0 custom-scrollbar">
             <nav className="space-y-1">
               <NavLink
                 to="/"
                 end
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -72,8 +72,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/transactions"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -86,8 +86,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/groups"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -100,8 +100,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/categories"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -114,8 +114,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/budgets"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -129,8 +129,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/savings-goals"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -144,8 +144,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 to="/financial-health"
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -207,8 +207,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 end
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -223,8 +223,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               to="/settings"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
-                  ? 'bg-[#01C38D]/10 text-[#01C38D] border-r-2 border-[#01C38D]'
-                  : 'text-gray-400 hover:text-white hover:bg-[#31344d]'
+                  ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                  : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                 } ${isCollapsed ? 'justify-center' : ''}`
               }
               onClick={() => setIsMobileMenuOpen(false)}

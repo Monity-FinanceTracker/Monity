@@ -52,7 +52,7 @@ const GroupSpendingCard = ({ group }) => {
     const spendingLevel = getSpendingLevel(group.totalSpent);
 
     return (
-        <div className="mt-3 p-4 bg-[#1a1f2e] rounded-lg border border-[#31344d]">
+        <div className="mt-3 p-4 bg-[#262626] rounded-lg border border-[#262626]">
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ const GroupSpendingCard = ({ group }) => {
                 </div>
             </div>
 
-            <div className="mt-3 pt-3 border-t border-[#31344d]">
+            <div className="mt-3 pt-3 border-t border-[#595e66]">
                 <div className="flex items-center justify-between text-xs">
                     <span className="text-gray-400">{t('groups.last_activity')}</span>
                     <span className="text-gray-300">{formatDate(group.lastActivity)}</span>

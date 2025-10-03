@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { get } from '../../utils/api';
+import { formatCurrency, getAmountColor } from '../../utils/currency';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
 import { getIcon, Icon } from '../../utils/iconMapping.jsx';
@@ -104,7 +105,7 @@ const EnhancedDashboard = () => {
                     
                     {isLoading ? (
                         <div className="flex justify-center items-center h-32">
-                            <div className="w-8 h-8 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                            <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
                         </div>
                     ) : (
                         children
@@ -132,7 +133,7 @@ const EnhancedDashboard = () => {
             <div className="space-y-3">
                 {dashboardData.recentTransactions.length > 0 ? (
                     dashboardData.recentTransactions.map((transaction, index) => (
-                        <div key={transaction.id || index} className="flex items-center justify-between p-3 bg-[#191E29] rounded-lg">
+                        <div key={transaction.id || index} className="flex items-center justify-between p-3 bg-[#232323] rounded-lg">
                             <div className="flex items-center gap-3">
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                     transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
@@ -149,8 +150,8 @@ const EnhancedDashboard = () => {
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className={`font-bold ${transaction.typeId === 1 ? 'text-red-400' : 'text-green-400'}`}>
-                                    {transaction.typeId === 1 ? '-' : '+'}${transaction.amount?.toFixed(2)}
+                                <p className={`font-bold ${getAmountColor(transaction.typeId)}`}>
+                                    {formatCurrency(transaction.amount || 0, transaction.typeId)}
                                 </p>
                                 <p className="text-gray-400 text-xs">{new Date(transaction.date).toLocaleDateString()}</p>
                             </div>
@@ -270,7 +271,9 @@ const EnhancedDashboard = () => {
                     <div className="bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/20 rounded-lg p-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                                🤖
+                                <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
+                                </svg>
                             </div>
                             <div>
                                 <h4 className="text-yellow-400 font-medium text-sm">{t('dashboard.smart_categorization_active')}</h4>

@@ -136,7 +136,7 @@ const MobileOptimizedForm = ({
 
         const baseInputClasses = `
             w-full px-4 py-4 text-lg
-            bg-[#191E29] border rounded-xl 
+            bg-[#232323] border rounded-xl 
             text-white placeholder-gray-400
             transition-all duration-200
             focus:outline-none focus:ring-2
@@ -144,7 +144,7 @@ const MobileOptimizedForm = ({
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' 
                 : isSuccess
                     ? 'border-green-500 focus:border-green-500 focus:ring-green-500/20'
-                    : 'border-[#31344d] focus:border-[#01C38D] focus:ring-[#01C38D]/20'
+                    : 'border-[#242532] focus:border-[#01C38D] focus:ring-[#01C38D]/20'
             }
         `;
 
@@ -243,7 +243,7 @@ const MobileOptimizedForm = ({
                     <span>{t('form.progress')}</span>
                     <span>{Object.keys(touched).length}/{fields.length}</span>
                 </div>
-                <div className="w-full bg-[#31344d] rounded-full h-1">
+                <div className="w-full bg-[#242532] rounded-full h-1">
                     <div 
                         className="bg-[#01C38D] h-1 rounded-full transition-all duration-300"
                         style={{ 
@@ -268,8 +268,8 @@ const MobileOptimizedForm = ({
                         transition-all duration-200 
                         flex items-center justify-center gap-3
                         ${isValid && !isLoading
-                            ? 'bg-[#01C38D] text-[#191E29] hover:bg-[#01A071] hover:scale-[1.02] shadow-lg hover:shadow-xl'
-                            : 'bg-[#31344d] text-gray-400 cursor-not-allowed'
+                            ? 'bg-[#01C38D] text-[#232323] hover:bg-[#01A071] hover:scale-[1.02] shadow-lg hover:shadow-xl'
+                            : 'bg-[#242532] text-gray-400 cursor-not-allowed'
                         }
                     `}
                 >
@@ -306,15 +306,15 @@ const MobileOptimizedForm = ({
             )}
 
             {/* Keyboard Shortcuts Help */}
-            <div className="pt-4 border-t border-[#31344d]">
+            <div className="pt-4 border-t border-[#242532]">
                 <details className="text-gray-400">
                     <summary className="text-sm cursor-pointer hover:text-white transition-colors">
                         {t('form.keyboard_shortcuts')}
                     </summary>
                     <div className="mt-2 text-xs space-y-1">
-                        <p>• <kbd className="bg-[#31344d] px-1 rounded">Tab</kbd> - {t('form.shortcuts.next_field')}</p>
-                        <p>• <kbd className="bg-[#31344d] px-1 rounded">⌘+Enter</kbd> - {t('form.shortcuts.submit')}</p>
-                        <p>• <kbd className="bg-[#31344d] px-1 rounded">Esc</kbd> - {t('form.shortcuts.cancel')}</p>
+                        <p>• <kbd className="bg-[#242532] px-1 rounded">Tab</kbd> - {t('form.shortcuts.next_field')}</p>
+                        <p>• <kbd className="bg-[#242532] px-1 rounded">⌘+Enter</kbd> - {t('form.shortcuts.submit')}</p>
+                        <p>• <kbd className="bg-[#242532] px-1 rounded">Esc</kbd> - {t('form.shortcuts.cancel')}</p>
                     </div>
                 </details>
             </div>
