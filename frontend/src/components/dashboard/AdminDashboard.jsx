@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { get } from '../../utils/api';
+import { DashboardSkeleton } from '../ui/Skeleton';
 
 function AdminDashboard() {
   const [analytics, setAnalytics] = useState(null);
@@ -62,10 +63,48 @@ function AdminDashboard() {
   if (loading) {
     return (
       <div className="text-white p-4 md:p-0">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="w-8 h-8 border-4 border-[#01C38D] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-400">Loading admin data...</p>
+        <div className="space-y-6">
+          {/* Header skeleton */}
+          <div className="flex items-center justify-between">
+            <div className="h-8 w-48 bg-gray-700/50 rounded animate-pulse"></div>
+            <div className="h-6 w-24 bg-gray-700/50 rounded animate-pulse"></div>
+          </div>
+          
+          {/* Overview cards skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="bg-[#171717] border border-[#262626] rounded-2xl p-6">
+                <div className="h-6 w-24 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+                <div className="h-8 w-16 bg-gray-700/50 rounded animate-pulse"></div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Main content skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-[#171717] border border-[#262626] rounded-2xl p-6">
+              <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse mb-4"></div>
+              <div className="grid grid-cols-2 gap-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="bg-[#171717] border border-[#262626] rounded-xl p-4">
+                    <div className="h-6 w-16 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 w-12 bg-gray-700/50 rounded animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-[#171717] border border-[#262626] rounded-2xl p-6">
+              <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse mb-4"></div>
+              <div className="h-24 bg-gray-700/30 rounded-lg mb-4"></div>
+              <div className="space-y-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="flex justify-between">
+                    <div className="h-4 w-20 bg-gray-700/50 rounded animate-pulse"></div>
+                    <div className="h-4 w-16 bg-gray-700/50 rounded animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -200,7 +239,7 @@ function AdminDashboard() {
       </div>
 
       {/* Most Used Categories */}
-      <div className="bg-gradient-to-br from-[#23263a] to-[#31344d] p-6 rounded-2xl border border-[#31344d]">
+      <div className="bg-gradient-to-br from-[##171717] to-[#242532] p-6 rounded-2xl border border-[#242532]">
         <h2 className="text-xl font-semibold mb-4">Most Used Categories</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {(analytics?.categories.mostUsed || []).slice(0, 6).map((category, index) => (
@@ -333,7 +372,7 @@ function AdminDashboard() {
 // Helper Components
 function MetricCard({ title, value, color, bgGradient }) {
   return (
-    <div className={`bg-gradient-to-br ${bgGradient} p-4 md:p-6 rounded-2xl border border-[#31344d] flex flex-col`}>
+    <div className={`bg-gradient-to-br ${bgGradient} p-4 md:p-6 rounded-2xl border border-[#242532] flex flex-col`}>
       <h4 className="text-2xl font-semibold text-white mb-2 leading-tight min-h-[2.5rem] flex items-center justify-center text-center" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>{title}</h4>
       <p className={`text-lg md:text-xl font-bold ${color} mt-auto`} style={{ wordBreak: 'keep-all' }}>{value}</p>
     </div>

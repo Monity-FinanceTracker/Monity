@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { get, del } from '../../utils/api';
 import formatDate from "../../utils/formatDate";
+import { formatSimpleCurrency } from '../../utils/currency';
 import { useTranslation } from "react-i18next";
 
 const ExpensivePurchase = React.memo(() => {
@@ -87,11 +88,11 @@ const ExpensivePurchase = React.memo(() => {
                     </thead>
                     <tbody>
                         {topExpenses.map((expense) => (
-                            <tr key={expense.id} className="border-t border-[#31344d] hover:bg-[#2a2d44] transition-colors">
+                            <tr key={expense.id} className="border-t border-[#262626] hover:bg-[#262626] transition-colors">
                                 <td className="py-3 px-4">{formatDate(expense.date)}</td>
                                 <td className="py-3 px-4">{expense.category}</td>
                                 <td className="py-3 px-4">{expense.description}</td>
-                                <td className="text-red-400 py-3 px-4 text-right">${expense.amount.toFixed(2)}</td>
+                                <td className="text-red-400 py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
                                 <td className="py-3 px-4 text-center">
                                     <button className="text-red-400 hover:text-red-300 font-semibold transition-colors" onClick={() => handleDelete(expense.id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -108,13 +109,13 @@ const ExpensivePurchase = React.memo(() => {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
                 {topExpenses.map((expense) => (
-                    <div key={expense.id} className="bg-[#191E29] p-4 rounded-lg border border-[#31344d]">
+                    <div key={expense.id} className="bg-[#232323] p-4 rounded-lg border border-[#262626]">
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
                                 <p className="text-sm text-gray-400">{expense.category}</p>
                             </div>
-                            <p className="text-red-400 font-bold text-lg">${expense.amount.toFixed(2)}</p>
+                            <p className="text-red-400 font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{formatDate(expense.date)}</p>

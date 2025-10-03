@@ -13,6 +13,7 @@ import {
 } from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 
 function CardWrapper({ children, title, accent }) {
     return (
@@ -49,12 +50,12 @@ function Budget() {
             // Filter for expense categories, assuming typeId for Expense is 1
             setCategories(categoriesData.filter(c => c.typeId === 1)); 
         } catch (err) {
-            setError(t('budgets.fetch_error'));
+            setError('Failed to fetch budgets and categories');
             console.error(err);
         } finally {
             setIsLoading(false);
         }
-    }, [user, t]);
+    }, [user]);
 
     useEffect(() => {
         fetchBudgetsAndCategories();
@@ -125,14 +126,35 @@ function Budget() {
                         <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))}
                 </select>
-                <input 
-                    type="number" 
-                    value={amount} 
-                    onChange={(e) => setAmount(e.target.value)} 
-                    placeholder={t('budgets.amount_placeholder')}
-                    className="p-3 rounded bg-[#171717] text-white w-full"
-                    required
-                />
+                <div className="relative">
+                    <input 
+                        type="number" 
+                        value={amount} 
+                        onChange={(e) => setAmount(e.target.value)} 
+                        placeholder={t('budgets.amount_placeholder')}
+                        className="p-3 pr-10 rounded bg-[#171717] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                        required
+                    />
+                    {/* Custom spinner arrows */}
+                    <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                        <button
+                            type="button"
+                            onClick={() => setAmount(((parseFloat(amount) || 0) + 0.01).toFixed(2))}
+                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                        >
+                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setAmount(Math.max(0, (parseFloat(amount) || 0) - 0.01).toFixed(2))}
+                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                        >
+                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                        </button>
+                    </div>
+                </div>
                 <input 
                     type="month" 
                     value={month} 
@@ -152,7 +174,7 @@ function Budget() {
             <h3 className="text-xl font-bold mb-4 text-[#01C38D]">{t('budgets.your_budgets')}</h3>
             {isLoading && budgets.length === 0 ? (
                  <div className="w-full h-40 flex justify-center items-center">
-                    <div className="w-12 h-12 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                    <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
                 </div>
             ) : (
                 <ul className="space-y-2">
@@ -208,11 +230,11 @@ function RecurringTransactions() {
             setCategories(catData);
             setTypes(typeData);
         } catch (err) {
-            setError(t('recurring.fetch_error'));
+            setError('Failed to fetch recurring transactions');
         } finally {
             setIsLoading(false);
         }
-    }, [user, t]);
+    }, [user]);
 
     useEffect(() => {
         fetchData();
@@ -286,7 +308,7 @@ function RecurringTransactions() {
     if (isLoading && recurring.length === 0) {
         return (
             <div className="w-full h-40 flex justify-center items-center">
-                <div className="w-12 h-12 rounded-full border-4 border-[#31344d] border-t-[#01C38D] animate-spin"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
             </div>
         );
     }
@@ -298,24 +320,45 @@ function RecurringTransactions() {
             </button>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <input type="text" name="description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder={t('recurring.description_placeholder')} className="p-3 rounded bg-[#31344d] text-white w-full" required />
-                <input type="number" name="amount" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} placeholder={t('recurring.amount_placeholder')} className="p-3 rounded bg-[#31344d] text-white w-full" required />
-                <select name="typeId" value={form.typeId} onChange={e => setForm({...form, typeId: e.target.value})} className="p-3 rounded bg-[#31344d] text-white w-full" required>
+                <input type="text" name="description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder={t('recurring.description_placeholder')} className="p-3 rounded bg-[#232323] text-white w-full" required />
+                <div className="relative">
+                    <input type="number" name="amount" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} placeholder={t('recurring.amount_placeholder')} className="p-3 pr-10 rounded bg-[#232323] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]" required />
+                    {/* Custom spinner arrows */}
+                    <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                        <button
+                            type="button"
+                            onClick={() => setForm({...form, amount: ((parseFloat(form.amount) || 0) + 0.01).toFixed(2)})}
+                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                        >
+                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setForm({...form, amount: Math.max(0, (parseFloat(form.amount) || 0) - 0.01).toFixed(2)})}
+                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                        >
+                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                        </button>
+                    </div>
+                </div>
+                <select name="typeId" value={form.typeId} onChange={e => setForm({...form, typeId: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required>
                     <option value="">{t('recurring.select_type')}</option>
                     {types.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                 </select>
-                <select name="categoryId" value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})} className="p-3 rounded bg-[#31344d] text-white w-full" required>
+                <select name="categoryId" value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required>
                     <option value="">{t('recurring.select_category')}</option>
                     {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
-                <select name="frequency" value={form.frequency} onChange={e => setForm({...form, frequency: e.target.value})} className="p-3 rounded bg-[#31344d] text-white w-full" required>
+                <select name="frequency" value={form.frequency} onChange={e => setForm({...form, frequency: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required>
                     <option value="daily">{t('recurring.daily')}</option>
                     <option value="weekly">{t('recurring.weekly')}</option>
                     <option value="monthly">{t('recurring.monthly')}</option>
                     <option value="yearly">{t('recurring.yearly')}</option>
                 </select>
-                <input type="date" name="startDate" value={form.startDate} onChange={e => setForm({...form, startDate: e.target.value})} className="p-3 rounded bg-[#31344d] text-white w-full" required />
-                <input type="date" name="endDate" value={form.endDate} onChange={e => setForm({...form, endDate: e.target.value})} className="p-3 rounded bg-[#31344d] text-white w-full" />
+                <input type="date" name="startDate" value={form.startDate} onChange={e => setForm({...form, startDate: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required />
+                <input type="date" name="endDate" value={form.endDate} onChange={e => setForm({...form, endDate: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" />
                 <button type="submit" disabled={isLoading} className="p-3 rounded bg-green-500 text-white">
                     {isEditing ? t('recurring.update_button') : t('recurring.add_button')}
                 </button>

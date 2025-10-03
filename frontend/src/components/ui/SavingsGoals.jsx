@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { X } from 'lucide-react';
 
-// A simple modal component
+// Modal component using correct hardcoded colors
 const Modal = ({ children, onClose }) => {
     const { t } = useTranslation();
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center px-4">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl relative w-full max-w-md">
-                <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold">&times;</button>
+        <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center px-4">
+            <div className="bg-[#171717] border border-[#262626] p-6 md:p-8 rounded-2xl shadow-2xl backdrop-blur-sm relative w-full max-w-md">
+                <button 
+                    onClick={onClose} 
+                    className="absolute top-4 right-4 text-white transition-colors p-2 bg-transparent border-none outline-none"
+                    style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                    <X className="w-5 h-5 text-white" />
+                </button>
                 {children}
             </div>
         </div>
@@ -21,6 +28,34 @@ const Modal = ({ children, onClose }) => {
 const SavingsGoals = () => {
     const { t } = useTranslation();
     const { user, subscriptionTier } = useAuth();
+    
+    // Add CSS to fix date input styling
+    useEffect(() => {
+        const style = document.createElement('style');
+        style.textContent = `
+            input[type="date"]::-webkit-calendar-picker-indicator {
+                filter: invert(1);
+                cursor: pointer;
+            }
+            input[type="date"]::-webkit-datetime-edit-text {
+                color: white;
+            }
+            input[type="date"]::-webkit-datetime-edit-month-field {
+                color: white;
+            }
+            input[type="date"]::-webkit-datetime-edit-day-field {
+                color: white;
+            }
+            input[type="date"]::-webkit-datetime-edit-year-field {
+                color: white;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        return () => {
+            document.head.removeChild(style);
+        };
+    }, []);
     const [goals, setGoals] = useState([]);
     const [newGoal, setNewGoal] = useState({
         goal_name: '',
@@ -36,7 +71,7 @@ const SavingsGoals = () => {
 
     const isLimited = subscriptionTier === 'free' && goals.length >= 2;
 
-    const fetchGoalsAndBalance = async () => {
+    const fetchGoalsAndBalance = useCallback(async () => {
         try {
             const [goalsResponse, balanceResponse] = await Promise.all([
                 api.get('/savings-goals'),
@@ -47,11 +82,11 @@ const SavingsGoals = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchGoalsAndBalance();
-    }, []);
+    }, [fetchGoalsAndBalance]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -167,27 +202,92 @@ const SavingsGoals = () => {
 
             {isModalOpen && !isLimited && (
                 <Modal onClose={() => setIsModalOpen(false)}>
-                    <h3 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">{t('savings_goals.add_new_goal_modal_title')}</h3>
-                    <form onSubmit={handleAddGoal}>
-                        <div className="mb-4">
-                            <label htmlFor="goal_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('savings_goals.goal_name')}</label>
-                            <input type="text" id="goal_name" name="goal_name" value={newGoal.goal_name} onChange={handleInputChange} placeholder={t('savings_goals.goal_name_placeholder')} className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required />
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
+                            <svg className="w-5 h-5 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                            </svg>
                         </div>
-                        <div className="mb-4">
-                            <label htmlFor="target_amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('savings_goals.target_amount')}</label>
-                            <input type="number" id="target_amount" name="target_amount" value={newGoal.target_amount} onChange={handleInputChange} placeholder={t('savings_goals.target_amount_placeholder')} className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required />
+                        <h3 className="text-2xl font-bold text-white">{t('savings_goals.add_new_goal_modal_title')}</h3>
+                    </div>
+                    
+                    <form onSubmit={handleAddGoal} className="space-y-6">
+                        <div className="space-y-2">
+                            <label htmlFor="goal_name" className="block text-gray-300 text-sm font-medium mb-2">
+                                {t('savings_goals.goal_name')}
+                            </label>
+                            <input
+                                type="text"
+                                id="goal_name"
+                                name="goal_name"
+                                value={newGoal.goal_name}
+                                onChange={handleInputChange}
+                                placeholder={t('savings_goals.goal_name_placeholder')}
+                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                required
+                            />
                         </div>
-                        <div className="mb-4">
-                            <label htmlFor="target_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('savings_goals.target_date')}</label>
-                            <input type="date" id="target_date" name="target_date" value={newGoal.target_date} onChange={handleInputChange} className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                        
+                        <div className="space-y-2">
+                            <label htmlFor="target_amount" className="block text-gray-300 text-sm font-medium mb-2">
+                                {t('savings_goals.target_amount')}
+                            </label>
+                            <input
+                                type="number"
+                                id="target_amount"
+                                name="target_amount"
+                                value={newGoal.target_amount}
+                                onChange={handleInputChange}
+                                placeholder={t('savings_goals.target_amount_placeholder')}
+                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                required
+                            />
                         </div>
-                        <div className="mb-4">
-                            <label htmlFor="current_amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('savings_goals.initial_saved_amount')}</label>
-                            <input type="number" id="current_amount" name="current_amount" value={newGoal.current_amount} onChange={handleInputChange} placeholder={t('savings_goals.initial_saved_amount_placeholder')} className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                        
+                        <div className="space-y-2">
+                            <label htmlFor="target_date" className="block text-gray-300 text-sm font-medium mb-2">
+                                {t('savings_goals.target_date')}
+                            </label>
+                            <input
+                                type="text"
+                                id="target_date"
+                                name="target_date"
+                                value={newGoal.target_date}
+                                onChange={handleInputChange}
+                                placeholder="mm/dd/yyyy"
+                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                            />
                         </div>
-                        <div className="flex justify-end gap-4 mt-6">
-                            <button type="button" onClick={() => setIsModalOpen(false)} className="py-2 px-4 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white font-semibold">{t('common.cancel')}</button>
-                            <button type="submit" className="py-2 px-4 rounded-lg bg-[#01C38D] hover:bg-[#01a87a] text-white font-bold">{t('savings_goals.create_goal')}</button>
+                        
+                        <div className="space-y-2">
+                            <label htmlFor="current_amount" className="block text-gray-300 text-sm font-medium mb-2">
+                                {t('savings_goals.initial_saved_amount')} <span className="text-gray-400 text-xs">(Optional)</span>
+                            </label>
+                            <input
+                                type="number"
+                                id="current_amount"
+                                name="current_amount"
+                                value={newGoal.current_amount}
+                                onChange={handleInputChange}
+                                placeholder={t('savings_goals.initial_saved_amount_placeholder')}
+                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                            />
+                        </div>
+                        
+                        <div className="flex gap-4 pt-4">
+                            <button
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="flex-1 bg-[#232323] hover:bg-[#262626] text-white font-semibold py-4 rounded-xl transition-all duration-200 border border-[#262626]"
+                            >
+                                {t('common.cancel')}
+                            </button>
+                            <button
+                                type="submit"
+                                className="flex-1 bg-white text-[#171717] font-semibold py-4 rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                            >
+                                {t('savings_goals.create_goal')}
+                            </button>
                         </div>
                     </form>
                 </Modal>
@@ -208,7 +308,9 @@ const SavingsGoals = () => {
                             <div key={goal.id} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                                 <div className="flex justify-between items-start">
                                     <h4 className="text-xl font-bold text-gray-900 dark:text-white">{goal.goal_name}</h4>
-                                    <button onClick={() => handleDeleteGoal(goal.id)} className="text-red-500 hover:text-red-700 font-bold">✕</button>
+                                    <button onClick={() => handleDeleteGoal(goal.id)} className="text-white transition-colors">
+                                        <X className="w-4 h-4 text-white" />
+                                    </button>
                                 </div>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
                                 
@@ -236,7 +338,7 @@ const SavingsGoals = () => {
                                             value={addingMoney[goal.id].amount}
                                             onChange={(e) => handleAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.amount_placeholder')}
-                                            className="p-2 border rounded w-full"
+                                            className="p-2 border border-[#262626] rounded bg-[#232323] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         />
                                         <button
                                             onClick={() => {
@@ -263,7 +365,7 @@ const SavingsGoals = () => {
                                             onChange={(e) => handleWithdrawAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.withdraw_amount_placeholder')}
                                             max={goal.current_amount}
-                                            className="p-2 border rounded w-full"
+                                            className="p-2 border border-[#262626] rounded bg-[#232323] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         />
                                         <button
                                             onClick={() => {

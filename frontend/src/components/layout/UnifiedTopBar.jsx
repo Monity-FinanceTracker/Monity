@@ -103,24 +103,25 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
     return (
         <header className="sticky top-0 z-30 bg-[#0A0A0A] border-b border-[#262626] w-full">
-            <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4">
                 {/* Left Section: Mobile menu + Search */}
                 <div className="flex items-center gap-4 flex-1">
                     {/* Mobile menu toggle */}
                     <button
                         onClick={onMobileMenuToggle}
-                        className="md:hidden text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-[#171717]"
+                        className="md:hidden text-white hover:text-gray-300 transition-colors bg-transparent border-none p-0 m-0"
+                        style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
                         aria-label={t('topbar.toggle_menu')}
                     >
                         {isMobileMenuOpen ? (
-                            <Icon name="X" size="md" />
+                            <Icon name="X" size="md" className="text-white" />
                         ) : (
-                            <Icon name="Menu" size="md" />
+                            <Icon name="Menu" size="md" className="text-white" />
                         )}
                     </button>
 
                     {/* Search - moved to left */}
-                    <div className="flex-1 max-w-lg relative" ref={searchRef}>
+                    <div className="flex-1 max-w-sm sm:max-w-lg relative" ref={searchRef}>
                     <div className="relative">
                         <button
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -141,7 +142,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
                         {isSearchOpen && (
                             <div className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl overflow-hidden z-50" style={{ backgroundColor: '#171717', border: '1px solid #262626' }}>
-                                <div className="max-h-64 overflow-y-auto" style={{ backgroundColor: '#171717' }}>
+                                <div className="max-h-64 overflow-y-auto custom-scrollbar" style={{ backgroundColor: '#171717' }}>
                                     {quickActions.map((action, index) => (
                                         <button
                                             key={action.path}
@@ -183,43 +184,61 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
                     {/* User Menu */}
                     <div className="relative" ref={userMenuRef}>
-                        <div className={`p-0.5 rounded-full ${subscriptionTier === 'premium' ? 'bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 to-blue-500' : ''}`}>
-                            <button
-                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    backgroundColor: '#01C38D',
-                                    borderRadius: '50%',
-                                    border: 'none',
-                                    outline: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease'
-                                }}
-                                onMouseEnter={(e) => e.target.style.backgroundColor = '#00A876'}
-                                onMouseLeave={(e) => e.target.style.backgroundColor = '#01C38D'}
-                                className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
-                            >
-                            <span style={{ 
-                                color: '#191E29', 
-                                fontSize: '14px', 
-                                fontWeight: 'bold',
-                                userSelect: 'none'
-                            }}>
-                                {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                    </svg>
-                                )}
-                            </span>
-                            </button>
+                        <div className={subscriptionTier === 'premium' ? 'premium-spinning-border' : ''}>
+                            <div className="relative group">
+                                <button
+                                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                    style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        backgroundColor: '#01C38D',
+                                        borderRadius: '50%',
+                                        border: 'none',
+                                        outline: 'none',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        zIndex: 2
+                                    }}
+                                    className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
+                                >
+                                <span style={{ 
+                                    color: '#232323', 
+                                    fontSize: '14px', 
+                                    fontWeight: 'bold',
+                                    userSelect: 'none'
+                                }}>
+                                    {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                        </svg>
+                                    )}
+                                </span>
+                                </button>
+                                
+                                {/* Hover Tooltip */}
+                                <div className="absolute top-full right-0 mt-2 px-3 py-2 bg-[#171717] border border-[#262626] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap">
+                                    <div className="text-white text-sm text-left">
+                                        <div className="font-medium">
+                                            Monity Account
+                                        </div>
+                                        <div className="text-gray-300 text-xs">
+                                            {user?.user_metadata?.name || 'User'}
+                                        </div>
+                                        <div className="text-gray-400 text-xs">
+                                            {user?.email}
+                                        </div>
+                                    </div>
+                                    {/* Tooltip arrow */}
+                                    <div className="absolute bottom-full right-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent border-b-[#262626]"></div>
+                                </div>
+                            </div>
                         </div>
 
                         {isUserMenuOpen && (
-                            <div className="absolute right-0 top-full mt-3 w-56 bg-[#171717] border border-[#262626] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
+                            <div className="absolute right-0 top-full mt-3 w-56 sm:w-64 bg-[#171717] border border-[#262626] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
                                 {/* User Info Header */}
                                 <div className="px-3 py-3 border-b border-[#262626]">
                                     <div className="flex flex-col space-y-1">
@@ -247,7 +266,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                         onClick={() => {
                                             setIsUserMenuOpen(false);
@@ -268,7 +287,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             backgroundColor: 'transparent',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
@@ -291,7 +310,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#31344d'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     >
                                         <Icon name="LogOut" size="sm" className="text-white" />

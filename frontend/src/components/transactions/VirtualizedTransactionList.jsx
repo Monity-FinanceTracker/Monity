@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { get, del } from '../../utils/api';
 import formatDate from '../../utils/formatDate';
+import { formatCurrency, getAmountColor } from '../../utils/currency';
 import Spinner from '../ui/Spinner';
 
 /**
@@ -195,8 +196,8 @@ const VirtualizedTransactionList = React.memo(({
                         </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <span className={`font-bold text-lg ${getTypeColor(transaction.typeId)}`}>
-                            {transaction.typeId === 1 ? '-' : '+'}${Math.abs(transaction.amount).toFixed(2)}
+                        <span className={`font-bold text-lg ${getAmountColor(transaction.typeId)}`}>
+                            {formatCurrency(transaction.amount, transaction.typeId)}
                         </span>
                         <button
                             onClick={() => handleDelete(transaction.id)}

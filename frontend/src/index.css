@@ -1,5 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+/* Fonts are loaded via HTML preload for better performance */
 @import 'tailwindcss';
+
+/* Responsive text handling */
+* {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Prevent horizontal overflow on small screens */
+body, html {
+  overflow-x: hidden;
+}
+
+/* Prevent layout shifts */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure consistent spacing and prevent CLS */
+main {
+  min-height: calc(100vh - 0px);
+  contain: layout style;
+}
+
+/* Prevent layout shifts during loading */
+.loading-container {
+  min-height: 200px;
+  contain: layout style;
+}
+
+/* Smooth transitions for dynamic content */
+.dynamic-content {
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Prevent layout shifts in cards */
+.card-container {
+  min-height: 120px;
+  contain: layout style;
+}
+
+/* Ensure all containers respect viewport width */
+.container, .max-w-6xl, .max-w-7xl {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Custom Scrollbar Styling - Applied to ALL scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #171717;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #242532;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #01C38D;
+}
+
+::-webkit-scrollbar-corner {
+  background: #171717;
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #242532 #171717;
+}
+
+/* Ensure scrollbars are styled in all containers */
+html, body, div, section, article, aside, nav, main, header, footer {
+  scrollbar-width: thin;
+  scrollbar-color: #242532 #171717;
+}
+
+/* Force scrollbar styling on all overflow containers */
+[class*="overflow-y-auto"], 
+[class*="overflow-y-scroll"], 
+[class*="overflow-auto"], 
+[class*="overflow-scroll"] {
+  scrollbar-width: thin;
+  scrollbar-color: #242532 #171717;
+}
+
+/* Custom scrollbar class for explicit application */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #242532 #171717;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #171717;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #242532;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #01C38D;
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: #171717;
+}
 
 :root {
   /* Font variables to match prototype setup */
@@ -243,4 +365,134 @@ img {
 .dynamic-list-item {
   min-height: 60px;
   contain: layout;
+}
+
+/* Static segmented border for premium users with random sizes */
+.premium-spinning-border {
+  position: relative;
+  display: inline-block;
+}
+
+.premium-spinning-border::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #d1d5db 0deg,
+    #d1d5db 45deg,
+    #9ca3af 45deg,
+    #9ca3af 120deg,
+    #6b7280 120deg,
+    #6b7280 200deg,
+    #4b5563 200deg,
+    #4b5563 280deg,
+    #d1d5db 280deg,
+    #d1d5db 360deg
+  );
+  z-index: 1;
+}
+
+.premium-spinning-border > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Custom Dropdown Styling - Override browser defaults */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: none !important;
+}
+
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+select option {
+  background-color: #171717 !important;
+  color: white !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+}
+
+select option:hover {
+  background-color: #262626 !important;
+  color: white !important;
+}
+
+select option:checked {
+  background-color: #01C38D !important;
+  color: white !important;
+}
+
+select option:focus {
+  background-color: #262626 !important;
+  color: white !important;
+}
+
+/* Specific styling for different dropdown backgrounds */
+select[class*="bg-[#232323]"] option {
+  background-color: #232323 !important;
+}
+
+select[class*="bg-[#262626]"] option {
+  background-color: #262626 !important;
+}
+
+/* Additional dropdown styling for better browser compatibility */
+select option:active {
+  background-color: #01C38D !important;
+  color: white !important;
+}
+
+select option:selected {
+  background-color: #01C38D !important;
+  color: white !important;
+}
+
+/* Override any browser-specific styling */
+select option::-moz-focus-inner {
+  border: 0 !important;
+}
+
+select option::-webkit-outer-spin-button,
+select option::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* Ensure consistent styling across all browsers */
+select option {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Force override of browser default blue highlight */
+select option:hover,
+select option:focus,
+select option:active,
+select option:checked,
+select option:selected {
+  background: #262626 !important;
+  background-color: #262626 !important;
+  color: white !important;
+  outline: none !important;
+  border: none !important;
+}
+
+/* Specific override for selected option */
+select option[selected] {
+  background: #01C38D !important;
+  background-color: #01C38D !important;
+  color: white !important;
 }
