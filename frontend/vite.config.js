@@ -12,20 +12,21 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     emptyOutDir: true,
-    // Configuração de manual chunks para otimização de bundle
+    // Simplified rollup options to fix React 19 scheduler issues
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Keep React core together to avoid scheduler issues with React 19
+          // Keep ALL React-related code in a single chunk to prevent scheduler issues
           if (id.includes('node_modules')) {
-            // Core React libraries - don't split to avoid scheduler conflicts
-            if (id.includes('react') && !id.includes('react-router-dom')) {
+            // React and React DOM must stay together to avoid scheduler conflicts
+            if (id.includes('react') || id.includes('react-dom') || 
+                id.includes('scheduler') || id.includes('react-router-dom')) {
               return 'react-vendor';
             }
             
             // Other vendor libraries
             if (id.includes('@tanstack') || id.includes('@supabase') || 
-                id.includes('react-router-dom') || id.includes('axios')) {
+                id.includes('axios')) {
               return 'vendor';
             }
             
@@ -103,5 +104,6 @@ export default defineConfig({
   // React 19 compatibility fixes
   define: {
     global: 'globalThis',
+    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
   }
 })
