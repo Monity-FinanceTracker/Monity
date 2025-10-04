@@ -6,16 +6,13 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import { queryClient } from './lib/queryClient'
-import { reportWebVitals } from './utils/performance'
 import './utils/i18n';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './utils/i18n';
+
 // Lazy load analytics to improve initial bundle size
 const Analytics = lazy(() => import("@vercel/analytics/react").then(module => ({ default: module.Analytics })));
 const SpeedInsights = lazy(() => import("@vercel/speed-insights/react").then(module => ({ default: module.SpeedInsights })));
-import { initWebVitalsMonitoring } from './utils/performanceMonitor';
-import { preloadCriticalChunks } from './utils/bundleOptimization';
-import { preloadCriticalUtilities } from './utils/importOptimizer.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -35,26 +32,15 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Defer non-critical initialization to improve LCP
+// Simplified initialization to avoid React 19 scheduler conflicts
 const deferInit = () => {
-    // Initialize performance monitoring
-    initWebVitalsMonitoring();
-
-    // Performance monitoring
-    reportWebVitals(console.log);
-
-    // Preload critical chunks and utilities after initial render
-    setTimeout(async () => {
-        await Promise.all([
-            preloadCriticalChunks(),
-            preloadCriticalUtilities()
-        ]);
-    }, 1000);
+    // Only initialize analytics after app is stable
+    console.log('App initialized successfully');
 };
 
 // Use requestIdleCallback if available, otherwise setTimeout
 if ('requestIdleCallback' in window) {
     requestIdleCallback(deferInit);
 } else {
-    setTimeout(deferInit, 1);
+    setTimeout(deferInit, 100);
 }
