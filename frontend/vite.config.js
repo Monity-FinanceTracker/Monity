@@ -12,42 +12,11 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     emptyOutDir: true,
-    // Simplified rollup options to fix React 19 scheduler issues
+    // Disable manual chunking to avoid initialization order issues
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Keep ALL React-related code in a single chunk to prevent scheduler issues
-          if (id.includes('node_modules')) {
-            // React and React DOM must stay together to avoid scheduler conflicts
-            if (id.includes('react') || id.includes('react-dom') || 
-                id.includes('scheduler') || id.includes('react-router-dom')) {
-              return 'react-vendor';
-            }
-            
-            // Other vendor libraries
-            if (id.includes('@tanstack') || id.includes('@supabase') || 
-                id.includes('axios')) {
-              return 'vendor';
-            }
-            
-            // UI and utility libraries
-            if (id.includes('lucide-react') || id.includes('react-icons') || 
-                id.includes('lodash') || id.includes('date-fns') || 
-                id.includes('i18next') || id.includes('react-chartjs-2')) {
-              return 'ui-vendor';
-            }
-            
-            // Everything else
-            return 'vendor';
-          }
-        },
-        // Configuração de chunk names para melhor organização
-        chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId
-            ? chunkInfo.facadeModuleId.split('/').pop().replace('.jsx', '').replace('.js', '')
-            : 'chunk'
-          return `js/[name]-[hash].js`
-        },
+        // Let Vite handle chunking automatically to avoid circular dependencies
+        chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('.')
