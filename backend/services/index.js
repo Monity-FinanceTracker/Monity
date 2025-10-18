@@ -4,6 +4,10 @@ const aiSchedulerService = require('./aiSchedulerService');
 const expenseSplittingService = require('./expenseSplittingService');
 const savingsGoalsService = require('./savingsGoalsService');
 const financialHealthService = require('./financialHealthService');
+const ScheduledTransactionService = require('./scheduledTransactionService');
+
+// Create singleton instance
+const scheduledTransactionService = new ScheduledTransactionService();
 
 module.exports = {
   smartCategorizationService,
@@ -11,4 +15,5 @@ module.exports = {
   expenseSplittingService,
   savingsGoalsService,
   financialHealthService,
+  scheduledTransactionService,
 };
