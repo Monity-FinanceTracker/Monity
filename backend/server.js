@@ -9,6 +9,7 @@ const BillingController = require("./controllers/billingController");
 const initializeControllers = require("./controllers");
 const initializeRoutes = require("./routes");
 const initializeMiddleware = require("./middleware");
+const { scheduledTransactionService } = require("./services");
 
 const { errorHandler } = require("./middleware/errorHandler");
 
@@ -74,6 +75,10 @@ app.listen(PORT, () => {
       "http://localhost:5173, https://firstmonity.vercel.app"
     }`
   );
+
+  // Initialize scheduled transaction service
+  scheduledTransactionService.initialize();
+  logger.info("Scheduled Transaction Service initialized");
 });
 
 module.exports = { createServer, app };

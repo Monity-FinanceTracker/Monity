@@ -5,6 +5,7 @@ const Category = require('./Category');
 const Group = require('./Group');
 const SavingsGoal = require('./SavingsGoal');
 const Budget = require('./Budget');
+const ScheduledTransaction = require('./ScheduledTransaction');
 
 module.exports = {
   User,
@@ -12,5 +13,6 @@ module.exports = {
   Category,
   Group,
   SavingsGoal,
-  Budget
+  Budget,
+  ScheduledTransaction
 };

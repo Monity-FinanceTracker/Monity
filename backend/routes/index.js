@@ -15,7 +15,8 @@ const invitationRoutes = require("./invitations");
 const budgetRoutes = require("./budgets");
 const financialProjectionsRoutes = require("./financialProjections");
 const userRoutes = require("./users");
-const billingRoutes = require("./billing"); // NEW
+const billingRoutes = require("./billing");
+const cashFlowRoutes = require("./cashFlow");
 
 module.exports = (controllers, middleware) => {
   // Version 1 of the API
@@ -88,7 +89,12 @@ module.exports = (controllers, middleware) => {
     "/billing",
     middleware.auth.authenticate,
     billingRoutes(controllers)
-  ); // NEW
+  );
+  v1Router.use(
+    "/cashflow",
+    middleware.auth.authenticate,
+    cashFlowRoutes(controllers)
+  );
 
   // Admin routes with role check
   v1Router.use(
