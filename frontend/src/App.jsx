@@ -27,6 +27,7 @@ const Subscription = lazy(() => import('./components/navigation/Subscription'));
 const PremiumPage = lazy(() => import('./components/navigation/PremiumPage'));
 const SavingsGoals = lazy(() => import('./components/ui/SavingsGoals'));
 const Savings = lazy(() => import('./components/ui/Savings'));
+const CashFlowCalendar = lazy(() => import('./components/cashFlow/CashFlowCalendar'));
 
 // Import lazy components with optimized loading
 import {
@@ -177,8 +178,9 @@ const App = React.memo(() => {
         <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyCreateGroup /></MainLayout></ProtectedRoute>} />
         <Route path="/groups/:id" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroupPage /></MainLayout></ProtectedRoute>} />
 
-        {/* Premium route */}
+        {/* Premium routes */}
         <Route path="/premium" element={<PremiumRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><PremiumPage /></Suspense></MainLayout></PremiumRoute>} />
+        <Route path="/cashflow" element={<PremiumRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><CashFlowCalendar /></Suspense></MainLayout></PremiumRoute>} />
 
         {/* Admin route */}
         <Route path="/admin" element={<AdminRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyAdminDashboard /></MainLayout></AdminRoute>} />

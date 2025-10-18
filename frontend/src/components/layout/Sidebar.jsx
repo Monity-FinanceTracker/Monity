@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { isPremium } from "../../utils/premium";
 import { useTranslation } from "react-i18next";
-import { 
+import {
   LayoutDashboard,
   CreditCard,
   Target,
@@ -15,7 +15,8 @@ import {
   Sparkles,
   Tag,
   Menu,
-  X
+  X,
+  CalendarDays
 } from "lucide-react";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
@@ -154,6 +155,24 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <TrendingUp className="w-5 h-5 flex-shrink-0" />
                 {!isCollapsed && <span className="font-medium truncate">{t('sidebar.financial_health')}</span>}
               </NavLink>
+
+              {/* Cash Flow - Premium Only */}
+              {premiumUser && (
+                <NavLink
+                  to="/cashflow"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                      ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                      : 'text-gray-400 hover:text-white hover:bg-[#262626]'
+                    } ${isCollapsed ? 'justify-center' : ''}`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  title={isCollapsed ? t('sidebar.cash_flow') : ''}
+                >
+                  <CalendarDays className="w-5 h-5 flex-shrink-0" />
+                  {!isCollapsed && <span className="font-medium truncate">{t('sidebar.cash_flow')}</span>}
+                </NavLink>
+              )}
 
             </nav>
 
