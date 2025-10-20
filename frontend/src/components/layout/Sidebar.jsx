@@ -16,7 +16,8 @@ import {
   Tag,
   Menu,
   X,
-  CalendarDays
+  CalendarDays,
+  MessageSquare
 } from "lucide-react";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
@@ -154,6 +155,21 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               >
                 <TrendingUp className="w-5 h-5 flex-shrink-0" />
                 {!isCollapsed && <span className="font-medium truncate">{t('sidebar.financial_health')}</span>}
+              </NavLink>
+
+              <NavLink
+                to="/ai-assistant"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
+                  } ${isCollapsed ? 'justify-center' : ''}`
+                }
+                onClick={() => setIsMobileMenuOpen(false)}
+                title={isCollapsed ? 'AI Assistant' : ''}
+              >
+                <MessageSquare className="w-5 h-5 flex-shrink-0" />
+                {!isCollapsed && <span className="font-medium truncate">AI Assistant</span>}
               </NavLink>
 
               {/* Cash Flow - Premium Only */}
