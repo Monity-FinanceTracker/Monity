@@ -6,6 +6,7 @@ const Group = require('./Group');
 const SavingsGoal = require('./SavingsGoal');
 const Budget = require('./Budget');
 const ScheduledTransaction = require('./ScheduledTransaction');
+const AIChat = require('./AIChat');
 
 module.exports = {
   User,
@@ -14,5 +15,6 @@ module.exports = {
   Group,
   SavingsGoal,
   Budget,
-  ScheduledTransaction
+  ScheduledTransaction,
+  AIChat
 };
