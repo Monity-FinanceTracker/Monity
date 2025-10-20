@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 function Signup() {
     const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    const premium = searchParams.get('premium') === 'true';
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -13,7 +15,6 @@ function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [role, setRole] = useState('user');
     const [focusedField, setFocusedField] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
@@ -22,7 +23,7 @@ function Signup() {
         e.preventDefault();
         setLoading(true);
         setError('');
-        
+
         if (password !== confirmPassword) {
             setError(t('signupPage.passwords_no_match'));
             setLoading(false);
@@ -40,7 +41,12 @@ function Signup() {
             if (error) {
                 throw new Error(error);
             }
-            navigate('/');
+            // If user is signing up for premium, redirect to subscription page
+            if (premium) {
+                navigate('/subscription');
+            } else {
+                navigate('/');
+            }
         } catch (err) {
             setError(err.message || t('signupPage.failed'));
         } finally {
@@ -101,6 +107,18 @@ function Signup() {
 
                 {/* Signup Card with Enhanced Design */}
                 <div className="bg-[#171717] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
+                    {/* Premium Badge */}
+                    {premium && (
+                        <div className="mb-4 p-3 bg-gradient-to-r from-[#01C38D]/10 to-[#01a87a]/10 border border-[#01C38D]/30 rounded-xl">
+                            <div className="flex items-center justify-center gap-2 text-[#01C38D]">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <span className="font-semibold text-sm">Sign up for Premium</span>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="text-center mb-6">
                         <h2 className="text-2xl font-bold text-white mb-2">{t('signupPage.create_account')}</h2>
                         <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
