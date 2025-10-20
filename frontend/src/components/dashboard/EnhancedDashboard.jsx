@@ -4,11 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { get } from '../../utils/api';
 import { formatCurrency, getAmountColor } from '../../utils/currency';
-import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton, AIChat } from '../ui';
+import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
 import { getIcon, Icon } from '../../utils/iconMapping.jsx';
 import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
-import { FiMessageSquare } from 'react-icons/fi';
 
 /**
  * Enhanced Dashboard with improved UX, quick actions, and better visual hierarchy
@@ -23,7 +22,6 @@ const EnhancedDashboard = () => {
         savingsProgress: 0
     });
     const [isLoading, setIsLoading] = useState(true);
-    const [isChatOpen, setIsChatOpen] = useState(false);
     // Removed activeQuickAction state to prevent unnecessary re-renders on hover
 
     useEffect(() => {
@@ -285,21 +283,6 @@ const EnhancedDashboard = () => {
                     </div>
                 </EnhancedCard>
             )}
-
-            {/* AI Chat Floating Button */}
-            <button
-                onClick={() => setIsChatOpen(true)}
-                className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-[#01C38D] to-[#01a87a] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group z-40 hover:scale-110"
-                aria-label="Open AI Assistant"
-            >
-                <FiMessageSquare className="text-white" size={24} />
-                <span className="absolute right-full mr-3 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    AI Financial Assistant
-                </span>
-            </button>
-
-            {/* AI Chat Modal */}
-            <AIChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         </div>
     );
 };
