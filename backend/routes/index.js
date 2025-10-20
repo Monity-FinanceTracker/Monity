@@ -9,6 +9,7 @@ const groupRoutes = require("./groups");
 const savingsGoalsRoutes = require("./savingsGoals");
 const adminRoutes = require("./admin");
 const aiRoutes = require("./ai");
+const aiChatRoutes = require("./aiChat");
 const subscriptionRoutes = require("./subscription");
 const balanceRoutes = require("./balance");
 const invitationRoutes = require("./invitations");
@@ -59,6 +60,7 @@ module.exports = (controllers, middleware) => {
     savingsGoalsRoutes(controllers)
   );
   v1Router.use("/ai", middleware.auth.authenticate, aiRoutes(controllers));
+  v1Router.use("/ai-chat", middleware.auth.authenticate, aiChatRoutes(controllers));
   v1Router.use(
     "/subscription-tier",
     middleware.auth.authenticate,

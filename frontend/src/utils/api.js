@@ -143,5 +143,11 @@ export const sendGroupInvitation = (groupId, email) => API.post(`/groups/${group
 export const getPendingInvitations = () => API.get('/invitations/pending').then(res => res.data);
 export const respondToInvitation = (invitationId, response) => API.post(`/invitations/${invitationId}/respond`, { response }).then(res => res.data);
 
+// AI Chat functions
+export const sendAIChatMessage = (message) => API.post('/ai-chat/message', { message }).then(res => res.data);
+export const getAIChatHistory = (limit = 50) => API.get(`/ai-chat/history?limit=${limit}`).then(res => res.data);
+export const getAIChatUsage = () => API.get('/ai-chat/usage').then(res => res.data);
+export const clearAIChatHistory = () => API.delete('/ai-chat/history').then(res => res.data);
+export const getAIChatPrompts = () => API.get('/ai-chat/prompts').then(res => res.data);
 
 export default API; 
