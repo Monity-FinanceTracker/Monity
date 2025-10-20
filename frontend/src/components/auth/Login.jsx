@@ -181,12 +181,12 @@ function Login() {
                     </form>
 
                     {/* Enhanced Sign Up Link */}
-                    <div className="mt-8 text-center">
+                    <div className="mt-6 text-center">
                         <p className="text-gray-400 text-sm mb-4">
                             {t('loginPage.no_account')}
                         </p>
-                        <Link 
-                            to="/signup" 
+                        <Link
+                            to="/signup"
                             className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
                         >
                             {t('loginPage.signup')}
