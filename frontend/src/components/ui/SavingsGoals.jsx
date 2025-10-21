@@ -296,37 +296,42 @@ const SavingsGoals = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
             {goals.length === 0 ? (
-                <div className="text-center py-10 px-4 border-2 border-dashed rounded-lg">
-                    <p className="text-gray-500 dark:text-gray-400">{t('savings_goals.no_goals_yet')}</p>
-                    <p className="text-gray-500 dark:text-gray-400">{t('savings_goals.no_goals_yet_description')}</p>
+                <div className="text-center py-16 px-4 border-2 border-dashed border-[#262626] rounded-xl bg-[#171717]">
+                    <div className="mb-6">
+                        <svg className="w-16 h-16 text-[#01C38D] mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                    </div>
+                    <p className="text-gray-400 text-lg mb-2">{t('savings_goals.no_goals_yet')}</p>
+                    <p className="text-gray-500">{t('savings_goals.no_goals_yet_description')}</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {goals.map(goal => {
                         const progress = (goal.current_amount / goal.target_amount) * 100;
                         return (
-                            <div key={goal.id} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                            <div key={goal.id} className="bg-[#171717] border border-[#262626] p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#262626]/80">
                                 <div className="flex justify-between items-start">
-                                    <h4 className="text-xl font-bold text-gray-900 dark:text-white">{goal.goal_name}</h4>
-                                    <button onClick={() => handleDeleteGoal(goal.id)} className="text-white transition-colors">
-                                        <X className="w-4 h-4 text-white" />
+                                    <h4 className="text-xl font-bold text-white">{goal.goal_name}</h4>
+                                    <button onClick={() => handleDeleteGoal(goal.id)} className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-[#262626]">
+                                        <X className="w-4 h-4" />
                                     </button>
                                 </div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
+                                <p className="text-sm text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
                                 
-                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-2">
-                                    <div className="bg-[#01C38D] h-4 rounded-full" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>
+                                <div className="w-full bg-[#262626] rounded-full h-4 mb-2">
+                                    <div className="bg-[#01C38D] h-4 rounded-full transition-all duration-300" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>
                                 </div>
-                                <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-300">
+                                <div className="flex justify-between text-sm font-medium text-white">
                                     <span>${parseFloat(goal.current_amount).toLocaleString()}</span>
                                     <span>${parseFloat(goal.target_amount).toLocaleString()}</span>
                                 </div>
                                 <div className="mt-4 flex space-x-4">
-                                    <button onClick={() => handleAddMoneyClick(goal.id)} className="text-[#01C38D] hover:underline font-semibold">
+                                    <button onClick={() => handleAddMoneyClick(goal.id)} className="bg-[#01C38D] hover:bg-[#01A071] text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md">
                                         {addingMoney[goal.id]?.isAdding ? t('common.cancel') : t('savings_goals.allocate_funds')}
                                     </button>
                                     {parseFloat(goal.current_amount) > 0 && (
-                                        <button onClick={() => handleWithdrawMoneyClick(goal.id)} className="text-orange-500 hover:underline font-semibold">
+                                        <button onClick={() => handleWithdrawMoneyClick(goal.id)} className="bg-[#171717] hover:bg-[#262626] text-white border border-[#262626] hover:border-[#262626]/80 font-semibold px-4 py-2 rounded-lg transition-all duration-200">
                                             {withdrawingMoney[goal.id]?.isWithdrawing ? t('common.cancel') : t('savings_goals.withdraw_funds')}
                                         </button>
                                     )}
@@ -338,7 +343,7 @@ const SavingsGoals = () => {
                                             value={addingMoney[goal.id].amount}
                                             onChange={(e) => handleAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.amount_placeholder')}
-                                            className="p-2 border border-[#262626] rounded bg-[#232323] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                            className="flex-1 bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         />
                                         <button
                                             onClick={() => {
@@ -350,7 +355,7 @@ const SavingsGoals = () => {
                                                 setError(null);
                                                 handleAllocateMoney(goal.id, amountToAdd);
                                             }}
-                                            className="bg-blue-500 text-white p-2 rounded ml-2"
+                                            className="bg-[#01C38D] hover:bg-[#01A071] text-white font-semibold px-4 py-3 rounded-lg ml-2 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                             disabled={parseFloat(addingMoney[goal.id]?.amount || 0) > balance || !addingMoney[goal.id]?.amount}
                                         >
                                             {t('common.save')}
@@ -365,7 +370,7 @@ const SavingsGoals = () => {
                                             onChange={(e) => handleWithdrawAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.withdraw_amount_placeholder')}
                                             max={goal.current_amount}
-                                            className="p-2 border border-[#262626] rounded bg-[#232323] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                            className="flex-1 bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         />
                                         <button
                                             onClick={() => {
@@ -377,7 +382,7 @@ const SavingsGoals = () => {
                                                 setError(null);
                                                 handleWithdrawMoney(goal.id, amountToWithdraw);
                                             }}
-                                            className="bg-orange-500 text-white p-2 rounded ml-2"
+                                            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-3 rounded-lg ml-2 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                             disabled={!withdrawingMoney[goal.id]?.amount || parseFloat(withdrawingMoney[goal.id]?.amount || 0) > parseFloat(goal.current_amount)}
                                         >
                                             {t('savings_goals.withdraw')}
