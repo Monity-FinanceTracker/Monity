@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/AuthContext";
 import { post } from "../../utils/api";
 import { FiCheck, FiZap, FiMessageSquare, FiTrendingUp, FiTarget, FiPieChart, FiLock, FiStar } from "react-icons/fi";
 
 const Subscription = () => {
+  const { t } = useTranslation();
   const { subscriptionTier } = useAuth();
   const [isUpgrading, setIsUpgrading] = useState(false);
 
@@ -37,52 +39,52 @@ const Subscription = () => {
   const features = [
     {
       icon: <FiMessageSquare className="w-6 h-6" />,
-      title: "Unlimited AI Financial Assistant",
-      description: "Get personalized advice anytime, no daily limits",
-      free: "3 messages/day",
-      premium: "Unlimited"
+      title: t('subscription.features.unlimited_ai'),
+      description: t('subscription.features.unlimited_ai_desc'),
+      free: t('subscription.features.messages_per_day', { count: 3 }),
+      premium: t('subscription.features.unlimited')
     },
     {
       icon: <FiTarget className="w-6 h-6" />,
-      title: "Unlimited Budgets & Goals",
-      description: "Create as many budgets and savings goals as you need",
-      free: "2 budgets, 2 goals",
-      premium: "Unlimited"
+      title: t('subscription.features.unlimited_budgets'),
+      description: t('subscription.features.unlimited_budgets_desc'),
+      free: t('subscription.features.budgets_goals_limit', { budgets: 2, goals: 2 }),
+      premium: t('subscription.features.unlimited')
     },
     {
       icon: <FiTrendingUp className="w-6 h-6" />,
-      title: "Advanced Analytics",
-      description: "Deep insights into your spending patterns and trends",
-      free: "Basic stats",
-      premium: "Full insights"
+      title: t('subscription.features.advanced_analytics'),
+      description: t('subscription.features.advanced_analytics_desc'),
+      free: t('subscription.features.basic_stats'),
+      premium: t('subscription.features.full_insights')
     },
     {
       icon: <FiPieChart className="w-6 h-6" />,
-      title: "Smart Categorization",
-      description: "AI-powered transaction categorization that learns from you",
-      free: "Manual only",
-      premium: "AI-powered"
+      title: t('subscription.features.smart_categorization'),
+      description: t('subscription.features.smart_categorization_desc'),
+      free: t('subscription.features.manual_only'),
+      premium: t('subscription.features.ai_powered')
     },
     {
       icon: <FiZap className="w-6 h-6" />,
-      title: "Priority Features",
-      description: "Early access to new features and faster processing",
-      free: "Standard",
-      premium: "Priority"
+      title: t('subscription.features.priority_features'),
+      description: t('subscription.features.priority_features_desc'),
+      free: t('subscription.features.standard'),
+      premium: t('subscription.features.priority')
     },
     {
       icon: <FiLock className="w-6 h-6" />,
-      title: "Export & Backup",
-      description: "Download your financial data anytime in CSV or PDF",
-      free: "Limited",
-      premium: "Full access"
+      title: t('subscription.features.export_backup'),
+      description: t('subscription.features.export_backup_desc'),
+      free: t('subscription.features.limited'),
+      premium: t('subscription.features.full_access_export')
     }
   ];
 
   if (subscriptionTier === null) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="text-gray-400">Loading...</div>
+        <div className="text-gray-400">{t('subscription.loading')}</div>
       </div>
     );
   }
@@ -95,21 +97,21 @@ const Subscription = () => {
           <div className="inline-flex items-center gap-2 bg-[#01C38D]/10 border border-[#01C38D]/20 rounded-full px-4 py-2 mb-4">
             <FiStar className="text-[#01C38D]" />
             <span className="text-[#01C38D] text-sm font-medium">
-              {subscriptionTier === 'premium' ? 'Premium Member' : 'Upgrade Available'}
+              {subscriptionTier === 'premium' ? t('subscription.premium_member') : t('subscription.upgrade_available')}
             </span>
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {subscriptionTier === 'premium'
-              ? 'You\'re on Premium!'
-              : 'Take Control of Your Finances'
+              ? t('subscription.premium_title')
+              : t('subscription.upgrade_title')
             }
           </h1>
 
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             {subscriptionTier === 'premium'
-              ? 'Enjoy unlimited access to all Monity features and AI-powered insights.'
-              : 'Unlock powerful tools and insights to reach your financial goals faster.'
+              ? t('subscription.premium_subtitle')
+              : t('subscription.upgrade_subtitle')
             }
           </p>
         </div>
@@ -123,8 +125,8 @@ const Subscription = () => {
                   <FiCheck className="text-white" size={24} />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-white font-semibold text-lg">Premium Active</h3>
-                  <p className="text-gray-300 text-sm">You have full access to all features</p>
+                  <h3 className="text-white font-semibold text-lg">{t('subscription.premium_active')}</h3>
+                  <p className="text-gray-300 text-sm">{t('subscription.full_access')}</p>
                 </div>
               </div>
             </div>
@@ -152,11 +154,11 @@ const Subscription = () => {
 
               <div className="flex items-center justify-between text-sm pt-4 border-t border-[#262626]">
                 <div>
-                  <div className="text-gray-500 mb-1">Free</div>
+                  <div className="text-gray-500 mb-1">{t('subscription.features.free')}</div>
                   <div className="text-gray-400">{feature.free}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-gray-500 mb-1">Premium</div>
+                  <div className="text-gray-500 mb-1">{t('subscription.features.premium')}</div>
                   <div className="text-[#01C38D] font-medium">{feature.premium}</div>
                 </div>
               </div>
@@ -169,16 +171,16 @@ const Subscription = () => {
           <div className="max-w-2xl mx-auto">
             <div className="bg-gradient-to-br from-[#01C38D]/10 to-[#01a87a]/10 border border-[#01C38D]/20 rounded-2xl p-8 text-center">
               <h2 className="text-2xl font-bold text-white mb-3">
-                Ready to level up your finances?
+                {t('subscription.cta.ready_to_upgrade')}
               </h2>
               <p className="text-gray-300 mb-6">
-                Join thousands of users managing their money smarter with Premium.
+                {t('subscription.cta.join_thousands')}
               </p>
 
               <div className="flex items-center justify-center gap-4 mb-8">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-white">$9.99</div>
-                  <div className="text-gray-400 text-sm">per month</div>
+                  <div className="text-gray-400 text-sm">{t('subscription.cta.price_per_month')}</div>
                 </div>
               </div>
 
@@ -190,18 +192,18 @@ const Subscription = () => {
                 {isUpgrading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processing...
+                    {t('subscription.cta.processing')}
                   </>
                 ) : (
                   <>
                     <FiZap />
-                    Upgrade to Premium
+                    {t('subscription.cta.upgrade_button')}
                   </>
                 )}
               </button>
 
               <p className="text-gray-500 text-xs mt-4">
-                Cancel anytime. No hidden fees.
+                {t('subscription.cta.cancel_anytime')}
               </p>
             </div>
           </div>
@@ -210,7 +212,7 @@ const Subscription = () => {
         {/* FAQ or Additional Info */}
         <div className="max-w-2xl mx-auto mt-12 text-center">
           <p className="text-gray-500 text-sm">
-            Have questions? Contact us at <a href="mailto:support@monity.app" className="text-[#01C38D] hover:underline">support@monity.app</a>
+            {t('subscription.support.have_questions')} <a href={`mailto:${t('subscription.support.email')}`} className="text-[#01C38D] hover:underline">{t('subscription.support.email')}</a>
           </p>
         </div>
       </div>

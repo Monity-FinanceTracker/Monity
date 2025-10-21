@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import {
     sendAIChatMessage,
@@ -12,6 +13,7 @@ import { FiSend, FiTrash2, FiMessageSquare, FiX, FiAlertCircle, FiLoader } from 
 import { toast } from 'react-toastify';
 
 const AIChat = ({ isOpen, onClose }) => {
+    const { t } = useTranslation();
     const { subscriptionTier } = useAuth();
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
@@ -81,7 +83,7 @@ const AIChat = ({ isOpen, onClose }) => {
 
         // Check if limit reached before sending
         if (subscriptionTier === 'free' && usage?.today?.messagesUsed >= 3) {
-            toast.error('Daily limit reached. Upgrade to premium for unlimited messages.');
+            toast.error(t('aiChat.error_daily_limit'));
             return;
         }
 
@@ -125,11 +127,11 @@ const AIChat = ({ isOpen, onClose }) => {
             console.error('Error sending message:', error);
 
             if (error.response?.data?.upgradeRequired) {
-                toast.error(error.response.data.message || 'Daily limit reached');
+                toast.error(error.response.data.message || t('aiChat.error_daily_limit'));
             } else if (error.response?.data?.error) {
                 toast.error(error.response.data.error);
             } else {
-                toast.error('Failed to send message. Please try again.');
+                toast.error(t('aiChat.error_send_failed'));
             }
 
             // Remove the user message if it failed
@@ -140,7 +142,7 @@ const AIChat = ({ isOpen, onClose }) => {
     };
 
     const handleClearHistory = async () => {
-        if (!window.confirm('Are you sure you want to clear all chat history?')) {
+        if (!window.confirm(t('aiChat.clear_history_confirm'))) {
             return;
         }
 
@@ -148,10 +150,10 @@ const AIChat = ({ isOpen, onClose }) => {
             await clearAIChatHistory();
             setMessages([]);
             setShowPrompts(true);
-            toast.success('Chat history cleared');
+            toast.success(t('aiChat.clear_history_success'));
         } catch (error) {
             console.error('Error clearing history:', error);
-            toast.error('Failed to clear chat history');
+            toast.error(t('aiChat.clear_history_error'));
         }
     };
 
@@ -170,6 +172,9 @@ const AIChat = ({ isOpen, onClose }) => {
 
     const isPremium = subscriptionTier === 'premium';
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
+    const messagesRemainingText = messagesRemaining === 1
+        ? t('aiChat.messages_remaining', { count: messagesRemaining })
+        : t('aiChat.messages_remaining_plural', { count: messagesRemaining });
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -181,14 +186,14 @@ const AIChat = ({ isOpen, onClose }) => {
                             <FiMessageSquare className="text-white" size={20} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-white">AI Financial Assistant</h2>
+                            <h2 className="text-xl font-bold text-white">{t('aiChat.title')}</h2>
                             {usage && (
                                 <p className="text-sm text-gray-400">
                                     {isPremium ? (
-                                        <span className="text-[#01C38D]">Unlimited messages</span>
+                                        <span className="text-[#01C38D]">{t('aiChat.unlimited_messages')}</span>
                                     ) : (
                                         <span>
-                                            {messagesRemaining} message{messagesRemaining !== 1 ? 's' : ''} remaining today
+                                            {messagesRemainingText}
                                         </span>
                                     )}
                                 </p>
@@ -200,7 +205,7 @@ const AIChat = ({ isOpen, onClose }) => {
                             <button
                                 onClick={handleClearHistory}
                                 className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-red-400"
-                                title="Clear chat history"
+                                title={t('aiChat.clear_history_title')}
                             >
                                 <FiTrash2 size={18} />
                             </button>
@@ -222,14 +227,14 @@ const AIChat = ({ isOpen, onClose }) => {
                                 <FiMessageSquare className="text-white" size={32} />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2">
-                                Hi! I'm your AI Financial Assistant
+                                {t('aiChat.welcome_title')}
                             </h3>
                             <p className="text-gray-400 mb-6 max-w-md">
-                                I can help you understand your spending, manage budgets, and make better financial decisions based on your data.
+                                {t('aiChat.welcome_description')}
                             </p>
 
                             <div className="w-full max-w-md space-y-2">
-                                <p className="text-sm text-gray-500 mb-3">Try asking:</p>
+                                <p className="text-sm text-gray-500 mb-3">{t('aiChat.try_asking')}</p>
                                 {suggestedPrompts.map((prompt, index) => (
                                     <button
                                         key={index}
@@ -264,7 +269,7 @@ const AIChat = ({ isOpen, onClose }) => {
                                     <div className="bg-gray-800 rounded-2xl px-4 py-3">
                                         <div className="flex items-center gap-2 text-gray-400">
                                             <FiLoader className="animate-spin" />
-                                            <span>Thinking...</span>
+                                            <span>{t('aiChat.thinking')}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -280,11 +285,11 @@ const AIChat = ({ isOpen, onClose }) => {
                         <div className="flex items-start gap-2 text-yellow-400">
                             <FiAlertCircle size={20} className="flex-shrink-0 mt-0.5" />
                             <div className="flex-1">
-                                <p className="text-sm font-medium">Daily limit reached</p>
+                                <p className="text-sm font-medium">{t('aiChat.limit_reached_title')}</p>
                                 <p className="text-xs text-yellow-400/80 mt-1">
-                                    Upgrade to premium for unlimited AI messages.{' '}
+                                    {t('aiChat.limit_reached_message')}{' '}
                                     <Link to="/subscription" className="underline hover:text-yellow-300">
-                                        Upgrade now
+                                        {t('aiChat.upgrade_now')}
                                     </Link>
                                 </p>
                             </div>
@@ -300,11 +305,11 @@ const AIChat = ({ isOpen, onClose }) => {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            onKeyPress={handleKeyPress}
+                            onKeyDown={handleKeyPress}
                             placeholder={
                                 !isPremium && messagesRemaining === 0
-                                    ? 'Daily limit reached'
-                                    : 'Ask me anything about your finances...'
+                                    ? t('aiChat.input_placeholder_limit')
+                                    : t('aiChat.input_placeholder')
                             }
                             disabled={loading || (!isPremium && messagesRemaining === 0)}
                             className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -315,7 +320,7 @@ const AIChat = ({ isOpen, onClose }) => {
                             className="bg-[#01C38D] text-white rounded-lg px-6 py-3 hover:bg-[#01a87a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {loading ? <FiLoader className="animate-spin" /> : <FiSend />}
-                            Send
+                            {t('aiChat.send_button')}
                         </button>
                     </div>
                 </div>

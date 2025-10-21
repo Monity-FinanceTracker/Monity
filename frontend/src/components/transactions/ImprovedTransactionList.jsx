@@ -62,7 +62,10 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     transactionData = transactionData.filter(t => t.typeId === 1);
                 } else if (transactionType === 'income') {
                     transactionData = transactionData.filter(t => t.typeId === 2);
+                } else if (transactionType === 'savings') {
+                    transactionData = transactionData.filter(t => t.typeId === 3);
                 }
+                // If transactionType is 'all' or not specified, show all transactions including type 3
                 
                 return transactionData;
             } catch (err) {
@@ -248,9 +251,11 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             acc.expenses += amount;
         } else if (transaction.typeId === 2) { // Income
             acc.income += amount;
+        } else if (transaction.typeId === 3) { // Savings
+            acc.savings += amount;
         }
         return acc;
-    }, { income: 0, expenses: 0 });
+    }, { income: 0, expenses: 0, savings: 0 });
 
     const balance = totals.income - totals.expenses;
 
@@ -280,12 +285,16 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     </div>
                     
                     <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
+                        transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' :
+                        transaction.typeId === 2 ? 'bg-green-500/20 text-green-400' :
+                        'bg-blue-500/20 text-blue-400'
                     }`}>
                         {transaction.typeId === 1 ? (
                             <Icon name="CreditCard" size="sm" className="text-red-400" />
-                        ) : (
+                        ) : transaction.typeId === 2 ? (
                             <Icon name="TrendingUp" size="sm" className="text-green-400" />
+                        ) : (
+                            <Icon name="PiggyBank" size="sm" className="text-blue-400" />
                         )}
                     </div>
                     
@@ -405,6 +414,12 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className="text-lg sm:text-2xl font-bold text-red-400">{formatSimpleCurrency(totals.expenses, true)}</div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
+                    </div>
+                    <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
+                        <div className={`text-lg sm:text-2xl font-bold ${totals.savings >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+                            {totals.savings >= 0 ? '$' : '-$'}{Math.abs(totals.savings).toFixed(2)}
+                        </div>
+                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_savings')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className={`text-lg sm:text-2xl font-bold ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>

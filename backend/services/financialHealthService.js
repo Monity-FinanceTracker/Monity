@@ -17,12 +17,13 @@ class FinancialHealthService {
 
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const thirtyDaysAgoDateString = thirtyDaysAgo.toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
             const { data: transactionsData, error } = await this.supabase
                 .from('transactions')
                 .select('amount, typeId, category')
                 .eq('userId', userId)
-                .gte('date', thirtyDaysAgo.toISOString());
+                .gte('date', thirtyDaysAgoDateString);
 
             if (error) {
                 logger.error('Error fetching transactions for financial health score', { userId, error });
@@ -35,19 +36,11 @@ class FinancialHealthService {
 
             const totalIncome = transactions.filter(t => t.typeId === 2).reduce((sum, t) => sum + t.amount, 0);
             const totalExpenses = transactions.filter(t => t.typeId === 1).reduce((sum, t) => sum + t.amount, 0);
-            
-            // Backward compatible savings calculation
-            const totalSavings = transactions.filter(t => t.typeId === 3).reduce((sum, t) => {
-                // Handle investment transactions (backward compatible)
-                if (t.category === "Make Investments") {
-                    return sum - t.amount; // Subtract when moving to investments
-                } else if (t.category === "Withdraw Investments") {
-                    return sum + t.amount; // Add when withdrawing from investments
-                }
-                
-                // Default: regular savings (positive contribution)
-                return sum + t.amount;
-            }, 0);
+
+            // Calculate total savings from type 3 transactions
+            // Now includes savings goal allocations/withdrawals (auto-created)
+            // Allocations are positive, withdrawals are negative, so simple sum works
+            const totalSavings = transactions.filter(t => t.typeId === 3).reduce((sum, t) => sum + t.amount, 0);
 
             // Get liabilities and assets from the database
             const { data: liabilities, error: liabilitiesError } = await this.supabase
