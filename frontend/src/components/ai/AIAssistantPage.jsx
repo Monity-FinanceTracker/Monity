@@ -10,8 +10,11 @@ import {
 import { FiSend, FiTrash2, FiMessageSquare, FiAlertCircle, FiLoader } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../utils/i18n';
 
 const AIAssistantPage = () => {
+    const { t } = useTranslation();
     const { subscriptionTier } = useAuth();
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
@@ -62,7 +65,8 @@ const AIAssistantPage = () => {
 
     const loadSuggestedPrompts = async () => {
         try {
-            const response = await getAIChatPrompts();
+            const locale = i18n.language || 'en';
+            const response = await getAIChatPrompts(locale);
             if (response.success) {
                 setSuggestedPrompts(response.prompts);
             }
@@ -78,7 +82,7 @@ const AIAssistantPage = () => {
 
         // Check if limit reached before sending
         if (subscriptionTier === 'free' && usage?.today?.messagesUsed >= 3) {
-            toast.error('Daily limit reached. Upgrade to premium for unlimited messages.');
+            toast.error(`${t('ai.daily_limit_reached')}. ${t('ai.upgrade_message')}`);
             return;
         }
 
@@ -122,11 +126,11 @@ const AIAssistantPage = () => {
             console.error('Error sending message:', error);
 
             if (error.response?.data?.upgradeRequired) {
-                toast.error(error.response.data.message || 'Daily limit reached');
+                toast.error(error.response.data.message || t('ai.daily_limit_reached'));
             } else if (error.response?.data?.error) {
                 toast.error(error.response.data.error);
             } else {
-                toast.error('Failed to send message. Please try again.');
+                toast.error(t('ai.send_failed'));
             }
 
             // Remove the user message if it failed
@@ -137,7 +141,7 @@ const AIAssistantPage = () => {
     };
 
     const handleClearHistory = async () => {
-        if (!window.confirm('Are you sure you want to clear all chat history?')) {
+        if (!window.confirm(t('ai.clear_confirm'))) {
             return;
         }
 
@@ -145,10 +149,10 @@ const AIAssistantPage = () => {
             await clearAIChatHistory();
             setMessages([]);
             setShowPrompts(true);
-            toast.success('Chat history cleared');
+            toast.success(t('ai.history_cleared'));
         } catch (error) {
             console.error('Error clearing history:', error);
-            toast.error('Failed to clear chat history');
+            toast.error(t('ai.clear_failed'));
         }
     };
 
@@ -175,14 +179,17 @@ const AIAssistantPage = () => {
                         <FiMessageSquare className="text-white" size={20} />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-white">AI Financial Assistant</h1>
+                        <h1 className="text-2xl font-bold text-white">{t('ai.assistant_title')}</h1>
                         {usage && (
                             <p className="text-sm text-gray-400">
                                 {isPremium ? (
-                                    <span className="text-[#01C38D]">Unlimited messages</span>
+                                    <span className="text-[#01C38D]">{t('ai.unlimited_messages')}</span>
                                 ) : (
                                     <span>
-                                        {messagesRemaining} message{messagesRemaining !== 1 ? 's' : ''} remaining today
+                                        {t('ai.messages_remaining', {
+                                            count: messagesRemaining,
+                                            plural: messagesRemaining !== 1 ? 's' : ''
+                                        })}
                                     </span>
                                 )}
                             </p>
@@ -193,7 +200,7 @@ const AIAssistantPage = () => {
                     <button
                         onClick={handleClearHistory}
                         className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-red-400"
-                        title="Clear chat history"
+                        title={t('ai.clear_history')}
                     >
                         <FiTrash2 size={18} />
                     </button>
@@ -209,14 +216,14 @@ const AIAssistantPage = () => {
                                 <FiMessageSquare className="text-white" size={32} />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2">
-                                Hi! I'm your AI Financial Assistant
+                                {t('ai.greeting_title')}
                             </h3>
                             <p className="text-gray-400 mb-6 max-w-md">
-                                I can help you understand your spending, manage budgets, and make better financial decisions based on your data.
+                                {t('ai.greeting_description')}
                             </p>
 
                             <div className="w-full max-w-md space-y-2">
-                                <p className="text-sm text-gray-500 mb-3">Try asking:</p>
+                                <p className="text-sm text-gray-500 mb-3">{t('ai.try_asking')}</p>
                                 {suggestedPrompts.map((prompt, index) => (
                                     <button
                                         key={index}
@@ -251,7 +258,7 @@ const AIAssistantPage = () => {
                                     <div className="bg-[#262626] rounded-2xl px-4 py-3">
                                         <div className="flex items-center gap-2 text-gray-400">
                                             <FiLoader className="animate-spin" />
-                                            <span>Thinking...</span>
+                                            <span>{t('ai.thinking')}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -267,11 +274,11 @@ const AIAssistantPage = () => {
                         <div className="flex items-start gap-2 text-yellow-400">
                             <FiAlertCircle size={20} className="flex-shrink-0 mt-0.5" />
                             <div className="flex-1">
-                                <p className="text-sm font-medium">Daily limit reached</p>
+                                <p className="text-sm font-medium">{t('ai.daily_limit_reached')}</p>
                                 <p className="text-xs text-yellow-400/80 mt-1">
-                                    Upgrade to premium for unlimited AI messages.{' '}
+                                    {t('ai.upgrade_message')}{' '}
                                     <Link to="/subscription" className="underline hover:text-yellow-300">
-                                        Upgrade now
+                                        {t('ai.upgrade_now')}
                                     </Link>
                                 </p>
                             </div>
@@ -290,8 +297,8 @@ const AIAssistantPage = () => {
                             onKeyPress={handleKeyPress}
                             placeholder={
                                 !isPremium && messagesRemaining === 0
-                                    ? 'Daily limit reached'
-                                    : 'Ask me anything about your finances...'
+                                    ? t('ai.placeholder_limit')
+                                    : t('ai.placeholder')
                             }
                             disabled={loading || (!isPremium && messagesRemaining === 0)}
                             className="flex-1 bg-[#262626] text-white rounded-lg px-4 py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#01C38D] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -302,7 +309,7 @@ const AIAssistantPage = () => {
                             className="bg-[#01C38D] text-white rounded-lg px-4 sm:px-6 py-3 hover:bg-[#01a87a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {loading ? <FiLoader className="animate-spin" /> : <FiSend />}
-                            <span className="hidden sm:inline">Send</span>
+                            <span className="hidden sm:inline">{t('ai.send')}</span>
                         </button>
                     </div>
                 </div>
