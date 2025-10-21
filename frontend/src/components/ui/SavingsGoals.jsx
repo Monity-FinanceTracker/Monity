@@ -86,7 +86,7 @@ const SavingsGoals = () => {
 
     useEffect(() => {
         fetchGoalsAndBalance();
-    }, [fetchGoalsAndBalance]);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

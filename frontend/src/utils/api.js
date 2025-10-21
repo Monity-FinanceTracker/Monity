@@ -149,6 +149,6 @@ export const sendAIChatMessage = (message) => API.post('/ai-chat/message', { mes
 export const getAIChatHistory = (limit = 50) => API.get(`/ai-chat/history?limit=${limit}`).then(res => res.data);
 export const getAIChatUsage = () => API.get('/ai-chat/usage').then(res => res.data);
 export const clearAIChatHistory = () => API.delete('/ai-chat/history').then(res => res.data);
-export const getAIChatPrompts = () => API.get('/ai-chat/prompts').then(res => res.data);
+export const getAIChatPrompts = (locale = 'en') => API.get(`/ai-chat/prompts?locale=${locale}`).then(res => res.data);
 
 export default API; 

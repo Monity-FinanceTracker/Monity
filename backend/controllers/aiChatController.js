@@ -188,17 +188,29 @@ class AIChatController {
      */
     async getSuggestedPrompts(req, res) {
         const userId = req.user.id;
+        const locale = req.query.locale || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
 
         try {
             const suggestedMessage = await this.aiChatService.getSuggestedFirstMessage(userId);
 
-            const prompts = [
-                suggestedMessage,
-                "What are my biggest spending categories?",
-                "How can I improve my savings rate?",
-                "Am I on track with my budgets?",
-                "Give me tips to reduce my expenses"
-            ];
+            // Define prompts in multiple languages
+            const promptsByLocale = {
+                en: [
+                    "What are my biggest spending categories?",
+                    "How can I improve my savings rate?",
+                    "Am I on track with my budgets?",
+                    "Give me tips to reduce my expenses"
+                ],
+                pt: [
+                    "Quais são minhas maiores categorias de gastos?",
+                    "Como posso melhorar minha taxa de poupança?",
+                    "Estou no caminho certo com meus orçamentos?",
+                    "Dê-me dicas para reduzir minhas despesas"
+                ]
+            };
+
+            const localizedPrompts = promptsByLocale[locale] || promptsByLocale.en;
+            const prompts = [suggestedMessage, ...localizedPrompts];
 
             res.json({
                 success: true,
@@ -207,6 +219,7 @@ class AIChatController {
         } catch (error) {
             logger.error('Error getting suggested prompts', {
                 userId,
+                locale,
                 error: error.message
             });
 

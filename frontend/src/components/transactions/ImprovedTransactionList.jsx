@@ -62,7 +62,10 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     transactionData = transactionData.filter(t => t.typeId === 1);
                 } else if (transactionType === 'income') {
                     transactionData = transactionData.filter(t => t.typeId === 2);
+                } else if (transactionType === 'savings') {
+                    transactionData = transactionData.filter(t => t.typeId === 3);
                 }
+                // If transactionType is 'all' or not specified, show all transactions including type 3
                 
                 return transactionData;
             } catch (err) {
@@ -282,12 +285,16 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     </div>
                     
                     <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
+                        transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' :
+                        transaction.typeId === 2 ? 'bg-green-500/20 text-green-400' :
+                        'bg-blue-500/20 text-blue-400'
                     }`}>
                         {transaction.typeId === 1 ? (
                             <Icon name="CreditCard" size="sm" className="text-red-400" />
-                        ) : (
+                        ) : transaction.typeId === 2 ? (
                             <Icon name="TrendingUp" size="sm" className="text-green-400" />
+                        ) : (
+                            <Icon name="PiggyBank" size="sm" className="text-blue-400" />
                         )}
                     </div>
                     

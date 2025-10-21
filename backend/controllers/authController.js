@@ -101,21 +101,23 @@ class AuthController {
             const healthData = await financialHealthService.getFinancialHealthScore(userId);
 
             // Get additional metrics for the user using the Transaction model for proper decryption
-            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-            const { data: transactionsData, error: transactionsError } = await this.supabase
-                .from('transactions')
-                .select('amount, typeId, category, date')
-                .eq('userId', userId)
-                .gte('date', thirtyDaysAgo);
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            const thirtyDaysAgoDateString = thirtyDaysAgo.toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
-            if (transactionsError) {
-                logger.error('Failed to get transactions for financial health', { userId, error: transactionsError.message });
-                return res.status(500).json({ error: 'Failed to fetch financial data.' });
-            }
+            logger.info('Querying transactions', { userId, thirtyDaysAgoDateString });
 
-            // Decrypt the transactions data
-            const { decryptObject } = require('../middleware/encryption');
-            const transactions = decryptObject('transactions', transactionsData || []);
+            // Use Transaction model to get all transactions (bypasses RLS with supabaseAdmin)
+            const Transaction = require('../models/Transaction');
+            const allTransactions = await Transaction.getAll(userId);
+
+            // Filter transactions from last 30 days
+            const transactions = allTransactions.filter(t => t.date >= thirtyDaysAgoDateString);
+
+            logger.info('Transactions from last 30 days', {
+                allCount: allTransactions.length,
+                filteredCount: transactions.length,
+                type3Count: transactions.filter(t => t.typeId === 3).length
+            });
 
             // Calculate detailed metrics
             const totalIncome = transactions.filter(t => t.typeId === 2).reduce((sum, t) => sum + t.amount, 0);
@@ -124,7 +126,18 @@ class AuthController {
             // Calculate total savings from type 3 transactions
             // Now includes savings goal allocations/withdrawals (auto-created)
             // Allocations are positive, withdrawals are negative, so simple sum works
-            const totalSavings = transactions.filter(t => t.typeId === 3).reduce((sum, t) => sum + t.amount, 0);
+            const type3Transactions = transactions.filter(t => t.typeId === 3);
+            const totalSavings = type3Transactions.reduce((sum, t) => sum + t.amount, 0);
+
+            logger.info('Financial Health Calculation Debug', {
+                userId,
+                totalTransactions: transactions.length,
+                type3Count: type3Transactions.length,
+                type3Transactions: type3Transactions.map(t => ({ amount: t.amount, category: t.category, date: t.date })),
+                totalSavings,
+                totalIncome,
+                totalExpenses
+            });
 
             // Calculate rates and ratios
             const savingsRate = totalIncome > 0 ? ((totalSavings / totalIncome) * 100) : 0;
