@@ -1,4 +1,5 @@
 const SavingsGoal = require('../models/SavingsGoal');
+const Transaction = require('../models/Transaction');
 const { logger } = require('../utils/logger');
 
 class SavingsGoalController {
@@ -113,13 +114,41 @@ class SavingsGoalController {
 
             // Update the current amount
             const newCurrentAmount = parseFloat(goal.current_amount || 0) + parseFloat(amount);
-            
+
             const updatedGoal = await this.savingsGoalModel.update(goalId, userId, {
                 current_amount: newCurrentAmount
             });
 
             if (!updatedGoal) {
                 return res.status(500).json({ error: 'Failed to update savings goal' });
+            }
+
+            // Create a type 3 transaction for the allocation
+            try {
+                const transactionData = {
+                    userId,
+                    description: `Savings: ${goal.goal_name}`,
+                    amount: parseFloat(amount),
+                    category: 'Savings Goal',
+                    date: new Date().toISOString().split('T')[0],
+                    typeId: 3,
+                    metadata: {
+                        savings_goal_id: goalId,
+                        savings_goal_name: goal.goal_name,
+                        operation: 'allocate'
+                    }
+                };
+
+                await Transaction.create(transactionData);
+                logger.info('Created type 3 transaction for savings goal allocation', { userId, goalId, amount });
+            } catch (transactionError) {
+                // Log but don't fail the request if transaction creation fails
+                logger.error('Failed to create transaction for savings goal allocation', {
+                    userId,
+                    goalId,
+                    amount,
+                    error: transactionError.message
+                });
             }
 
             res.json(updatedGoal);
@@ -157,13 +186,41 @@ class SavingsGoalController {
 
             // Update the current amount
             const newCurrentAmount = currentAmount - withdrawAmount;
-            
+
             const updatedGoal = await this.savingsGoalModel.update(goalId, userId, {
                 current_amount: newCurrentAmount
             });
 
             if (!updatedGoal) {
                 return res.status(500).json({ error: 'Failed to update savings goal' });
+            }
+
+            // Create a NEGATIVE type 3 transaction for withdrawal
+            try {
+                const transactionData = {
+                    userId,
+                    description: `Withdrawal: ${goal.goal_name}`,
+                    amount: -parseFloat(amount), // Negative amount for withdrawal
+                    category: 'Savings Goal',
+                    date: new Date().toISOString().split('T')[0],
+                    typeId: 3,
+                    metadata: {
+                        savings_goal_id: goalId,
+                        savings_goal_name: goal.goal_name,
+                        operation: 'withdraw'
+                    }
+                };
+
+                await Transaction.create(transactionData);
+                logger.info('Created type 3 transaction for savings goal withdrawal', { userId, goalId, amount });
+            } catch (transactionError) {
+                // Log but don't fail the request if transaction creation fails
+                logger.error('Failed to create transaction for savings goal withdrawal', {
+                    userId,
+                    goalId,
+                    amount,
+                    error: transactionError.message
+                });
             }
 
             res.json({

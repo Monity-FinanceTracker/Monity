@@ -120,16 +120,11 @@ class AuthController {
             // Calculate detailed metrics
             const totalIncome = transactions.filter(t => t.typeId === 2).reduce((sum, t) => sum + t.amount, 0);
             const totalExpenses = transactions.filter(t => t.typeId === 1).reduce((sum, t) => sum + Math.abs(t.amount), 0);
-            const savingsTransactions = transactions.filter(t => t.typeId === 3);
-            
-            const totalSavings = savingsTransactions.reduce((sum, t) => {
-                if (t.category === "Make Investments") {
-                    return sum - t.amount;
-                } else if (t.category === "Withdraw Investments") {
-                    return sum + t.amount;
-                }
-                return sum + t.amount;
-            }, 0);
+
+            // Calculate total savings from type 3 transactions
+            // Now includes savings goal allocations/withdrawals (auto-created)
+            // Allocations are positive, withdrawals are negative, so simple sum works
+            const totalSavings = transactions.filter(t => t.typeId === 3).reduce((sum, t) => sum + t.amount, 0);
 
             // Calculate rates and ratios
             const savingsRate = totalIncome > 0 ? ((totalSavings / totalIncome) * 100) : 0;
