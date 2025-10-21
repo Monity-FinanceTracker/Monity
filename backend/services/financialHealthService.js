@@ -17,12 +17,13 @@ class FinancialHealthService {
 
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const thirtyDaysAgoDateString = thirtyDaysAgo.toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
             const { data: transactionsData, error } = await this.supabase
                 .from('transactions')
                 .select('amount, typeId, category')
                 .eq('userId', userId)
-                .gte('date', thirtyDaysAgo.toISOString());
+                .gte('date', thirtyDaysAgoDateString);
 
             if (error) {
                 logger.error('Error fetching transactions for financial health score', { userId, error });
