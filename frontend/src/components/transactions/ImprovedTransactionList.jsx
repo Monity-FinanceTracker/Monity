@@ -248,9 +248,11 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             acc.expenses += amount;
         } else if (transaction.typeId === 2) { // Income
             acc.income += amount;
+        } else if (transaction.typeId === 3) { // Savings
+            acc.savings += amount;
         }
         return acc;
-    }, { income: 0, expenses: 0 });
+    }, { income: 0, expenses: 0, savings: 0 });
 
     const balance = totals.income - totals.expenses;
 
@@ -394,7 +396,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         <div className="space-y-6">
             {/* Header with stats */}
             <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     <div className="text-center">
                         <div className="text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
                         <div className="text-gray-400 text-sm">{t('transactions.total_transactions')}</div>
@@ -406,6 +408,12 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     <div className="text-center">
                         <div className="text-2xl font-bold text-red-400">{formatSimpleCurrency(totals.expenses, true)}</div>
                         <div className="text-gray-400 text-sm">{t('transactions.total_expenses')}</div>
+                    </div>
+                    <div className="text-center">
+                        <div className={`text-2xl font-bold ${totals.savings >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+                            {totals.savings >= 0 ? '$' : '-$'}{Math.abs(totals.savings).toFixed(2)}
+                        </div>
+                        <div className="text-gray-400 text-sm">{t('transactions.total_savings')}</div>
                     </div>
                     <div className="text-center">
                         <div className={`text-2xl font-bold ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
