@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/AuthContext";
 import { post } from "../../utils/api";
@@ -8,6 +8,22 @@ const Subscription = () => {
   const { t } = useTranslation();
   const { subscriptionTier } = useAuth();
   const [isUpgrading, setIsUpgrading] = useState(false);
+
+  // Load Stripe buy button script
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://js.stripe.com/v3/buy-button.js';
+    script.async = true;
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      const existingScript = document.querySelector('script[src="https://js.stripe.com/v3/buy-button.js"]');
+      if (existingScript) {
+        document.head.removeChild(existingScript);
+      }
+    };
+  }, []);
 
   const handleUpgrade = async () => {
     setIsUpgrading(true);
@@ -184,6 +200,15 @@ const Subscription = () => {
                 </div>
               </div>
 
+              {/* Stripe Buy Button */}
+              <div className="mb-6">
+                <stripe-buy-button
+                  buy-button-id="buy_btn_1SLE6GBDlx4noKmegfQZtEY6"
+                  publishable-key="pk_live_51SH0m9BDlx4noKmetogVrJWuB7swkwBpzLi3d8GOsYUPeMB1w5IuTjVrpbrmSlJxPUj065ZdWc9CENn7AXeIWmWC00WD1iCqqz"
+                />
+              </div>
+
+              {/* Alternative upgrade button (fallback) */}
               <button
                 onClick={handleUpgrade}
                 disabled={isUpgrading}
