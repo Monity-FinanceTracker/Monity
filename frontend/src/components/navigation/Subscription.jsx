@@ -118,23 +118,6 @@ const Subscription = () => {
           </p>
         </div>
 
-        {/* Current Plan Badge */}
-        {subscriptionTier === 'premium' && (
-          <div className="max-w-2xl mx-auto mb-12">
-            <div className="bg-gradient-to-r from-[#01C38D]/20 to-[#01a87a]/20 border border-[#01C38D]/30 rounded-2xl p-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#01C38D] rounded-full flex items-center justify-center">
-                  <FiCheck className="text-white" size={24} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-white font-semibold text-lg">{t('subscription.premium_active')}</h3>
-                  <p className="text-gray-300 text-sm">{t('subscription.full_access')}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {features.map((feature, index) => (
