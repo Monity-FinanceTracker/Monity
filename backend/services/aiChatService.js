@@ -5,7 +5,7 @@ class AIChatService {
     constructor(supabase) {
         this.supabase = supabase;
         this.apiKey = process.env.GEMINI_API_KEY;
-        this.model = 'gemini-1.5-flash';
+        this.model = 'gemini-2.5-flash';
     }
 
     /**
@@ -186,6 +186,14 @@ Remember: This is real financial data. Be helpful, accurate, and responsible wit
     async chat(userId, userMessage, conversationHistory = []) {
         if (!this.apiKey) {
             throw new Error('GEMINI_API_KEY not configured. Please add it to your .env file.');
+        }
+
+        if (!userId || typeof userId !== 'string') {
+            throw new Error('Invalid userId provided to chat service');
+        }
+
+        if (!userMessage || typeof userMessage !== 'string') {
+            throw new Error('Invalid userMessage provided to chat service');
         }
 
         try {
