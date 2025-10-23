@@ -28,25 +28,11 @@ const Subscription = () => {
   const handleUpgrade = async () => {
     setIsUpgrading(true);
     try {
-      const priceId =
-        import.meta.env.VITE_STRIPE_PRICE_PREMIUM_MONTHLY ||
-        import.meta.env.VITE_STRIPE_PRICE_ID;
-      if (!priceId) {
-        throw new Error(
-          "Missing Stripe price ID. Set VITE_STRIPE_PRICE_PREMIUM_MONTHLY in .env"
-        );
-      }
-      const { data } = await post("/billing/create-checkout-session", {
-        priceId,
-      });
-      if (data?.url) {
-        window.location.href = data.url;
-        return;
-      }
-      throw new Error("No checkout URL returned");
+      // Redirect to Stripe checkout URL
+      window.location.href = "https://buy.stripe.com/28E00i8dS5CTaZA5h50Fi01";
     } catch (error) {
       console.error("Upgrade failed", error);
-      alert(error.message || "Failed to start checkout");
+      alert("Failed to redirect to checkout");
     } finally {
       setIsUpgrading(false);
     }
