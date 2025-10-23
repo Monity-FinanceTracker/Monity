@@ -173,7 +173,7 @@ const AIAssistantPage = () => {
     return (
         <div className="flex flex-col h-[calc(100vh-8rem)] max-w-5xl mx-auto">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4 px-4 sm:px-0">
+            <div className="flex items-center justify-between mb-4 px-4 sm:px-0 flex-shrink-0">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-[#01C38D] to-[#01a87a] rounded-full flex items-center justify-center">
                         <FiMessageSquare className="text-white" size={20} />
@@ -208,10 +208,9 @@ const AIAssistantPage = () => {
             </div>
 
             {/* Messages Container */}
-            <div className="flex-1 bg-[#171717] border border-[#262626] rounded-2xl overflow-hidden flex flex-col">
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0 ">
                     {messages.length === 0 && showPrompts ? (
-                        <div className="h-full flex flex-col items-center justify-center text-center p-6">
+                        <div className="h-full flex flex-col items-center justify-center text-center p-6 ">
                             <div className="w-16 h-16 bg-gradient-to-br from-[#01C38D] to-[#01a87a] rounded-full flex items-center justify-center mb-4">
                                 <FiMessageSquare className="text-white" size={32} />
                             </div>
@@ -270,7 +269,7 @@ const AIAssistantPage = () => {
 
                 {/* Limit Warning */}
                 {!isPremium && messagesRemaining === 0 && (
-                    <div className="px-4 py-3 bg-yellow-400/10 border-t border-yellow-400/20">
+                    <div className="px-4 py-3 bg-yellow-400/10 border-t border-yellow-400/20 flex-shrink-0">
                         <div className="flex items-start gap-2 text-yellow-400">
                             <FiAlertCircle size={20} className="flex-shrink-0 mt-0.5" />
                             <div className="flex-1">
@@ -287,7 +286,7 @@ const AIAssistantPage = () => {
                 )}
 
                 {/* Input */}
-                <div className="p-4 border-t border-[#262626]">
+                <div className="p-4 border-t border-[#262626] flex-shrink-0">
                     <div className="flex gap-2">
                         <input
                             ref={inputRef}
@@ -313,7 +312,6 @@ const AIAssistantPage = () => {
                         </button>
                     </div>
                 </div>
-            </div>
         </div>
     );
 };
