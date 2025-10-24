@@ -164,18 +164,18 @@ const Subscription = () => {
 
               <div className="flex items-center justify-center gap-4 mb-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white">$9.99</div>
+                  <div className="text-3xl font-bold text-white">R$9.90</div>
                   <div className="text-gray-400 text-sm">{t('subscription.cta.price_per_month')}</div>
                 </div>
               </div>
 
-              {/* Stripe Buy Button */}
+              {/* Stripe Buy Button
               <div className="mb-6">
                 <stripe-buy-button
                   buy-button-id="buy_btn_1SLE6GBDlx4noKmegfQZtEY6"
                   publishable-key="pk_live_51SH0m9BDlx4noKmetogVrJWuB7swkwBpzLi3d8GOsYUPeMB1w5IuTjVrpbrmSlJxPUj065ZdWc9CENn7AXeIWmWC00WD1iCqqz"
                 />
-              </div>
+              </div> */}
 
               {/* Alternative upgrade button (fallback) */}
               <button

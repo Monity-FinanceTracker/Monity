@@ -60,7 +60,7 @@ function Savings() {
     }
 
     return (
-        <h2 className="text-4xl font-bold mb-4">${totalSavings.toFixed(2)}</h2>
+        <h2 className="text-4xl font-bold mb-4">R$ {totalSavings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
     );
 }
 

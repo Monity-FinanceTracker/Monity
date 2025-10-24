@@ -56,9 +56,9 @@ const FinancialHealth = () => {
     };
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('en-US', {
+        return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
-            currency: 'USD',
+            currency: 'BRL',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
         }).format(amount || 0);
