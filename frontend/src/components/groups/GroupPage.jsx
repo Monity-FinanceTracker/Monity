@@ -277,13 +277,13 @@ const GroupPage = () => {
                                 <div key={expense.id} className="p-4 bg-[#232323] rounded-lg">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-white font-medium">{expense.description}</span>
-                                        <span className="text-[#01C38D] font-bold">${expense.amount.toFixed(2)}</span>
+                                        <span className="text-[#01C38D] font-bold">R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="text-sm text-gray-400 mb-3">{t('groups.paid_by')} {expense.profiles.name}</div>
                                     <div className="space-y-1">
                                         {expense.expense_shares.map(share => (
                                             <div key={share.id} className="flex justify-between items-center text-sm">
-                                                <span className="text-gray-300">{share.profiles.name} {t('groups.owes')} ${share.amount_owed.toFixed(2)}</span>
+                                                <span className="text-gray-300">{share.profiles.name} {t('groups.owes')} R$ {share.amount_owed.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                                 {share.is_settled ? (
                                                     <span className="text-green-400 text-xs">{t('groups.settled')}</span>
                                                 ) : share.user_id === user.id ? (
