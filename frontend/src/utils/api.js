@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { supabase } from './supabase';
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
 console.log("API URL from env:", apiUrl);
 
 const API = axios.create({

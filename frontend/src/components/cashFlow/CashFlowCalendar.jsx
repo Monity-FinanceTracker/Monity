@@ -78,12 +78,13 @@ const CashFlowCalendar = () => {
   const CustomDayCell = ({ date }) => {
     const dateStr = moment(date).format('YYYY-MM-DD');
     const dayData = dailyBalances[dateStr];
+    const isToday = moment(date).isSame(moment(), 'day');
 
     // If no data, show just the day number
     if (!dayData) {
       return (
-        <div className="h-full p-2">
-          <div className="text-xs font-semibold mb-1 text-gray-400">
+        <div className="h-full p-2 flex flex-col items-center">
+          <div className={`text-xs font-semibold mb-1 ${isToday ? 'w-6 h-6 flex items-center justify-center rounded-full text-white' : 'text-gray-400'}`} style={isToday ? { backgroundColor: '#08bf8c' } : {}}>
             {moment(date).format('D')}
           </div>
         </div>
@@ -99,14 +100,8 @@ const CashFlowCalendar = () => {
     const hasFinancialActivity = dayData.income > 0 || dayData.expenses > 0;
 
     return (
-      <div className={`h-full p-2 ${
-        dayData.isNegative 
-          ? 'bg-red-900/20 border border-[#1D1E24]' 
-          : hasFinancialActivity 
-            ? 'bg-[#01C38D]/10 border border-[#01C38D]/30' 
-            : 'bg-[#0A0A0A]'
-      }`}>
-        <div className="text-xs font-semibold mb-1 text-white">
+      <div className={`h-full p-2 flex flex-col items-start ${dayData.isNegative ? 'bg-red-900/20' : ''}`}>
+        <div className={`text-xs font-semibold mb-1 ${isToday ? 'w-6 h-6 flex items-center justify-center rounded-full text-white self-center' : 'self-center'}`} style={isToday ? { backgroundColor: '#08bf8c' } : {}}>
           {moment(date).format('D')}
         </div>
         <div className={`text-xs font-bold ${dayData.isNegative ? 'text-red-400' : 'text-green-400'}`}>
@@ -136,6 +131,19 @@ const CashFlowCalendar = () => {
         );
       },
     },
+  };
+
+  // Aplicar estilos às células dos dias
+  const dayPropGetter = (date) => {
+    const isToday = moment(date).isSame(moment(), 'day');
+    if (isToday) {
+      return {
+        style: {
+          backgroundColor: '#171717',
+        },
+      };
+    }
+    return {};
   };
 
   if (loading) {
@@ -184,6 +192,7 @@ const CashFlowCalendar = () => {
             onSelectSlot={handleSelectSlot}
             selectable
             components={components}
+            dayPropGetter={dayPropGetter}
             className="custom-calendar"
           />
         </div>
@@ -226,11 +235,8 @@ const CashFlowCalendar = () => {
           background: #0A0A0A;
         }
         .calendar-container :global(.rbc-off-range-bg) {
-          background: #171717;
-          opacity: 0.6;
-        }
-        .calendar-container :global(.rbc-today) {
-          background: rgba(1, 195, 141, 0.1);
+          background: #050505;
+          opacity: 0.4;
         }
         .calendar-container :global(.rbc-toolbar) {
           padding: 16px;

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../utils/i18n';
+import ReactMarkdown from 'react-markdown';
 
 const AIAssistantPage = () => {
     const { t } = useTranslation();
@@ -248,7 +249,36 @@ const AIAssistantPage = () => {
                                                 : 'bg-[#262626] text-white'
                                         }`}
                                     >
-                                        <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
+                                        {message.role === 'assistant' ? (
+                                            <div className="text-left prose-sm sm:prose-base">
+                                                <ReactMarkdown
+                                                    components={{
+                                                        p: (props) => <p className="mb-2 last:mb-0 text-white" {...props} />,
+                                                        ul: (props) => <ul className="list-disc ml-4 mb-2 last:mb-0 text-white" {...props} />,
+                                                        ol: (props) => <ol className="list-decimal ml-4 mb-2 last:mb-0 text-white" {...props} />,
+                                                        li: (props) => <li className="mb-1 text-white" {...props} />,
+                                                        strong: (props) => <strong className="font-bold text-white" {...props} />,
+                                                        em: (props) => <em className="italic text-white" {...props} />,
+                                                        h1: (props) => <h1 className="text-xl font-bold mb-2 mt-2 text-white" {...props} />,
+                                                        h2: (props) => <h2 className="text-lg font-bold mb-2 mt-2 text-white" {...props} />,
+                                                        h3: (props) => <h3 className="text-base font-bold mb-1 mt-1 text-white" {...props} />,
+                                                        code: ({inline, ...props}) => 
+                                                            inline ? (
+                                                                <code className="bg-gray-700 px-1 py-0.5 rounded text-sm text-white" {...props} />
+                                                            ) : (
+                                                                <code className="block bg-gray-700 p-2 rounded my-2 text-sm overflow-x-auto text-white" {...props} />
+                                                            ),
+                                                        blockquote: (props) => <blockquote className="border-l-4 border-gray-600 pl-3 italic my-2 text-white" {...props} />,
+                                                    }}
+                                                >
+                                                    {message.content}
+                                                </ReactMarkdown>
+                                            </div>
+                                        ) : (
+                                            <p className="whitespace-pre-wrap text-sm sm:text-base">
+                                                {message.content}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             ))}
