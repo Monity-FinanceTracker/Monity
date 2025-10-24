@@ -1,9 +1,11 @@
 const axios = require('axios');
 const { logger } = require('../utils/logger');
+const { decryptObject } = require('../middleware/encryption');
+const { supabaseAdmin } = require('../config');
 
 class AIChatService {
     constructor(supabase) {
-        this.supabase = supabase;
+        this.supabase = supabase; // Keep for backward compatibility
         this.apiKey = process.env.GEMINI_API_KEY;
         this.model = 'gemini-2.5-flash';
     }
@@ -15,45 +17,85 @@ class AIChatService {
      */
     async getUserFinancialContext(userId) {
         try {
-            // Get recent transactions
-            const { data: transactions } = await this.supabase
+            // Get recent transactions using admin client
+            const { data: transactionsRaw, error: transactionsError } = await supabaseAdmin
                 .from('transactions')
-                .select('description, amount, category, typeId, createdAt')
+                .select('description, amount, category, typeId, date, createdAt')
                 .eq('userId', userId)
-                .order('createdAt', { ascending: false })
+                .order('date', { ascending: false })
                 .limit(50);
 
-            // Get budgets
-            const { data: budgets } = await this.supabase
+            if (transactionsError) {
+                logger.error('Error fetching transactions', { userId, error: transactionsError.message });
+            }
+
+            // Log raw data for debugging
+            logger.info('Raw transactions data', { 
+                userId, 
+                count: transactionsRaw?.length || 0,
+                hasError: !!transactionsError,
+                sample: transactionsRaw?.[0] 
+            });
+
+            // Decrypt transaction data
+            const transactions = decryptObject('transactions', transactionsRaw || []);
+            
+            logger.info('Decrypted transactions data', { 
+                userId, 
+                count: transactions?.length || 0,
+                sample: transactions?.[0]
+            });
+
+            // Get budgets using admin client
+            const { data: budgets, error: budgetsError } = await supabaseAdmin
                 .from('budgets')
-                .select('category, amount, period')
+                .select('name, amount, month, categoryId')
                 .eq('userId', userId);
 
-            // Get savings goals
-            const { data: goals } = await this.supabase
+            if (budgetsError) {
+                logger.error('Error fetching budgets', { userId, error: budgetsError.message });
+            }
+
+            // Get savings goals using admin client
+            const { data: goalsRaw, error: goalsError } = await supabaseAdmin
                 .from('savings_goals')
-                .select('name, target_amount, current_amount, deadline')
-                .eq('userId', userId);
+                .select('goal_name, target_amount, current_amount, target_date')
+                .eq('user_id', userId);
+
+            if (goalsError) {
+                logger.error('Error fetching savings goals', { userId, error: goalsError.message });
+            }
+
+            // Decrypt savings goals data (goal names are encrypted)
+            const goals = decryptObject('savings_goals', goalsRaw || []);
 
             // Calculate spending summary
             const spendingSummary = this.calculateSpendingSummary(transactions);
 
-            // Get user profile
-            const { data: profile } = await this.supabase
+            // Get user profile using admin client
+            const { data: profileRaw, error: profileError } = await supabaseAdmin
                 .from('profiles')
                 .select('name, subscription_tier')
                 .eq('id', userId)
-                .single();
+                .limit(1)
+                .maybeSingle();
+
+            if (profileError) {
+                logger.error('Error fetching profile', { userId, error: profileError.message });
+            }
+
+            // Decrypt profile data
+            const profile = decryptObject('profiles', profileRaw || {});
 
             return {
-                profile: profile || {},
-                recentTransactions: transactions || [],
+                profile,
+                recentTransactions: transactions,
                 budgets: budgets || [],
-                savingsGoals: goals || [],
+                savingsGoals: goals,
                 spendingSummary
             };
         } catch (error) {
-            logger.error('Error fetching user financial context', { userId, error: error.message });
+            logger.error('Error fetching user financial context', { userId, error: error.message, stack: error.stack });
             return {
                 profile: {},
                 recentTransactions: [],
@@ -148,7 +190,8 @@ Financial Overview:
         if (budgets && budgets.length > 0) {
             prompt += `\nActive Budgets:\n`;
             budgets.forEach(budget => {
-                prompt += `- ${budget.category}: $${budget.amount} per ${budget.period}\n`;
+                const monthDate = budget.month ? new Date(budget.month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'month';
+                prompt += `- ${budget.name}: $${budget.amount} (${monthDate})\n`;
             });
         }
 
@@ -156,7 +199,7 @@ Financial Overview:
             prompt += `\nSavings Goals:\n`;
             savingsGoals.forEach(goal => {
                 const progress = ((goal.current_amount / goal.target_amount) * 100).toFixed(1);
-                prompt += `- ${goal.name}: $${goal.current_amount}/$${goal.target_amount} (${progress}%)\n`;
+                prompt += `- ${goal.goal_name || goal.name}: $${goal.current_amount}/$${goal.target_amount} (${progress}%)\n`;
             });
         }
 
@@ -278,7 +321,7 @@ Remember: This is real financial data. Be helpful, accurate, and responsible wit
             if (savingsGoals && savingsGoals.length > 0) {
                 const goal = savingsGoals[0];
                 const progress = ((goal.current_amount / goal.target_amount) * 100).toFixed(0);
-                return `How can I reach my ${goal.name} goal faster? I'm at ${progress}% progress.`;
+                return `How can I reach my ${goal.goal_name || goal.name} goal faster? I'm at ${progress}% progress.`;
             }
 
             if (spendingSummary.topCategories && spendingSummary.topCategories.length > 0) {
