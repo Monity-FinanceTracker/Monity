@@ -15,8 +15,26 @@ class AIChatController {
      * Send a chat message and get AI response
      */
     async sendMessage(req, res) {
-        const userId = req.user.id;
+        const userId = req.user?.id;
         const { message } = req.body;
+
+        // Validate authentication
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                error: 'User not authenticated'
+            });
+        }
+
+        // Validate UUID format
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(userId)) {
+            logger.error('Invalid user ID format in AI chat', { userId, user: req.user });
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid user ID format'
+            });
+        }
 
         if (!message || message.trim().length === 0) {
             return res.status(400).json({
@@ -98,8 +116,15 @@ class AIChatController {
      * Get chat history
      */
     async getHistory(req, res) {
-        const userId = req.user.id;
+        const userId = req.user?.id;
         const limit = parseInt(req.query.limit) || 50;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                error: 'User not authenticated'
+            });
+        }
 
         try {
             const messages = await AIChat.getMessages(userId, limit);
@@ -125,7 +150,14 @@ class AIChatController {
      * Get usage statistics
      */
     async getUsage(req, res) {
-        const userId = req.user.id;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                error: 'User not authenticated'
+            });
+        }
 
         try {
             const user = await User.getById(userId);
@@ -161,7 +193,14 @@ class AIChatController {
      * Clear chat history
      */
     async clearHistory(req, res) {
-        const userId = req.user.id;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                error: 'User not authenticated'
+            });
+        }
 
         try {
             await AIChat.clearMessages(userId);
@@ -187,8 +226,15 @@ class AIChatController {
      * Get suggested prompts
      */
     async getSuggestedPrompts(req, res) {
-        const userId = req.user.id;
+        const userId = req.user?.id;
         const locale = req.query.locale || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                error: 'User not authenticated'
+            });
+        }
 
         try {
             const suggestedMessage = await this.aiChatService.getSuggestedFirstMessage(userId);
