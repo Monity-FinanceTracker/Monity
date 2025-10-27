@@ -69,6 +69,10 @@
   },
   "addIncome": {
     "title": "Add Income",
+    "subtitle": "Track your earnings with smart categorization",
+    "form_title": "Add New Income",
+    "description": "Description",
+    "description_label": "Description",
     "amount": "Amount",
     "select_category": "Select a category",
     "date": "Date",
@@ -77,8 +81,6 @@
     "failed_load_categories": "Failed to load categories",
     "success": "Income added!",
     "failed": "Failed to add income",
-    "subtitle": "Add a new income to track your finances",
-    "description": "Description",
     "no_income_categories": "No income categories found",
     "no_categories_message": "Create income categories first.",
     "create_category": "Create Category"
