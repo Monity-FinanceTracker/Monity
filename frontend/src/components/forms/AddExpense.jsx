@@ -91,7 +91,7 @@ const AddExpense = () => {
                         <FaArrowTrendDown className="text-white text-2xl" />
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('addExpense.title')}</h1>
-                    <p className="text-gray-400 text-lg">Track your spending with smart categorization</p>
+                    <p className="text-gray-400 text-lg">{t('addExpense.subtitle')}</p>
                 </div>
 
                 {/* Add Expense Form */}
@@ -100,14 +100,14 @@ const AddExpense = () => {
                         <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
                             <FaPlus className="text-red-400 text-lg" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white">Add New Expense</h2>
+                        <h2 className="text-2xl font-bold text-white">{t('addExpense.form_title')}</h2>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Description Input */}
                         <div className="space-y-2">
                             <label className="block text-white font-medium text-sm uppercase tracking-wide">
-                                Description
+                                {t('addExpense.description_label')}
                             </label>
                             <div className="relative">
                                 <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />

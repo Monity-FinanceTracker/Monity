@@ -85,26 +85,47 @@ const AddIncome = () => {
     const incomeCategories = categories.filter(c => c.typeId === 2);
 
     return (
-        <div className="max-w-2xl mx-auto p-4 md:p-6 bg-[#171717] text-white rounded-2xl shadow-lg">
-            <header className="mb-6 text-center">
-                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('addIncome.title')}</h1>
-                 <p className="text-gray-400">{t('addIncome.subtitle')}</p>
-            </header>
-            <form onSubmit={handleSubmit} className="space-y-6">
-                 <div className="relative">
-                     <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
-                     <input
-                         type="text"
-                         className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
-                         placeholder={t('addIncome.description')}
-                         value={income.description}
-                         onChange={e => setIncome(prev => ({ ...prev, description: e.target.value }))}
-                         required
-                     />
-                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="relative">
-                        <FaDollarSign className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
+        <div className="min-h-screen bg-[#0A0A0A] p-4 md:p-6">
+            <div className="max-w-2xl mx-auto">
+                {/* Header Section */}
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl mb-4 shadow-lg">
+                        <FaArrowTrendUp className="text-white text-2xl" />
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('addIncome.title')}</h1>
+                    <p className="text-gray-400 text-lg">{t('addIncome.subtitle')}</p>
+                </div>
+
+                {/* Add Income Form */}
+                <div className="bg-[#171717] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm">
+                    <div className="flex items-center justify-center gap-3 mb-8">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                            <FaPlus className="text-green-400 text-lg" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white">{t('addIncome.form_title')}</h2>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Description Input */}
+                        <div className="space-y-2">
+                            <label className="block text-white font-medium text-sm uppercase tracking-wide">
+                                {t('addIncome.description_label')}
+                            </label>
+                            <div className="relative">
+                                <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
+                                <input
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                    placeholder={t('addIncome.description')}
+                                    value={income.description}
+                                    onChange={e => setIncome(prev => ({ ...prev, description: e.target.value }))}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="relative">
+                                <FaDollarSign className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                         <input
                             type="number"
                             step="0.01"

@@ -52,7 +52,10 @@
   },
   "addExpense": {
     "title": "Add Expense",
+    "subtitle": "Track your spending with smart categorization",
+    "form_title": "Add New Expense",
     "description": "Description",
+    "description_label": "Description",
     "amount": "Amount",
     "select_category": "Select a category",
     "date": "Date",
