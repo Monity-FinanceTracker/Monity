@@ -52,7 +52,10 @@
   },
   "addExpense": {
     "title": "Adicionar Despesa",
+    "subtitle": "Acompanhe seus gastos com categorização inteligente",
+    "form_title": "Adicionar Nova Despesa",
     "description": "Descrição",
+    "description_label": "Descrição",
     "amount": "Valor",
     "select_category": "Selecione uma categoria",
     "date": "Data",
@@ -319,24 +322,6 @@
     "description": "Descrição",
     "amount": "Valor",
     "actions": "Ações"
-  },
-  "subscription": {
-    "loading": "Carregando...",
-    "title": "Assinatura",
-    "current_plan": "Seu plano atual",
-    "manage_plan": "Gerencie seu plano de assinatura",
-    "upgrade_button": "Atualizar para Premium",
-    "upgrading": "Atualizando...",
-    "upgrade_successful": "Atualizado para Premium com sucesso!",
-    "upgrade_failed": "Falha ao atualizar a assinatura",
-    "upgrade_benefits": "Benefícios da Atualização",
-    "unlimited_transactions": "Transações ilimitadas",
-    "advanced_analytics": "Análises e insights avançados",
-    "export_data": "Exportar dados para CSV/PDF",
-    "priority_support": "Suporte prioritário ao cliente",
-    "upgrade_now": "Atualize Agora",
-    "premium_active": "Sua assinatura Premium está ativa",
-    "cancel_subscription": "Cancelar Assinatura"
   },
   "adminDashboard": {
     "fetch_error": "Falha ao buscar estatísticas do admin.",
