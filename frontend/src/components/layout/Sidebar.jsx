@@ -166,10 +166,10 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   } ${isCollapsed ? 'justify-center' : ''}`
                 }
                 onClick={() => setIsMobileMenuOpen(false)}
-                title={isCollapsed ? 'AI Assistant' : ''}
+                title={isCollapsed ? t('sidebar.ai_assistant') : ''}
               >
                 <MessageSquare className="w-5 h-5 flex-shrink-0" />
-                {!isCollapsed && <span className="font-medium truncate">AI Assistant</span>}
+                {!isCollapsed && <span className="font-medium truncate">{t('sidebar.ai_assistant')}</span>}
               </NavLink>
 
               {/* Cash Flow - Premium Only */}
