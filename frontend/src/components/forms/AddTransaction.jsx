@@ -211,14 +211,6 @@ const AddTransaction = ({ type = 'expense' }) => {
                             animation: fadeIn 0.3s ease-out;
                         }
                     `}</style>
-                    <div className="flex items-center justify-center gap-3 mb-8">
-                        <div className={`w-10 h-10 ${currentConfig.bgColor} rounded-lg flex items-center justify-center`}>
-                            <FaPlus className={`${currentConfig.textColor} text-lg`} />
-                        </div>
-                        <h2 className="text-2xl font-bold text-white">
-                            {t(`${currentConfig.translationKey}.form_title`)}
-                        </h2>
-                    </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Description Input */}
