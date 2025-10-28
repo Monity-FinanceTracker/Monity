@@ -85,6 +85,15 @@
     "no_categories_message": "Create income categories first.",
     "create_category": "Create Category"
   },
+  "addTransaction": {
+    "fill_all_fields": "Please fill in all required fields",
+    "create_category_first": "Create category first",
+    "no_category_error": "You need to create a category first to add this transaction!",
+    "no_category_alert_title": "No categories found!",
+    "no_category_alert_message": "You need to create a category before adding this transaction. Would you like to create one now?",
+    "create_category_now": "Create Category Now",
+    "no_categories_available": "You have no categories"
+  },
   "savings_goals": {
     "title": "Savings Goals",
     "add_new_goal": "Add New Goal",
