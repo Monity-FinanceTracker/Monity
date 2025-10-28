@@ -4,26 +4,7 @@ import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
-
-// Modal component using correct hardcoded colors
-const Modal = ({ children, onClose }) => {
-    const { t } = useTranslation();
-    return (
-        <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center px-4">
-            <div className="bg-[#171717] border border-[#262626] p-6 md:p-8 rounded-2xl shadow-2xl backdrop-blur-sm relative w-full max-w-md">
-                <button 
-                    onClick={onClose} 
-                    className="absolute top-4 right-4 text-white transition-colors p-2 bg-transparent border-none outline-none"
-                    style={{ background: 'transparent', border: 'none', outline: 'none' }}
-                >
-                    <X className="w-5 h-5 text-white" />
-                </button>
-                {children}
-            </div>
-        </div>
-    );
-};
-
+import { formatSimpleCurrency } from '../../utils/currency';
 
 const SavingsGoals = () => {
     const { t } = useTranslation();
@@ -201,15 +182,22 @@ const SavingsGoals = () => {
             </div>
 
             {isModalOpen && !isLimited && (
-                <Modal onClose={() => setIsModalOpen(false)}>
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                            <svg className="w-5 h-5 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                            </svg>
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-bold text-white">{t('savings_goals.add_new_goal_modal_title')}</h2>
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
+                                style={{ 
+                                    border: 'none', 
+                                    outline: 'none', 
+                                    background: 'transparent'
+                                }}
+                            >
+                                <X className="w-6 h-6 text-white" />
+                            </button>
                         </div>
-                        <h3 className="text-2xl font-bold text-white">{t('savings_goals.add_new_goal_modal_title')}</h3>
-                    </div>
                     
                     <form onSubmit={handleAddGoal} className="space-y-6">
                         <div className="space-y-2">
@@ -290,7 +278,8 @@ const SavingsGoals = () => {
                             </button>
                         </div>
                     </form>
-                </Modal>
+                    </div>
+                </div>
             )}
 
             {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -313,8 +302,16 @@ const SavingsGoals = () => {
                             <div key={goal.id} className="bg-[#171717] border border-[#262626] p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#262626]/80">
                                 <div className="flex justify-between items-start">
                                     <h4 className="text-xl font-bold text-white">{goal.goal_name}</h4>
-                                    <button onClick={() => handleDeleteGoal(goal.id)} className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-[#262626]">
-                                        <X className="w-4 h-4" />
+                                    <button 
+                                        onClick={() => handleDeleteGoal(goal.id)} 
+                                        className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
+                                        style={{ 
+                                            border: 'none', 
+                                            outline: 'none', 
+                                            background: 'transparent'
+                                        }}
+                                    >
+                                        <X className="w-6 h-6 text-white" />
                                     </button>
                                 </div>
                                 <p className="text-sm text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
@@ -323,8 +320,8 @@ const SavingsGoals = () => {
                                     <div className="bg-[#01C38D] h-4 rounded-full transition-all duration-300" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>
                                 </div>
                                 <div className="flex justify-between text-sm font-medium text-white">
-                                    <span>${parseFloat(goal.current_amount).toLocaleString()}</span>
-                                    <span>${parseFloat(goal.target_amount).toLocaleString()}</span>
+                                    <span>{formatSimpleCurrency(goal.current_amount)}</span>
+                                    <span>{formatSimpleCurrency(goal.target_amount)}</span>
                                 </div>
                                 <div className="mt-4 flex space-x-4">
                                     <button onClick={() => handleAddMoneyClick(goal.id)} className="bg-[#01C38D] hover:bg-[#01A071] text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md">
