@@ -352,6 +352,7 @@
     "avg_daily_volume": "Volume Diário Médio",
     "conversion_rate": "Taxa de Conversão Premium"
   },
+  
   "transactions": {
     "title": "Transações",
     "subtitle": "Gerencie todas as suas transações financeiras",
@@ -993,7 +994,7 @@
     "mean_absolute_percentage_error": "Erro Percentual Absoluto Médio",
     "what_if_scenario": "Planejador de Cenário \"E Se\"",
     "see_impact": "Veja como poupanças extras podem impactar sua meta:",
-    "extra_monthly_savings": "Poupança mensal extra ($)",
+    "extra_monthly_savings": "Poupança mensal extra (R$)",
     "amount_placeholder": "ex: 100",
     "calculating": "Calculando...",
     "calculate_projection": "Calcular Projeção",

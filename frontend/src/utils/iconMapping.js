@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-    Home, UtensilsCrossed, Car, DollarSign, Gamepad2, ShoppingBag,
+    Home, UtensilsCrossed, Car, Banknote, Gamepad2, ShoppingBag,
     Heart, BookOpen, Plane, Zap, Music, Dumbbell, Briefcase, 
     Smartphone, Package, Plus, Search, X, Trash2, Edit, Calendar,
     TrendingUp, TrendingDown, PieChart, BarChart3, Settings, User,
@@ -29,7 +29,8 @@ export const iconMap = {
     'Home': Home,
     'UtensilsCrossed': UtensilsCrossed,
     'Car': Car,
-    'DollarSign': DollarSign,
+    'Banknote': Banknote,
+    'DollarSign': Banknote, // Backwards compatibility
     'Gamepad2': Gamepad2,
     'ShoppingBag': ShoppingBag,
     'Heart': Heart,
@@ -190,7 +191,7 @@ export const categoryIconOptions = [
     { name: 'Home', icon: Home, label: 'Home' },
     { name: 'UtensilsCrossed', icon: UtensilsCrossed, label: 'Food & Dining' },
     { name: 'Car', icon: Car, label: 'Transportation' },
-    { name: 'DollarSign', icon: DollarSign, label: 'Finance' },
+    { name: 'Banknote', icon: Banknote, label: 'Finance' },
     { name: 'Gamepad2', icon: Gamepad2, label: 'Entertainment' },
     { name: 'ShoppingBag', icon: ShoppingBag, label: 'Shopping' },
     { name: 'Heart', icon: Heart, label: 'Health & Wellness' },

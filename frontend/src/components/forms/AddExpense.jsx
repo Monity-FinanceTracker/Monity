@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui';
 import { FaPlus, FaArrowTrendDown, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
-import { FaDollarSign, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
+import { FaMoneyBillWave, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
 
 const AddExpense = () => {
     const navigate = useNavigate();
@@ -123,7 +123,7 @@ const AddExpense = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="relative">
-                                <FaDollarSign className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
+                                <FaMoneyBillWave className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     type="number"
                                     step="0.01"

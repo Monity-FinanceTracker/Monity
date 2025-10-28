@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { get } from '../../utils/api';
 import Spinner from '../ui/Spinner';
-import { DollarSign, Lightbulb, BarChart3 } from 'lucide-react';
+import { Banknote, Lightbulb, BarChart3 } from 'lucide-react';
 import { Icon } from '../../utils/iconMapping.jsx';
 
 /**
@@ -166,7 +166,7 @@ const FinancialHealth = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
                     <h3 className="text-lg font-semibold mb-4 flex items-center">
-                        <DollarSign className="w-5 h-5 mr-2" />
+                        <Banknote className="w-5 h-5 mr-2" />
                         {t('financialHealth.income')}
                     </h3>
                     <div className="text-3xl font-bold text-green-400 mb-2">
