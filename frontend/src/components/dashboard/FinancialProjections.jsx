@@ -59,8 +59,8 @@ const FinancialProjections = ({ goal }) => {
                     <h4 className="font-bold text-lg">{t('financialProjections.ai_powered_results')}</h4>
                     
                     <div className="my-4">
-                        <p>{t('financialProjections.based_on_history')} <strong className="text-blue-500">${projection.predictedMonthlySavings}</strong> {t('financialProjections.per_month')}.</p>
-                        <p>{t('financialProjections.with_extra_commitment')} <strong className="text-blue-500">${extraSavings}</strong>, {t('financialProjections.total_monthly_savings')} <strong className="text-blue-500">${(parseFloat(projection.predictedMonthlySavings) + parseFloat(extraSavings)).toFixed(2)}</strong>.</p>
+                        <p>{t('financialProjections.based_on_history')} <strong className="text-blue-500">R$ {parseFloat(projection.predictedMonthlySavings).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> {t('financialProjections.per_month')}.</p>
+                        <p>{t('financialProjections.with_extra_commitment')} <strong className="text-blue-500">R$ {parseFloat(extraSavings).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>, {t('financialProjections.total_monthly_savings')} <strong className="text-blue-500">R$ {(parseFloat(projection.predictedMonthlySavings) + parseFloat(extraSavings)).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>.</p>
                     </div>
 
                     <p>{t('financialProjections.with_this_pace')}</p>

@@ -96,6 +96,9 @@ const CashFlowCalendar = () => {
       currency: 'BRL',
     }).format(dayData.balance);
 
+    // Determine if this day has financial activity (income or expenses)
+    const hasFinancialActivity = dayData.income > 0 || dayData.expenses > 0;
+
     return (
       <div className={`h-full p-2 flex flex-col items-start ${dayData.isNegative ? 'bg-red-900/20' : ''}`}>
         <div className={`text-xs font-semibold mb-1 ${isToday ? 'w-6 h-6 flex items-center justify-center rounded-full text-white self-center' : 'self-center'}`} style={isToday ? { backgroundColor: '#08bf8c' } : {}}>
@@ -218,17 +221,17 @@ const CashFlowCalendar = () => {
           background: #262626;
           padding: 12px 8px;
           font-weight: 600;
-          border-bottom: 1px solid #404040;
+          border-bottom: 1px solid #1D1E24;
           color: #f3f4f6;
         }
         .calendar-container :global(.rbc-month-view) {
           border: none;
         }
         .calendar-container :global(.rbc-month-row) {
-          border-top: 1px solid #262626;
+          border-top: 1px solid #1D1E24;
         }
         .calendar-container :global(.rbc-day-bg) {
-          border-left: 1px solid #262626;
+          border-left: 1px solid #1D1E24;
           background: #0A0A0A;
         }
         .calendar-container :global(.rbc-off-range-bg) {
@@ -238,7 +241,7 @@ const CashFlowCalendar = () => {
         .calendar-container :global(.rbc-toolbar) {
           padding: 16px;
           background: #171717;
-          border-bottom: 1px solid #262626;
+          border-bottom: 1px solid #1D1E24;
           margin-bottom: 0;
           display: flex;
           justify-content: space-between;
@@ -247,7 +250,7 @@ const CashFlowCalendar = () => {
         .calendar-container :global(.rbc-toolbar button) {
           color: white;
           background: #262626;
-          border: 1px solid #404040;
+          border: 1px solid #1D1E24;
           padding: 8px 16px;
           border-radius: 8px;
           font-weight: 500;
@@ -283,6 +286,22 @@ const CashFlowCalendar = () => {
           color: white;
           font-weight: 600;
           font-size: 18px;
+        }
+        .calendar-container :global(*) {
+          border-color: #1D1E24 !important;
+        }
+        .calendar-container :global(.rbc-month-view),
+        .calendar-container :global(.rbc-month-row),
+        .calendar-container :global(.rbc-date-cell),
+        .calendar-container :global(.rbc-day-bg),
+        .calendar-container :global(.rbc-off-range-bg),
+        .calendar-container :global(.rbc-today),
+        .calendar-container :global(.rbc-header),
+        .calendar-container :global(.rbc-toolbar),
+        .calendar-container :global(.rbc-toolbar button),
+        .calendar-container :global(.rbc-btn-group),
+        .calendar-container :global(.rbc-btn-group button) {
+          border-color: #1D1E24 !important;
         }
       `}</style>
     </div>

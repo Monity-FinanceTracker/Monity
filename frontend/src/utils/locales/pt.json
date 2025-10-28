@@ -52,7 +52,10 @@
   },
   "addExpense": {
     "title": "Adicionar Despesa",
+    "subtitle": "Acompanhe seus gastos com categorização inteligente",
+    "form_title": "Adicionar Nova Despesa",
     "description": "Descrição",
+    "description_label": "Descrição",
     "amount": "Valor",
     "select_category": "Selecione uma categoria",
     "date": "Data",
@@ -66,6 +69,10 @@
   },
   "addIncome": {
     "title": "Adicionar Receita",
+    "subtitle": "Acompanhe seus ganhos com categorização inteligente",
+    "form_title": "Adicionar Nova Receita",
+    "description": "Descrição",
+    "description_label": "Descrição",
     "amount": "Valor",
     "select_category": "Selecione a categoria",
     "date": "Data",
@@ -74,8 +81,6 @@
     "failed_load_categories": "Falha ao carregar categorias",
     "success": "Receita adicionada!",
     "failed": "Falha ao adicionar receita",
-    "subtitle": "Adicione uma nova receita para monitorar suas finanças",
-    "description": "Descrição",
     "no_income_categories": "Nenhuma categoria de receita encontrada",
     "no_categories_message": "Crie categorias de receita primeiro.",
     "create_category": "Criar Categoria"
@@ -320,24 +325,6 @@
     "amount": "Valor",
     "actions": "Ações"
   },
-  "subscription": {
-    "loading": "Carregando...",
-    "title": "Assinatura",
-    "current_plan": "Seu plano atual",
-    "manage_plan": "Gerencie seu plano de assinatura",
-    "upgrade_button": "Atualizar para Premium",
-    "upgrading": "Atualizando...",
-    "upgrade_successful": "Atualizado para Premium com sucesso!",
-    "upgrade_failed": "Falha ao atualizar a assinatura",
-    "upgrade_benefits": "Benefícios da Atualização",
-    "unlimited_transactions": "Transações ilimitadas",
-    "advanced_analytics": "Análises e insights avançados",
-    "export_data": "Exportar dados para CSV/PDF",
-    "priority_support": "Suporte prioritário ao cliente",
-    "upgrade_now": "Atualize Agora",
-    "premium_active": "Sua assinatura Premium está ativa",
-    "cancel_subscription": "Cancelar Assinatura"
-  },
   "adminDashboard": {
     "fetch_error": "Falha ao buscar estatísticas do admin.",
     "loading": "Carregando painel do admin...",
@@ -365,6 +352,7 @@
     "avg_daily_volume": "Volume Diário Médio",
     "conversion_rate": "Taxa de Conversão Premium"
   },
+  
   "transactions": {
     "title": "Transações",
     "subtitle": "Gerencie todas as suas transações financeiras",
@@ -715,7 +703,6 @@
     "all": "Todas as Categorias",
     "expense": "Despesa",
     "income": "Receita",
-    "transfer": "Transferência",
     "name": "Nome da Categoria",
     "type": "Tipo de Categoria",
     "icon": "Ícone",
@@ -1007,7 +994,7 @@
     "mean_absolute_percentage_error": "Erro Percentual Absoluto Médio",
     "what_if_scenario": "Planejador de Cenário \"E Se\"",
     "see_impact": "Veja como poupanças extras podem impactar sua meta:",
-    "extra_monthly_savings": "Poupança mensal extra ($)",
+    "extra_monthly_savings": "Poupança mensal extra (R$)",
     "amount_placeholder": "ex: 100",
     "calculating": "Calculando...",
     "calculate_projection": "Calcular Projeção",

@@ -67,7 +67,7 @@ function ListIncomes() {
         return (
             <div className="bg-[#171717] p-4 rounded-xl shadow-lg ring-2 ring-green-400/50">
                 <div className='flex flex-col md:flex-row items-center justify-between gap-4 mb-4'>
-                    <h3 className="text-lg font-bold text-white">{t('incomeList.total_incomes')}: <span className="text-[#01C38D]">${sum.toFixed(2)}</span></h3>
+                    <h3 className="text-lg font-bold text-white">{t('incomeList.total_incomes')}: <span className="text-[#01C38D]">R$ {sum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></h3>
                     <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                         <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_category_placeholder')} />
                         <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_date_placeholder')} />
@@ -87,7 +87,7 @@ function ListIncomes() {
         <div className="bg-[#171717] p-4 rounded-xl shadow-lg ring-2 ring-green-400/50">
             {/* Header */}
             <div className='flex flex-col md:flex-row items-center justify-between gap-4 mb-4'>
-                <h3 className="text-lg font-bold text-white">{t('incomeList.total_incomes')}: <span className="text-[#01C38D]">${sum.toFixed(2)}</span></h3>
+                <h3 className="text-lg font-bold text-white">{t('incomeList.total_incomes')}: <span className="text-[#01C38D]">R$ {sum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></h3>
                 <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_category_placeholder')} />
                     <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#01C38D] focus:border-[#01C38D] block w-full p-2.5 placeholder-gray-400" placeholder={t('incomeList.filter_date_placeholder')} />
@@ -117,7 +117,7 @@ function ListIncomes() {
                                 <td className="py-3 px-4">{formatDate(income.date)}</td>
                                 <td className="py-3 px-4">{income.category}</td>
                                 <td className="py-3 px-4">{income.description}</td>
-                                <td className="text-green-400 py-3 px-4 text-right">${income.amount.toFixed(2)}</td>
+                                <td className="text-green-400 py-3 px-4 text-right">R$ {income.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                 <td className="py-3 px-4 text-center">
                                     <button className="text-red-400 hover:text-red-300 font-semibold transition-colors" onClick={() => handleDelete(income.id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -140,7 +140,7 @@ function ListIncomes() {
                                 <p className="font-bold text-white text-lg">{income.description}</p>
                                 <p className="text-sm text-gray-400">{income.category}</p>
                             </div>
-                            <p className="text-green-400 font-bold text-lg">${income.amount.toFixed(2)}</p>
+                            <p className="text-green-400 font-bold text-lg">R$ {income.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{formatDate(income.date)}</p>
