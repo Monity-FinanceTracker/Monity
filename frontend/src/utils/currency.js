@@ -1,27 +1,27 @@
 /**
- * Currency formatting utilities
+ * Utilitários de formatação de moeda
  */
 
 /**
- * Formats a monetary amount with proper sign handling
- * @param {number} amount - The amount to format
- * @param {number} typeId - Transaction type (1 for expense, 2 for income)
- * @param {boolean} showSign - Whether to show + or - sign (default: true)
- * @returns {string} Formatted currency string
+ * Formata um valor monetário com tratamento adequado de sinal
+ * @param {number} amount - O valor a ser formatado
+ * @param {number} typeId - Tipo de transação (1 para despesa, 2 para receita)
+ * @param {boolean} showSign - Se deve mostrar o sinal + ou - (padrão: true)
+ * @returns {string} String de moeda formatada
  */
 export const formatCurrency = (amount, typeId, showSign = true) => {
     const numAmount = parseFloat(amount);
     
     if (isNaN(numAmount)) {
-        return '$0.00';
+        return 'R$ 0,00';
     }
     
-    // For expenses (typeId === 1), amount should be negative
-    // For income (typeId === 2), amount should be positive
+    // Para despesas (typeId === 1), o valor deve ser negativo
+    // Para receitas (typeId === 2), o valor deve ser positivo
     const isExpense = typeId === 1;
     const isNegative = numAmount < 0;
     
-    // Determine the sign to display
+    // Determina o sinal a ser exibido
     let sign = '';
     if (showSign) {
         if (isExpense) {
@@ -31,29 +31,41 @@ export const formatCurrency = (amount, typeId, showSign = true) => {
         }
     }
     
-    // Always use absolute value for display
+    // Sempre usa o valor absoluto para exibição
     const displayAmount = Math.abs(numAmount);
     
-    return `${sign}$${displayAmount.toFixed(2)}`;
+    // Formato brasileiro: R$ 1.234,56
+    const formatted = displayAmount.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    
+    return `${sign}R$ ${formatted}`;
 };
 
 /**
- * Formats a simple currency amount without transaction type logic
- * @param {number} amount - The amount to format
- * @param {boolean} showSign - Whether to show sign (default: false)
- * @returns {string} Formatted currency string
+ * Formata um valor de moeda simples sem lógica de tipo de transação
+ * @param {number} amount - O valor a ser formatado
+ * @param {boolean} showSign - Se deve mostrar o sinal (padrão: false)
+ * @returns {string} String de moeda formatada
  */
 export const formatSimpleCurrency = (amount, showSign = false) => {
     const numAmount = parseFloat(amount);
     
     if (isNaN(numAmount)) {
-        return '$0.00';
+        return 'R$ 0,00';
     }
     
     const sign = showSign && numAmount < 0 ? '-' : '';
     const displayAmount = Math.abs(numAmount);
     
-    return `${sign}$${displayAmount.toFixed(2)}`;
+    // Formato brasileiro: R$ 1.234,56
+    const formatted = displayAmount.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    
+    return `${sign}R$ ${formatted}`;
 };
 
 /**

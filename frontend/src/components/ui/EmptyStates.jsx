@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { 
     Home, Play, RotateCcw, MessageCircle, Search, Plus, 
-    Upload, RefreshCw, Bot, BookOpen, TrendingUp, DollarSign 
+    Upload, RefreshCw, Bot, BookOpen, TrendingUp, Banknote 
 } from 'lucide-react';
 import { Icon } from '../../utils/iconMapping.jsx';
 
-/**
+/*
  * Reusable empty state components for better UX when there's no data
  */
 

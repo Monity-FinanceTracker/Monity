@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Trash2, Edit, Repeat, Calendar, DollarSign } from 'lucide-react';
+import { Trash2, Edit, Repeat, Calendar, Banknote } from 'lucide-react';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import moment from 'moment';

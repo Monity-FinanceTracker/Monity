@@ -31,7 +31,7 @@ const EnhancedSettings = () => {
         notifications: true,
         emailUpdates: false,
         darkMode: true,
-        currency: 'USD'
+        currency: 'BRL'
     });
     const [isUpgrading, setIsUpgrading] = useState(false);
     
@@ -57,8 +57,8 @@ const EnhancedSettings = () => {
                     notifications: true,
                     email_updates: false,
                     dark_mode: true,
-                    currency: 'USD',
-                    language: 'en'
+                    currency: 'BRL',
+                    language: 'pt'
                 };
                 
                 const { data: newData, error: insertError } = await supabase
