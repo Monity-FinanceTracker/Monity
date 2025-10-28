@@ -85,6 +85,15 @@
     "no_categories_message": "Crie categorias de receita primeiro.",
     "create_category": "Criar Categoria"
   },
+  "addTransaction": {
+    "fill_all_fields": "Por favor, preencha todos os campos obrigatórios",
+    "create_category_first": "Criar categoria primeiro",
+    "no_category_error": "Você precisa criar uma categoria primeiro para adicionar esta transação!",
+    "no_category_alert_title": "Nenhuma categoria encontrada!",
+    "no_category_alert_message": "Você precisa criar uma categoria antes de adicionar esta transação. Deseja criar uma agora?",
+    "create_category_now": "Criar Categoria Agora",
+    "no_categories_available": "Você não tem categorias"
+  },
   "savings_goals": {
     "title": "Metas de Poupança",
     "add_new_goal": "Adicionar Nova Meta",
