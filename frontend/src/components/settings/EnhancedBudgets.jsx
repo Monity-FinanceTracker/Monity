@@ -159,7 +159,7 @@ const EnhancedBudgets = () => {
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-white">
-                            ${budgets.reduce((sum, b) => sum + parseFloat(b.amount || 0), 0).toFixed(2)}
+                            R$ {budgets.reduce((sum, b) => sum + parseFloat(b.amount || 0), 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                     </div>
 
@@ -255,7 +255,7 @@ const EnhancedBudgets = () => {
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-gray-400">
-                                            ${spent.toFixed(2)} {t('budgets.of')} ${budget.amount}
+                                            R$ {spent.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {t('budgets.of')} R$ {parseFloat(budget.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
                                         <span className={`font-medium ${
                                             percentage >= 100 ? 'text-red-400' :
@@ -274,7 +274,7 @@ const EnhancedBudgets = () => {
                                     
                                     <div className="flex justify-between text-sm">
                                         <span className={`${remaining > 0 ? 'text-[#01C38D]' : 'text-red-400'}`}>
-                                            ${remaining.toFixed(2)} {remaining > 0 ? t('budgets.remaining') : t('budgets.over_budget')}
+                                            R$ {remaining.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {remaining > 0 ? t('budgets.remaining') : t('budgets.over_budget')}
                                         </span>
                                         <span className="text-gray-400">
                                             {budget.period === 'monthly' ? '30 days' : budget.period}

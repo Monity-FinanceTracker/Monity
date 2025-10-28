@@ -185,7 +185,7 @@ function Budget() {
                                 <span className="text-sm text-gray-400 block">{new Date(budget.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
                             </div>
                             <div className="flex items-center gap-4">
-                               <span className="font-bold text-[#01C38D]">${parseFloat(budget.amount).toFixed(2)}</span>
+                               <span className="font-bold text-[#01C38D]">R$ {parseFloat(budget.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                 <button onClick={() => handleDeleteBudget(budget.id)} className="text-red-500 hover:text-red-700">
                                     X
                                 </button>

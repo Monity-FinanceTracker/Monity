@@ -15,7 +15,7 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     }
 
     return (
-        <h2 className="text-2xl font-bold text-white mb-4">${balance.toFixed(2)}</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">R$ {balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
     );
 });
 
