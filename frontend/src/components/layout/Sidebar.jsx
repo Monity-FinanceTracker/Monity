@@ -27,7 +27,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
 
   return (
     <>
-      <aside className={`fixed top-0 left-0 h-screen bg-[#171717] text-white border-r border-[#262626] z-40 transform transition-[width,transform] duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'} overflow-hidden`} style={{ willChange: 'transform, width' }}>
+      <aside className={`fixed top-0 left-0 h-screen bg-[#171717] text-white border-r border-[#262626] z-40 transform transition-[width,transform] duration-200 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-64'} overflow-hidden`} style={{ willChange: 'transform, width' }}>
         <div className="flex flex-col h-full min-h-0">
           {/* Header */}
           <div className={`flex items-center h-[73px] px-4 border-b border-[#262626] flex-shrink-0 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
@@ -70,7 +70,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <LayoutDashboard className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.dashboard')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.dashboard')}</span>
               </NavLink>
               <NavLink
                 to="/transactions"
@@ -86,7 +86,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <CreditCard className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.transactions')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.transactions')}</span>
               </NavLink>
               <NavLink
                 to="/groups"
@@ -102,7 +102,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Users className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.groups')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.groups')}</span>
               </NavLink>
               <NavLink
                 to="/categories"
@@ -118,7 +118,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Tag className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.categories')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.categories')}</span>
               </NavLink>
               <NavLink
                 to="/budgets"
@@ -134,7 +134,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <PieChart className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.budgets')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.budgets')}</span>
               </NavLink>
 
               <NavLink
@@ -151,7 +151,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Target className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.savings_goals')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.savings_goals')}</span>
               </NavLink>
 
               <NavLink
@@ -168,7 +168,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <TrendingUp className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.financial_health')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.financial_health')}</span>
               </NavLink>
 
               <NavLink
@@ -185,7 +185,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <MessageSquare className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.ai_assistant')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.ai_assistant')}</span>
               </NavLink>
 
               {/* Cash Flow - Premium Only */}
@@ -204,7 +204,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0">
                     <CalendarDays className="w-5 h-5" />
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.cash_flow')}</span>
+                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.cash_flow')}</span>
                 </NavLink>
               )}
 
@@ -227,7 +227,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.go_premium')}</span>
+                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.go_premium')}</span>
                 </NavLink>
               </div>
             )}
@@ -248,7 +248,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.premium')}</span>
+                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.premium')}</span>
                 </NavLink>
               </div>
             )}
@@ -275,7 +275,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
                     <span className="material-symbols-outlined text-lg">eye_tracking</span>
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.admin_dashboard')}</span>
+                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.admin_dashboard')}</span>
                 </NavLink>
               )}
               
@@ -293,7 +293,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Settings className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-3'}`}>{t('sidebar.settings')}</span>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-3 translate-x-0'}`}>{t('sidebar.settings')}</span>
               </NavLink>
             </div>
           </div>
