@@ -116,7 +116,7 @@ const Groups = () => {
                                             {group.totalSpent > 0 && (
                                                 <div className="text-right">
                                                     <div className="text-[#01C38D] font-bold text-lg">
-                                                        ${group.totalSpent.toFixed(0)}
+                                                        R$ {group.totalSpent.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                                     </div>
                                                     <div className="text-gray-400 text-xs">
                                                         {group.expenseCount} {t('groups.expenses_count')}
