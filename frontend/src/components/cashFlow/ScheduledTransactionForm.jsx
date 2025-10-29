@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Calendar, Banknote, Tag, Repeat } from 'lucide-react';
+import { Calendar, Banknote, Tag, Repeat } from 'lucide-react';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import { CloseButton } from '../ui';
 
 const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit }) => {
   const { t } = useTranslation();
@@ -120,12 +121,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
           <h2 className="text-xl font-bold text-white">
             {transaction ? t('cashFlow.form.edit_title') : t('cashFlow.form.create_title')}
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <CloseButton onClick={onClose} size="sm" />
         </div>
 
         {/* Form */}

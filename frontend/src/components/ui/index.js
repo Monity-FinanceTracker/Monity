@@ -18,3 +18,4 @@ export { default as Skeleton, CardSkeleton, TransactionSkeleton, DashboardSkelet
 export { default as FormField, Input, Textarea, Select, FormGroup, FormActions, FormSection } from './FormField';
 export { default as Dropdown } from './Dropdown';
 export { default as AIChat } from './AIChat';
+export { default as CloseButton } from './CloseButton';

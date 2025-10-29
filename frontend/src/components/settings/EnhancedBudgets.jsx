@@ -6,7 +6,7 @@ import { EmptyBudgets, LoadingState } from '../ui/EmptyStates';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
-import { X } from 'lucide-react';
+import { CloseButton } from '../ui';
 
 /**
  * Enhanced Budgets Component with modern UI and improved functionality
@@ -293,17 +293,7 @@ const EnhancedBudgets = () => {
                     <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('budgets.add_new')}</h2>
-                            <button
-                                onClick={() => setShowAddForm(false)}
-                                className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
-                                style={{ 
-                                    border: 'none', 
-                                    outline: 'none', 
-                                    background: 'transparent'
-                                }}
-                            >
-                                <X className="w-6 h-6 text-white" />
-                            </button>
+                            <CloseButton onClick={() => setShowAddForm(false)} />
                         </div>
 
                         <form onSubmit={handleAddBudget} className="space-y-4">
@@ -419,17 +409,7 @@ const EnhancedBudgets = () => {
                     <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('budgets.edit')}</h2>
-                            <button
-                                onClick={() => setEditingBudget(null)}
-                                className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
-                                style={{ 
-                                    border: 'none', 
-                                    outline: 'none', 
-                                    background: 'transparent'
-                                }}
-                            >
-                                <X className="w-6 h-6 text-white" />
-                            </button>
+                            <CloseButton onClick={() => setEditingBudget(null)} />
                         </div>
 
                         <form onSubmit={handleUpdateBudget} className="space-y-4">
