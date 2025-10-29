@@ -23,6 +23,7 @@ const Button = memo(({
     primary: 'bg-[#01C38D] hover:bg-[#01A071] text-[#232323] focus:ring-[#01C38D]/20 shadow-sm hover:shadow-md',
     secondary: 'bg-[#171717] hover:bg-[#262626] text-white border border-[#262626] hover:border-[#262626]/80 focus:ring-[#01C38D]/20',
     danger: 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500/20 shadow-sm hover:shadow-md',
+    success: 'bg-green-500 hover:bg-green-600 text-white focus:ring-green-500/20 shadow-sm hover:shadow-md',
     ghost: 'text-[#01C38D] hover:bg-[#01C38D]/10 hover:text-[#01A071] focus:ring-[#01C38D]/20',
     outline: 'border-2 border-[#01C38D] text-[#01C38D] hover:bg-[#01C38D] hover:text-[#232323] focus:ring-[#01C38D]/20',
     minimal: 'text-gray-300 hover:text-white hover:bg-[#171717] focus:ring-[#01C38D]/20'

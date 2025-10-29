@@ -30,8 +30,7 @@ const EnhancedCategories = () => {
     const categoryTypes = [
         { id: 'all', label: t('categories.all'), value: 'all' },
         { id: 1, label: t('categories.expense'), value: 'expense' },
-        { id: 2, label: t('categories.income'), value: 'income' },
-        { id: 3, label: t('categories.transfer'), value: 'transfer' }
+        { id: 2, label: t('categories.income'), value: 'income' }
     ];
 
     const colorOptions = [
