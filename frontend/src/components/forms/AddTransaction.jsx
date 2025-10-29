@@ -4,10 +4,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getCategories, addTransaction, post } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui';
+import { Button, CloseButton } from '../ui';
 import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { FaMoneyBillWave, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
-import { X } from 'lucide-react';
 import { categoryIconOptions } from '../../utils/iconMapping.jsx';
 
 /**
@@ -372,20 +371,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                     <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
-                            <button
-                                onClick={() => setShowAddCategoryModal(false)}
-                                className="text-white hover:text-gray-300 transition-colors focus:outline-none"
-                                style={{ 
-                                    background: 'none', 
-                                    border: 'none', 
-                                    padding: 0, 
-                                    margin: 0,
-                                    outline: 'none',
-                                    boxShadow: 'none'
-                                }}
-                            >
-                                <X className="w-6 h-6 text-white" />
-                            </button>
+                            <CloseButton onClick={() => setShowAddCategoryModal(false)} />
                         </div>
 
                         <form onSubmit={handleAddCategory} className="space-y-3 sm:space-y-4">

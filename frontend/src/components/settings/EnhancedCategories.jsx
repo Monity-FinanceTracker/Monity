@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../ui/NotificationSystem';
 import { get, post, del } from '../../utils/api';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
-import { Plus, Search, X, Trash2 } from 'lucide-react';
+import { Plus, Search, Trash2 } from 'lucide-react';
 import { iconMap, categoryIconOptions, getIcon } from '../../utils/iconMapping.jsx';
-import { Dropdown } from '../ui';
+import { Dropdown, CloseButton } from '../ui';
 
 /**
  * Enhanced Categories Component with modern UI and improved functionality
@@ -202,20 +202,7 @@ const EnhancedCategories = () => {
                     <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
-                            <button
-                                onClick={() => setShowAddForm(false)}
-                                className="text-white hover:text-gray-300 transition-colors focus:outline-none"
-                                style={{ 
-                                    background: 'none', 
-                                    border: 'none', 
-                                    padding: 0, 
-                                    margin: 0,
-                                    outline: 'none',
-                                    boxShadow: 'none'
-                                }}
-                            >
-                                <X className="w-6 h-6 text-white" />
-                            </button>
+                            <CloseButton onClick={() => setShowAddForm(false)} />
                         </div>
 
                         <form onSubmit={handleAddCategory} className="space-y-3 sm:space-y-4">
