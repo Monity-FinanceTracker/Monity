@@ -390,7 +390,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 {/* Add Expense */}
                 <button
                   onClick={() => {
-                    navigate('/transactions?type=expense');
+                    navigate('/add-expense');
                     setIsSearchOpen(false);
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
@@ -406,7 +406,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 {/* Add Income */}
                 <button
                   onClick={() => {
-                    navigate('/transactions?type=income');
+                    navigate('/add-income');
                     setIsSearchOpen(false);
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
