@@ -1,11 +1,14 @@
 const User = require('../models/User');
 const { logger } = require('../utils/logger');
 const jwt = require('jsonwebtoken');
+const { supabaseAdmin } = require('../config');
+const DataExportService = require('../services/dataExportService');
 
 class AuthController {
     constructor(supabase) {
         this.supabase = supabase;
         this.userModel = new User(supabase);
+        this.dataExportService = new DataExportService(supabase);
     }
 
     async register(req, res) {
@@ -211,6 +214,128 @@ class AuthController {
         } catch (error) {
             logger.error('An unexpected error occurred while fetching financial health', { userId, error: error.message });
             res.status(500).json({ error: 'Failed to calculate financial health' });
+        }
+    }
+
+    async deleteAccount(req, res) {
+        const userId = req.user.id;
+
+        try {
+            logger.info(`Account deletion requested for user ${userId}`);
+
+            // Delete all user data from related tables using supabaseAdmin to bypass RLS
+            const deleteOperations = [
+                supabaseAdmin.from('transactions').delete().eq('user_id', userId),
+                supabaseAdmin.from('budgets').delete().eq('user_id', userId),
+                supabaseAdmin.from('categories').delete().eq('user_id', userId),
+                supabaseAdmin.from('savings_goals').delete().eq('user_id', userId),
+                supabaseAdmin.from('groups').delete().eq('user_id', userId),
+                supabaseAdmin.from('ai_chats').delete().eq('user_id', userId),
+                supabaseAdmin.from('scheduled_transactions').delete().eq('user_id', userId)
+            ];
+
+            // Execute all delete operations in parallel
+            const results = await Promise.allSettled(deleteOperations);
+
+            // Check if any deletions failed
+            const failures = results.filter(r => r.status === 'rejected');
+            if (failures.length > 0) {
+                logger.error('Some data deletions failed during account deletion', {
+                    userId,
+                    failures: failures.map(f => f.reason)
+                });
+            }
+
+            // Delete the user profile
+            const { error: profileError } = await supabaseAdmin
+                .from('profiles')
+                .delete()
+                .eq('id', userId);
+
+            if (profileError) {
+                logger.error('Failed to delete user profile', { userId, error: profileError.message });
+                return res.status(500).json({ error: 'Failed to delete profile data' });
+            }
+
+            // Delete the user from Supabase Auth
+            const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+
+            if (authError) {
+                logger.error('Failed to delete user from auth system', { userId, error: authError.message });
+                return res.status(500).json({ error: 'Failed to delete authentication account' });
+            }
+
+            logger.info(`Account successfully deleted for user ${userId}`);
+            res.json({
+                success: true,
+                message: 'Account and all associated data have been permanently deleted'
+            });
+
+        } catch (error) {
+            logger.error('An unexpected error occurred during account deletion', {
+                userId,
+                error: error.message
+            });
+            res.status(500).json({ error: 'Internal Server Error during account deletion' });
+        }
+    }
+
+    async exportUserData(req, res) {
+        const userId = req.user.id;
+        const format = req.body.format || 'json'; // Default to JSON
+
+        try {
+            logger.info(`Data export requested for user ${userId} in format ${format}`);
+
+            // Validate format
+            if (!['json', 'csv', 'pdf'].includes(format.toLowerCase())) {
+                return res.status(400).json({
+                    error: 'Invalid format. Supported formats: json, csv, pdf'
+                });
+            }
+
+            // Export all user data
+            const exportedData = await this.dataExportService.exportAllUserData(userId, format);
+
+            // Set appropriate content type and filename
+            let contentType;
+            let filename;
+
+            switch (format.toLowerCase()) {
+                case 'csv':
+                    contentType = 'text/csv';
+                    filename = `monity-data-export-${userId}-${Date.now()}.csv`;
+                    break;
+                case 'pdf':
+                    contentType = 'application/pdf';
+                    filename = `monity-data-export-${userId}-${Date.now()}.pdf`;
+                    break;
+                case 'json':
+                default:
+                    contentType = 'application/json';
+                    filename = `monity-data-export-${userId}-${Date.now()}.json`;
+                    break;
+            }
+
+            res.setHeader('Content-Type', contentType);
+            res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+            if (format.toLowerCase() === 'pdf') {
+                // For PDF, exportedData is a Buffer
+                res.send(exportedData);
+            } else {
+                // For JSON and CSV, exportedData is a string
+                res.send(exportedData);
+            }
+
+            logger.info(`Data export completed successfully for user ${userId}`);
+
+        } catch (error) {
+            logger.error('An unexpected error occurred during data export', {
+                userId,
+                error: error.message
+            });
+            res.status(500).json({ error: 'Internal Server Error during data export' });
         }
     }
 }
