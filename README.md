@@ -2,7 +2,7 @@
 
 **AI-powered personal finance management with collaborative expense splitting.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)]()
 [![Status: Pre-Launch](https://img.shields.io/badge/Status-Pre--Launch-orange.svg)]()
 
 > **🚀 Coming Soon** – Currently in final testing before public launch. Star the repo to follow our progress!
@@ -317,15 +317,15 @@ Please ensure:
 
 ## Team
 
-- **Leonardo Stuart** – [GitHub](#) • [LinkedIn](#)
-- **Luca G. Lodi** – [GitHub](#) • [LinkedIn](#)
-- **Fabio Brugnara** – [GitHub](#) • [LinkedIn](#)
+- **Leonardo Stuart** – [https://github.com/leo-stuart](#) • [https://www.linkedin.com/in/leonardo-stuart-almeida-ramalho-ab799825a](#)
+- **Luca G. Lodi** – [https://github.com/LucaLodii](#) • [https://www.linkedin.com/in/luca-guimarães-lodi-752981356](#)
+- **Fabio Brugnara** – [https://github.com/fabiobrug](#) • [https://www.linkedin.com/in/fabio-brugnara-b32307324](#)
 
 ---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is proprietary software. All rights reserved - see the [LICENSE](LICENSE) file for details.
 
 ---
 
