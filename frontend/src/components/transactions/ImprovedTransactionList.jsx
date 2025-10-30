@@ -12,6 +12,19 @@ import { monitorApiCall } from '../../utils/performanceMonitor';
 import { TransactionSkeleton, Dropdown } from '../ui';
 
 /**
+ * Calcula tamanho da fonte baseado no comprimento do valor
+ */
+const getResponsiveFontSize = (value) => {
+    const formattedValue = Math.abs(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const totalLength = formattedValue.length + 4; // +4 para "R$ " ou "-R$ "
+    
+    if (totalLength <= 10) return 'text-lg sm:text-2xl';
+    if (totalLength <= 15) return 'text-base sm:text-xl';
+    if (totalLength <= 20) return 'text-sm sm:text-lg';
+    return 'text-xs sm:text-base';
+};
+
+/**
  * Enhanced transaction list with advanced filtering, search, and bulk operations
  */
 const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
@@ -408,21 +421,25 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className="text-lg sm:text-2xl font-bold text-green-400">R$ {totals.income.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                        <div className={`${getResponsiveFontSize(totals.income)} font-bold text-green-400 whitespace-nowrap overflow-hidden`}>
+                            R$ {totals.income.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_income')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className="text-lg sm:text-2xl font-bold text-red-400">{formatSimpleCurrency(totals.expenses, true)}</div>
+                        <div className={`${getResponsiveFontSize(totals.expenses)} font-bold text-red-400 whitespace-nowrap overflow-hidden`}>
+                            {formatSimpleCurrency(totals.expenses, true)}
+                        </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`text-lg sm:text-2xl font-bold ${totals.savings >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+                        <div className={`${getResponsiveFontSize(totals.savings)} font-bold whitespace-nowrap overflow-hidden ${totals.savings >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
                             {totals.savings >= 0 ? 'R$ ' : '-R$ '}{Math.abs(totals.savings).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_savings')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`text-lg sm:text-2xl font-bold ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        <div className={`${getResponsiveFontSize(balance)} font-bold whitespace-nowrap overflow-hidden ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {balance >= 0 ? 'R$ ' : '-R$ '}{Math.abs(balance).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.net_balance')}</div>
