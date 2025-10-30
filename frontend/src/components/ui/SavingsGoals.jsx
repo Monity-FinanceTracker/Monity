@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
+import CloseButton from './CloseButton';
 import { formatSimpleCurrency } from '../../utils/currency';
 
 const SavingsGoals = () => {
@@ -186,17 +186,7 @@ const SavingsGoals = () => {
                     <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('savings_goals.add_new_goal_modal_title')}</h2>
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
-                                style={{ 
-                                    border: 'none', 
-                                    outline: 'none', 
-                                    background: 'transparent'
-                                }}
-                            >
-                                <X className="w-6 h-6 text-white" />
-                            </button>
+                            <CloseButton onClick={() => setIsModalOpen(false)} />
                         </div>
                     
                     <form onSubmit={handleAddGoal} className="space-y-6">
@@ -302,17 +292,7 @@ const SavingsGoals = () => {
                             <div key={goal.id} className="bg-[#171717] border border-[#262626] p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#262626]/80">
                                 <div className="flex justify-between items-start">
                                     <h4 className="text-xl font-bold text-white">{goal.goal_name}</h4>
-                                    <button 
-                                        onClick={() => handleDeleteGoal(goal.id)} 
-                                        className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors"
-                                        style={{ 
-                                            border: 'none', 
-                                            outline: 'none', 
-                                            background: 'transparent'
-                                        }}
-                                    >
-                                        <X className="w-6 h-6 text-white" />
-                                    </button>
+                                    <CloseButton onClick={() => handleDeleteGoal(goal.id)} />
                                 </div>
                                 <p className="text-sm text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
                                 
