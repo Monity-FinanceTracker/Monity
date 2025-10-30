@@ -307,7 +307,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
           {/* Admin and Settings at bottom */}
           <div className="border-t border-[#262626] px-[18px] py-4 flex-shrink-0">
             <div className="space-y-2">
-              {/* Admin Dashboard first */}
+              {/* Admin Dashboard First */}
               {isAdmin && (
                 <NavLink
                   to="/admin"
