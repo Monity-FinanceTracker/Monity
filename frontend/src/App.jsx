@@ -8,18 +8,19 @@ import { isPremium } from './utils/premium';
 // Removed preloadComponents import - now using useComponentPreloader hook
 
 // Keep only critical components as regular imports for faster initial loading
-import { 
-  AddExpense, 
-  AddIncome, 
-  Sidebar, 
-  Login, 
-  Signup, 
-  Spinner, 
-  UnifiedTopBar, 
+import {
+  AddExpense,
+  AddIncome,
+  Sidebar,
+  Login,
+  Signup,
+  Spinner,
+  UnifiedTopBar,
   NotificationProvider
 } from './components';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import ConfigCheck from './components/ui/ConfigCheck';
+import Privace from './components/privace';
 
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
@@ -161,6 +162,7 @@ const App = React.memo(() => {
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/privacy" element={<Privace />} />
 
         {/* Protected routes - using lazy components */}
         <Route path="/" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedDashboard /></MainLayout></ProtectedRoute>} />
