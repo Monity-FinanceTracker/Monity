@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, Info } from 'lucide-react';
+import CloseButton from './CloseButton';
 
 /**
  * Notification Context and Provider for app-wide notifications
@@ -214,17 +215,7 @@ const NotificationCard = ({ notification, onClose }) => {
                     </div>
 
                     {/* Close button */}
-                    <button
-                        onClick={handleClose}
-                        className="border-0 outline-none focus:outline-none bg-transparent p-0 m-0 text-white hover:text-gray-300 transition-colors flex-shrink-0"
-                        style={{ 
-                            border: 'none', 
-                            outline: 'none', 
-                            background: 'transparent'
-                        }}
-                    >
-                        <X className="w-4 h-4 text-white" />
-                    </button>
+                    <CloseButton onClick={handleClose} size="sm" className="flex-shrink-0" />
                 </div>
 
                 {/* Progress bar for timed notifications */}
