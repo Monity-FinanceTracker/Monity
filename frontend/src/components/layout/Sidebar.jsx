@@ -227,6 +227,24 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.ai_assistant')}</span>
               </NavLink>
 
+              {/* Investment Calculator */}
+              <NavLink
+                to="/investment-calculator"
+                className={({ isActive }) =>
+                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
+                  }`
+                }
+                onClick={() => setIsMobileMenuOpen(false)}
+                title={isCollapsed ? t('sidebar.investment_calculator') : ''}
+              >
+                <div className="w-5 h-5 flex-shrink-0">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.investment_calculator')}</span>
+              </NavLink>
+
               {/* Cash Flow - Premium Only */}
               {premiumUser && (
                 <NavLink
