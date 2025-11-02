@@ -83,3 +83,6 @@ CREATE TRIGGER investment_calculator_usage_updated_at
 COMMENT ON TABLE investment_simulations IS 'Stores investment calculator simulation data for users';
 COMMENT ON TABLE investment_calculator_usage IS 'Tracks monthly simulation usage for implementing free tier limits (2 simulations/month)';
 
+
+
+

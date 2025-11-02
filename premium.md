@@ -26,7 +26,7 @@ Monity operates on a freemium model with two subscription tiers:
 
 ## ACTUAL Premium Limitations (Implemented in Code)
 
-**IMPORTANT**: After thorough code analysis, most "premium" features are NOT actually restricted. Only the following features have real limitations implemented:
+**IMPORTANT**: The following features have real limitations implemented in both frontend and backend code. All other advertised "premium" features are available to all users.
 
 ### 1. Savings Goals - ✅ ACTUALLY LIMITED
 
@@ -111,7 +111,120 @@ const isLimited = subscriptionTier === 'free' && budgets.length >= 2;
 - Unlimited budgets
 - Full access to budget tracking and analytics
 
-### 3. Premium Route Protection - ✅ ACTUALLY IMPLEMENTED
+### 3. AI Financial Assistant (Chat) - ✅ ACTUALLY LIMITED
+
+**Free Tier Limitation:**
+- Maximum 3 messages per day
+- AI response blocked after reaching daily limit
+- Upgrade prompt displayed when limit reached
+
+**Code Implementation:**
+```javascript
+// backend/controllers/aiChatController.js:6
+const FREE_TIER_DAILY_LIMIT = 3;
+
+// Usage Check (Lines 52-65)
+if (subscriptionTier === 'free') {
+    const usage = await AIChat.getTodayUsage(userId);
+
+    if (usage.message_count >= FREE_TIER_DAILY_LIMIT) {
+        return res.status(429).json({
+            success: false,
+            error: 'Daily message limit reached',
+            message: `You've reached your daily limit of ${FREE_TIER_DAILY_LIMIT} messages. Upgrade to premium for unlimited messages.`,
+            limit: FREE_TIER_DAILY_LIMIT,
+            used: usage.message_count,
+            upgradeRequired: true
+        });
+    }
+}
+```
+
+**Frontend Implementation:**
+```javascript
+// frontend/src/components/ai/AIAssistantPage.jsx:171-172
+const isPremium = subscriptionTier === 'premium';
+const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
+
+// UI Limitation Display (Lines 186-194)
+{isPremium ? (
+    <span className="text-[#01C38D]">{t('ai.unlimited_messages')}</span>
+) : (
+    <span>
+        {t('ai.messages_remaining', {
+            count: messagesRemaining,
+            plural: messagesRemaining !== 1 ? 's' : ''
+        })}
+    </span>
+)}
+```
+
+**Premium Benefits:**
+- Unlimited AI chat messages per day
+- Full access to personalized financial advice
+- Priority AI response processing
+
+### 4. Investment Calculator - ✅ ACTUALLY LIMITED
+
+**Free Tier Limitation:**
+- Maximum 2 simulations per month
+- Calculation blocked after reaching monthly limit
+- Upgrade prompt displayed when limit reached
+
+**Code Implementation:**
+```javascript
+// backend/controllers/investmentCalculatorController.js:6
+const FREE_TIER_MONTHLY_LIMIT = 2;
+
+// Usage Check (Lines 60-73)
+if (subscriptionTier === 'free') {
+    const usage = await InvestmentCalculator.getMonthlyUsage(userId);
+
+    if (usage.simulation_count >= FREE_TIER_MONTHLY_LIMIT) {
+        return res.status(429).json({
+            success: false,
+            error: 'Monthly simulation limit reached',
+            message: `You've reached your monthly limit of ${FREE_TIER_MONTHLY_LIMIT} simulations. Upgrade to premium for unlimited simulations.`,
+            limit: FREE_TIER_MONTHLY_LIMIT,
+            used: usage.simulation_count,
+            upgradeRequired: true
+        });
+    }
+}
+```
+
+**Frontend Implementation:**
+```javascript
+// frontend/src/components/investment/InvestmentCalculator.jsx:45-80
+const [usage, setUsage] = useState(null);
+
+useEffect(() => {
+    fetchUsage();
+}, []);
+
+const fetchUsage = async () => {
+    try {
+        const response = await axios.get('/api/v1/investment-calculator/usage');
+        
+        if (!response.data.isPremium && 
+            response.data.data.simulationsUsed >= response.data.data.simulationsLimit) {
+            // Show upgrade message
+        }
+        
+        setUsage(response.data.data);
+    } catch (error) {
+        console.error('Error fetching usage:', error);
+    }
+};
+```
+
+**Premium Benefits:**
+- Unlimited investment simulations per month
+- Advanced investment analysis
+- Historical calculation storage
+- Priority processing for calculations
+
+### 5. Premium Route Protection - ✅ ACTUALLY IMPLEMENTED
 
 **Code Implementation:**
 ```javascript
@@ -338,7 +451,9 @@ const refreshSubscription = useCallback(async (options = {}) => {
 
 ### 2. Upgrade Benefits Display
 The subscription page shows these premium benefits:
-- ✓ Unlimited transactions
+- ✓ Unlimited budgets & savings goals
+- ✓ Unlimited AI financial assistant messages
+- ✓ Unlimited investment simulations
 - ✓ Advanced analytics and insights
 - ✓ Export data to CSV/PDF
 - ✓ Priority customer support
@@ -460,8 +575,25 @@ Based on the codebase structure, potential future premium features could include
 - Application logs for webhook processing
 - Database queries for subscription status verification
 
+## Summary of Premium Limitations
+
+**Free Tier Limitations:**
+1. Savings Goals: Maximum 2 goals
+2. Budgets: Maximum 2 budgets
+3. AI Financial Assistant: 3 messages per day
+4. Investment Calculator: 2 simulations per month
+
+**Premium Tier Benefits ($9.99/month):**
+- ✅ Unlimited savings goals and budgets
+- ✅ Unlimited AI chat messages
+- ✅ Unlimited investment simulations
+- ✅ Early access to new features
+- ✅ Priority customer support
+
+**Note:** AI categorization, advanced analytics, financial projections, and data export are available to all users regardless of subscription tier.
+
 ## Conclusion
 
-The Monity application implements a comprehensive freemium model with clear premium limitations and benefits. The system uses Stripe for payment processing and provides a smooth upgrade experience for users. Premium features focus on removing limitations (unlimited savings goals and budgets) and adding advanced functionality (AI features, advanced analytics, data export).
+The Monity application implements a comprehensive freemium model with clear premium limitations and benefits. The system uses Stripe for payment processing and provides a smooth upgrade experience for users. Premium features focus on removing usage limitations across core functionality (budgets, savings goals, AI assistant, and investment calculator).
 
-The implementation is well-structured with proper separation between frontend UI limitations and backend subscription management, ensuring a secure and user-friendly premium experience.
+The implementation is well-structured with proper separation between frontend UI limitations and backend subscription management. Usage tracking is implemented at the API level for AI chat and investment calculator, ensuring secure enforcement of premium limits.

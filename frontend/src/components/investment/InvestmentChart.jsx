@@ -197,3 +197,6 @@ const InvestmentChart = ({ data, viewType }) => {
 
 export default InvestmentChart;
 
+
+
+
