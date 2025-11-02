@@ -2,6 +2,7 @@ import Spinner from "./Spinner"
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { get, del } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import formatDate from "../../utils/formatDate";
 import { formatSimpleCurrency } from '../../utils/currency';
 import { useTranslation } from "react-i18next";
@@ -45,6 +46,7 @@ const ExpensivePurchase = React.memo(() => {
             await queryClient.invalidateQueries({ queryKey: ['balance'] });
             await queryClient.invalidateQueries({ queryKey: ['savings'] });
             await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            await queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
             
             // Refetch expenses after deletion, respecting the current filter
             fetchExpenses();
