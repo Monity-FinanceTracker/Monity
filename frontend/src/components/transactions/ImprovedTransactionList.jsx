@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
 import { del } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import formatDate from '../../utils/formatDate';
 import { formatCurrency, formatSimpleCurrency, getAmountColor } from '../../utils/currency';
 import { Icon } from '../../utils/iconMapping.jsx';
@@ -208,6 +209,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         onSuccess: () => {
             // Invalidate and refetch transactions
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
         },
         onError: (error) => {
             console.error('Delete transaction error:', error);
@@ -251,10 +253,46 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             await queryClient.invalidateQueries({ queryKey: ['balance'] });
             await queryClient.invalidateQueries({ queryKey: ['savings'] });
             await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            await queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
         } catch (error) {
             console.error('Bulk delete failed:', error);
             alert(t('transactions.bulk_delete_failed'));
         }
+    };
+
+    // Helper function to check if a transaction is an allocation
+    const isAllocationTransaction = (transaction) => {
+        // Check if metadata has operation: 'allocate' or category is 'Savings Goal'
+        if (transaction.metadata) {
+            const metadata = typeof transaction.metadata === 'string' 
+                ? JSON.parse(transaction.metadata) 
+                : transaction.metadata;
+            if (metadata?.operation === 'allocate') {
+                return true;
+            }
+        }
+        // Check if category indicates it's an allocation (positive amounts)
+        if (transaction.category === 'Savings Goal' && parseFloat(transaction.amount) > 0) {
+            return true;
+        }
+        return false;
+    };
+
+    // Helper function to check if a transaction is a withdrawal
+    const isWithdrawalTransaction = (transaction) => {
+        if (transaction.metadata) {
+            const metadata = typeof transaction.metadata === 'string' 
+                ? JSON.parse(transaction.metadata) 
+                : transaction.metadata;
+            if (metadata?.operation === 'withdraw') {
+                return true;
+            }
+        }
+        // Withdrawals have negative amounts
+        if (transaction.category === 'Savings Goal' && parseFloat(transaction.amount) < 0) {
+            return true;
+        }
+        return false;
     };
 
     // Calculate totals
@@ -265,12 +303,25 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         } else if (transaction.typeId === 2) { // Income
             acc.income += amount;
         } else if (transaction.typeId === 3) { // Savings
-            acc.savings += amount;
+            // Handle allocations and withdrawals separately
+            if (isAllocationTransaction(transaction)) {
+                // Allocations decrease available balance
+                acc.allocations += amount;
+            } else if (isWithdrawalTransaction(transaction)) {
+                // Withdrawals increase available balance (negative amount)
+                acc.withdrawals += amount;
+            } else {
+                // Regular savings deposits
+                acc.savings += amount;
+            }
         }
         return acc;
-    }, { income: 0, expenses: 0, savings: 0 });
+    }, { income: 0, expenses: 0, savings: 0, allocations: 0, withdrawals: 0 });
 
-    const balance = totals.income - totals.expenses;
+    // Net balance = income - expenses - allocations - withdrawals + savings
+    // Withdrawals are negative amounts, so subtracting them adds the money back (matches backend logic: balance -= transaction.amount)
+    // Allocations are positive and should be subtracted
+    const balance = totals.income - totals.expenses - totals.allocations - totals.withdrawals + totals.savings;
 
     // Transaction card component - Responsive for different screen sizes
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (

@@ -317,6 +317,7 @@ const SavingsGoals = () => {
                                     <div className="mt-4 flex items-center">
                                         <input
                                             type="number"
+                                            step="0.01"
                                             value={addingMoney[goal.id].amount}
                                             onChange={(e) => handleAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.amount_placeholder')}
@@ -325,6 +326,10 @@ const SavingsGoals = () => {
                                         <button
                                             onClick={() => {
                                                 const amountToAdd = parseFloat(addingMoney[goal.id].amount);
+                                                if (isNaN(amountToAdd) || amountToAdd <= 0) {
+                                                    setError('Please enter a valid amount');
+                                                    return;
+                                                }
                                                 if (amountToAdd > balance) {
                                                     setError(t('savings_goals.insufficient_balance_error'));
                                                     return;
@@ -333,7 +338,13 @@ const SavingsGoals = () => {
                                                 handleAllocateMoney(goal.id, amountToAdd);
                                             }}
                                             className="bg-[#01C38D] hover:bg-[#01A071] text-white font-semibold px-4 py-3 rounded-lg ml-2 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                            disabled={parseFloat(addingMoney[goal.id]?.amount || 0) > balance || !addingMoney[goal.id]?.amount}
+                                            disabled={
+                                                !addingMoney[goal.id]?.amount || 
+                                                addingMoney[goal.id]?.amount.trim() === '' ||
+                                                isNaN(parseFloat(addingMoney[goal.id]?.amount || 0)) ||
+                                                parseFloat(addingMoney[goal.id]?.amount || 0) < 0.01 ||
+                                                parseFloat(addingMoney[goal.id]?.amount || 0) > balance 
+                                            }
                                         >
                                             {t('common.save')}
                                         </button>
@@ -343,6 +354,7 @@ const SavingsGoals = () => {
                                     <div className="mt-4 flex items-center">
                                         <input
                                             type="number"
+                                            step="0.01"
                                             value={withdrawingMoney[goal.id].amount}
                                             onChange={(e) => handleWithdrawAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.withdraw_amount_placeholder')}

@@ -1,6 +1,6 @@
 const { Category } = require('../models');
 const { logger } = require('../utils/logger');
-const { supabase } = require('../config');
+const { supabaseAdmin } = require('../config');
 
 class CategoryController {
     async getAllCategories(req, res) {
@@ -8,21 +8,33 @@ class CategoryController {
         try {
             const categories = await Category.findByUser(userId);
             
-            const categoriesWithCounts = await Promise.all(
-                categories.map(async (category) => {
-                    const { count, error } = await supabase
-                        .from('transactions')
-                        .select('id', { count: 'exact', head: true })
-                        .eq('userId', userId)
-                        .eq('category', category.name);
+            // Get all transactions for the user to count categories
+            // Note: category field in transactions is stored as plain text (not encrypted)
+            const { data: allTransactions, error: transactionsError } = await supabaseAdmin
+                .from('transactions')
+                .select('category')
+                .eq('userId', userId);
 
-                    if (error) {
-                        logger.warn('Error counting transactions for category', { category: category.name, error: error.message });
-                        return { ...category, transactionCount: 0 };
+            if (transactionsError) {
+                logger.warn('Error fetching transactions for category counting', { error: transactionsError.message });
+            }
+
+            // Count transactions per category
+            const transactionCounts = {};
+            if (allTransactions) {
+                allTransactions.forEach(transaction => {
+                    const categoryName = transaction.category;
+                    if (categoryName) {
+                        transactionCounts[categoryName] = (transactionCounts[categoryName] || 0) + 1;
                     }
-                    return { ...category, transactionCount: count };
-                })
-            );
+                });
+            }
+
+            // Map categories with their transaction counts
+            const categoriesWithCounts = categories.map(category => ({
+                ...category,
+                transactionCount: transactionCounts[category.name] || 0
+            }));
 
             res.json(categoriesWithCounts);
 
