@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { getCategories, addTransaction, post } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button, CloseButton } from '../ui';
@@ -130,6 +131,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             await queryClient.invalidateQueries({ queryKey: ['balance'] });
             await queryClient.invalidateQueries({ queryKey: ['savings'] });
             await queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            await queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
             
             toast.success(t(`${currentConfig.translationKey}.success`));
             navigate('/');
