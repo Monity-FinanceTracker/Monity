@@ -342,8 +342,8 @@ const SavingsGoals = () => {
                                                 !addingMoney[goal.id]?.amount || 
                                                 addingMoney[goal.id]?.amount.trim() === '' ||
                                                 isNaN(parseFloat(addingMoney[goal.id]?.amount || 0)) ||
-                                                parseFloat(addingMoney[goal.id]?.amount || 0) <= 0 ||
-                                                parseFloat(addingMoney[goal.id]?.amount || 0) > balance
+                                                parseFloat(addingMoney[goal.id]?.amount || 0) < 0.01 ||
+                                                parseFloat(addingMoney[goal.id]?.amount || 0) > balance 
                                             }
                                         >
                                             {t('common.save')}
