@@ -8,6 +8,10 @@ function AdminDashboard() {
   const [aiStats, setAiStats] = useState(null);
   const [healthData, setHealthData] = useState(null);
   const [financialHealth, setFinancialHealth] = useState(null);
+  const [engagement, setEngagement] = useState(null);
+  const [monetization, setMonetization] = useState(null);
+  const [errorsPerf, setErrorsPerf] = useState(null);
+  const [segments, setSegments] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,12 +21,16 @@ function AdminDashboard() {
       setError(null);
       try {
         // Fetch real data only - no mocked fallbacks
-        const [analyticsRes, trendsRes, aiStatsRes, healthRes, financialHealthRes] = await Promise.allSettled([
+        const [analyticsRes, trendsRes, aiStatsRes, healthRes, financialHealthRes, engagementRes, monetizationRes, errorsRes, segmentsRes] = await Promise.allSettled([
           get('/admin/analytics'),
           get('/admin/trends?days=30'),
           get('/ai/stats'),
           get('/admin/health'),
-          get('/admin/financial-health')
+          get('/admin/financial-health'),
+          get('/admin/engagement'),
+          get('/admin/monetization'),
+          get('/admin/errors'),
+          get('/admin/segments')
         ]);
 
         // Set only real data
@@ -31,6 +39,10 @@ function AdminDashboard() {
         setAiStats(aiStatsRes.status === 'fulfilled' ? aiStatsRes.value.data?.stats : null);
         setHealthData(healthRes.status === 'fulfilled' ? healthRes.value.data : null);
         setFinancialHealth(financialHealthRes.status === 'fulfilled' ? financialHealthRes.value.data : null);
+        setEngagement(engagementRes.status === 'fulfilled' ? engagementRes.value.data : null);
+        setMonetization(monetizationRes.status === 'fulfilled' ? monetizationRes.value.data : null);
+        setErrorsPerf(errorsRes.status === 'fulfilled' ? errorsRes.value.data : null);
+        setSegments(segmentsRes.status === 'fulfilled' ? segmentsRes.value.data : null);
 
       } catch (err) {
         console.error('Admin data fetch error:', err);
@@ -131,6 +143,18 @@ function AdminDashboard() {
         </div>
       </div>
 
+      {/* Alerts */}
+      {(errorsPerf?.latencyMs?.p95 > 300) && (
+        <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-3 rounded-xl">
+          High API latency detected (p95 {errorsPerf.latencyMs.p95} ms). Investigate performance.
+        </div>
+      )}
+      {(trends?.summary?.weekOverWeekGrowth !== undefined && trends.summary.weekOverWeekGrowth < 0) && (
+        <div className="bg-yellow-500/10 border border-yellow-500/30 text-yellow-200 p-3 rounded-xl">
+          Activity down week-over-week ({trends.summary.weekOverWeekGrowth}%). Monitor engagement.
+        </div>
+      )}
+
       {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
@@ -157,6 +181,22 @@ function AdminDashboard() {
           color="text-[#FFCE56]"
           bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5"
         />
+        {monetization && (
+          <MetricCard
+            title="MRR"
+            value={formatCurrency(monetization?.revenue?.mrr || 0)}
+            color="text-[#01C38D]"
+            bgGradient="from-[#01C38D]/20 to-[#01C38D]/5"
+          />
+        )}
+        {monetization && (
+          <MetricCard
+            title="ARPU"
+            value={formatCurrency(monetization?.revenue?.arpu || 0)}
+            color="text-[#36A2EB]"
+            bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
+          />
+        )}
       </div>
 
       {/* User Metrics and Monthly Growth */}
@@ -259,6 +299,116 @@ function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Engagement */}
+      {engagement && (
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+          <h2 className="text-xl font-semibold mb-4">Engagement</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <MetricCard title="DAU" value={engagement.dau} color="text-[#01C38D]" bgGradient="from-[#01C38D]/20 to-[#01C38D]/5" />
+            <MetricCard title="WAU" value={engagement.wau} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
+            <MetricCard title="MAU" value={engagement.mau} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
+            <MetricCard title="Retention Cohorts" value={`${engagement.cohort?.length || 0} wks`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/20 to-[#FF6384]/5" />
+          </div>
+          <div className="h-24 bg-[#171717] rounded-lg border border-[#262626] p-4 flex items-center justify-center">
+            {engagement.cohort && engagement.cohort.length > 0 ? (
+              <div className="h-full flex items-end justify-between gap-1 w-full">
+                {engagement.cohort.map((c, i) => {
+                  const maxVal = Math.max(...engagement.cohort.map(x => x.signups || 0), 1);
+                  const height = ((c.retained || 0) / (maxVal || 1)) * 80;
+                  return (
+                    <div key={i} className="flex flex-col items-center justify-end flex-1 h-full">
+                      <div className="w-full rounded-t bg-[#36A2EB]" style={{ height: `${height}%` }} title={`${c.weekStart}: ${c.retained}/${c.signups}`} />
+                      <div className="text-[10px] text-gray-400 mt-1 text-center">{c.weekStart.slice(5)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-gray-400 text-sm">No cohort data</div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Monetization Funnel */}
+      {monetization && (
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+          <h2 className="text-xl font-semibold mb-4">Monetization</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <MetricCard title="Users" value={monetization.users?.total || 0} color="text-white" bgGradient="from-[#242532]/40 to-[#171717]/0" />
+            <MetricCard title="Premium" value={monetization.users?.premium || 0} color="text-[#01C38D]" bgGradient="from-[#01C38D]/20 to-[#01C38D]/5" />
+            <MetricCard title="MRR" value={formatCurrency(monetization.revenue?.mrr || 0)} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
+            <MetricCard title="ARPU" value={formatCurrency(monetization.revenue?.arpu || 0)} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 rounded-xl border border-[#262626]">
+              <div className="text-gray-400 mb-2">30d Signups</div>
+              <div className="text-2xl font-bold">{monetization.funnel?.signups30 || 0}</div>
+            </div>
+            <div className="p-4 rounded-xl border border-[#262626]">
+              <div className="text-gray-400 mb-2">30d Active</div>
+              <div className="text-2xl font-bold text-[#01C38D]">{monetization.funnel?.active30 || 0}</div>
+            </div>
+            <div className="p-4 rounded-xl border border-[#262626]">
+              <div className="text-gray-400 mb-2">30d Premium</div>
+              <div className="text-2xl font-bold text-[#FF6384]">{monetization.funnel?.premium30 || 0}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Errors & Performance */}
+      {errorsPerf && (
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+          <h2 className="text-xl font-semibold mb-4">Errors & Performance</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <MetricCard title="p50 Latency" value={`${errorsPerf.latencyMs?.p50 || 0} ms`} color="text-[#01C38D]" bgGradient="from-[#01C38D]/20 to-[#01C38D]/5" />
+            <MetricCard title="p95 Latency" value={`${errorsPerf.latencyMs?.p95 || 0} ms`} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
+            <MetricCard title="p99 Latency" value={`${errorsPerf.latencyMs?.p99 || 0} ms`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/20 to-[#FF6384]/5" />
+            <MetricCard title="Avg Latency" value={`${errorsPerf.latencyMs?.avg || 0} ms`} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
+          </div>
+        </div>
+      )}
+
+      {/* Segments */}
+      {segments && (
+        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+          <h2 className="text-xl font-semibold mb-4">Segments</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl border border-[#262626]">
+              <div className="text-gray-400 mb-2">By Tier</div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <div className="text-sm text-gray-400">Free</div>
+                  <div className="text-2xl font-bold">{segments.segments?.byTier?.free || 0}</div>
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm text-gray-400">Premium</div>
+                  <div className="text-2xl font-bold text-[#01C38D]">{segments.segments?.byTier?.premium || 0}</div>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl border border-[#262626]">
+              <div className="text-gray-400 mb-2">By Activity</div>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <div className="text-sm text-gray-400">Low</div>
+                  <div className="text-2xl font-bold">{segments.segments?.byActivityLevel?.low || 0}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400">Medium</div>
+                  <div className="text-2xl font-bold text-[#FFCE56]">{segments.segments?.byActivityLevel?.medium || 0}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400">High</div>
+                  <div className="text-2xl font-bold text-[#FF6384]">{segments.segments?.byActivityLevel?.high || 0}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Financial Health Overview */}
       {financialHealth && (
