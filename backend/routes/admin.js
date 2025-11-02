@@ -10,5 +10,11 @@ module.exports = (controllers) => {
     router.get('/trends', (req, res, next) => adminController.getTrends(req, res, next));
     router.get('/financial-health', (req, res, next) => adminController.getFinancialHealthMetrics(req, res, next));
 
+    // New admin monitoring endpoints
+    router.get('/engagement', (req, res, next) => adminController.getEngagementMetrics(req, res, next));
+    router.get('/monetization', (req, res, next) => adminController.getMonetizationMetrics(req, res, next));
+    router.get('/errors', (req, res, next) => adminController.getErrorPerformanceMetrics(req, res, next));
+    router.get('/segments', (req, res, next) => adminController.getSegments(req, res, next));
+
     return router;
 };

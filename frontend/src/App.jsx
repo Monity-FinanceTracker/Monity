@@ -29,6 +29,7 @@ const SavingsGoals = lazy(() => import('./components/ui/SavingsGoals'));
 const Savings = lazy(() => import('./components/ui/Savings'));
 const CashFlowCalendar = lazy(() => import('./components/cashFlow/CashFlowCalendar'));
 const AIAssistantPage = lazy(() => import('./components/ai/AIAssistantPage'));
+const InvestmentCalculator = lazy(() => import('./components/investment/InvestmentCalculator'));
 
 // Import lazy components with optimized loading
 import {
@@ -177,6 +178,7 @@ const App = React.memo(() => {
         <Route path="/savings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Savings /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/financial-health" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ProtectedRoute>} />
         <Route path="/ai-assistant" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><AIAssistantPage /></Suspense></MainLayout></ProtectedRoute>} />
+        <Route path="/investment-calculator" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><InvestmentCalculator /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/groups" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroups /></MainLayout></ProtectedRoute>} />
         <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyCreateGroup /></MainLayout></ProtectedRoute>} />
         <Route path="/groups/:id" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroupPage /></MainLayout></ProtectedRoute>} />
