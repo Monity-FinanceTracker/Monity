@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../ui/NotificationSystem';
-import { get, post, del } from '../../utils/api';
+import { post, del } from '../../utils/api';
+import { useCategories, useAddCategory } from '../../hooks/useQueries';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../../lib/queryClient';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
 import { Plus, Search, Trash2 } from 'lucide-react';
 import { iconMap, categoryIconOptions, getIcon } from '../../utils/iconMapping.jsx';
@@ -13,9 +16,12 @@ import { Dropdown, CloseButton } from '../ui';
 const EnhancedCategories = () => {
     const { t } = useTranslation();
     const { success, error: notifyError } = useNotifications();
+    const queryClient = useQueryClient();
     
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // Use React Query hook for categories - automatically refetches when invalidated
+    const { data: categories = [], isLoading: loading, error } = useCategories();
+    const addCategoryMutation = useAddCategory();
+    
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState('all');
     const [showAddForm, setShowAddForm] = useState(false);
@@ -42,28 +48,19 @@ const EnhancedCategories = () => {
     // Use centralized icon options
     const iconOptions = categoryIconOptions;
 
+    // Handle query errors
     useEffect(() => {
-        fetchCategories();
-    }, []);
-
-    const fetchCategories = async () => {
-        try {
-            const { data } = await get('/categories');
-            setCategories(data || []);
-        } catch (error) {
+        if (error) {
             console.error('Error fetching categories:', error);
             notifyError(t('categories.fetch_error'));
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [error, notifyError, t]);
 
     const handleAddCategory = async (e) => {
         e.preventDefault();
         
         try {
-            const { data } = await post('/categories', newCategory);
-            setCategories(prev => [...prev, data]);
+            await addCategoryMutation.mutateAsync(newCategory);
             setNewCategory({ name: '', typeId: 1, color: '#01C38D', icon: 'Package' });
             setShowAddForm(false);
             success(t('categories.add_success'));
@@ -77,7 +74,8 @@ const EnhancedCategories = () => {
         
         try {
             await del(`/categories/${id}`);
-            setCategories(prev => prev.filter(cat => cat.id !== id));
+            // Invalidate categories query to refetch with updated data
+            queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
             success(t('categories.delete_success'));
         } catch (error) {
             notifyError(error.response?.data?.message || t('categories.delete_error'));
@@ -173,7 +171,7 @@ const EnhancedCategories = () => {
                                             return <IconComponent className="w-5 h-5 text-white" />;
                                         })()}
                                     </div>
-                                    <div>
+                                    <div className="text-left">
                                         <h3 className="text-white font-medium">{category.name}</h3>
                                         <span className="text-xs px-2 py-1 rounded-full bg-[#242532] text-gray-300">
                                             {getTypeLabel(category.typeId)}
