@@ -113,6 +113,7 @@ export const useAddTransaction = () => {
       // Invalidate and refetch related queries
       queryClient.invalidateQueries({ queryKey: queryKeys.balance.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.transactions.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
     },
   });
 };
