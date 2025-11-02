@@ -232,6 +232,53 @@ class CashFlowController {
     });
 
     /**
+     * Check if a type 3 transaction is an allocation to a savings goal
+     * Allocations should decrease available balance (money moving out)
+     */
+    isAllocationTransaction(txn) {
+        // Check if metadata has operation: 'allocate' or category is 'Savings Goal'
+        if (txn.metadata) {
+            const metadata = typeof txn.metadata === 'string' 
+                ? JSON.parse(txn.metadata) 
+                : txn.metadata;
+            if (metadata.operation === 'allocate') {
+                return true;
+            }
+            // Withdrawals have operation: 'withdraw' and negative amounts, handled separately
+            if (metadata.operation === 'withdraw') {
+                return false; // Withdrawals are handled by their negative amount
+            }
+        }
+        // Check if category indicates it's an allocation
+        // Only treat as allocation if amount is positive (allocations use positive amounts)
+        if (txn.category === 'Savings Goal' && (txn.amount > 0 || parseFloat(txn.amount) > 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if a type 3 transaction is a withdrawal from a savings goal
+     * Withdrawals have negative amounts and should increase available balance (money coming back)
+     */
+    isWithdrawalTransaction(txn) {
+        if (txn.metadata) {
+            const metadata = typeof txn.metadata === 'string' 
+                ? JSON.parse(txn.metadata) 
+                : txn.metadata;
+            if (metadata.operation === 'withdraw') {
+                return true;
+            }
+        }
+        // Withdrawals have negative amounts
+        const amount = typeof txn.amount === 'string' ? parseFloat(txn.amount) : txn.amount;
+        if (txn.category === 'Savings Goal' && amount < 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Calculate daily balances including past and future transactions
      */
     calculateDailyBalances(pastTransactions, scheduledOccurrences, startDate, endDate) {
@@ -249,7 +296,18 @@ class CashFlowController {
             } else if (txn.typeId === 1) { // Expense
                 runningBalance -= txn.amount;
             } else if (txn.typeId === 3) { // Savings
-                runningBalance += txn.amount;
+                // Handle different types of savings transactions
+                if (this.isAllocationTransaction(txn)) {
+                    // Allocation: subtract (money moving out of available balance)
+                    runningBalance -= txn.amount;
+                } else if (this.isWithdrawalTransaction(txn)) {
+                    // Withdrawal: add back (money coming back to available balance)
+                    // Since withdrawal amount is negative, subtracting it adds to balance
+                    runningBalance -= txn.amount; // Subtracting negative = adding
+                } else {
+                    // Regular savings deposit (positive amount adds to balance)
+                    runningBalance += txn.amount;
+                }
             }
         });
 
@@ -260,7 +318,12 @@ class CashFlowController {
             } else if (scheduled.typeId === 1) { // Expense
                 runningBalance -= parseFloat(scheduled.amount);
             } else if (scheduled.typeId === 3) { // Savings
-                runningBalance += parseFloat(scheduled.amount);
+                // Scheduled transactions typically don't have metadata, but check category if available
+                if (scheduled.category === 'Savings Goal') {
+                    runningBalance -= parseFloat(scheduled.amount);
+                } else {
+                    runningBalance += parseFloat(scheduled.amount);
+                }
             }
         });
 
@@ -287,7 +350,18 @@ class CashFlowController {
                 } else if (txn.typeId === 1) { // Expense
                     dailyChange -= txn.amount;
                 } else if (txn.typeId === 3) { // Savings
-                    dailyChange += txn.amount;
+                    // Handle different types of savings transactions
+                    if (this.isAllocationTransaction(txn)) {
+                        // Allocation: subtract (money moving out of available balance)
+                        dailyChange -= txn.amount;
+                    } else if (this.isWithdrawalTransaction(txn)) {
+                        // Withdrawal: add back (money coming back to available balance)
+                        // Since withdrawal amount is negative, subtracting it adds to balance
+                        dailyChange -= txn.amount; // Subtracting negative = adding
+                    } else {
+                        // Regular savings deposit (positive amount adds to balance)
+                        dailyChange += txn.amount;
+                    }
                 }
             });
 
@@ -298,7 +372,12 @@ class CashFlowController {
                 } else if (scheduled.typeId === 1) { // Expense
                     dailyChange -= parseFloat(scheduled.amount);
                 } else if (scheduled.typeId === 3) { // Savings
-                    dailyChange += parseFloat(scheduled.amount);
+                    // Scheduled transactions typically don't have metadata, but check category if available
+                    if (scheduled.category === 'Savings Goal') {
+                        dailyChange -= parseFloat(scheduled.amount);
+                    } else {
+                        dailyChange += parseFloat(scheduled.amount);
+                    }
                 }
             });
 

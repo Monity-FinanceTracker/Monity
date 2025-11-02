@@ -7,6 +7,53 @@ class BalanceController {
         this.supabase = supabase;
     }
 
+    /**
+     * Check if a type 3 transaction is an allocation to a savings goal
+     * Allocations should decrease available balance (money moving out)
+     */
+    isAllocationTransaction(txn) {
+        // Check if metadata has operation: 'allocate' or category is 'Savings Goal'
+        if (txn.metadata) {
+            const metadata = typeof txn.metadata === 'string' 
+                ? JSON.parse(txn.metadata) 
+                : txn.metadata;
+            if (metadata.operation === 'allocate') {
+                return true;
+            }
+            // Withdrawals have operation: 'withdraw' and negative amounts, handled separately
+            if (metadata.operation === 'withdraw') {
+                return false; // Withdrawals are handled by their negative amount
+            }
+        }
+        // Check if category indicates it's an allocation
+        // Only treat as allocation if amount is positive (allocations use positive amounts)
+        if (txn.category === 'Savings Goal' && (txn.amount > 0 || parseFloat(txn.amount) > 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if a type 3 transaction is a withdrawal from a savings goal
+     * Withdrawals have negative amounts and should increase available balance (money coming back)
+     */
+    isWithdrawalTransaction(txn) {
+        if (txn.metadata) {
+            const metadata = typeof txn.metadata === 'string' 
+                ? JSON.parse(txn.metadata) 
+                : txn.metadata;
+            if (metadata.operation === 'withdraw') {
+                return true;
+            }
+        }
+        // Withdrawals have negative amounts
+        const amount = typeof txn.amount === 'string' ? parseFloat(txn.amount) : txn.amount;
+        if (txn.category === 'Savings Goal' && amount < 0) {
+            return true;
+        }
+        return false;
+    }
+
     getBalance = asyncHandler(async (req, res) => {
         const userId = req.user.id;
         
@@ -40,7 +87,7 @@ class BalanceController {
                 };
             });
 
-            // Calculate balance: income - expenses + savings
+            // Calculate balance: income - expenses, handling savings transactions properly
             let balance = 0;
             decryptedTransactions.forEach(transaction => {
                 if (transaction.typeId === 2) { // Income
@@ -48,12 +95,22 @@ class BalanceController {
                 } else if (transaction.typeId === 1) { // Expense
                     balance -= transaction.amount;
                 } else if (transaction.typeId === 3) { // Savings
-                    // For savings, we typically add to balance unless it's an investment withdrawal
-                    balance += transaction.amount;
+                    // Handle different types of savings transactions
+                    if (this.isAllocationTransaction(transaction)) {
+                        // Allocation: subtract (money moving out of available balance)
+                        balance -= transaction.amount;
+                    } else if (this.isWithdrawalTransaction(transaction)) {
+                        // Withdrawal: add back (money coming back to available balance)
+                        // Since withdrawal amount is negative, subtracting it adds to balance
+                        balance -= transaction.amount; // Subtracting negative = adding
+                    } else {
+                        // Regular savings deposit (positive amount adds to balance)
+                        balance += transaction.amount;
+                    }
                 }
             });
 
-            // Calculate total allocated to savings goals
+            // Calculate total allocated to savings goals (for display purposes)
             let totalAllocated = 0;
             if (savingsGoals && savingsGoals.length > 0) {
                 const decryptedGoals = savingsGoals.map(goal => decryptObject('savings_goals', goal));
@@ -62,8 +119,9 @@ class BalanceController {
                 }, 0);
             }
 
-            // Available balance = total balance - allocated savings
-            const availableBalance = balance - totalAllocated;
+            // Available balance is now already calculated correctly in balance variable
+            // No need to subtract totalAllocated separately since allocations are already subtracted
+            const availableBalance = balance;
 
             res.status(200).json({ 
                 balance: availableBalance,
