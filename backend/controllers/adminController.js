@@ -648,6 +648,182 @@ class AdminController {
             res.status(500).json({ error: 'Failed to fetch financial health metrics' });
         }
     }
+
+    async getEngagementMetrics(req, res) {
+        try {
+            const now = new Date();
+            const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+            const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+            const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+            const [{ data: tx1d }, { data: tx7d }, { data: tx30d }, { data: profiles }] = await Promise.all([
+                this.supabase.from('transactions').select('userId, date').gte('date', oneDayAgo),
+                this.supabase.from('transactions').select('userId, date').gte('date', sevenDaysAgo),
+                this.supabase.from('transactions').select('userId, date').gte('date', thirtyDaysAgo),
+                this.supabase.from('profiles').select('id, created_at')
+            ]);
+
+            const dau = new Set((tx1d || []).map(t => t.userId)).size;
+            const wau = new Set((tx7d || []).map(t => t.userId)).size;
+            const mau = new Set((tx30d || []).map(t => t.userId)).size;
+
+            // Simple weekly cohort retention (last 8 weeks)
+            const weeks = 8;
+            const cohort = [];
+            for (let i = weeks - 1; i >= 0; i--) {
+                const start = new Date(now.getTime() - (i + 1) * 7 * 24 * 60 * 60 * 1000);
+                const end = new Date(now.getTime() - i * 7 * 24 * 60 * 60 * 1000);
+                const startISO = start.toISOString();
+                const endISO = end.toISOString();
+
+                const signedThisWeek = (profiles || []).filter(p => p.created_at >= startISO && p.created_at < endISO).map(p => p.id);
+                const { data: txThisWindow } = await this.supabase
+                    .from('transactions')
+                    .select('userId, date')
+                    .gte('date', end.toISOString())
+                    .lte('date', now.toISOString());
+                const activeAfter = new Set((txThisWindow || []).map(t => t.userId));
+                const retained = signedThisWeek.filter(id => activeAfter.has(id)).length;
+                cohort.push({
+                    weekStart: startISO.slice(0, 10),
+                    signups: signedThisWeek.length,
+                    retained
+                });
+            }
+
+            res.json({
+                dau,
+                wau,
+                mau,
+                cohort
+            });
+        } catch (error) {
+            logger.error('Failed to get engagement metrics', { error: error.message });
+            res.status(500).json({ error: 'Failed to fetch engagement metrics' });
+        }
+    }
+
+    async getMonetizationMetrics(req, res) {
+        try {
+            const DEFAULT_PRICE = 9.90;
+
+            const [allProfilesRes, premiumProfilesRes] = await Promise.all([
+                this.supabase.from('profiles').select('id, subscription_tier, plan_price_id'),
+                this.supabase.from('profiles').select('id').eq('subscription_tier', 'premium')
+            ]);
+
+            const totalUsers = (allProfilesRes.data || []).length;
+            const premiumUsers = (premiumProfilesRes.data || []).length;
+            const freeUsers = totalUsers - premiumUsers;
+
+            // ARPU: approximate with DEFAULT_PRICE for premium users / total users
+            const mrr = premiumUsers * DEFAULT_PRICE;
+            const arpu = totalUsers > 0 ? mrr / totalUsers : 0;
+
+            // Simple conversion funnel approximation (signup -> active -> premium)
+            const now = new Date();
+            const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
+            const [{ data: signups30 }, { data: tx30 }] = await Promise.all([
+                this.supabase.from('profiles').select('id, created_at').gte('created_at', thirtyDaysAgo),
+                this.supabase.from('transactions').select('userId, date').gte('date', thirtyDaysAgo)
+            ]);
+            const activeUsersSet = new Set((tx30 || []).map(t => t.userId));
+            const signupsCount = (signups30 || []).length;
+            const activeFromSignups = (signups30 || []).filter(p => activeUsersSet.has(p.id)).length;
+            const premiumFromSignups = (signups30 || []).filter(p => p.subscription_tier === 'premium').length;
+
+            res.json({
+                users: { total: totalUsers, premium: premiumUsers, free: freeUsers },
+                pricing: { defaultMonthlyPrice: DEFAULT_PRICE },
+                revenue: { mrr, arpu: parseFloat(arpu.toFixed(2)) },
+                funnel: {
+                    signups30: signupsCount,
+                    active30: activeFromSignups,
+                    premium30: premiumFromSignups
+                }
+            });
+        } catch (error) {
+            logger.error('Failed to get monetization metrics', { error: error.message });
+            res.status(500).json({ error: 'Failed to fetch monetization metrics' });
+        }
+    }
+
+    async getErrorPerformanceMetrics(req, res) {
+        try {
+            // Synthetic latency sampling using common queries
+            const samples = [];
+            const sampleQuery = async (fn) => {
+                const start = Date.now();
+                await fn();
+                samples.push(Date.now() - start);
+            };
+
+            await sampleQuery(async () => {
+                await this.supabase.from('profiles').select('id').limit(50);
+            });
+            await sampleQuery(async () => {
+                await this.supabase.from('transactions').select('id').limit(50);
+            });
+            await sampleQuery(async () => {
+                await this.supabase.from('categories').select('id').limit(50);
+            });
+
+            const sorted = samples.slice().sort((a, b) => a - b);
+            const p = (x) => sorted[Math.min(sorted.length - 1, Math.floor(x * sorted.length))] || 0;
+            const avg = samples.reduce((s, v) => s + v, 0) / (samples.length || 1);
+
+            // Error rates not persisted; expose placeholders for now
+            res.json({
+                latencyMs: {
+                    p50: p(0.5),
+                    p95: p(0.95),
+                    p99: p(0.99),
+                    avg: Math.round(avg)
+                },
+                errorRates: {
+                    lastHour: null,
+                    last24h: null
+                }
+            });
+        } catch (error) {
+            logger.error('Failed to get error/performance metrics', { error: error.message });
+            res.status(500).json({ error: 'Failed to fetch error/performance metrics' });
+        }
+    }
+
+    async getSegments(req, res) {
+        try {
+            // Limited segmentation based on available data
+            const [{ data: profiles }, { data: tx }] = await Promise.all([
+                this.supabase.from('profiles').select('id, subscription_tier'),
+                this.supabase.from('transactions').select('userId')
+            ]);
+
+            const activityMap = {};
+            (tx || []).forEach(t => {
+                activityMap[t.userId] = (activityMap[t.userId] || 0) + 1;
+            });
+
+            const segments = {
+                byTier: { free: 0, premium: 0 },
+                byActivityLevel: { low: 0, medium: 0, high: 0 }
+            };
+
+            (profiles || []).forEach(p => {
+                const tier = p.subscription_tier === 'premium' ? 'premium' : 'free';
+                segments.byTier[tier]++;
+                const count = activityMap[p.id] || 0;
+                if (count >= 100) segments.byActivityLevel.high++;
+                else if (count >= 20) segments.byActivityLevel.medium++;
+                else segments.byActivityLevel.low++;
+            });
+
+            res.json({ segments });
+        } catch (error) {
+            logger.error('Failed to get segments', { error: error.message });
+            res.status(500).json({ error: 'Failed to fetch segments' });
+        }
+    }
 }
 
 module.exports = AdminController;
