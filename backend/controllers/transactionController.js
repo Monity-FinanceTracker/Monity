@@ -1,4 +1,5 @@
 const { Transaction } = require('../models');
+const SavingsGoal = require('../models/SavingsGoal');
 const { logger } = require('../utils/logger');
 
 class TransactionController {
@@ -101,6 +102,60 @@ class TransactionController {
         const transactionId = req.params.id;
 
         try {
+            // Get the transaction before deleting it to check if it's a savings goal transaction
+            // Transaction.getById already returns decrypted data
+            const transaction = await Transaction.getById(transactionId, userId);
+            
+            if (!transaction) {
+                return res.status(404).json({ error: 'Transaction not found or you do not have permission to delete it.' });
+            }
+
+            // Check if this is a savings goal transaction and update the goal accordingly
+            if (transaction.metadata && transaction.typeId === 3) {
+                const metadata = typeof transaction.metadata === 'string' 
+                    ? JSON.parse(transaction.metadata) 
+                    : transaction.metadata;
+
+                if (metadata.savings_goal_id) {
+                    const savingsGoalModel = new SavingsGoal(null);
+                    const goal = await savingsGoalModel.findById(metadata.savings_goal_id, userId);
+
+                    if (goal) {
+                        const transactionAmount = parseFloat(transaction.amount || 0);
+                        let newCurrentAmount;
+
+                        if (metadata.operation === 'allocate') {
+                            // If deleting an allocation, decrease the goal's current_amount
+                            newCurrentAmount = parseFloat(goal.current_amount || 0) - transactionAmount;
+                        } else if (metadata.operation === 'withdraw') {
+                            // If deleting a withdrawal, increase the goal's current_amount
+                            // Withdrawals have negative amounts, so we subtract the negative (which adds)
+                            newCurrentAmount = parseFloat(goal.current_amount || 0) - transactionAmount;
+                        }
+
+                        // Ensure current_amount doesn't go negative
+                        if (newCurrentAmount < 0) {
+                            newCurrentAmount = 0;
+                        }
+
+                        // Update the goal's current_amount
+                        await savingsGoalModel.update(metadata.savings_goal_id, userId, {
+                            current_amount: newCurrentAmount
+                        });
+
+                        logger.info('Updated savings goal current_amount after transaction deletion', {
+                            userId,
+                            goalId: metadata.savings_goal_id,
+                            operation: metadata.operation,
+                            transactionAmount,
+                            oldAmount: goal.current_amount,
+                            newAmount: newCurrentAmount
+                        });
+                    }
+                }
+            }
+
+            // Now delete the transaction
             const deletedTransaction = await Transaction.delete(transactionId, userId);
 
             if (!deletedTransaction) {
