@@ -104,8 +104,10 @@ class SavingsGoalController {
         const goalId = req.params.id;
         const { amount } = req.body;
 
-        if (!amount || amount <= 0) {
-            return res.status(400).json({ error: 'Amount must be a positive number' });
+        // Parse and validate amount
+        const parsedAmount = parseFloat(amount);
+        if (isNaN(parsedAmount) || parsedAmount < 0.01) {
+            return res.status(400).json({ error: 'Amount must be at least 0.01' });
         }
 
         try {
@@ -115,8 +117,8 @@ class SavingsGoalController {
                 return res.status(404).json({ error: 'Savings goal not found' });
             }
 
-            // Update the current amount
-            const newCurrentAmount = parseFloat(goal.current_amount || 0) + parseFloat(amount);
+            // Update the current amount (use parsedAmount for consistency)
+            const newCurrentAmount = parseFloat(goal.current_amount || 0) + parsedAmount;
 
             const updatedGoal = await this.savingsGoalModel.update(goalId, userId, {
                 current_amount: newCurrentAmount
@@ -130,7 +132,7 @@ class SavingsGoalController {
             const transactionData = {
                 userId,
                 description: `Savings: ${goal.goal_name}`,
-                amount: parseFloat(amount),
+                amount: parsedAmount,
                 category: 'Savings Goal',
                 date: new Date().toISOString().split('T')[0],
                 typeId: 3,
