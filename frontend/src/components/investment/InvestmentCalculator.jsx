@@ -122,8 +122,8 @@ const InvestmentCalculator = () => {
                             <div className="bg-gray-800 rounded-lg px-4 py-2 border border-gray-700">
                                 <p className="text-sm text-gray-400">
                                     {t('investmentCalculator.simulationsUsed', {
-                                        used: usage.simulationsUsed,
-                                        limit: usage.simulationsLimit
+                                        used: Number(usage.simulationsUsed ?? 0),
+                                        limit: Number(usage.simulationsLimit ?? 0)
                                     })}
                                 </p>
                             </div>

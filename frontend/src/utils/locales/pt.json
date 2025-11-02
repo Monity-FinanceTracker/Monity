@@ -1099,7 +1099,14 @@
       "standard": "Padrão",
       "priority": "Prioritário",
       "limited": "Limitado",
-      "full_access_export": "Acesso completo"
+      "full_access_export": "Acesso completo",
+      "cash_flow_calendar": "Calendário de Fluxo de Caixa",
+      "cash_flow_calendar_desc": "Agende transações e veja seu saldo ao longo do tempo",
+      "investment_calculator": "Calculadora de Investimentos",
+      "investment_calculator_desc": "Calcule o crescimento de investimentos com juros compostos",
+      "not_available": "Não Disponível",
+      "full_access": "Acesso Completo",
+      "simulations_per_month": "{{count}} simulações/mês"
     },
     "cta": {
       "ready_to_upgrade": "Pronto para aprimorar suas finanças?",

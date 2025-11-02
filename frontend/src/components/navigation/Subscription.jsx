@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/AuthContext";
 import { post } from "../../utils/api";
-import { FiCheck, FiZap, FiMessageSquare, FiTrendingUp, FiTarget, FiPieChart, FiLock, FiStar } from "react-icons/fi";
+import { FiCheck, FiZap, FiMessageSquare, FiTrendingUp, FiTarget, FiPieChart, FiLock, FiStar, FiCalendar } from "react-icons/fi";
 
 const Subscription = () => {
   const { t } = useTranslation();
@@ -53,13 +53,13 @@ const Subscription = () => {
       free: t('subscription.features.budgets_goals_limit', { budgets: 2, goals: 2 }),
       premium: t('subscription.features.unlimited')
     },
-    {
-      icon: <FiTrendingUp className="w-6 h-6" />,
-      title: t('subscription.features.advanced_analytics'),
-      description: t('subscription.features.advanced_analytics_desc'),
-      free: t('subscription.features.basic_stats'),
-      premium: t('subscription.features.full_insights')
-    },
+    // {
+    //   icon: <FiTrendingUp className="w-6 h-6" />,
+    //   title: t('subscription.features.advanced_analytics'),
+    //   description: t('subscription.features.advanced_analytics_desc'),
+    //   free: t('subscription.features.basic_stats'),
+    //   premium: t('subscription.features.full_insights')
+    // },
     {
       icon: <FiPieChart className="w-6 h-6" />,
       title: t('subscription.features.smart_categorization'),
@@ -67,19 +67,33 @@ const Subscription = () => {
       free: t('subscription.features.manual_only'),
       premium: t('subscription.features.ai_powered')
     },
-    {
-      icon: <FiZap className="w-6 h-6" />,
-      title: t('subscription.features.priority_features'),
-      description: t('subscription.features.priority_features_desc'),
-      free: t('subscription.features.standard'),
-      premium: t('subscription.features.priority')
-    },
+    // {
+    //   icon: <FiZap className="w-6 h-6" />,
+    //   title: t('subscription.features.priority_features'),
+    //   description: t('subscription.features.priority_features_desc'),
+    //   free: t('subscription.features.standard'),
+    //   premium: t('subscription.features.priority')
+    // },
     {
       icon: <FiLock className="w-6 h-6" />,
       title: t('subscription.features.export_backup'),
       description: t('subscription.features.export_backup_desc'),
       free: t('subscription.features.limited'),
       premium: t('subscription.features.full_access_export')
+    },
+    {
+      icon: <FiCalendar className="w-6 h-6" />,
+      title: t('subscription.features.cash_flow_calendar'),
+      description: t('subscription.features.cash_flow_calendar_desc'),
+      free: t('subscription.features.not_available'),
+      premium: t('subscription.features.full_access')
+    },
+    {
+      icon: <FiTrendingUp className="w-6 h-6" />,
+      title: t('subscription.features.investment_calculator'),
+      description: t('subscription.features.investment_calculator_desc'),
+      free: t('subscription.features.simulations_per_month', { count: 2 }),
+      premium: t('subscription.features.unlimited')
     }
   ];
 
