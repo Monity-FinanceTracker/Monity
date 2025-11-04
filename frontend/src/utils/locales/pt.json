@@ -19,7 +19,7 @@
     "not_set": "Não definido"
   },
   "loginPage": {
-    "slogan": "Acompanhe suas finanças com facilidade",
+    "slogan": "Bem-vindo de volta!",
     "welcome": "Bem-vindo de volta",
     "email": "E-mail",
     "password": "Senha",
@@ -29,7 +29,7 @@
     "signup": "Cadastre-se"
   },
   "signupPage": {
-    "slogan": "Acompanhe suas finanças com facilidade",
+    "slogan": "Bem-vindo de volta!",
     "create_account": "Criar Conta",
     "name": "Nome",
     "email": "E-mail",
