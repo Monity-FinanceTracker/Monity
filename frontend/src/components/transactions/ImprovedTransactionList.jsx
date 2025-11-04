@@ -323,6 +323,9 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     // Allocations are positive and should be subtracted
     const balance = totals.income - totals.expenses - totals.allocations - totals.withdrawals + totals.savings;
 
+    // Calculate total savings: regular savings + allocations - withdrawals
+    const totalSavings = totals.savings + totals.allocations - totals.withdrawals;
+
     // Transaction card component - Responsive for different screen sizes
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (
         <div className={`bg-[#171717] border border-[#262626] rounded-lg p-3 sm:p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item w-full max-w-full min-w-0 flex-shrink-0 ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
@@ -484,8 +487,8 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`${getResponsiveFontSize(totals.savings)} font-bold whitespace-nowrap overflow-hidden ${totals.savings >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
-                            {totals.savings >= 0 ? 'R$ ' : '-R$ '}{Math.abs(totals.savings).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        <div className={`${getResponsiveFontSize(totalSavings)} font-bold whitespace-nowrap overflow-hidden ${totalSavings >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+                            {totalSavings >= 0 ? 'R$ ' : '-R$ '}{Math.abs(totalSavings).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_savings')}</div>
                     </div>
