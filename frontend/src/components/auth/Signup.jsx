@@ -75,7 +75,7 @@ function Signup() {
         else feedback.push(t('signupPage.password_special'));
 
         const strength = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][score];
-        const color = ['text-red-500', 'text-red-400', 'text-yellow-400', 'text-blue-400', 'text-green-400'][score];
+        const color = ['text-red-500', 'text-red-400', 'text-yellow-400', 'text-gray-300', 'text-green-400'][score];
 
         return { score, strength, color, feedback };
     };
@@ -84,7 +84,7 @@ function Signup() {
     const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#232323] via-[#1a1f2e] to-[#23263a] p-4 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
@@ -144,7 +144,7 @@ function Signup() {
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
@@ -155,9 +155,9 @@ function Signup() {
                                     onChange={(e) => setName(e.target.value)}
                                     onFocus={() => setFocusedField('name')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#171717] border-2 ${
-                                        focusedField === 'name' ? 'border-[#01C38D]' : 'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className={`w-full bg-[#E8F0FE] border-2 ${
+                                        focusedField === 'name' ? 'border-[#01C38D]' : 'border-gray-300'
+                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="Your full name"
                                     required
                                 />
@@ -178,7 +178,7 @@ function Signup() {
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                                     </svg>
                                 </div>
@@ -189,9 +189,9 @@ function Signup() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setFocusedField('email')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#171717] border-2 ${
-                                        focusedField === 'email' ? 'border-[#01C38D]' : 'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className={`w-full bg-[#E8F0FE] border-2 ${
+                                        focusedField === 'email' ? 'border-[#01C38D]' : 'border-gray-300'
+                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -212,7 +212,7 @@ function Signup() {
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                 </div>
@@ -223,28 +223,27 @@ function Signup() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setFocusedField('password')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#171717] border-2 ${
-                                        focusedField === 'password' ? 'border-[#01C38D]' : 'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className={`w-full bg-[#E8F0FE] border-2 ${
+                                        focusedField === 'password' ? 'border-[#01C38D]' : 'border-gray-300'
+                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
-                                <button
-                                    type="button"
+                                <div
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    title={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? (
-                                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464l1.414-1.414M15.12 15.12l1.414 1.414" />
+                                        <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
                                         </svg>
                                     ) : (
-                                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                                         </svg>
                                     )}
-                                </button>
+                                </div>
                             </div>
 
                             {/* Password Strength Indicator */}
@@ -257,7 +256,7 @@ function Signup() {
                                                     passwordStrength.score === 0 ? 'bg-red-500 w-1/5' :
                                                     passwordStrength.score === 1 ? 'bg-red-400 w-2/5' :
                                                     passwordStrength.score === 2 ? 'bg-yellow-400 w-3/5' :
-                                                    passwordStrength.score === 3 ? 'bg-blue-400 w-4/5' :
+                                                    passwordStrength.score === 3 ? 'bg-gray-300 w-4/5' :
                                                     'bg-green-400 w-full'
                                                 }`}
                                             ></div>
@@ -277,7 +276,7 @@ function Signup() {
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
@@ -288,30 +287,29 @@ function Signup() {
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#171717] border-2 ${
+                                    className={`w-full bg-[#E8F0FE] border-2 ${
                                         focusedField === 'confirmPassword' ? 'border-[#01C38D]' : 
                                         confirmPassword && !passwordsMatch ? 'border-red-400' :
-                                        'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                        'border-gray-300'
+                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
-                                <button
-                                    type="button"
+                                <div
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    title={showConfirmPassword ? "Hide password" : "Show password"}
                                 >
                                     {showConfirmPassword ? (
-                                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464l1.414-1.414M15.12 15.12l1.414 1.414" />
+                                        <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
                                         </svg>
                                     ) : (
-                                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                                         </svg>
                                     )}
-                                </button>
+                                </div>
                             </div>
                             {confirmPassword && (
                                 <div className="text-xs">
@@ -361,19 +359,9 @@ function Signup() {
 
                     {/* Enhanced Login Link */}
                     <div className="mt-6 text-center">
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-[#262626]"></div>
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-[#171717] text-gray-400">
-                                    {t('signupPage.already_account')}
-                                </span>
-                            </div>
-                        </div>
                         <Link 
                             to="/login" 
-                            className="inline-flex items-center justify-center mt-3 text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
+                            className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
                         >
                             {t('signupPage.login')}
                             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
