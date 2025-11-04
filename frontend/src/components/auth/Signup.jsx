@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 
 function Signup() {
     const { t } = useTranslation();
@@ -93,16 +94,11 @@ function Signup() {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 w-full max-w-md">
+            <div className="relative z-10 w-full max-w-md mx-auto">
                 {/* Monity Logo with Animation */}
-                <div className="mb-6 text-center transform animate-fade-in-up">
-                    <div className="relative">
-                        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#01C38D] to-[#01C38D]/70 bg-clip-text text-transparent">
-                            Monity
-                        </h1>
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-[#01C38D] to-transparent rounded-full"></div>
-                    </div>
-                    <p className="text-gray-400 mt-3 text-base font-medium">{t('signupPage.slogan')}</p>
+                <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
+                    <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
+                    <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
                 </div>
 
                 {/* Signup Card with Enhanced Design */}
