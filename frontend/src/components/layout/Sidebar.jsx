@@ -22,7 +22,8 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   List,
-  DollarSign
+  DollarSign,
+  Calculator
 } from "lucide-react";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
@@ -240,7 +241,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title={isCollapsed ? t('sidebar.investment_calculator') : ''}
               >
                 <div className="w-5 h-5 flex-shrink-0">
-                  <TrendingUp className="w-5 h-5" />
+                  <Calculator className="w-5 h-5" />
                 </div>
                 <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.investment_calculator')}</span>
               </NavLink>
