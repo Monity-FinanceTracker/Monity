@@ -170,3 +170,4 @@ O Route 53 automaticamente resolve o domínio do CloudFront quando você selecio
 ---
 
 Depois de configurar, aguarde alguns minutos e teste. Me avise se funcionou! 🚀
+

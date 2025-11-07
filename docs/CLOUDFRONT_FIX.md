@@ -136,3 +136,4 @@ Quando funcionar, você deve ver:
 - ✅ Navegação funciona (SPA routing)
 - ✅ HTTPS funcionando (cadeado verde)
 - ✅ Sem erros no console
+

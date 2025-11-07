@@ -79,3 +79,4 @@ jobs:
           echo "🌐 URL: https://app.monity-finance.com"
           echo "📦 Bucket: ${{ secrets.S3_BUCKET_NAME }}"
           echo "🚀 CloudFront: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}"
+

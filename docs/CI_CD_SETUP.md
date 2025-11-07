@@ -365,3 +365,4 @@ E o deploy acontece automaticamente! 🚀
 - [GitHub Actions Docs](https://docs.github.com/en/actions)
 - [AWS IAM Best Practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 - [CloudFront Invalidation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html)
+
