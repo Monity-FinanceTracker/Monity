@@ -30,10 +30,10 @@ const EnhancedDashboard = () => {
 
     const fetchDashboardData = async () => {
         try {
-            // Fetch recent transactions
-            const { data: transactions } = await get('/transactions');
-            const recentTransactions = Array.isArray(transactions) 
-                ? transactions.slice(0, 3) 
+            // Fetch only the 3 most recent transactions (optimized query)
+            const { data: transactions } = await get('/transactions?limit=3');
+            const recentTransactions = Array.isArray(transactions)
+                ? transactions
                 : [];
 
             setDashboardData(prev => ({
