@@ -337,3 +337,4 @@ Seu frontend agora está:
 - ✅ Com SPA routing funcionando
 
 **Próximo passo:** Deploy da landing page (Next.js) no Amplify! 🚀
+

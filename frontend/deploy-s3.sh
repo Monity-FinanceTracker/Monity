@@ -14,8 +14,8 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Configuration - UPDATE THESE VALUES
-S3_BUCKET="monity-frontend"  # Your S3 bucket name
-CLOUDFRONT_DISTRIBUTION_ID="E1234567890ABC"  # Your CloudFront distribution ID
+S3_BUCKET="monity-frontend-6646-0786"  # Your S3 bucket name
+CLOUDFRONT_DISTRIBUTION_ID="EBCS9HQJKWAWI"  # Your CloudFront distribution ID
 AWS_REGION="us-east-1"  # Your AWS region
 
 echo "=========================================="

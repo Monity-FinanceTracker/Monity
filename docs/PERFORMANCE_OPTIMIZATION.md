@@ -462,3 +462,4 @@ CloudFront → Invalidations → Create invalidation → /*
 4. **Otimize especificamente o gargalo**
 
 Me diga qual otimização você quer implementar primeiro, ou me envie os resultados dos testes de diagnóstico! 🚀
+
