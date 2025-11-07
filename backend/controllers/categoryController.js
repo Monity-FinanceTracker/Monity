@@ -1,42 +1,66 @@
 const { Category } = require('../models');
 const { logger } = require('../utils/logger');
 const { supabaseAdmin } = require('../config');
+const {
+    getCachedCategories,
+    setCachedCategories,
+    invalidateUserCategories
+} = require('../services/staticDataCache');
 
 class CategoryController {
     async getAllCategories(req, res) {
         const userId = req.user.id;
+        const includeCounts = req.query.includeCounts === 'true';
+
         try {
+            // Check cache first (only cache without counts for better performance)
+            if (!includeCounts) {
+                const cachedCategories = getCachedCategories(userId);
+                if (cachedCategories) {
+                    return res.json(cachedCategories);
+                }
+            }
+
+            // Cache miss or counts requested - fetch from database
             const categories = await Category.findByUser(userId);
-            
-            // Get all transactions for the user to count categories
-            // Note: category field in transactions is stored as plain text (not encrypted)
-            const { data: allTransactions, error: transactionsError } = await supabaseAdmin
-                .from('transactions')
-                .select('category')
-                .eq('userId', userId);
 
-            if (transactionsError) {
-                logger.warn('Error fetching transactions for category counting', { error: transactionsError.message });
+            // Only fetch transaction counts if explicitly requested
+            if (includeCounts) {
+                // Get all transactions for the user to count categories
+                // Note: category field in transactions is stored as plain text (not encrypted)
+                const { data: allTransactions, error: transactionsError } = await supabaseAdmin
+                    .from('transactions')
+                    .select('category')
+                    .eq('userId', userId);
+
+                if (transactionsError) {
+                    logger.warn('Error fetching transactions for category counting', { error: transactionsError.message });
+                }
+
+                // Count transactions per category
+                const transactionCounts = {};
+                if (allTransactions) {
+                    allTransactions.forEach(transaction => {
+                        const categoryName = transaction.category;
+                        if (categoryName) {
+                            transactionCounts[categoryName] = (transactionCounts[categoryName] || 0) + 1;
+                        }
+                    });
+                }
+
+                // Map categories with their transaction counts
+                const categoriesWithCounts = categories.map(category => ({
+                    ...category,
+                    transactionCount: transactionCounts[category.name] || 0
+                }));
+
+                return res.json(categoriesWithCounts);
             }
 
-            // Count transactions per category
-            const transactionCounts = {};
-            if (allTransactions) {
-                allTransactions.forEach(transaction => {
-                    const categoryName = transaction.category;
-                    if (categoryName) {
-                        transactionCounts[categoryName] = (transactionCounts[categoryName] || 0) + 1;
-                    }
-                });
-            }
+            // Cache categories without counts (most common case)
+            setCachedCategories(userId, categories);
 
-            // Map categories with their transaction counts
-            const categoriesWithCounts = categories.map(category => ({
-                ...category,
-                transactionCount: transactionCounts[category.name] || 0
-            }));
-
-            res.json(categoriesWithCounts);
+            res.json(categories);
 
         } catch (error) {
             logger.error('Failed to get categories for user', { userId, error: error.message });
@@ -63,6 +87,10 @@ class CategoryController {
             };
 
             const createdCategory = await Category.create(newCategory);
+
+            // Invalidate cache since a new category was created
+            invalidateUserCategories(userId);
+
             res.status(201).json(createdCategory);
 
         } catch (error) {
@@ -88,6 +116,9 @@ class CategoryController {
                 return res.status(404).json({ error: 'Category not found or you do not have permission to update it.' });
             }
 
+            // Invalidate cache since category was updated
+            invalidateUserCategories(userId);
+
             res.json(updatedCategory);
 
         } catch (error) {
@@ -106,6 +137,9 @@ class CategoryController {
             if (!deletedCategory) {
                 return res.status(404).json({ error: 'Category not found or you do not have permission to delete it.' });
             }
+
+            // Invalidate cache since category was deleted
+            invalidateUserCategories(userId);
 
             res.json({ message: 'Category deleted successfully' });
             
