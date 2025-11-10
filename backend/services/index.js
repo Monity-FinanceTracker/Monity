@@ -7,6 +7,7 @@ const financialHealthService = require('./financialHealthService');
 const ScheduledTransactionService = require('./scheduledTransactionService');
 const AIChatService = require('./aiChatService');
 const EmailValidationService = require('./emailValidationService');
+const emailMetricsService = require('./emailMetricsService');
 
 // Create singleton instances
 const scheduledTransactionService = new ScheduledTransactionService();
@@ -22,4 +23,5 @@ module.exports = {
   AIChatService,
   EmailValidationService,
   emailValidationService,
+  emailMetricsService,
 };
