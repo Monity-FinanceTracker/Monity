@@ -39,12 +39,21 @@ class Transaction {
         return decryptObject(TABLE_NAME, data);
     }
 
-    static async getAll(userId) {
-        const { data, error } = await supabaseAdmin
+    static async getAll(userId, options = {}) {
+        const { limit = null, offset = 0 } = options;
+
+        let query = supabaseAdmin
             .from(TABLE_NAME)
             .select('*')
             .eq('userId', userId)
             .order('date', { ascending: false });
+
+        // Apply limit and offset if provided
+        if (limit !== null) {
+            query = query.range(offset, offset + limit - 1);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             throw new Error(`Error fetching transactions for user: ${error.message}`);
