@@ -256,13 +256,13 @@ const SavingsGoals = () => {
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="flex-1 bg-[#232323] hover:bg-[#262626] text-white font-semibold py-4 rounded-xl transition-all duration-200 border border-[#262626]"
+                                className="flex-1 text-white hover:text-[#01C38D] font-semibold py-4 rounded-xl transition-colors duration-200"
                             >
                                 {t('common.cancel')}
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 bg-white text-[#171717] font-semibold py-4 rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                                className="flex-1 bg-[#01C38D] text-white font-semibold py-4 rounded-xl hover:bg-[#00b37e] transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                             >
                                 {t('savings_goals.create_goal')}
                             </button>
@@ -308,7 +308,7 @@ const SavingsGoals = () => {
                                         {addingMoney[goal.id]?.isAdding ? t('common.cancel') : t('savings_goals.allocate_funds')}
                                     </button>
                                     {parseFloat(goal.current_amount) > 0 && (
-                                        <button onClick={() => handleWithdrawMoneyClick(goal.id)} className="bg-[#171717] hover:bg-[#262626] text-white border border-[#262626] hover:border-[#262626]/80 font-semibold px-4 py-2 rounded-lg transition-all duration-200">
+                                        <button onClick={() => handleWithdrawMoneyClick(goal.id)} className="text-white hover:text-[#01C38D] font-semibold px-4 py-2 rounded-lg transition-colors duration-200">
                                             {withdrawingMoney[goal.id]?.isWithdrawing ? t('common.cancel') : t('savings_goals.withdraw_funds')}
                                         </button>
                                     )}
