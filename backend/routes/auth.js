@@ -18,7 +18,7 @@ module.exports = (controllers, middleware) => {
     );
 
     // OAuth - Google Login (inicia o fluxo OAuth)
-    router.post('/google',
+    router.get('/google',
         (req, res, next) => authController.loginWithGoogle(req, res, next)
     );
 
