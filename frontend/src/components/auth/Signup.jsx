@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
+import GoogleOAuthButton from './GoogleOAuthButton';
 
 function Signup() {
     const { t } = useTranslation();
@@ -358,6 +359,19 @@ function Signup() {
                             )}
                         </button>
                     </form>
+
+                    {/* OAuth Divider */}
+                    <div className="relative my-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-700"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-[#171717] text-gray-400">{t('common.or') || 'ou'}</span>
+                        </div>
+                    </div>
+
+                    {/* Google OAuth Button */}
+                    <GoogleOAuthButton onError={(err) => setError(err)} />
 
                     {/* Enhanced Login Link */}
                     <div className="mt-6 text-center">
