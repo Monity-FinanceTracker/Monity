@@ -38,10 +38,15 @@ function Signup() {
         }
 
         try {
-            const { error } = await signup(name, email, password);
-            if (error) {
-                throw new Error(error);
+            const result = await signup(name, email, password);
+            
+            if (!result.success) {
+                // Mostrar erro do backend (ex: "Emails temporários não são permitidos")
+                setError(result.error || t('signupPage.failed'));
+                setLoading(false);
+                return;
             }
+            
             // If user is signing up for premium, redirect to subscription page
             if (premium) {
                 navigate('/subscription');
@@ -49,6 +54,7 @@ function Signup() {
                 navigate('/');
             }
         } catch (err) {
+            // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
         } finally {
             setLoading(false);
