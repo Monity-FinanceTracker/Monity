@@ -1,0 +1,254 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Monity Application Infrastructure - EC2, S3, CloudFront'
+
+Parameters:
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: EC2 Key Pair for SSH access
+    
+  DomainName:
+    Type: String
+    Description: Your domain name (e.g., yourdomain.com)
+    Default: yourdomain.com
+    
+  SSHLocation:
+    Type: String
+    Description: IP address range that can SSH to EC2 (use your IP/32 for security)
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+
+Resources:
+  # VPC and Networking (using default VPC for simplicity)
+  
+  # Security Group for EC2 Backend
+  BackendSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: monity-backend-sg
+      GroupDescription: Security group for Monity backend EC2 instance
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocation
+          Description: SSH access
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP access
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: HTTPS access
+      Tags:
+        - Key: Name
+          Value: monity-backend-sg
+        - Key: Application
+          Value: Monity
+
+  # EC2 Instance for Backend
+  BackendEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      KeyName: !Ref KeyPairName
+      ImageId: ami-0c55b159cbfafe1f0  # Ubuntu 22.04 LTS (update for your region)
+      SecurityGroupIds:
+        - !Ref BackendSecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp3
+            DeleteOnTermination: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -e
+          
+          # Update system
+          apt-get update
+          apt-get upgrade -y
+          
+          # Install Node.js 20.x
+          curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+          apt-get install -y nodejs
+          
+          # Install PM2
+          npm install -g pm2
+          
+          # Install nginx
+          apt-get install -y nginx
+          
+          # Install git
+          apt-get install -y git
+          
+          # Create directory for application
+          mkdir -p /home/ubuntu/monity-backend
+          chown ubuntu:ubuntu /home/ubuntu/monity-backend
+          
+          echo "EC2 instance setup complete" > /home/ubuntu/setup-complete.txt
+          
+      Tags:
+        - Key: Name
+          Value: monity-backend
+        - Key: Application
+          Value: Monity
+
+  # Elastic IP for EC2 (static IP)
+  BackendEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref BackendEC2Instance
+      Tags:
+        - Key: Name
+          Value: monity-backend-eip
+
+  # S3 Bucket for Frontend
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'monity-frontend-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: Name
+          Value: monity-frontend
+        - Key: Application
+          Value: Monity
+
+  # S3 Bucket Policy for CloudFront
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Statement:
+          - Sid: AllowCloudFrontOAI
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOAI}'
+            Action: 's3:GetObject'
+            Resource: !Sub '${FrontendBucket.Arn}/*'
+
+  # CloudFront Origin Access Identity
+  CloudFrontOAI:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'OAI for Monity Frontend - ${DomainName}'
+
+  # CloudFront Distribution for Frontend
+  FrontendCloudFront:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: Monity Frontend Distribution
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        PriceClass: PriceClass_100  # Use only North America & Europe (cheapest)
+        
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOAI}'
+        
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          MinTTL: 0
+          DefaultTTL: 86400
+          MaxTTL: 31536000
+        
+        # Custom error responses for SPA routing
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 300
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 300
+        
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+          # After creating ACM certificate, update to:
+          # AcmCertificateArn: !Ref SSLCertificate
+          # SslSupportMethod: sni-only
+          # MinimumProtocolVersion: TLSv1.2_2021
+        
+      Tags:
+        - Key: Name
+          Value: monity-frontend-cdn
+        - Key: Application
+          Value: Monity
+
+Outputs:
+  BackendEC2PublicIP:
+    Description: Public IP address of the backend EC2 instance
+    Value: !GetAtt BackendEC2Instance.PublicIp
+    Export:
+      Name: !Sub '${AWS::StackName}-BackendIP'
+  
+  BackendElasticIP:
+    Description: Elastic IP address for backend (use this for DNS)
+    Value: !Ref BackendEIP
+    Export:
+      Name: !Sub '${AWS::StackName}-BackendEIP'
+  
+  FrontendBucketName:
+    Description: S3 bucket name for frontend
+    Value: !Ref FrontendBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-FrontendBucket'
+  
+  CloudFrontDomain:
+    Description: CloudFront distribution domain name
+    Value: !GetAtt FrontendCloudFront.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-CloudFrontDomain'
+  
+  CloudFrontDistributionId:
+    Description: CloudFront distribution ID (for cache invalidation)
+    Value: !Ref FrontendCloudFront
+    Export:
+      Name: !Sub '${AWS::StackName}-CloudFrontDistributionId'
+  
+  SSHCommand:
+    Description: SSH command to connect to backend
+    Value: !Sub 'ssh -i your-key.pem ubuntu@${BackendEIP}'
+  
+  NextSteps:
+    Description: Next steps after stack creation
+    Value: |
+      1. SSH to EC2 and run the deploy-ec2.sh script
+      2. Update frontend/deploy-s3.sh with bucket name and CloudFront ID
+      3. Configure Route 53 DNS records
+      4. Request SSL certificate in ACM
+      5. Update CloudFront distribution with custom domain and SSL
+
