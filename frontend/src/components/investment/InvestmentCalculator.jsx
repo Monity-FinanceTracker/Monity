@@ -6,6 +6,7 @@ import Spinner from '../ui/Spinner';
 import InvestmentChart from './InvestmentChart';
 import { TrendingUp, DollarSign, Target, AlertCircle, Crown } from 'lucide-react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import Dropdown from '../ui/Dropdown';
 
 const InvestmentCalculator = () => {
     const { t } = useTranslation();
@@ -25,7 +26,6 @@ const InvestmentCalculator = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [limitReached, setLimitReached] = useState(false);
-    const [isFrequencyDropdownOpen, setIsFrequencyDropdownOpen] = useState(false);
 
     // Set default goal date to 5 years from now
     useEffect(() => {
@@ -204,34 +204,18 @@ const InvestmentCalculator = () => {
                                     <label className="block text-sm font-medium text-gray-300 mb-2">
                                         {t('investmentCalculator.contributionFrequency')}
                                     </label>
-                                    <div className="relative" onClick={() => setIsFrequencyDropdownOpen(true)}>
-                                        <select
-                                            value={contributionFrequency}
-                                            onChange={(e) => {
-                                                setContributionFrequency(e.target.value);
-                                                setIsFrequencyDropdownOpen(false);
-                                            }}
-                                            onFocus={() => setIsFrequencyDropdownOpen(true)}
-                                            onBlur={() => {
-                                                setTimeout(() => setIsFrequencyDropdownOpen(false), 150);
-                                            }}
-                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 pr-10 text-white focus:ring-0 focus:ring-transparent appearance-none cursor-pointer"
-                                        >
-                                            <option value="monthly">{t('investmentCalculator.monthly')}</option>
-                                            <option value="semi-annually">{t('investmentCalculator.semiAnnually')}</option>
-                                            <option value="annually">{t('investmentCalculator.annually')}</option>
-                                        </select>
-                                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg 
-                                                className="w-4 h-4 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </div>
-                                    </div>
+                                    <Dropdown
+                                        value={contributionFrequency}
+                                        onChange={(value) => setContributionFrequency(value)}
+                                        options={[
+                                            { value: 'monthly', label: t('investmentCalculator.monthly') },
+                                            { value: 'semi-annually', label: t('investmentCalculator.semiAnnually') },
+                                            { value: 'annually', label: t('investmentCalculator.annually') }
+                                        ]}
+                                        placeholder={t('investmentCalculator.contributionFrequency')}
+                                        bgColor="#232323"
+                                        menuBgColor="#232323"
+                                    />
                                 </div>
 
                                 {/* Annual Interest Rate */}
