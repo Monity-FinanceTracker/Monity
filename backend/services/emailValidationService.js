@@ -1,6 +1,7 @@
 const dns = require('dns').promises;
 const { isDisposableEmail, getBlockedDomainsCount } = require('../utils/disposableEmailDomains');
 const { logger } = require('../utils/logger');
+const emailMetricsService = require('./emailMetricsService');
 
 class EmailValidationService {
     constructor() {
@@ -18,67 +19,79 @@ class EmailValidationService {
         try {
             // 1. Validação básica
             if (!email || typeof email !== 'string') {
-                return {
+                const result = {
                     isValid: false,
                     reason: 'Email inválido',
                     details: { step: 'format', error: 'Email vazio ou tipo inválido' }
                 };
+                emailMetricsService.recordValidation(result, email);
+                return result;
             }
 
             const trimmedEmail = email.trim().toLowerCase();
 
             // 2. Validação de formato regex
             if (!this.emailRegex.test(trimmedEmail)) {
-                return {
+                const result = {
                     isValid: false,
                     reason: 'Formato de email inválido',
-                    details: { step: 'regex', email: trimmedEmail }
+                    details: { step: 'format', email: trimmedEmail }
                 };
+                emailMetricsService.recordValidation(result, trimmedEmail);
+                return result;
             }
 
             // 3. Validação de comprimento (RFC 5321)
             if (trimmedEmail.length > 254) {
-                return {
+                const result = {
                     isValid: false,
                     reason: 'Email muito longo',
                     details: { step: 'length', length: trimmedEmail.length }
                 };
+                emailMetricsService.recordValidation(result, trimmedEmail);
+                return result;
             }
 
             const [localPart, domain] = trimmedEmail.split('@');
 
             // 4. Validação da parte local (RFC 5321)
             if (localPart.length > 64) {
-                return {
+                const result = {
                     isValid: false,
                     reason: 'Nome de usuário do email muito longo',
-                    details: { step: 'local-part', length: localPart.length }
+                    details: { step: 'length', length: localPart.length }
                 };
+                emailMetricsService.recordValidation(result, trimmedEmail);
+                return result;
             }
 
             // 5. Verificação de email temporário/descartável (BLOQUEIA FAKES!)
             if (isDisposableEmail(trimmedEmail)) {
                 logger.warn('Email temporário bloqueado', { email: trimmedEmail, domain });
-                return {
+                const result = {
                     isValid: false,
                     reason: 'Emails temporários não são permitidos. Use um email real.',
                     details: { 
-                        step: 'disposable-check', 
+                        step: 'disposable', 
                         domain,
                         blocked: true,
                         totalBlockedDomains: getBlockedDomainsCount()
                     }
                 };
+                emailMetricsService.recordValidation(result, trimmedEmail);
+                return result;
             }
 
             // 6. Validação de domínio (DNS MX Record - verifica se domínio existe)
             const mxValidation = await this.validateDomainMX(domain);
             if (!mxValidation.isValid) {
-                return {
+                const result = {
                     isValid: false,
-                    reason: mxValidation.reason,
-                    details: { step: 'mx-lookup', domain, ...mxValidation.details }
+                    reason: 'O domínio do email parece inválido ou não existe',
+                    details: { step: 'mxRecord', domain, originalReason: mxValidation.reason, ...mxValidation.details }
                 };
+                emailMetricsService.recordValidation(result, trimmedEmail);
+                return result;
             }
 
             // ✅ Email válido!
@@ -89,7 +102,7 @@ class EmailValidationService {
                 processingTime: `${processingTime}ms` 
             });
 
-            return {
+            const result = {
                 isValid: true,
                 details: {
                     email: trimmedEmail,
@@ -103,17 +116,27 @@ class EmailValidationService {
                 }
             };
 
+            // Registrar métrica
+            emailMetricsService.recordValidation(result, trimmedEmail);
+
+            return result;
+
         } catch (error) {
             logger.error('Erro ao validar email', { error: error.message, email });
             
             // Fail-safe: em caso de erro na validação, permitir mas logar
-            return {
+            const result = {
                 isValid: true,
                 details: {
                     warning: 'Validação incompleta devido a erro',
                     error: error.message
                 }
             };
+
+            // Registrar métrica (aceito por fail-safe)
+            emailMetricsService.recordValidation(result, email);
+
+            return result;
         }
     }
 
