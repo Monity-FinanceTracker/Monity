@@ -203,6 +203,18 @@ function Login() {
                         </Link>
                     </div>
                 </div>
+
+                {/* Footer with Privacy Policy Link */}
+                <div className="mt-8 text-center">
+                    <a 
+                        href="/privacy" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                    >
+                        Privacy Policy
+                    </a>
+                </div>
             </div>
 
             {/* Custom CSS for animations */}
