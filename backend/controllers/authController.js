@@ -386,12 +386,9 @@ class AuthController {
                 return res.status(400).json({ error: error.message });
             }
 
-            // Retorna a URL para onde o frontend deve redirecionar o usuário
-            res.json({ 
-                url: data.url,
-                provider: 'google',
-                message: 'Redirecione o usuário para a URL fornecida' 
-            });
+            // Redireciona o usuário diretamente para a URL do Google OAuth
+            logger.info('Redirecting to Google OAuth', { url: data.url });
+            res.redirect(data.url);
 
         } catch (error) {
             logger.error('An unexpected error occurred during Google OAuth', { error: error.message });
