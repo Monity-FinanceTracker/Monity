@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../ui/NotificationSystem';
 import { supabase } from '../../utils/supabase';
 import LanguageSwitcher from '../navigation/LanguageSwitcher';
+import CloseButton from '../ui/CloseButton';
 
 /**
  * Enhanced Settings Component with modern UI and comprehensive functionality
  * Includes: Profile, Security, Subscription, Preferences, Account Management
+ * Updated: Navigation buttons with green theme
  */
 const EnhancedSettings = () => {
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const { user, subscriptionTier, refreshSubscription, logout } = useAuth();
     const { success, error: notifyError } = useNotifications();
@@ -161,125 +166,146 @@ const EnhancedSettings = () => {
         }
     };
 
-    const tabs = [
-        { id: 'profile', label: t('settings.profile'), icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> },
-        { id: 'security', label: t('settings.security'), icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg> },
-        { id: 'subscription', label: t('settings.subscription'), icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> },
-        { id: 'preferences', label: t('settings.preferences'), icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
-        { id: 'account', label: t('settings.account'), icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> }
+    const categories = [
+        { 
+            id: 'profile', 
+            label: t('settings.profile'), 
+            icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> 
+        },
+        { 
+            id: 'security', 
+            label: t('settings.security'), 
+            icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+        },
+        { 
+            id: 'preferences', 
+            label: t('settings.preferences'), 
+            icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> 
+        },
+        { 
+            id: 'subscription', 
+            label: t('settings.subscription'), 
+            icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        },
+        { 
+            id: 'account', 
+            label: t('settings.account'), 
+            icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg> 
+        }
     ];
 
     const renderTabContent = () => {
         switch (activeTab) {
             case 'profile':
                 return (
-                    <div className="space-y-6">
-                        <div>
-                            <h3 className="text-xl font-semibold text-white mb-8">{t('settings.profile_info')}</h3>
-                            <form onSubmit={handleProfileUpdate} className="space-y-4">
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                    <div className="min-w-0">
-                                        <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
-                                            {t('settings.full_name')}
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={profileData.name}
-                                            onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
-                                            placeholder={t('settings.enter_name')}
-                                        />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
-                                            {t('settings.email')}
-                                        </label>
-                                        <input
-                                            type="email"
-                                            value={profileData.email}
-                                            className="w-full bg-[#232323] border border-[#262626] text-gray-400 rounded-lg p-3 cursor-not-allowed min-w-0"
-                                            disabled
-                                        />
-                                        <p className="text-xs text-gray-500 mt-1 truncate">{t('settings.email_readonly')}</p>
-                                    </div>
+                    <div className="space-y-4">
+                        <form onSubmit={handleProfileUpdate} className="space-y-4">
+                            {/* Name Setting Row */}
+                            <div className="flex items-center justify-between py-3 border-b border-[#262626]">
+                                <div className="flex-1">
+                                    <h4 className="text-white text-sm font-medium">{t('settings.full_name')}</h4>
+                                    <p className="text-gray-400 text-xs mt-0.5">{t('settings.enter_name')}</p>
                                 </div>
-                                <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2 text-left">
-                                        {t('settings.bio')}
-                                    </label>
-                                    <textarea
-                                        value={profileData.bio}
-                                        onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
-                                        rows="3"
-                                        placeholder={t('settings.enter_bio')}
-                                    />
+                                <input
+                                    type="text"
+                                    value={profileData.name}
+                                    onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                                    className="w-48 bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    placeholder="Your name"
+                                />
+                            </div>
+
+                            {/* Email Setting Row (Read-only) */}
+                            <div className="flex items-center justify-between py-3 border-b border-[#262626]">
+                                <div className="flex-1">
+                                    <h4 className="text-white text-sm font-medium">{t('settings.email')}</h4>
+                                    <p className="text-gray-400 text-xs mt-0.5">{t('settings.email_readonly')}</p>
                                 </div>
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50"
-                                >
-                                    {loading ? t('settings.updating') : t('settings.update_profile')}
-                                </button>
-                            </form>
-                        </div>
+                                <div className="w-48 bg-[#1A1A1A] border border-[#262626] text-gray-500 text-sm rounded-lg px-3 py-1.5 cursor-not-allowed truncate">
+                                    {profileData.email}
+                                </div>
+                            </div>
+
+                            {/* Bio Setting Row */}
+                            <div className="py-3 border-b border-[#262626]">
+                                <h4 className="text-white text-sm font-medium mb-2">{t('settings.bio')}</h4>
+                                <textarea
+                                    value={profileData.bio}
+                                    onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    rows="3"
+                                    placeholder={t('settings.enter_bio')}
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="bg-[#01C38D] text-white px-6 py-2 text-sm rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50 mt-4"
+                            >
+                                {loading ? t('settings.updating') : t('settings.update_profile')}
+                            </button>
+                        </form>
                     </div>
                 );
 
             case 'security':
                 return (
-                    <div className="space-y-6">
-                        <div>
-                            <h3 className="text-xl font-semibold text-white mb-4">{t('settings.change_password')}</h3>
-                            <form onSubmit={handlePasswordChange} className="space-y-4">
-                                <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        {t('settings.current_password')}
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={passwordData.currentPassword}
-                                        onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
-                                        required
-                                    />
-                                </div>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                    <div className="min-w-0">
-                                        <label className="block text-gray-300 text-sm font-medium mb-2">
-                                            {t('settings.new_password')}
-                                        </label>
-                                        <input
-                                            type="password"
-                                            value={passwordData.newPassword}
-                                            onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <label className="block text-gray-300 text-sm font-medium mb-2">
-                                            {t('settings.confirm_password')}
-                                        </label>
-                                        <input
-                                            type="password"
-                                            value={passwordData.confirmPassword}
-                                            onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                            className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all min-w-0"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50"
-                                >
-                                    {loading ? t('settings.updating') : t('settings.change_password')}
-                                </button>
-                            </form>
-                        </div>
+                    <div className="space-y-4">
+                        <form onSubmit={handlePasswordChange} className="space-y-4">
+                            {/* Current Password */}
+                            <div className="py-3 border-b border-[#262626]">
+                                <label className="block text-white text-sm font-medium mb-2">
+                                    {t('settings.current_password')}
+                                </label>
+                                <input
+                                    type="password"
+                                    value={passwordData.currentPassword}
+                                    onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    placeholder="••••••••"
+                                    required
+                                />
+                            </div>
+
+                            {/* New Password */}
+                            <div className="py-3 border-b border-[#262626]">
+                                <label className="block text-white text-sm font-medium mb-2">
+                                    {t('settings.new_password')}
+                                </label>
+                                <input
+                                    type="password"
+                                    value={passwordData.newPassword}
+                                    onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    placeholder="••••••••"
+                                    required
+                                />
+                            </div>
+
+                            {/* Confirm Password */}
+                            <div className="py-3 border-b border-[#262626]">
+                                <label className="block text-white text-sm font-medium mb-2">
+                                    {t('settings.confirm_password')}
+                                </label>
+                                <input
+                                    type="password"
+                                    value={passwordData.confirmPassword}
+                                    onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    placeholder="••••••••"
+                                    required
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="bg-[#01C38D] text-white px-6 py-2 text-sm rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50 mt-4"
+                            >
+                                {loading ? t('settings.updating') : t('settings.change_password')}
+                            </button>
+                        </form>
                     </div>
                 );
 
@@ -360,86 +386,110 @@ const EnhancedSettings = () => {
 
             case 'preferences':
                 return (
-                    <div className="space-y-6">
-                        <div>
-                            <h3 className="text-xl font-semibold text-white mb-4">{t('settings.general_preferences')}</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
-                                    <div>
-                                        <h4 className="text-white font-medium">{t('settings.language')}</h4>
-                                        <p className="text-gray-400 text-sm">{t('settings.language_desc')}</p>
-                                    </div>
-                                    <LanguageSwitcher />
-                                </div>
-                                
-                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
-                                    <div>
-                                        <h4 className="text-white font-medium">{t('settings.notifications')}</h4>
-                                        <p className="text-gray-400 text-sm">{t('settings.notifications_desc')}</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={preferences.notifications}
-                                            onChange={(e) => setPreferences(prev => ({ ...prev, notifications: e.target.checked }))}
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
-                                    </label>
-                                </div>
-                                
-                                <div className="flex items-center justify-between p-4 bg-[#262626] rounded-lg border border-[#262626]">
-                                    <div>
-                                        <h4 className="text-white font-medium">{t('settings.email_updates')}</h4>
-                                        <p className="text-gray-400 text-sm">{t('settings.email_updates_desc')}</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={preferences.emailUpdates}
-                                            onChange={(e) => setPreferences(prev => ({ ...prev, emailUpdates: e.target.checked }))}
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
-                                    </label>
-                                </div>
-                                
-                                <button
-                                    onClick={handlePreferencesUpdate}
-                                    disabled={loading}
-                                    className="bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50"
-                                >
-                                    {loading ? t('settings.updating') : t('settings.save_preferences')}
-                                </button>
+                    <div className="space-y-4">
+                        {/* Language Setting */}
+                        <div className="flex items-center justify-between py-3 border-b border-[#262626]">
+                            <div className="flex-1">
+                                <h4 className="text-white text-sm font-medium">{t('settings.language')}</h4>
+                                <p className="text-gray-400 text-xs mt-0.5">{t('settings.language_desc')}</p>
                             </div>
+                            <LanguageSwitcher />
+                        </div>
+                        
+                        {/* Notifications Toggle */}
+                        <div className="flex items-center justify-between py-3 border-b border-[#262626]">
+                            <div className="flex-1">
+                                <h4 className="text-white text-sm font-medium">{t('settings.notifications')}</h4>
+                                <p className="text-gray-400 text-xs mt-0.5">{t('settings.notifications_desc')}</p>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={preferences.notifications}
+                                    onChange={(e) => {
+                                        setPreferences(prev => ({ ...prev, notifications: e.target.checked }));
+                                        handlePreferencesUpdate();
+                                    }}
+                                    className="sr-only peer"
+                                />
+                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
+                            </label>
+                        </div>
+                        
+                        {/* Email Updates Toggle */}
+                        <div className="flex items-center justify-between py-3 border-b border-[#262626]">
+                            <div className="flex-1">
+                                <h4 className="text-white text-sm font-medium">{t('settings.email_updates')}</h4>
+                                <p className="text-gray-400 text-xs mt-0.5">{t('settings.email_updates_desc')}</p>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={preferences.emailUpdates}
+                                    onChange={(e) => {
+                                        setPreferences(prev => ({ ...prev, emailUpdates: e.target.checked }));
+                                        handlePreferencesUpdate();
+                                    }}
+                                    className="sr-only peer"
+                                />
+                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
+                            </label>
+                        </div>
+                        
+                        {/* Dark Mode Toggle */}
+                        <div className="flex items-center justify-between py-3 border-b border-[#262626]">
+                            <div className="flex-1">
+                                <h4 className="text-white text-sm font-medium">Dark Mode</h4>
+                                <p className="text-gray-400 text-xs mt-0.5">Always enabled for optimal experience</p>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={preferences.darkMode}
+                                    onChange={(e) => setPreferences(prev => ({ ...prev, darkMode: e.target.checked }))}
+                                    className="sr-only peer"
+                                />
+                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
+                            </label>
                         </div>
                     </div>
                 );
 
             case 'account':
                 return (
-                    <div className="space-y-6">
-                        <div className="bg-[#232323] border border-[#262626] rounded-lg p-6">
-                            <h3 className="text-xl font-semibold text-white mb-4">{t('settings.danger_zone')}</h3>
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="text-white font-medium mb-2">{t('settings.export_data')}</h4>
-                                    <p className="text-gray-300 text-sm mb-3">{t('settings.export_data_desc')}</p>
-                                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                                        {t('settings.export_button')}
-                                    </button>
-                                </div>
-                                
-                                <hr className="border-[#262626]" />
-                                
-                                <div>
-                                    <h4 className="text-white font-medium mb-2">{t('settings.delete_account')}</h4>
-                                    <p className="text-gray-300 text-sm mb-3">{t('settings.delete_account_desc')}</p>
-                                    <button className="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors">
-                                        {t('settings.delete_button')}
-                                    </button>
-                                </div>
-                            </div>
+                    <div className="space-y-4">
+                        {/* Account Info */}
+                        <div className="py-3 border-b border-[#262626]">
+                            <h4 className="text-white text-sm font-medium mb-1">Account ID</h4>
+                            <p className="text-gray-400 text-xs font-mono">{user?.id?.substring(0, 20)}...</p>
+                        </div>
+
+                        {/* Export Data */}
+                        <div className="py-3 border-b border-[#262626]">
+                            <h4 className="text-white text-sm font-medium mb-1">{t('settings.export_data')}</h4>
+                            <p className="text-gray-400 text-xs mb-3">{t('settings.export_data_desc')}</p>
+                            <button className="text-white hover:text-[#01C38D] px-4 py-1.5 text-sm rounded-lg transition-colors">
+                                {t('settings.export_button')}
+                            </button>
+                        </div>
+                        
+                        {/* Danger Zone */}
+                        <div className="py-3 border-b border-red-900/30">
+                            <h4 className="text-red-400 text-sm font-medium mb-1">{t('settings.delete_account')}</h4>
+                            <p className="text-gray-400 text-xs mb-3">{t('settings.delete_account_desc')}</p>
+                            <button className="text-red-400 hover:text-red-300 px-4 py-1.5 text-sm rounded-lg transition-colors">
+                                {t('settings.delete_button')}
+                            </button>
+                        </div>
+
+                        {/* Logout Button */}
+                        <div className="py-3">
+                            <button 
+                                onClick={logout}
+                                className="text-white hover:text-[#01C38D] px-4 py-2 text-sm rounded-lg transition-colors w-full"
+                            >
+                                Logout
+                            </button>
                         </div>
                     </div>
                 );
@@ -449,41 +499,89 @@ const EnhancedSettings = () => {
         }
     };
 
-    return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t('settings.title')}</h1>
-                <p className="text-gray-400 text-sm sm:text-base">{t('settings.subtitle')}</p>
+    const modalContent = (
+        <>
+            {/* Modal Backdrop */}
+            <div 
+                className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[9999] flex items-center justify-center p-4"
+                onClick={() => navigate(-1)}
+            >
+                {/* Modal Container */}
+                <div 
+                    className="w-full max-w-5xl bg-[#1A1A1A] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-fade-in" 
+                    style={{ maxHeight: '90vh', height: '700px' }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    
+                    {/* Left Sidebar */}
+                    <div className="w-full md:w-64 bg-[#0F0F0F] border-r border-[#262626] overflow-y-auto">
+                        {/* Header with Close Button */}
+                        <div className="p-4 border-b border-[#262626] flex items-center">
+                            <CloseButton onClick={() => navigate(-1)} />
+                        </div>
+
+                        {/* Category Navigation */}
+                        <nav className="p-4 space-y-2">
+                            {categories.map((category) => (
+                                <button
+                                    key={category.id}
+                                    onClick={() => setActiveTab(category.id)}
+                                    style={{
+                                        backgroundColor: activeTab === category.id ? '#01C38D' : '#1A1A1A',
+                                        color: activeTab === category.id ? '#FFFFFF' : '#9CA3AF'
+                                    }}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                                        activeTab === category.id
+                                            ? 'shadow-lg shadow-[#01C38D]/20'
+                                            : 'hover:!bg-[#262626] hover:!text-white'
+                                    }`}
+                                >
+                                    <span className="flex-shrink-0">{category.icon}</span>
+                                    <span className="text-sm">{category.label}</span>
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
+
+                    {/* Right Content Area */}
+                    <div className="flex-1 overflow-y-auto">
+                        <div className="p-6">
+                            {/* Category Title */}
+                            <h3 className="text-2xl font-bold text-white mb-6 capitalize">
+                                {categories.find(c => c.id === activeTab)?.label}
+                            </h3>
+
+                            {/* Category Content */}
+                            <div className="space-y-6">
+                                {renderTabContent()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="bg-[#171717] rounded-lg border border-[#262626] overflow-hidden">
-                {/* Tab Navigation */}
-                <div className="border-b border-[#262626]">
-                    <nav className="flex flex-wrap gap-x-4 gap-y-2 px-4 sm:px-6 py-4" aria-label="Settings tabs">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex items-center ${
-                                    activeTab === tab.id
-                                        ? 'border-[#01C38D] text-[#01C38D]'
-                                        : 'border-transparent text-gray-400 hover:text-white hover:border-gray-300'
-                                }`}
-                            >
-                                <span className="mr-2 flex-shrink-0">{tab.icon}</span>
-                                <span className="truncate">{tab.label}</span>
-                            </button>
-                        ))}
-                    </nav>
-                </div>
-
-                {/* Tab Content */}
-                <div className="p-4 sm:p-6">
-                    {renderTabContent()}
-                </div>
-            </div>
-        </div>
+            {/* Animation Styles */}
+            <style>{`
+                @keyframes fade-in {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.95);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+                
+                .animate-fade-in {
+                    animation: fade-in 0.2s ease-out;
+                }
+            `}</style>
+        </>
     );
+
+    // Render modal at document body level using Portal
+    return createPortal(modalContent, document.body);
 };
 
 export default EnhancedSettings; 

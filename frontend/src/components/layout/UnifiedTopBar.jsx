@@ -61,11 +61,11 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                 {/* Right Section: Notifications + PRO Badge + User Menu */}
                 <div className="flex items-center gap-4">
                     {/* Notifications */}
-                    <Bell className="w-4 h-4 text-white hover:text-gray-300 transition-colors cursor-pointer" />
+                    <Bell className="w-4 h-4 text-white hover:text-gray-300 transition-colors cursor-pointer" strokeWidth={2.6} />
 
                     {/* PRO Badge - Only for premium users */}
                     {subscriptionTier === 'premium' && (
-                        <div className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">
+                        <div className="bg-gray-700 text-gray-300 px-2 py-0.75 rounded-full text-xs font-bold">
                             PRO
                         </div>
                     )}
@@ -77,8 +77,8 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 <button
                                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                                     style={{
-                                        width: '40px',
-                                        height: '40px',
+                                        width: '32px',
+                                        height: '32px',
                                         backgroundColor: '#01C38D',
                                         borderRadius: '50%',
                                         border: 'none',
@@ -94,7 +94,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 >
                                 <span style={{ 
                                     color: '#232323', 
-                                    fontSize: '14px', 
+                                    fontSize: '13px', 
                                     fontWeight: 'bold',
                                     userSelect: 'none'
                                 }}>

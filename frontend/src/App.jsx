@@ -173,6 +173,7 @@ const App = React.memo(() => {
         <Route path="/add-expense" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddExpense /></MainLayout></ProtectedRoute>} />
         <Route path="/add-income" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddIncome /></MainLayout></ProtectedRoute>} />
         <Route path="/categories" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><EnhancedCategories /></Suspense></MainLayout></ProtectedRoute>} />
+        {/* Settings uses Portal to render as modal overlay on top of everything */}
         <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedSettings /></MainLayout></ProtectedRoute>} />
         <Route path="/budgets" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ProtectedRoute>} />
         <Route path="/subscription" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Subscription /></Suspense></MainLayout></ProtectedRoute>} />

@@ -303,14 +303,14 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-[#262626] text-white rounded-lg hover:bg-[#404040] transition-colors"
+              className="flex-1 px-4 py-2 text-white hover:text-[#01C38D] rounded-lg transition-colors"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-[#01C38D] text-[#232323] rounded-lg hover:bg-[#01C38D]/90 transition-colors font-medium disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-[#01C38D] text-white rounded-lg hover:bg-[#00b37e] transition-colors font-medium disabled:opacity-50"
             >
               {loading ? t('common.saving') : t('common.save')}
             </button>
