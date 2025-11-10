@@ -12,7 +12,7 @@ module.exports = {
       // Environment
       env: {
         NODE_ENV: 'production',
-        PORT: 3001,
+        PORT: 3000,
       },
       
       // Auto-restart configuration
@@ -44,7 +44,7 @@ module.exports = {
       host: 'your-ec2-instance-ip',
       ref: 'origin/main',
       repo: 'git@github.com:yourusername/monity.git',
-      path: '/home/ubuntu/monity-backend',
+      path: '/home/ubuntu/Monity/backend',
       'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production'
     }
   }
