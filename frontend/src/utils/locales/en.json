@@ -19,7 +19,7 @@
     "not_set": "Not set"
   },
   "loginPage": {
-    "slogan": "Track your finances with ease",
+    "slogan": "Welcome Back!",
     "welcome": "Welcome Back",
     "email": "Email",
     "password": "Password",
@@ -29,7 +29,7 @@
     "signup": "Sign up"
   },
   "signupPage": {
-    "slogan": "Track your finances with ease",
+    "slogan": "Welcome Back!",
     "create_account": "Create Account",
     "name": "Name",
     "email": "Email",

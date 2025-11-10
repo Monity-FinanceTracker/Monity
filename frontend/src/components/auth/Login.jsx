@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 
 function Login() {
     const { t } = useTranslation();
@@ -45,16 +46,11 @@ function Login() {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 w-full max-w-md">
+            <div className="relative z-10 w-full max-w-md mx-auto">
                 {/* Monity Logo with Animation */}
-                <div className="mb-8 text-center transform animate-fade-in-up">
-                    <div className="relative">
-                        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#01C38D] to-[#01C38D]/70 bg-clip-text text-transparent">
-                            Monity
-                        </h1>
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#01C38D] to-transparent rounded-full"></div>
-                    </div>
-                    <p className="text-gray-400 mt-4 text-lg font-medium">{t('loginPage.slogan')}</p>
+                <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
+                    <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
+                    <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
                 </div>
 
                 {/* Login Card with Enhanced Design */}
@@ -182,9 +178,6 @@ function Login() {
 
                     {/* Enhanced Sign Up Link */}
                     <div className="mt-6 text-center">
-                        <p className="text-gray-400 text-sm mb-4">
-                            {t('loginPage.no_account')}
-                        </p>
                         <Link
                             to="/signup"
                             className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
