@@ -466,7 +466,7 @@ const EnhancedSettings = () => {
                         <div className="py-3 border-b border-[#262626]">
                             <h4 className="text-white text-sm font-medium mb-1">{t('settings.export_data')}</h4>
                             <p className="text-gray-400 text-xs mb-3">{t('settings.export_data_desc')}</p>
-                            <button className="bg-[#262626] text-white px-4 py-1.5 text-sm rounded-lg hover:bg-[#333333] transition-colors border border-[#333333]">
+                            <button className="text-white hover:text-[#01C38D] px-4 py-1.5 text-sm rounded-lg transition-colors">
                                 {t('settings.export_button')}
                             </button>
                         </div>
@@ -475,7 +475,7 @@ const EnhancedSettings = () => {
                         <div className="py-3 border-b border-red-900/30">
                             <h4 className="text-red-400 text-sm font-medium mb-1">{t('settings.delete_account')}</h4>
                             <p className="text-gray-400 text-xs mb-3">{t('settings.delete_account_desc')}</p>
-                            <button className="bg-red-600/10 text-red-400 px-4 py-1.5 text-sm rounded-lg hover:bg-red-600/20 transition-colors border border-red-600/30">
+                            <button className="text-red-400 hover:text-red-300 px-4 py-1.5 text-sm rounded-lg transition-colors">
                                 {t('settings.delete_button')}
                             </button>
                         </div>
@@ -484,7 +484,7 @@ const EnhancedSettings = () => {
                         <div className="py-3">
                             <button 
                                 onClick={logout}
-                                className="bg-[#262626] text-white px-4 py-2 text-sm rounded-lg hover:bg-[#333333] transition-colors border border-[#333333] w-full"
+                                className="text-white hover:text-[#01C38D] px-4 py-2 text-sm rounded-lg transition-colors w-full"
                             >
                                 Logout
                             </button>
