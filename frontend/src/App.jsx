@@ -20,7 +20,7 @@ import {
 } from './components';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import ConfigCheck from './components/ui/ConfigCheck';
-import Privace from './components/privace';
+import Privace from './components/privace';gut 
 
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
