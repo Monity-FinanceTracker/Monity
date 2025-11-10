@@ -53,14 +53,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify Required Secrets
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "❌ ERROR: EC2_HOST secret is not set!"
+            echo "Please add EC2_HOST secret in: Settings → Secrets → Actions"
+            echo "Value should be your EC2 IP address or domain (e.g., 3.14.159.265)"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_USERNAME }}" ]; then
+            echo "❌ ERROR: EC2_USERNAME secret is not set!"
+            echo "Please add EC2_USERNAME secret (usually 'ec2-user' or 'ubuntu')"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "❌ ERROR: EC2_SSH_KEY secret is not set!"
+            echo "Please add EC2_SSH_KEY secret with your private SSH key"
+            exit 1
+          fi
+          echo "✅ All required secrets are configured"
+
       - name: Configure SSH
         env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           mkdir -p ~/.ssh
           echo "$EC2_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          echo "Scanning SSH keys for host: $EC2_HOST"
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
         env:
