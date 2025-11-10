@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 
+const healthRoutes = require("./health");
 const authRoutes = require("./auth");
 const transactionRoutes = require("./transactions");
 const categoryRoutes = require("./categories");
@@ -23,6 +24,9 @@ const investmentCalculatorRoutes = require("./investmentCalculator");
 module.exports = (controllers, middleware) => {
   // Version 1 of the API
   const v1Router = express.Router();
+
+  // Health check route - public, no rate limiting or auth
+  v1Router.use("/health", healthRoutes(controllers, middleware));
 
   // Apply general rate limiting to all v1 routes
   v1Router.use(middleware.rateLimiter.apiLimiter);
