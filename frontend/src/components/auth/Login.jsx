@@ -206,7 +206,7 @@ function Login() {
             </div>
 
             {/* Custom CSS for animations */}
-            <style jsx>{`
+            <style>{`
                 @keyframes fade-in-up {
                     from {
                         opacity: 0;
