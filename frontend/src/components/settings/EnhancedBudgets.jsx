@@ -229,10 +229,10 @@ const EnhancedBudgets = () => {
                                         </div>
                                     </div>
                                     
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => setEditingBudget(budget)}
-                                            className="text-blue-400 hover:text-blue-300 transition-colors p-2"
+                                            className="p-2 text-gray-400 hover:text-[#01C38D] hover:bg-[#01C38D]/10 rounded-lg transition-colors"
                                             title={t('budgets.edit')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,7 +241,7 @@ const EnhancedBudgets = () => {
                                         </button>
                                         <button
                                             onClick={() => handleDeleteBudget(budget.id)}
-                                            className="text-red-400 hover:text-red-300 transition-colors p-2"
+                                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                             title={t('budgets.delete')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

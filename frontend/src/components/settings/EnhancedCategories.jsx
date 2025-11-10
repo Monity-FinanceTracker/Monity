@@ -180,7 +180,7 @@ const EnhancedCategories = () => {
                                 </div>
                                 <button
                                     onClick={() => handleDeleteCategory(category.id)}
-                                    className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all p-1"
+                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                     title={t('categories.delete')}
                                 >
                                     <Trash2 className="w-4 h-4" />

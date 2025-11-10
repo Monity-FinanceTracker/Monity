@@ -186,8 +186,14 @@ function Budget() {
                             </div>
                             <div className="flex items-center gap-4">
                                <span className="font-bold text-[#01C38D]">R$ {parseFloat(budget.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                <button onClick={() => handleDeleteBudget(budget.id)} className="text-red-500 hover:text-red-700">
-                                    X
+                                <button 
+                                    onClick={() => handleDeleteBudget(budget.id)} 
+                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                    title="Delete budget"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
                                 </button>
                             </div>
                         </li>

@@ -260,22 +260,12 @@ h1, h2 {
   line-height: 1.1;
 }
 
+/* Button styles now controlled by Tailwind classes and component-level styles */
+/* Global button defaults removed to follow new design system */
 button {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: var(--primary);
-  color: var(--primary-foreground);
   cursor: pointer;
-  transition: all 0.25s;
 }
-button:hover {
-  opacity: 0.9;
-}
-button:focus,
 button:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
