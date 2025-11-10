@@ -48,12 +48,11 @@ function Signup() {
                 return;
             }
             
-            // If user is signing up for premium, redirect to subscription page
-            if (premium) {
-                navigate('/subscription');
-            } else {
-                navigate('/');
-            }
+            // Redirecionar para tela de confirmação de email
+            navigate('/email-confirmation', { 
+                state: { email: email },
+                replace: true 
+            });
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
