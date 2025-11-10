@@ -15,6 +15,10 @@ const sanitize = (value) => {
     return cleaned.trim();
 };
 
+// Cache em memória para validações de email (previne abuse)
+const emailValidationCache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
 // Middleware para validar email profundamente (bloqueia emails temporários e inválidos)
 const validateEmailDeep = async (req, res, next) => {
     const email = req.body.email;
@@ -27,11 +31,43 @@ const validateEmailDeep = async (req, res, next) => {
     }
 
     try {
+        const normalizedEmail = email.trim().toLowerCase();
+        
+        // Verificar cache primeiro (evita múltiplas validações DNS)
+        const cached = emailValidationCache.get(normalizedEmail);
+        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+            if (!cached.isValid) {
+                return res.status(400).json({
+                    success: false,
+                    error: cached.reason,
+                    details: cached.details?.step
+                });
+            }
+            req.body.email = normalizedEmail;
+            return next();
+        }
+
         const validation = await emailValidationService.validateEmail(email);
+
+        // Cachear resultado (válido ou inválido)
+        emailValidationCache.set(normalizedEmail, {
+            ...validation,
+            timestamp: Date.now()
+        });
+
+        // Limpar cache antigo periodicamente
+        if (emailValidationCache.size > 10000) {
+            const now = Date.now();
+            for (const [key, value] of emailValidationCache.entries()) {
+                if (now - value.timestamp > CACHE_TTL) {
+                    emailValidationCache.delete(key);
+                }
+            }
+        }
 
         if (!validation.isValid) {
             logger.warn('Email validation blocked registration', {
-                email,
+                email: normalizedEmail,
                 reason: validation.reason,
                 details: validation.details
             });
@@ -44,7 +80,7 @@ const validateEmailDeep = async (req, res, next) => {
         }
 
         // Email válido, normalizar e continuar
-        req.body.email = validation.details.email; // Email normalizado (lowercase, trimmed)
+        req.body.email = validation.details.email;
         next();
 
     } catch (error) {
