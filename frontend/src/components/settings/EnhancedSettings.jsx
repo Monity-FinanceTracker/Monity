@@ -6,10 +6,12 @@ import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../ui/NotificationSystem';
 import { supabase } from '../../utils/supabase';
 import LanguageSwitcher from '../navigation/LanguageSwitcher';
+import CloseButton from '../ui/CloseButton';
 
 /**
  * Enhanced Settings Component with modern UI and comprehensive functionality
  * Includes: Profile, Security, Subscription, Preferences, Account Management
+ * Updated: Navigation buttons with green theme
  */
 const EnhancedSettings = () => {
     const navigate = useNavigate();
@@ -515,31 +517,27 @@ const EnhancedSettings = () => {
                     <div className="w-full md:w-64 bg-[#0F0F0F] border-r border-[#262626] overflow-y-auto">
                         {/* Header with Close Button */}
                         <div className="p-4 border-b border-[#262626] flex items-center">
-                            <button
-                                onClick={() => navigate(-1)}
-                                className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-[#262626]"
-                                aria-label="Close settings"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                            <CloseButton onClick={() => navigate(-1)} />
                         </div>
 
                         {/* Category Navigation */}
-                        <nav className="p-3 space-y-1">
+                        <nav className="p-4 space-y-2">
                             {categories.map((category) => (
                                 <button
                                     key={category.id}
                                     onClick={() => setActiveTab(category.id)}
-                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
+                                    style={{
+                                        backgroundColor: activeTab === category.id ? '#01C38D' : '#1A1A1A',
+                                        color: activeTab === category.id ? '#FFFFFF' : '#9CA3AF'
+                                    }}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                                         activeTab === category.id
-                                            ? 'bg-[#262626] text-white'
-                                            : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                                            ? 'shadow-lg shadow-[#01C38D]/20'
+                                            : 'hover:!bg-[#262626] hover:!text-white'
                                     }`}
                                 >
                                     <span className="flex-shrink-0">{category.icon}</span>
-                                    <span className="text-sm font-medium">{category.label}</span>
+                                    <span className="text-sm">{category.label}</span>
                                 </button>
                             ))}
                         </nav>
