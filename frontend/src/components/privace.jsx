@@ -24,7 +24,7 @@ const Privace = () => {
             <p className="text-gray-300 text-base leading-relaxed mb-6">
               A sua privacidade é importante para nós. É política do <span className="text-[#01C38D] font-semibold">Monity</span> respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar no site{' '}
               <a
-                href="https://firstmonity.vercel.app/"
+                href="https://app.monity-finance.com/"
                 className="text-[#01C38D] hover:text-[#01A071] transition-colors duration-200 font-medium underline decoration-[#01C38D]/30 hover:decoration-[#01C38D]/60"
               >
                 Monity
