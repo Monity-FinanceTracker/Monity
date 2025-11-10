@@ -108,13 +108,13 @@ html, body, div, section, article, aside, nav, main, header, footer {
 
 /* Custom scrollbar class for explicit application */
 .custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #242532 #171717;
+  scrollbar-width: auto;
+  scrollbar-color: #3D3F42 #171717;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 14px;
+  height: 14px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -123,7 +123,7 @@ html, body, div, section, article, aside, nav, main, header, footer {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #242532;
+  background: #3D3F42;
   border-radius: 4px;
   transition: background 0.2s ease;
 }
@@ -134,6 +134,13 @@ html, body, div, section, article, aside, nav, main, header, footer {
 
 .custom-scrollbar::-webkit-scrollbar-corner {
   background: #171717;
+}
+
+/* Remove scrollbar arrows/buttons */
+.custom-scrollbar::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
 }
 
 :root {
