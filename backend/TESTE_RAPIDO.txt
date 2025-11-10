@@ -1,0 +1,51 @@
+=============================================================================
+🧪 TESTE RÁPIDO - Copy & Paste no PowerShell
+=============================================================================
+
+PASSO 1: Iniciar servidor (Terminal 1)
+--------------------------------------
+cd C:\Users\LucaL\dev\Monity\backend
+npm start
+
+
+PASSO 2: Testar emails (Terminal 2 - depois que servidor iniciar)
+------------------------------------------------------------------
+
+## TESTE 1: Email fake (DEVE BLOQUEAR) ⭐
+$body = @{ name = "Test"; email = "wawefi5741@wacold.com"; password = "senha12345678" } | ConvertTo-Json; Invoke-RestMethod -Uri "http://localhost:5000/api/auth/register" -Method POST -Body $body -ContentType "application/json"
+
+✅ Esperado: Erro "Emails temporários não são permitidos"
+
+
+## TESTE 2: TempMail (DEVE BLOQUEAR)
+$body = @{ name = "Test"; email = "test@tempmail.com"; password = "senha12345678" } | ConvertTo-Json; Invoke-RestMethod -Uri "http://localhost:5000/api/auth/register" -Method POST -Body $body -ContentType "application/json"
+
+✅ Esperado: Erro "Emails temporários não são permitidos"
+
+
+## TESTE 3: Mailinator (DEVE BLOQUEAR)
+$body = @{ name = "Test"; email = "fake@mailinator.com"; password = "senha12345678" } | ConvertTo-Json; Invoke-RestMethod -Uri "http://localhost:5000/api/auth/register" -Method POST -Body $body -ContentType "application/json"
+
+✅ Esperado: Erro "Emails temporários não são permitidos"
+
+
+## TESTE 4: Email válido (DEVE PASSAR)
+## IMPORTANTE: Troque para SEU email real!
+$body = @{ name = "Seu Nome"; email = "seu.email@gmail.com"; password = "senha12345678" } | ConvertTo-Json; Invoke-RestMethod -Uri "http://localhost:5000/api/auth/register" -Method POST -Body $body -ContentType "application/json"
+
+✅ Esperado: Sucesso com user e session OU erro "already registered" se já existir
+
+
+=============================================================================
+📊 RESULTADO FINAL ESPERADO:
+=============================================================================
+
+✅ wawefi5741@wacold.com → BLOQUEADO
+✅ test@tempmail.com → BLOQUEADO  
+✅ fake@mailinator.com → BLOQUEADO
+✅ seu.email@gmail.com → PASSOU
+
+🎉 Sistema funcionando! Emails fake agora são bloqueados!
+
+=============================================================================
+

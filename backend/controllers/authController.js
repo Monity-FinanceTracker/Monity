@@ -13,7 +13,12 @@ class AuthController {
 
     async register(req, res) {
         const { email, password, name } = req.body;
+        
         try {
+            // Email já foi validado pelo middleware validateEmailDeep
+            // Aqui fazemos o registro no Supabase
+            logger.info('Attempting user registration', { email });
+
             const { data, error } = await this.supabase.auth.signUp({
                 email,
                 password,
@@ -26,20 +31,38 @@ class AuthController {
             });
 
             if (error) {
-                logger.error('User registration failed', { error: error.message });
+                logger.error('User registration failed', { 
+                    error: error.message,
+                    email 
+                });
                 return res.status(400).json({ error: error.message });
             }
 
             if (data.user) {
-                // Not waiting for this to complete to speed up response time
+                logger.info('User registered successfully', { 
+                    userId: data.user.id,
+                    email: data.user.email 
+                });
+
+                // Criar categorias padrão de forma assíncrona
                 this.userModel.createDefaultCategories(data.user.id)
-                    .catch(err => logger.error('Failed to create default categories', { userId: data.user.id, error: err.message }));
+                    .catch(err => logger.error('Failed to create default categories', { 
+                        userId: data.user.id, 
+                        error: err.message 
+                    }));
             }
 
-            res.status(201).json({ user: data.user, session: data.session });
+            res.status(201).json({ 
+                user: data.user, 
+                session: data.session,
+                message: 'Conta criada com sucesso!' 
+            });
 
         } catch (error) {
-            logger.error('An unexpected error occurred during registration', { error: error.message });
+            logger.error('An unexpected error occurred during registration', { 
+                error: error.message,
+                email 
+            });
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
@@ -336,6 +359,297 @@ class AuthController {
                 error: error.message
             });
             res.status(500).json({ error: 'Internal Server Error during data export' });
+        }
+    }
+
+    /**
+     * Inicia o fluxo OAuth com Google
+     * O Supabase gerencia todo o processo de autenticação OAuth
+     */
+    async loginWithGoogle(req, res) {
+        try {
+            logger.info('Google OAuth login initiated');
+
+            const { data, error } = await this.supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback`,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    }
+                }
+            });
+
+            if (error) {
+                logger.error('Google OAuth initiation failed', { error: error.message });
+                return res.status(400).json({ error: error.message });
+            }
+
+            // Retorna a URL para onde o frontend deve redirecionar o usuário
+            res.json({ 
+                url: data.url,
+                provider: 'google',
+                message: 'Redirecione o usuário para a URL fornecida' 
+            });
+
+        } catch (error) {
+            logger.error('An unexpected error occurred during Google OAuth', { error: error.message });
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    /**
+     * Trata o callback do OAuth (se necessário fazer algo no backend)
+     * Normalmente o Supabase lida com isso automaticamente
+     */
+    async handleOAuthCallback(req, res) {
+        try {
+            const { access_token, refresh_token } = req.query;
+
+            if (!access_token) {
+                logger.warn('OAuth callback without access_token');
+                return res.status(400).json({ error: 'Missing access token' });
+            }
+
+            // Supabase já criou o usuário automaticamente
+            // Aqui podemos fazer ações adicionais se necessário
+            logger.info('OAuth callback processed successfully');
+
+            // Criar categorias padrão para novos usuários OAuth
+            const { data: { user }, error } = await this.supabase.auth.getUser(access_token);
+            
+            if (!error && user) {
+                // Verificar se é primeiro login (criar categorias padrão)
+                const { data: existingProfile } = await supabaseAdmin
+                    .from('profiles')
+                    .select('id')
+                    .eq('id', user.id)
+                    .single();
+
+                if (!existingProfile) {
+                    // Primeiro login, criar categorias padrão
+                    await this.userModel.createDefaultCategories(user.id)
+                        .catch(err => logger.error('Failed to create default categories for OAuth user', { 
+                            userId: user.id, 
+                            error: err.message 
+                        }));
+                }
+
+                logger.info('OAuth user processed', { userId: user.id, email: user.email });
+            }
+
+            // Redirecionar para o frontend
+            const redirectUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+            res.redirect(`${redirectUrl}/dashboard?auth=success`);
+
+        } catch (error) {
+            logger.error('An unexpected error occurred during OAuth callback', { error: error.message });
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    /**
+     * Reenvia o email de confirmação para o usuário
+     * Útil quando o email não chegou ou expirou
+     */
+    async resendConfirmationEmail(req, res) {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Email é obrigatório' 
+            });
+        }
+
+        try {
+            logger.info('Resending confirmation email', { email });
+
+            // Supabase envia automaticamente o email de confirmação
+            const { data, error } = await this.supabase.auth.resend({
+                type: 'signup',
+                email: email,
+                options: {
+                    emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/verify`
+                }
+            });
+
+            if (error) {
+                logger.error('Failed to resend confirmation email', { 
+                    email, 
+                    error: error.message 
+                });
+
+                // Mensagens de erro amigáveis
+                if (error.message.includes('already confirmed')) {
+                    return res.status(400).json({ 
+                        success: false,
+                        error: 'Este email já foi confirmado. Você pode fazer login.' 
+                    });
+                }
+
+                if (error.message.includes('not found')) {
+                    return res.status(404).json({ 
+                        success: false,
+                        error: 'Email não encontrado. Cadastre-se primeiro.' 
+                    });
+                }
+
+                return res.status(400).json({ 
+                    success: false,
+                    error: error.message 
+                });
+            }
+
+            logger.info('Confirmation email resent successfully', { email });
+
+            res.json({
+                success: true,
+                message: 'Email de confirmação reenviado com sucesso! Verifique sua caixa de entrada.',
+                email
+            });
+
+        } catch (error) {
+            logger.error('An unexpected error occurred while resending confirmation email', { 
+                email, 
+                error: error.message 
+            });
+            res.status(500).json({ 
+                success: false,
+                error: 'Erro ao reenviar email de confirmação. Tente novamente.' 
+            });
+        }
+    }
+
+    /**
+     * Verifica o status de confirmação do email do usuário
+     * Útil para verificar se o usuário já confirmou o email
+     */
+    async checkEmailVerification(req, res) {
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Email é obrigatório' 
+            });
+        }
+
+        try {
+            logger.info('Checking email verification status', { email });
+
+            // Buscar usuário no Supabase Auth
+            const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers();
+
+            if (error) {
+                logger.error('Failed to check email verification', { 
+                    email, 
+                    error: error.message 
+                });
+                return res.status(500).json({ 
+                    success: false,
+                    error: 'Erro ao verificar status do email' 
+                });
+            }
+
+            // Encontrar usuário pelo email
+            const user = users.find(u => u.email === email);
+
+            if (!user) {
+                return res.status(404).json({ 
+                    success: false,
+                    error: 'Usuário não encontrado',
+                    verified: false
+                });
+            }
+
+            const isVerified = user.email_confirmed_at !== null;
+
+            logger.info('Email verification status checked', { 
+                email, 
+                verified: isVerified 
+            });
+
+            res.json({
+                success: true,
+                email,
+                verified: isVerified,
+                confirmedAt: user.email_confirmed_at,
+                message: isVerified 
+                    ? 'Email já foi confirmado' 
+                    : 'Email ainda não foi confirmado'
+            });
+
+        } catch (error) {
+            logger.error('An unexpected error occurred while checking email verification', { 
+                email, 
+                error: error.message 
+            });
+            res.status(500).json({ 
+                success: false,
+                error: 'Erro ao verificar status do email' 
+            });
+        }
+    }
+
+    /**
+     * Middleware para verificar se o email do usuário está confirmado
+     * Pode ser usado em rotas que exigem email confirmado
+     */
+    async requireEmailVerified(req, res, next) {
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ 
+                success: false,
+                error: 'Autenticação necessária' 
+            });
+        }
+
+        try {
+            // Buscar usuário no Supabase Auth
+            const { data: { user }, error } = await supabaseAdmin.auth.admin.getUserById(userId);
+
+            if (error || !user) {
+                logger.error('Failed to get user for email verification check', { 
+                    userId, 
+                    error: error?.message 
+                });
+                return res.status(500).json({ 
+                    success: false,
+                    error: 'Erro ao verificar confirmação de email' 
+                });
+            }
+
+            const isVerified = user.email_confirmed_at !== null;
+
+            if (!isVerified) {
+                logger.warn('User attempted to access resource without verified email', { 
+                    userId, 
+                    email: user.email 
+                });
+
+                return res.status(403).json({ 
+                    success: false,
+                    error: 'Email não confirmado',
+                    message: 'Por favor, confirme seu email antes de continuar.',
+                    emailVerified: false
+                });
+            }
+
+            // Email verificado, continuar
+            next();
+
+        } catch (error) {
+            logger.error('An unexpected error occurred in email verification middleware', { 
+                userId, 
+                error: error.message 
+            });
+            res.status(500).json({ 
+                success: false,
+                error: 'Erro ao verificar confirmação de email' 
+            });
         }
     }
 }
