@@ -1,0 +1,156 @@
+# Button Styling Guidelines for Monity
+
+## Core Button Design Principle
+
+**DEFAULT BUTTON STYLE**: All buttons in the Monity application must have **WHITE TEXT** with **NO BACKGROUND COLOR** (transparent background) and **NO BORDERS**.
+
+## Standard Button Styling
+
+### Primary/Default Buttons
+```jsx
+// Correct ✅
+<button className="text-white hover:text-[#01C38D] transition-colors">
+  Button Text
+</button>
+
+<button className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors">
+  Button Text
+</button>
+
+// WRONG ❌ - Never use backgrounds, borders, or dark text
+<button className="bg-white text-black">Button Text</button>
+<button className="bg-[#E8F0FE] text-gray-900">Button Text</button>
+<button className="text-white border border-white">Button Text</button>
+```
+
+### Accent/Action Buttons (For Critical Actions Only)
+Only use colored backgrounds for primary actions like:
+- Form submissions (Sign Up, Login, Save, Update)
+- Primary CTAs (Upgrade Now, Get Started)
+- Confirmation actions
+
+```jsx
+// Correct ✅ - For primary actions only
+<button className="bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors">
+  Submit
+</button>
+
+<button className="bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white px-6 py-3 rounded-xl hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 transition-all">
+  Sign Up
+</button>
+```
+
+### Danger/Destructive Buttons
+```jsx
+// Correct ✅ - Simple text button
+<button className="text-red-400 px-4 py-2 rounded-lg hover:text-red-300 transition-colors">
+  Delete
+</button>
+
+// Or with background for critical destructive actions
+<button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+  Delete Account
+</button>
+```
+
+### Icon Buttons
+```jsx
+// Correct ✅
+<button className="text-white hover:text-[#01C38D] transition-colors p-2 rounded-lg">
+  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+    {/* icon path */}
+  </svg>
+</button>
+```
+
+### Navigation/Tab Buttons
+```jsx
+// Correct ✅
+<button className={`text-gray-400 hover:text-white px-3 py-2 rounded-lg transition-all ${
+  isActive ? 'text-white bg-[#262626]' : ''
+}`}>
+  Tab Name
+</button>
+```
+
+## Common Patterns
+
+### Standard Button Classes
+```
+text-white                          // Default text color
+hover:text-[#01C38D]               // Hover state (color change)
+hover:opacity-80                   // Alternative hover effect
+transition-colors                   // Smooth transitions
+px-4 py-2                          // Standard padding
+rounded-lg                         // Rounded corners
+```
+
+### Button Sizing
+```
+Small:  px-3 py-1.5 text-sm
+Medium: px-4 py-2 text-base
+Large:  px-6 py-3 text-lg
+```
+
+## What NOT to Do
+
+### ❌ NEVER Use These Patterns
+```jsx
+// White/light backgrounds with dark text
+<button className="bg-white text-black">...</button>
+<button className="bg-[#E8F0FE] text-gray-900">...</button>
+<button className="bg-gray-100 text-gray-800">...</button>
+
+// Borders on buttons
+<button className="border border-white">...</button>
+<button className="border border-gray-300">...</button>
+<button className="border border-[#01C38D]">...</button>
+
+// Light backgrounds in any form
+<button className="bg-blue-100">...</button>
+<button className="bg-green-50">...</button>
+```
+
+### ❌ NEVER Use These Classes on Buttons
+- `bg-white`
+- `bg-[#E8F0FE]`
+- `bg-gray-100`, `bg-gray-200`, etc.
+- `text-black`
+- `text-gray-900`, `text-gray-800`
+- `border`, `border-white`, `border-gray-*`, etc.
+- Any light background color
+- Any border classes
+
+## Exception: Form Inputs
+Note: This rule applies to **BUTTONS ONLY**. Form inputs (text inputs, textareas, selects) can have borders and different styling as needed for usability.
+
+## Badge/Label Exception
+Small status badges and labels (not interactive buttons) may use different styling:
+```jsx
+// Badges can have colored backgrounds and borders
+<span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm border border-yellow-300">
+  PREMIUM
+</span>
+```
+
+## Migration Checklist
+
+When updating existing buttons:
+1. ✅ Remove any `bg-white`, `bg-[#E8F0FE]`, or light background classes
+2. ✅ Remove ALL `border` classes from buttons
+3. ✅ Change `text-black` or `text-gray-900` to `text-white`
+4. ✅ Add hover states with `hover:text-[#01C38D]` or `hover:opacity-80`
+5. ✅ Keep transition classes for smooth interactions
+6. ✅ Only use `bg-[#01C38D]` for primary action buttons
+
+## Summary
+
+**Golden Rule**: By default, all buttons should be:
+- ✅ White text (`text-white`)
+- ✅ No background (transparent)
+- ✅ No borders
+- ✅ Only hover effects (color change or opacity)
+
+**Exception**: Only primary action buttons can have colored backgrounds like `bg-[#01C38D]`.
+
+This ensures consistency across the entire Monity application and maintains the modern, clean aesthetic of the dark theme.
