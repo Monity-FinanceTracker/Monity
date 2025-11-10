@@ -122,27 +122,10 @@ function AddCategory() {
                                         id="categoryType"
                                         value={categoryType}
                                         onChange={(e) => setCategoryType(e.target.value)}
-                                        className="w-full bg-[#232323] border border-[#262626]/50 text-white rounded-xl p-4 pl-12 pr-12 focus:ring-0 focus:ring-transparent focus:border-[#01C38D] transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium"
-                                        style={{
-                                            fontFamily: "'DM Sans', sans-serif",
-                                            fontSize: '14px',
-                                            fontWeight: '500'
-                                        }}
+                                        className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 pr-10 text-white focus:ring-0 focus:ring-transparent appearance-none cursor-pointer"
                                     >
-                                        <option 
-                                            value="expense"
-                                            className="bg-[#232323] text-white font-medium"
-                                            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
-                                        >
-                                            {t('addCategory.expenseOption')}
-                                        </option>
-                                        <option 
-                                            value="income"
-                                            className="bg-[#232323] text-white font-medium"
-                                            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
-                                        >
-                                            {t('addCategory.incomeOption')}
-                                        </option>
+                                        <option value="expense">{t('addCategory.expenseOption')}</option>
+                                        <option value="income">{t('addCategory.incomeOption')}</option>
                                     </select>
                                     {categoryType === 'expense' ? (
                                         <FaArrowTrendDown className="absolute left-4 top-1/2 transform -translate-y-1/2 text-red-400" />
@@ -150,7 +133,13 @@ function AddCategory() {
                                         <FaArrowTrendUp className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-400" />
                                     )}
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg 
+                                            className="w-4 h-4 text-gray-400" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                            style={{ transform: 'none' }}
+                                        >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>

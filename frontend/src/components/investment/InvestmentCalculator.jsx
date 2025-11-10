@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { post, get } from '../../utils/api';
 import Spinner from '../ui/Spinner';
 import InvestmentChart from './InvestmentChart';
-import { TrendingUp, DollarSign, Target, Percent, AlertCircle, Crown } from 'lucide-react';
+import { TrendingUp, DollarSign, Target, AlertCircle, Crown } from 'lucide-react';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 
 const InvestmentCalculator = () => {
     const { t } = useTranslation();
@@ -24,6 +25,7 @@ const InvestmentCalculator = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [limitReached, setLimitReached] = useState(false);
+    const [isFrequencyDropdownOpen, setIsFrequencyDropdownOpen] = useState(false);
 
     // Set default goal date to 5 years from now
     useEffect(() => {
@@ -98,15 +100,12 @@ const InvestmentCalculator = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 md:p-6">
+        <div className="min-h-screen p-4 md:p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                            <div className="bg-green-500/20 p-3 rounded-lg">
-                                <TrendingUp className="w-8 h-8 text-green-400" />
-                            </div>
                             <div>
                                 <h1 className="text-3xl font-bold text-white">
                                     {t('investmentCalculator.title')}
@@ -119,7 +118,7 @@ const InvestmentCalculator = () => {
                         
                         {/* Usage indicator */}
                         {usage && !usage.isPremium && (
-                            <div className="bg-gray-800 rounded-lg px-4 py-2 border border-gray-700">
+                            <div className="bg-[#171717] rounded-lg px-4 py-2 border border-[#262626]">
                                 <p className="text-sm text-gray-400">
                                     {t('investmentCalculator.simulationsUsed', {
                                         used: Number(usage.simulationsUsed ?? 0),
@@ -156,7 +155,7 @@ const InvestmentCalculator = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Input Form */}
                     <div className="lg:col-span-1">
-                        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                        <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
                             <h2 className="text-xl font-semibold text-white mb-6">
                                 {t('investmentCalculator.inputParameters')}
                             </h2>
@@ -173,7 +172,7 @@ const InvestmentCalculator = () => {
                                             type="number"
                                             value={initialInvestment}
                                             onChange={(e) => setInitialInvestment(e.target.value)}
-                                            className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
                                             min="0"
                                             step="0.01"
                                             required
@@ -192,7 +191,7 @@ const InvestmentCalculator = () => {
                                             type="number"
                                             value={contributionAmount}
                                             onChange={(e) => setContributionAmount(e.target.value)}
-                                            className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
                                             min="0"
                                             step="0.01"
                                             required
@@ -205,15 +204,34 @@ const InvestmentCalculator = () => {
                                     <label className="block text-sm font-medium text-gray-300 mb-2">
                                         {t('investmentCalculator.contributionFrequency')}
                                     </label>
-                                    <select
-                                        value={contributionFrequency}
-                                        onChange={(e) => setContributionFrequency(e.target.value)}
-                                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
-                                    >
-                                        <option value="monthly">{t('investmentCalculator.monthly')}</option>
-                                        <option value="semi-annually">{t('investmentCalculator.semiAnnually')}</option>
-                                        <option value="annually">{t('investmentCalculator.annually')}</option>
-                                    </select>
+                                    <div className="relative" onClick={() => setIsFrequencyDropdownOpen(true)}>
+                                        <select
+                                            value={contributionFrequency}
+                                            onChange={(e) => {
+                                                setContributionFrequency(e.target.value);
+                                                setIsFrequencyDropdownOpen(false);
+                                            }}
+                                            onFocus={() => setIsFrequencyDropdownOpen(true)}
+                                            onBlur={() => {
+                                                setTimeout(() => setIsFrequencyDropdownOpen(false), 150);
+                                            }}
+                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 pr-10 text-white focus:ring-0 focus:ring-transparent appearance-none cursor-pointer"
+                                        >
+                                            <option value="monthly">{t('investmentCalculator.monthly')}</option>
+                                            <option value="semi-annually">{t('investmentCalculator.semiAnnually')}</option>
+                                            <option value="annually">{t('investmentCalculator.annually')}</option>
+                                        </select>
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                            <svg 
+                                                className="w-4 h-4 text-gray-400" 
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Annual Interest Rate */}
@@ -222,17 +240,35 @@ const InvestmentCalculator = () => {
                                         {t('investmentCalculator.annualInterestRate')}
                                     </label>
                                     <div className="relative">
-                                        <Percent className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
                                             type="number"
                                             value={annualInterestRate}
                                             onChange={(e) => setAnnualInterestRate(e.target.value)}
-                                            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 pr-10 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 pr-10 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                             min="0"
                                             max="100"
                                             step="0.1"
                                             required
                                         />
+                                        {/* Custom spinner arrows */}
+                                        <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                                            <button
+                                                type="button"
+                                                onClick={() => setAnnualInterestRate(Math.min(100, ((parseFloat(annualInterestRate) || 0) + 0.1).toFixed(1)))}
+                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                            >
+                                                <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setAnnualInterestRate(Math.max(0, ((parseFloat(annualInterestRate) || 0) - 0.1).toFixed(1)))}
+                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                            >
+                                                <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -242,12 +278,14 @@ const InvestmentCalculator = () => {
                                         {t('investmentCalculator.goalDate')}
                                     </label>
                                     <div className="relative">
-                                        <Target className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
                                             type="date"
                                             value={goalDate}
                                             onChange={(e) => setGoalDate(e.target.value)}
-                                            className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                            style={{
+                                                colorScheme: 'dark'
+                                            }}
                                             required
                                         />
                                     </div>
@@ -261,7 +299,7 @@ const InvestmentCalculator = () => {
                                     <select
                                         value={viewType}
                                         onChange={(e) => setViewType(e.target.value)}
-                                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                        className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
                                     >
                                         <option value="monthly">{t('investmentCalculator.monthlyView')}</option>
                                         <option value="annually">{t('investmentCalculator.annualView')}</option>
@@ -281,7 +319,7 @@ const InvestmentCalculator = () => {
                                     disabled={loading || limitReached}
                                     className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                                         loading || limitReached
-                                            ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                                            ? 'bg-[#262626] text-gray-400 cursor-not-allowed'
                                             : 'bg-green-500 text-white hover:bg-green-600'
                                     }`}
                                 >
@@ -313,7 +351,12 @@ const InvestmentCalculator = () => {
                                         </p>
                                     </div>
 
-                                    <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/50 rounded-xl p-6">
+                                    <div 
+                                        className="investment-calculator-card rounded-xl p-6" 
+                                        style={{ 
+                                            border: '1px solid rgba(59, 130, 246, 0.5)'
+                                        }}
+                                    >
                                         <h3 className="text-sm font-medium text-blue-400 mb-2">
                                             {t('investmentCalculator.totalInterest')}
                                         </h3>
@@ -342,7 +385,7 @@ const InvestmentCalculator = () => {
                                 </div>
 
                                 {/* Chart */}
-                                <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                                <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
                                     <h2 className="text-xl font-semibold text-white mb-4">
                                         {t('investmentCalculator.growthProjection')}
                                     </h2>
@@ -350,7 +393,7 @@ const InvestmentCalculator = () => {
                                 </div>
                             </>
                         ) : (
-                            <div className="bg-gray-800 rounded-xl p-12 border border-gray-700 text-center">
+                            <div className="bg-[#171717] rounded-xl p-12 border border-[#262626] text-center">
                                 <TrendingUp className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                                 <h3 className="text-xl font-semibold text-gray-400 mb-2">
                                     {t('investmentCalculator.noResults')}

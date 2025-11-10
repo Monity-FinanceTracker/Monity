@@ -47,6 +47,19 @@ main {
   box-sizing: border-box;
 }
 
+/* Hide native date picker calendar icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+    display: none !important;
+    -webkit-appearance: none !important;
+}
+
 /* Custom Scrollbar Styling - Applied to ALL scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
