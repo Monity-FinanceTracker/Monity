@@ -22,6 +22,7 @@ import ErrorBoundary from './components/ui/ErrorBoundary';
 import ConfigCheck from './components/ui/ConfigCheck';
 import Privace from './components/privace';
 import AuthCallback from './pages/AuthCallback';
+import EmailConfirmation from './pages/EmailConfirmation';
 
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
@@ -165,6 +166,7 @@ const App = React.memo(() => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/email-confirmation" element={<EmailConfirmation />} />
         <Route path="/privacy" element={<Privace />} />
 
         {/* Protected routes - using lazy components */}
