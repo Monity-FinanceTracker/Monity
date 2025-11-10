@@ -16,7 +16,10 @@
     "save": "Save",
     "cancel": "Cancel",
     "transactions": "Transactions",
-    "not_set": "Not set"
+    "not_set": "Not set",
+    "or": "or",
+    "continue_with_google": "Continue with Google",
+    "loading": "Loading..."
   },
   "loginPage": {
     "slogan": "Welcome Back!",
