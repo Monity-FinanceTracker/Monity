@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const compression = require("compression");
 const { logger, morganMiddleware } = require("./utils/logger");
 const { supabase } = require("./config/supabase");
 const BillingController = require("./controllers/billingController");
@@ -16,8 +17,10 @@ const { errorHandler } = require("./middleware/errorHandler");
 const createServer = (supabaseClient) => {
   const app = express(); // --- Middleware antes das rotas ---
 
-  app.use(helmet()); // Configuração do CORS para produção e desenvolvimento
+  app.use(helmet());
+  app.use(compression()); // Enable gzip compression for all responses
 
+  // Configuração do CORS para produção e desenvolvimento
   const corsOptions = {
     origin: function (origin, callback) {
       // Permite requisições sem origem (aplicativos móveis, etc.)

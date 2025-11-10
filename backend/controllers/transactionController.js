@@ -1,13 +1,17 @@
 const { Transaction } = require('../models');
 const SavingsGoal = require('../models/SavingsGoal');
 const { logger } = require('../utils/logger');
+const { invalidateUserBalance } = require('../services/balanceCache');
 
 class TransactionController {
 
     async getAllTransactions(req, res) {
         const userId = req.user.id;
+        const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
+        const offset = req.query.offset ? parseInt(req.query.offset, 10) : 0;
+
         try {
-            const transactions = await Transaction.getAll(userId);
+            const transactions = await Transaction.getAll(userId, { limit, offset });
             res.json(transactions);
         } catch (error) {
             logger.error('Failed to get transactions for user', { userId, error: error.message });
@@ -49,7 +53,10 @@ class TransactionController {
             };
 
             const createdTransaction = await Transaction.create(newTransaction);
-            
+
+            // Invalidate balance cache since a new transaction was created
+            invalidateUserBalance(userId);
+
             // Handle AI feedback separately, should not block the main transaction flow
             if (wasAISuggested && suggestedCategory) {
                 // This could be offloaded to a queue in a larger application
@@ -89,6 +96,9 @@ class TransactionController {
             if (!updatedTransaction) {
                 return res.status(404).json({ error: 'Transaction not found or you do not have permission to update it.' });
             }
+
+            // Invalidate balance cache since transaction was updated
+            invalidateUserBalance(userId);
 
             res.json(updatedTransaction);
         } catch (error) {
@@ -161,6 +171,9 @@ class TransactionController {
             if (!deletedTransaction) {
                 return res.status(404).json({ error: 'Transaction not found or you do not have permission to delete it.' });
             }
+
+            // Invalidate balance cache since transaction was deleted
+            invalidateUserBalance(userId);
 
             res.json({ message: 'Transaction deleted successfully' });
         } catch (error) {

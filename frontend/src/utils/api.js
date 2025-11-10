@@ -9,11 +9,57 @@ const API = axios.create({
   withCredentials: true,
 });
 
+// Token cache to avoid fetching session on every request
+let tokenCache = {
+  token: null,
+  expiresAt: 0,
+};
+
+// Cache duration: 5 minutes (tokens are valid for 1 hour, but we refresh more often to be safe)
+const TOKEN_CACHE_DURATION = 5 * 60 * 1000;
+
+// Function to get cached or fresh token
+async function getAccessToken() {
+  const now = Date.now();
+
+  // Return cached token if still valid
+  if (tokenCache.token && tokenCache.expiresAt > now) {
+    return tokenCache.token;
+  }
+
+  // Fetch fresh token
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (session?.access_token) {
+    tokenCache.token = session.access_token;
+    tokenCache.expiresAt = now + TOKEN_CACHE_DURATION;
+    return session.access_token;
+  }
+
+  // Clear cache if no session
+  tokenCache.token = null;
+  tokenCache.expiresAt = 0;
+  return null;
+}
+
+// Clear token cache (called on logout)
+export function clearTokenCache() {
+  tokenCache.token = null;
+  tokenCache.expiresAt = 0;
+}
+
+// Listen to auth state changes to clear cache on logout
+supabase.auth.onAuthStateChange((event) => {
+  if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+    clearTokenCache();
+  }
+});
+
 API.interceptors.request.use(
     async (config) => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.access_token) {
-            config.headers.Authorization = `Bearer ${session.access_token}`;
+        const token = await getAccessToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
