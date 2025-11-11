@@ -4,7 +4,6 @@ import { BalanceCard, ExpensivePurchase, Savings, Container, Grid, Heading, Text
 import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useResponsive } from "../../hooks/useResponsive";
 
 function ModernCard({ children, title, subtitle, icon, accent, isLoading = false, action }) {
     return (

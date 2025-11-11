@@ -90,7 +90,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             try {
                 const fetchedCategories = await getCategories();
                 setCategories(fetchedCategories);
-            } catch (_err) {
+            } catch {
                 setError(t(`${currentConfig.translationKey}.failed_load_categories`));
                 toast.error(t(`${currentConfig.translationKey}.failed_load_categories`));
             }

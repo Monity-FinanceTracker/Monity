@@ -235,7 +235,7 @@ function RecurringTransactions() {
             setRecurring(recData);
             setCategories(catData);
             setTypes(typeData);
-        } catch (err) {
+        } catch {
             setError('Failed to fetch recurring transactions');
         } finally {
             setIsLoading(false);
@@ -252,7 +252,7 @@ function RecurringTransactions() {
             await processRecurringTransactions();
             alert(t('recurring.processing_complete'));
             fetchData(); // Refresh data
-        } catch (_err) {
+        } catch {
             setError(t('recurring.processing_error'));
         } finally {
             setIsLoading(false);
@@ -270,7 +270,7 @@ function RecurringTransactions() {
             }
             resetForm();
             fetchData();
-        } catch (_err) {
+        } catch {
             setError(t('recurring.save_error'));
         } finally {
             setIsLoading(false);
@@ -291,7 +291,7 @@ function RecurringTransactions() {
         try {
             await deleteRecurringTransaction(id);
             fetchData();
-        } catch (_err) {
+        } catch {
             setError(t('recurring.delete_error'));
         } finally {
             setIsLoading(false);

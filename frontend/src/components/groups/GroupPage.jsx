@@ -54,8 +54,6 @@ const GroupPage = () => {
     }, [fetchGroup]);
 
     useEffect(() => {
-        fetchGroup();
-
         // Set up real-time subscriptions for this group
         if (user) {
             const groupSubscription = supabase
@@ -90,7 +88,7 @@ const GroupPage = () => {
                 supabase.removeChannel(groupSubscription);
             };
         }
-    }, [id, user]);
+    }, [id, user, fetchGroup]);
 
     const handleSearchUsers = async (query) => {
         if (query.length < 2) {

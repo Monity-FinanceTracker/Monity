@@ -114,7 +114,7 @@ const VirtualizedTransactionList = React.memo(({
             console.error('Error deleting transaction:', err);
             alert(t('transactions.delete_error'));
         }
-    }, [t]);
+    }, [t, queryClient]);
 
     // Helper function to get type ID
     const getTypeId = (type) => {

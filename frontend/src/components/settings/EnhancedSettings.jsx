@@ -159,7 +159,7 @@ const EnhancedSettings = () => {
             await new Promise(resolve => setTimeout(resolve, 2000));
             await refreshSubscription();
             success(t('subscription.upgrade_successful'));
-        } catch (_error) {
+        } catch {
             notifyError(t('subscription.upgrade_failed'));
         } finally {
             setIsUpgrading(false);
