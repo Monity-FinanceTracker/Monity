@@ -47,25 +47,25 @@ echo -e "${GREEN}Step 5: Installing git...${NC}"
 sudo apt-get install -y git
 
 echo -e "${GREEN}Step 6: Creating application directory...${NC}"
-mkdir -p ~/monity-backend
-cd ~/monity-backend
+mkdir -p ~/Monity/backend
+cd ~/Monity/backend
 
 echo -e "${YELLOW}Step 7: Clone your repository or upload code...${NC}"
 echo "Options:"
-echo "  a) Clone from git: git clone <your-repo-url> ."
+echo "  a) Clone from git: git clone <your-repo-url> ~/Monity"
 echo "  b) Upload code via SCP/SFTP"
 echo "  c) Code already present"
 echo ""
-read -p "Have you uploaded/cloned your backend code to ~/monity-backend? (y/n): " code_ready
+read -p "Have you uploaded/cloned your code to ~/Monity/backend? (y/n): " code_ready
 
 if [ "$code_ready" != "y" ]; then
     echo -e "${YELLOW}Please clone your repository or upload your code, then run this script again.${NC}"
-    echo "Example: git clone https://github.com/yourusername/monity.git ~/monity-backend"
+    echo "Example: git clone https://github.com/yourusername/monity.git ~/Monity"
     exit 0
 fi
 
 echo -e "${GREEN}Step 8: Installing dependencies...${NC}"
-cd ~/monity-backend
+cd ~/Monity/backend
 npm install --production
 
 echo -e "${GREEN}Step 9: Creating logs directory...${NC}"
@@ -75,8 +75,8 @@ echo -e "${YELLOW}Step 10: Environment variables setup...${NC}"
 if [ ! -f .env ]; then
     echo -e "${YELLOW}Creating .env file from template...${NC}"
     cp .env.production.template .env
-    echo -e "${RED}IMPORTANT: Edit ~/monity-backend/.env with your actual values!${NC}"
-    echo "Use: nano ~/monity-backend/.env"
+    echo -e "${RED}IMPORTANT: Edit ~/Monity/backend/.env with your actual values!${NC}"
+    echo "Use: nano ~/Monity/backend/.env"
     read -p "Press Enter after you've configured .env file..."
 else
     echo ".env file already exists"
@@ -104,7 +104,7 @@ server {
     error_log /var/log/nginx/monity-backend-error.log;
 
     location / {
-        proxy_pass http://localhost:3001;
+        proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -122,7 +122,7 @@ server {
 
     # Health check endpoint
     location /health {
-        proxy_pass http://localhost:3001/health;
+        proxy_pass http://localhost:3000/health;
         access_log off;
     }
 }
@@ -143,7 +143,7 @@ sudo ufw --force enable
 
 echo -e "${GREEN}Step 15: Setting up log rotation...${NC}"
 sudo tee /etc/logrotate.d/monity-backend > /dev/null <<EOF
-/home/ubuntu/monity-backend/logs/*.log {
+/home/ubuntu/Monity/backend/logs/*.log {
     daily
     missingok
     rotate 14
@@ -160,7 +160,7 @@ echo "=========================================="
 echo -e "${GREEN}Deployment Complete!${NC}"
 echo "=========================================="
 echo ""
-echo "Backend is now running on port 3001"
+echo "Backend is now running on port 3000"
 echo "Nginx is proxying requests on port 80"
 echo ""
 echo "Useful commands:"

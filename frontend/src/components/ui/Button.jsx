@@ -1,12 +1,18 @@
 import React, { memo } from 'react';
 
 /**
- * Modern Button Component with consistent styling and performance optimization
- * Supports multiple variants, sizes, and loading states
- * Memoized for better performance
+ * Modern Button Component following Monity design system
+ * 
+ * DESIGN PRINCIPLE: All buttons have WHITE TEXT with NO BACKGROUND by default
+ * Only action buttons (submit, save) should have colored backgrounds
+ * 
+ * @param {string} variant - 'default' (white text) | 'action' (green bg) | 'danger' (red text) | 'dangerAction' (red bg)
+ * @param {string} size - 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+ * @param {boolean} loading - Shows spinner when true
+ * @param {boolean} fullWidth - Makes button full width
  */
 const Button = memo(({ 
-  variant = 'primary', 
+  variant = 'default', 
   size = 'md', 
   children, 
   className = '', 
@@ -17,24 +23,37 @@ const Button = memo(({
   fullWidth = false,
   ...props 
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#232323] disabled:opacity-50 disabled:cursor-not-allowed select-none';
+  const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#01C38D]/30 disabled:opacity-50 disabled:cursor-not-allowed select-none';
   
+  // NEW DESIGN SYSTEM - Following button-styling.mdc rules
   const variants = {
-    primary: 'bg-[#01C38D] hover:bg-[#01A071] text-[#232323] focus:ring-[#01C38D]/20 shadow-sm hover:shadow-md',
-    secondary: 'bg-[#171717] hover:bg-[#262626] text-white border border-[#262626] hover:border-[#262626]/80 focus:ring-[#01C38D]/20',
-    danger: 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500/20 shadow-sm hover:shadow-md',
-    success: 'bg-green-500 hover:bg-green-600 text-white focus:ring-green-500/20 shadow-sm hover:shadow-md',
-    ghost: 'text-[#01C38D] hover:bg-[#01C38D]/10 hover:text-[#01A071] focus:ring-[#01C38D]/20',
-    outline: 'border-2 border-[#01C38D] text-[#01C38D] hover:bg-[#01C38D] hover:text-[#232323] focus:ring-[#01C38D]/20',
-    minimal: 'text-gray-300 hover:text-white hover:bg-[#171717] focus:ring-[#01C38D]/20'
+    // Default: White text, no background, no border (use this 90% of the time)
+    default: 'text-white hover:text-[#01C38D]',
+    
+    // Action: For primary actions like submit, save, confirm
+    action: 'bg-[#01C38D] text-white hover:bg-[#00b37e]',
+    
+    // Danger: Red text, no background (for delete, remove)
+    danger: 'text-red-400 hover:text-red-300',
+    
+    // Danger Action: Red background (for critical destructive actions)
+    dangerAction: 'bg-red-600 text-white hover:bg-red-700',
+    
+    // Legacy support (maps old variants to new system)
+    primary: 'bg-[#01C38D] text-white hover:bg-[#00b37e]',  // maps to 'action'
+    secondary: 'text-white hover:text-[#01C38D]',           // maps to 'default'
+    ghost: 'text-white hover:text-[#01C38D]',               // maps to 'default'
+    minimal: 'text-white hover:text-[#01C38D]',             // maps to 'default'
+    success: 'bg-[#01C38D] text-white hover:bg-[#00b37e]',  // maps to 'action'
+    outline: 'text-white hover:text-[#01C38D]'              // maps to 'default' (NO BORDERS!)
   };
   
   const sizes = {
-    xs: 'px-2.5 py-1.5 text-xs rounded-md gap-1',
-    sm: 'px-3 py-2 text-sm rounded-lg gap-2',
-    md: 'px-4 py-2.5 text-sm rounded-lg gap-2',
-    lg: 'px-6 py-3 text-base rounded-xl gap-3',
-    xl: 'px-8 py-4 text-lg rounded-xl gap-3'
+    xs: 'px-3 py-1.5 text-xs rounded-lg gap-1',
+    sm: 'px-4 py-2 text-sm rounded-lg gap-2',
+    md: 'px-4 py-2.5 text-base rounded-lg gap-2',
+    lg: 'px-6 py-3 text-lg rounded-xl gap-3',
+    xl: 'px-8 py-4 text-xl rounded-xl gap-3'
   };
 
   const widthClass = fullWidth ? 'w-full' : '';
@@ -60,5 +79,7 @@ const Button = memo(({
     </button>
   );
 });
+
+Button.displayName = 'Button';
 
 export default Button;
