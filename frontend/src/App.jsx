@@ -44,7 +44,7 @@ import {
   LazyCreateGroup,
   LazyGroupPage
 } from './components/LazyComponents';
-import { useLazyComponentPreloader } from './components/lazyHelpers';
+import useLazyComponentPreloader from './hooks/useLazyComponentPreloader';
 
 
 // Protected route component

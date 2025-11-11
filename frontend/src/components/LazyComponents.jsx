@@ -1,5 +1,5 @@
 import Spinner from './ui/Spinner';
-import { withLazyLoading } from './lazyHelpers';
+import withLazyLoading from '../utils/withLazyLoading';
 
 // Componentes lazy carregados com otimizações
 export const LazyEnhancedDashboard = withLazyLoading(
