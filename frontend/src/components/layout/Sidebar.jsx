@@ -1,7 +1,6 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { isPremium } from "../../utils/premium";
+import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
 import CloseButton from "../ui/CloseButton";
 import {

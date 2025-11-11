@@ -464,7 +464,7 @@ select option:active {
   color: white !important;
 }
 
-select option:selected {
+select option:checked {
   background-color: #01C38D !important;
   color: white !important;
 }
@@ -492,7 +492,7 @@ select option:hover,
 select option:focus,
 select option:active,
 select option:checked,
-select option:selected {
+select option:checked {
   background: #262626 !important;
   background-color: #262626 !important;
   color: white !important;

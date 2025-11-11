@@ -96,9 +96,6 @@ const CashFlowCalendar = () => {
       currency: 'BRL',
     }).format(dayData.balance);
 
-    // Determine if this day has financial activity (income or expenses)
-    const hasFinancialActivity = dayData.income > 0 || dayData.expenses > 0;
-
     return (
       <div className={`h-full p-2 flex flex-col items-start ${dayData.isNegative ? 'bg-red-900/20' : ''}`}>
         <div className={`text-xs font-semibold mb-1 ${isToday ? 'w-6 h-6 flex items-center justify-center rounded-full text-white self-center' : 'self-center'}`} style={isToday ? { backgroundColor: '#08bf8c' } : {}}>

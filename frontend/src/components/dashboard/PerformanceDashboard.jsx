@@ -47,7 +47,7 @@ const PerformanceDashboard = React.memo(() => {
     // Initial load
     useEffect(() => {
         fetchPerformanceData();
-    }, []);
+    }, [fetchPerformanceData]);
 
     // Auto-refresh setup
     useEffect(() => {
@@ -60,7 +60,7 @@ const PerformanceDashboard = React.memo(() => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [autoRefresh, refreshInterval]);
+    }, [autoRefresh, refreshInterval, fetchPerformanceData]);
 
     // Performance metrics card component
     const MetricsCard = React.memo(({ title, metrics, icon, className = "" }) => (
