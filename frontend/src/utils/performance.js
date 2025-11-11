@@ -5,7 +5,7 @@
 
 // Performance observer for measuring component render times
 export const measureComponentRender = (componentName, renderFn) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     const startTime = performance.now();
     const result = renderFn();
     const endTime = performance.now();
@@ -21,7 +21,7 @@ export const measureComponentRender = (componentName, renderFn) => {
 
 // Web Vitals monitoring - temporarily disabled to prevent errors
 export const reportWebVitals = (onPerfEntry) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     console.log('Web Vitals monitoring temporarily disabled');
     return;
   }
@@ -47,7 +47,7 @@ export const reportWebVitals = (onPerfEntry) => {
 
 // Memory usage monitoring
 export const logMemoryUsage = () => {
-  if (process.env.NODE_ENV === 'development' && 'memory' in performance) {
+  if (import.meta.env.DEV && 'memory' in performance) {
     const memory = performance.memory;
     console.log('[PERFORMANCE] Memory Usage:', {
       used: `${Math.round(memory.usedJSHeapSize / 1048576)} MB`,
@@ -59,7 +59,7 @@ export const logMemoryUsage = () => {
 
 // Bundle size analyzer (development only)
 export const analyzeBundleSize = () => {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     // Log the approximate size of major dependencies
     console.log('[BUNDLE] Major Dependencies:');
     console.log('- React:', typeof React !== 'undefined' ? '[OK]' : '[ERROR]');
@@ -70,7 +70,7 @@ export const analyzeBundleSize = () => {
 
 // Performance timing helper
 export const withTiming = (label, fn) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     console.time(label);
     const result = fn();
     console.timeEnd(label);

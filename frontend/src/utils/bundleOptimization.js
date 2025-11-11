@@ -81,7 +81,7 @@ export const optimizeChunkLoading = () => {
  * Bundle size analyzer (development only)
  */
 export const analyzeBundleSize = () => {
-    if (process.env.NODE_ENV !== 'development') return;
+    if (!import.meta.env.DEV) return;
 
     const scripts = document.querySelectorAll('script[src]');
     const chunks = [];

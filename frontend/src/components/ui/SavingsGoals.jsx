@@ -8,7 +8,7 @@ import { formatSimpleCurrency } from '../../utils/currency';
 
 const SavingsGoals = () => {
     const { t } = useTranslation();
-    const { user, subscriptionTier } = useAuth();
+    const { subscriptionTier } = useAuth();
     
     // Add CSS to fix date input styling
     useEffect(() => {

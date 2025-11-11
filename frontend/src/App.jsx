@@ -4,7 +4,6 @@ import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useAuth } from './context/AuthContext';
-import { isPremium } from './utils/premium';
 // Removed preloadComponents import - now using useComponentPreloader hook
 
 // Keep only critical components as regular imports for faster initial loading
@@ -93,7 +92,6 @@ const AdminRoute = ({ children }) => {
 const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { preloadCriticalComponents } = useComponentPreloader();
-  const { user } = useAuth();
 
   // Preload critical components after layout is mounted
   useEffect(() => {

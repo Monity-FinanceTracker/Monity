@@ -46,7 +46,6 @@ function ModernCard({ children, title, subtitle, icon, accent, isLoading = false
 function Dashboard() {
     const { t } = useTranslation();
     const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
-    const { isMobile, isTablet } = useResponsive();
 
     return (
         <Container size="default" padding="default">
