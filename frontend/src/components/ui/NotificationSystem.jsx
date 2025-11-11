@@ -1,20 +1,8 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckCircle, XCircle, AlertTriangle, Info } from 'lucide-react';
 import CloseButton from './CloseButton';
-
-/**
- * Notification Context and Provider for app-wide notifications
- */
-const NotificationContext = createContext();
-
-export const useNotifications = () => {
-    const context = useContext(NotificationContext);
-    if (!context) {
-        throw new Error('useNotifications must be used within a NotificationProvider');
-    }
-    return context;
-};
+import { NotificationContext, useNotifications } from './notificationContext';
 
 export const NotificationProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);

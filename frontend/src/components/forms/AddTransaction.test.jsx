@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AddTransaction from './AddTransaction';
@@ -133,25 +134,27 @@ describe('AddTransaction', () => {
     });
 
     it('should submit income successfully', async () => {
+      const user = userEvent.setup();
       api.addTransaction.mockResolvedValue({});
       
       render(<AddTransaction type="income" />, { wrapper: createWrapper() });
 
+      const descriptionInput = await screen.findByPlaceholderText('addIncome.description');
+      const amountInput = await screen.findByPlaceholderText('addIncome.amount');
+      const select = await screen.findByRole('combobox');
+
       await waitFor(() => {
-        const descriptionInput = screen.getByPlaceholderText('addIncome.description');
-        const amountInput = screen.getByPlaceholderText('addIncome.amount');
-        
-        fireEvent.change(descriptionInput, { target: { value: 'Monthly Salary' } });
-        fireEvent.change(amountInput, { target: { value: '3000.00' } });
+        expect(select.querySelectorAll('option').length).toBeGreaterThan(1);
       });
 
-      // Selecionar categoria
-      const select = screen.getByRole('combobox');
-      fireEvent.change(select, { target: { value: 'Salary' } });
+      await user.clear(descriptionInput);
+      await user.type(descriptionInput, 'Monthly Salary');
+      await user.clear(amountInput);
+      await user.type(amountInput, '3000.00');
+      await user.selectOptions(select, 'Salary');
 
-      // Submit
       const submitButton = screen.getByRole('button', { name: /addIncome.add_income/i });
-      fireEvent.click(submitButton);
+      await user.click(submitButton);
 
       await waitFor(() => {
         expect(api.addTransaction).toHaveBeenCalledWith(

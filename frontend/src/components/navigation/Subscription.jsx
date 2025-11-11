@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { FiCheck, FiZap, FiMessageSquare, FiTrendingUp, FiTarget, FiPieChart, FiLock, FiStar, FiCalendar } from "react-icons/fi";
 
 const Subscription = () => {

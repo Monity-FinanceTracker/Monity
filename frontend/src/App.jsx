@@ -3,8 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { useAuth } from './context/AuthContext';
-// Removed preloadComponents import - now using useComponentPreloader hook
+import { useAuth } from './context/useAuth';
 
 // Keep only critical components as regular imports for faster initial loading
 import {
@@ -41,9 +40,9 @@ import {
   LazyEnhancedSettings,
   LazyEnhancedBudgets,
   LazyCreateGroup,
-  LazyGroupPage,
-  useComponentPreloader
+  LazyGroupPage
 } from './components/LazyComponents';
+import { useLazyComponentPreloader } from './components/lazyHelpers';
 
 
 // Protected route component
@@ -91,7 +90,7 @@ const AdminRoute = ({ children }) => {
 // Main layout for protected pages
 const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const { preloadCriticalComponents } = useComponentPreloader();
+  const { preloadCriticalComponents } = useLazyComponentPreloader();
 
   // Preload critical components after layout is mounted
   useEffect(() => {

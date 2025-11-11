@@ -40,7 +40,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 // Mock Auth Context
-vi.mock('../../context/AuthContext', () => ({
+vi.mock('../../context/useAuth', () => ({
     useAuth: () => ({
         user: { id: 'test-user', email: 'test@example.com' },
         subscriptionTier: 'premium'

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNotifications } from '../ui/NotificationSystem';
+import { useNotifications } from '../ui/notificationContext';
 import { get, post, put, del } from '../../utils/api';
 import { EmptyBudgets, LoadingState } from '../ui/EmptyStates';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { CloseButton } from '../ui';

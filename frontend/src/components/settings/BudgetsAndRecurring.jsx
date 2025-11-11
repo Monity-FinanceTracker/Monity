@@ -11,7 +11,7 @@ import {
     processRecurringTransactions, 
     getTransactionTypes 
 } from '../../utils/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 
