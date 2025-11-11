@@ -170,7 +170,7 @@ describe('AddTransaction', () => {
 
   describe('Validation', () => {
     it('should require all fields', async () => {
-      const { toast } = await import('react-toastify');
+      await import('react-toastify');
       
       render(<AddTransaction type="expense" />, { wrapper: createWrapper() });
 

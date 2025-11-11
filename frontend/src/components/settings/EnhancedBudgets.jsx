@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNotifications } from '../ui/NotificationSystem';
+import { useNotifications } from '../ui/notificationContext';
 import { get, post, put, del } from '../../utils/api';
 import { EmptyBudgets, LoadingState } from '../ui/EmptyStates';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { CloseButton } from '../ui';
@@ -36,11 +36,7 @@ const EnhancedBudgets = () => {
         { value: 'yearly', label: t('budgets.yearly') }
     ];
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const [budgetsRes, categoriesRes] = await Promise.all([
                 get('/budgets'),
@@ -54,7 +50,11 @@ const EnhancedBudgets = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [notifyError, t]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const handleAddBudget = async (e) => {
         e.preventDefault();
@@ -229,10 +229,10 @@ const EnhancedBudgets = () => {
                                         </div>
                                     </div>
                                     
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => setEditingBudget(budget)}
-                                            className="text-blue-400 hover:text-blue-300 transition-colors p-2"
+                                            className="p-2 text-gray-400 hover:text-[#01C38D] hover:bg-[#01C38D]/10 rounded-lg transition-colors"
                                             title={t('budgets.edit')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,7 +241,7 @@ const EnhancedBudgets = () => {
                                         </button>
                                         <button
                                             onClick={() => handleDeleteBudget(budget.id)}
-                                            className="text-red-400 hover:text-red-300 transition-colors p-2"
+                                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                             title={t('budgets.delete')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

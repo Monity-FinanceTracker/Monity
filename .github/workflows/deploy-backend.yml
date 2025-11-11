@@ -78,7 +78,7 @@ jobs:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
-          mkdir -p ~/.sshc
+          mkdir -p ~/.ssh
           echo "$EC2_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           echo "Scanning SSH keys for host: $EC2_HOST"
@@ -93,7 +93,7 @@ jobs:
             set -e
 
             echo "📦 Navigating to application directory..."
-            cd ~/Monity/backend || cd /home/ec2-user/Monity/backend || cd /var/www/Monity/backend
+            cd ~/Monity/backend
 
             echo "🔄 Pulling latest changes..."
             git fetch origin
@@ -118,7 +118,7 @@ jobs:
           BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
         run: |
           ssh -i ~/.ssh/deploy_key $EC2_USERNAME@$EC2_HOST << 'ENDSSH'
-            cd ~/Monity/backend || cd /home/ec2-user/Monity/backend || cd /var/www/Monity/backend
+            cd ~/Monity/backend
 
             echo "Updating .env file..."
             cat > .env << 'EOF'
@@ -176,7 +176,7 @@ jobs:
         run: |
           echo "❌ Deployment failed, attempting rollback..."
           ssh -i ~/.ssh/deploy_key $EC2_USERNAME@$EC2_HOST << 'ENDSSH' || true
-            cd ~/Monity/backend || cd /home/ec2-user/Monity/backend || cd /var/www/Monity/backend
+            cd ~/Monity/backend
 
             echo "Rolling back to previous commit..."
             git reset --hard HEAD~1

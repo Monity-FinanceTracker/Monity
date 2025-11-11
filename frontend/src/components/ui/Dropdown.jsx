@@ -11,7 +11,9 @@ const Dropdown = ({
     placeholder = "Select an option",
     className = '',
     leftIcon = null,
-    disabled = false
+    disabled = false,
+    bgColor = '#171717',
+    menuBgColor = '#171717'
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -59,13 +61,14 @@ const Dropdown = ({
                 onClick={toggleDropdown}
                 disabled={disabled}
                 className={`
-                    w-full h-12 bg-[#171717] border border-[#262626] text-white rounded-xl px-4 
+                    w-full h-12 border border-[#262626] text-white rounded-xl px-4 
                     focus:ring-0 focus:ring-transparent focus:border-[#01C38D] transition-all 
                     cursor-pointer font-sans text-base font-medium flex items-center justify-between
                     ${leftIcon ? 'pl-10' : 'pl-4'} pr-4
                     ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#01C38D]'}
                 `}
                 style={{
+                    backgroundColor: bgColor,
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: '16px',
                     fontWeight: '500'
@@ -95,7 +98,10 @@ const Dropdown = ({
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute z-50 w-full mt-1 bg-[#171717] border border-[#262626] rounded-xl shadow-lg overflow-hidden">
+                <div 
+                    className="absolute z-50 w-full mt-1 border border-[#262626] rounded-xl shadow-lg overflow-hidden"
+                    style={{ backgroundColor: menuBgColor }}
+                >
                     {options.map((option, index) => (
                         <button
                             key={option.value}

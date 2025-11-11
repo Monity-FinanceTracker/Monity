@@ -117,34 +117,4 @@ export const LazySettings = lazy(() =>
     }))
 );
 
-/**
- * Preload components for better UX
- */
-export const preloadComponents = () => {
-    // Preload commonly used components
-    import('./dashboard/Dashboard');
-    import('./transactions/Transactions');
-    import('./settings/Settings');
-};
-
-/**
- * Component preloader hook
- */
-export const useComponentPreloader = (componentImports = []) => {
-    React.useEffect(() => {
-        // Preload components after a short delay to not block initial render
-        const timeoutId = setTimeout(() => {
-            componentImports.forEach(importFunc => {
-                if (typeof importFunc === 'function') {
-                    importFunc().catch(() => {
-                        // Silently handle preload errors
-                    });
-                }
-            });
-        }, 100);
-
-        return () => clearTimeout(timeoutId);
-    }, [componentImports]);
-};
-
 export default LazyWrapper;

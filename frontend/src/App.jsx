@@ -3,9 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { useAuth } from './context/AuthContext';
-import { isPremium } from './utils/premium';
-// Removed preloadComponents import - now using useComponentPreloader hook
+import { useAuth } from './context/useAuth';
 
 // Keep only critical components as regular imports for faster initial loading
 import {
@@ -42,9 +40,9 @@ import {
   LazyEnhancedSettings,
   LazyEnhancedBudgets,
   LazyCreateGroup,
-  LazyGroupPage,
-  useComponentPreloader
+  LazyGroupPage
 } from './components/LazyComponents';
+import { useLazyComponentPreloader } from './components/lazyHelpers';
 
 
 // Protected route component
@@ -92,8 +90,7 @@ const AdminRoute = ({ children }) => {
 // Main layout for protected pages
 const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const { preloadCriticalComponents } = useComponentPreloader();
-  const { user } = useAuth();
+  const { preloadCriticalComponents } = useLazyComponentPreloader();
 
   // Preload critical components after layout is mounted
   useEffect(() => {
@@ -173,6 +170,7 @@ const App = React.memo(() => {
         <Route path="/add-expense" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddExpense /></MainLayout></ProtectedRoute>} />
         <Route path="/add-income" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><AddIncome /></MainLayout></ProtectedRoute>} />
         <Route path="/categories" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><EnhancedCategories /></Suspense></MainLayout></ProtectedRoute>} />
+        {/* Settings uses Portal to render as modal overlay on top of everything */}
         <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedSettings /></MainLayout></ProtectedRoute>} />
         <Route path="/budgets" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ProtectedRoute>} />
         <Route path="/subscription" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Subscription /></Suspense></MainLayout></ProtectedRoute>} />
