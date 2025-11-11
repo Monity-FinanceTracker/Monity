@@ -24,10 +24,10 @@ const Terms = () => {
             <p className="text-gray-300 text-base leading-relaxed mb-6">
               Bem-vindo ao <span className="text-[#01C38D] font-semibold">Monity</span>. Ao acessar e utilizar nosso aplicativo disponível em{' '}
               <a
-                href="https://app.monity-finance.com/"
+                href="https://firstmonity.vercel.app/"
                 className="text-[#01C38D] hover:text-[#01A071] transition-colors duration-200 font-medium underline decoration-[#01C38D]/30 hover:decoration-[#01C38D]/60"
               >
-                app.monity-finance.com
+                firstmonity.vercel.app
               </a>
               , você concorda em cumprir e estar vinculado aos seguintes termos e condições de uso.
             </p>
