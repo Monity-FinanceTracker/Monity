@@ -78,25 +78,27 @@ describe('AddTransaction', () => {
     });
 
     it('should submit expense successfully', async () => {
+      const user = userEvent.setup();
       api.addTransaction.mockResolvedValue({});
       
       render(<AddTransaction type="expense" />, { wrapper: createWrapper() });
 
+      const descriptionInput = await screen.findByPlaceholderText('addExpense.description');
+      const amountInput = await screen.findByPlaceholderText('addExpense.amount');
+      const select = await screen.findByRole('combobox');
+
       await waitFor(() => {
-        const descriptionInput = screen.getByPlaceholderText('addExpense.description');
-        const amountInput = screen.getByPlaceholderText('addExpense.amount');
-        
-        fireEvent.change(descriptionInput, { target: { value: 'Grocery Shopping' } });
-        fireEvent.change(amountInput, { target: { value: '50.00' } });
+        expect(select.querySelectorAll('option').length).toBeGreaterThan(1);
       });
+      
+      await user.clear(descriptionInput);
+      await user.type(descriptionInput, 'Grocery Shopping');
+      await user.clear(amountInput);
+      await user.type(amountInput, '50.00');
+      await user.selectOptions(select, 'Food');
 
-      // Selecionar categoria
-      const select = screen.getByRole('combobox');
-      fireEvent.change(select, { target: { value: 'Food' } });
-
-      // Submit
       const submitButton = screen.getByRole('button', { name: /addExpense.add_expense/i });
-      fireEvent.click(submitButton);
+      await user.click(submitButton);
 
       await waitFor(() => {
         expect(api.addTransaction).toHaveBeenCalledWith(
