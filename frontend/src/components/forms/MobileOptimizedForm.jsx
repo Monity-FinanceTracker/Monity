@@ -61,7 +61,7 @@ const MobileOptimizedForm = ({
 
         setErrors(newErrors);
         setIsValid(valid && Object.keys(formData).length > 0);
-    }, [formData, fields]);
+    }, [formData, fields, t]);
 
     // Real-time validation
     useEffect(() => {

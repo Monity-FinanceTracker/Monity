@@ -63,7 +63,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     } finally {
       setLoadingCategories(false);
     }
-  }, []);
+  }, [formData.typeId, formData.category]);
 
   // Fetch categories when typeId changes
   useEffect(() => {

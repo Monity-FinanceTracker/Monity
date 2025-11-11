@@ -66,7 +66,7 @@ const Groups = () => {
                 supabase.removeChannel(groupsSubscription);
             };
         }
-    }, [user]);
+    }, [user, fetchGroups]);
 
     const isLimited = subscriptionTier === 'free' && groups.length >= 2;
 
