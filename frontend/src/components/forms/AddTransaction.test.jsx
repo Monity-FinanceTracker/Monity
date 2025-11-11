@@ -91,11 +91,16 @@ describe('AddTransaction', () => {
         expect(select.querySelectorAll('option').length).toBeGreaterThan(1);
       });
       
+      const dateInput = document.querySelector('input[type="date"]');
+
       await user.clear(descriptionInput);
       await user.type(descriptionInput, 'Grocery Shopping');
       await user.clear(amountInput);
       await user.type(amountInput, '50.00');
       await user.selectOptions(select, 'Food');
+      if (dateInput) {
+        fireEvent.change(dateInput, { target: { value: '2024-01-01' } });
+      }
 
       const submitButton = screen.getByRole('button', { name: /addExpense.add_expense/i });
       await user.click(submitButton);
@@ -149,11 +154,16 @@ describe('AddTransaction', () => {
         expect(select.querySelectorAll('option').length).toBeGreaterThan(1);
       });
 
+      const dateInput = document.querySelector('input[type="date"]');
+
       await user.clear(descriptionInput);
       await user.type(descriptionInput, 'Monthly Salary');
       await user.clear(amountInput);
       await user.type(amountInput, '3000.00');
       await user.selectOptions(select, 'Salary');
+      if (dateInput) {
+        fireEvent.change(dateInput, { target: { value: '2024-01-01' } });
+      }
 
       const submitButton = screen.getByRole('button', { name: /addIncome.add_income/i });
       await user.click(submitButton);
