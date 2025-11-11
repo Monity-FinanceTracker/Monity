@@ -28,14 +28,14 @@ createRoot(document.getElementById('root')).render(
 // Initialize analytics after app is stable
 setTimeout(() => {
     // Load analytics after initial render
-    import("@vercel/analytics/react").then(({ Analytics }) => {
+    import("@vercel/analytics/react").then(() => {
         // Analytics will be initialized automatically
         console.log('Analytics loaded');
     }).catch(() => {
         console.warn('Analytics failed to load');
     });
     
-    import("@vercel/speed-insights/react").then(({ SpeedInsights }) => {
+    import("@vercel/speed-insights/react").then(() => {
         // Speed insights will be initialized automatically
         console.log('Speed insights loaded');
     }).catch(() => {

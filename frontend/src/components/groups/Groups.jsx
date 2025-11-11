@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { getGroups } from '../../utils/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../utils/supabase';
 import GroupInvitations from './GroupInvitations';
@@ -15,7 +15,7 @@ const Groups = () => {
     const [loading, setLoading] = useState(true);
     const { user, subscriptionTier } = useAuth();
 
-    const fetchGroups = async () => {
+    const fetchGroups = useCallback(async () => {
         try {
             if (user) {
                 const fetchedGroups = await getGroups();
@@ -26,12 +26,14 @@ const Groups = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [user]);
 
     useEffect(() => {
         fetchGroups();
+    }, [fetchGroups]);
 
-        // Set up real-time subscriptions
+    // Set up real-time subscriptions
+    useEffect(() => {
         if (user) {
             // Subscribe to group changes for groups the user is a member of
             const groupsSubscription = supabase
@@ -64,7 +66,7 @@ const Groups = () => {
                 supabase.removeChannel(groupsSubscription);
             };
         }
-    }, [user]);
+    }, [user, fetchGroups]);
 
     const isLimited = subscriptionTier === 'free' && groups.length >= 2;
 

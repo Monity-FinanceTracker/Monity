@@ -1,6 +1,12 @@
 const { asyncHandler } = require('../utils/helpers');
 const { supabaseAdmin } = require('../config/supabase');
 const { decryptObject, decrypt } = require('../middleware/encryption');
+const {
+    getCachedBalance,
+    setCachedBalance,
+    getCachedMonthlyBalance,
+    setCachedMonthlyBalance
+} = require('../services/balanceCache');
 
 class BalanceController {
     constructor(supabase) {
@@ -56,8 +62,15 @@ class BalanceController {
 
     getBalance = asyncHandler(async (req, res) => {
         const userId = req.user.id;
-        
+
         try {
+            // Check cache first
+            const cachedResult = getCachedBalance(userId);
+            if (cachedResult) {
+                return res.status(200).json(cachedResult);
+            }
+
+            // Cache miss - calculate balance
             // Get all transactions for the user
             const { data: transactions, error } = await supabaseAdmin
                 .from('transactions')
@@ -123,11 +136,16 @@ class BalanceController {
             // No need to subtract totalAllocated separately since allocations are already subtracted
             const availableBalance = balance;
 
-            res.status(200).json({ 
+            const result = {
                 balance: availableBalance,
                 totalBalance: balance,
-                allocatedSavings: totalAllocated 
-            });
+                allocatedSavings: totalAllocated
+            };
+
+            // Cache the result
+            setCachedBalance(userId, result);
+
+            res.status(200).json(result);
         } catch (error) {
             console.error('Error calculating balance:', error);
             res.status(500).json({ error: 'Failed to calculate balance' });

@@ -399,81 +399,74 @@ leading-loose: 2
 
 ### Button Component
 
-Botão versátil com múltiplas variantes e estados.
+**IMPORTANTE**: Todos os botões devem ter **TEXTO BRANCO**, **SEM FUNDO** e **SEM BORDAS** por padrão.
+Apenas botões de ação primária (submit, save, etc.) podem ter fundo colorido.
 
 ```jsx
-import Button from '../ui/Button';
+// PADRÃO DEFAULT - Texto branco, sem fundo, sem borda
+<button className="text-white hover:text-[#01C38D] transition-colors px-4 py-2 rounded-lg">
+  Botão Padrão
+</button>
 
-// Variantes
-<Button variant="primary">Primário</Button>
-<Button variant="secondary">Secundário</Button>
-<Button variant="danger">Perigo</Button>
-<Button variant="ghost">Fantasma</Button>
-<Button variant="outline">Contorno</Button>
-<Button variant="minimal">Mínimo</Button>
+// AÇÃO PRIMÁRIA - Com fundo verde (apenas para ações críticas)
+<button className="bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors">
+  Salvar
+</button>
 
-// Tamanhos
-<Button size="xs">Extra Pequeno</Button>
-<Button size="sm">Pequeno</Button>
-<Button size="md">Médio</Button>
-<Button size="lg">Grande</Button>
-<Button size="xl">Extra Grande</Button>
+<button className="bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white px-6 py-3 rounded-xl hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 transition-all">
+  Criar Conta
+</button>
+
+// DANGER/DESTRUTIVO - Texto vermelho ou com fundo vermelho
+<button className="text-red-400 hover:text-red-300 px-4 py-2 rounded-lg transition-colors">
+  Excluir
+</button>
+
+<button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+  Deletar Conta
+</button>
+
+// ÍCONE - Apenas ícone, sem fundo
+<button className="text-white hover:text-[#01C38D] transition-colors p-2 rounded-lg">
+  <Icon name="Plus" size="sm" />
+</button>
+
+// Com ícones e texto
+<button className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+  <Icon name="Plus" size="sm" />
+  Adicionar
+</button>
 
 // Estados
-<Button loading>Carregando...</Button>
-<Button disabled>Desabilitado</Button>
+<button className="text-white opacity-50 cursor-not-allowed px-4 py-2 rounded-lg" disabled>
+  Desabilitado
+</button>
 
-// Com ícones
-<Button 
-  leftIcon={<Icon name="Plus" size="sm" />}
-  variant="primary"
->
-  Adicionar
-</Button>
-
-<Button 
-  rightIcon={<Icon name="ArrowRight" size="sm" />}
-  variant="outline"
->
-  Continuar
-</Button>
-
-// Largura completa
-<Button fullWidth variant="primary">
-  Botão Completo
-</Button>
-
-// Props disponíveis
-variant: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline' | 'minimal'
-size: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-disabled: boolean
-loading: boolean
-leftIcon: ReactNode
-rightIcon: ReactNode
-fullWidth: boolean
-className: string
+// Tamanhos
+<button className="text-white px-3 py-1.5 text-sm rounded-lg">Pequeno</button>
+<button className="text-white px-4 py-2 text-base rounded-lg">Médio</button>
+<button className="text-white px-6 py-3 text-lg rounded-lg">Grande</button>
 ```
 
-**Estilos por Variante:**
+**Estilos por Tipo:**
 
 ```css
-/* Primary */
-bg-[#01C38D] hover:bg-[#01A071] text-[#232323]
+/* Padrão (usar 90% das vezes) */
+text-white hover:text-[#01C38D] transition-colors
 
-/* Secondary */
-bg-[#171717] hover:bg-[#262626] text-white border border-[#262626]
+/* Ação Primária (submit, save, confirm) */
+bg-[#01C38D] text-white hover:bg-[#00b37e] transition-colors
 
-/* Danger */
-bg-red-500 hover:bg-red-600 text-white
+/* Destrutivo */
+text-red-400 hover:text-red-300 transition-colors
 
-/* Ghost */
-text-[#01C38D] hover:bg-[#01C38D]/10
+/* Destrutivo Crítico */
+bg-red-600 text-white hover:bg-red-700 transition-colors
 
-/* Outline */
-border-2 border-[#01C38D] text-[#01C38D] hover:bg-[#01C38D] hover:text-[#232323]
-
-/* Minimal */
-text-gray-300 hover:text-white hover:bg-[#171717]
+/* NUNCA USE */
+❌ border, border-white, border-gray-*
+❌ bg-white, bg-[#E8F0FE]
+❌ text-black, text-gray-900
 ```
 
 ### Card Component
@@ -493,7 +486,9 @@ import Card from '../ui/Card';
   title="Transações Recentes"
   subtitle="Últimos 30 dias"
   headerAction={
-    <Button size="sm" variant="ghost">Ver Todas</Button>
+    <button className="text-white hover:text-[#01C38D] text-sm px-3 py-1.5 rounded-lg transition-colors">
+      Ver Todas
+    </button>
   }
 >
   Lista de transações...
@@ -657,9 +652,12 @@ import { EmptyState } from '../ui/EmptyStates';
   title="Nenhuma transação"
   description="Você ainda não tem transações cadastradas."
   action={
-    <Button variant="primary" onClick={handleAdd}>
+    <button 
+      onClick={handleAdd}
+      className="bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors"
+    >
       Adicionar Transação
-    </Button>
+    </button>
   }
 />
 ```
@@ -1178,20 +1176,20 @@ ratio: '1/1' | '4/3' | '16/9' | '21/9' | string
 
   {/* Botões de ação */}
   <div className="flex gap-3">
-    <Button 
+    <button 
       type="button" 
-      variant="secondary" 
       onClick={onCancel}
+      className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors"
     >
       Cancelar
-    </Button>
-    <Button 
+    </button>
+    <button 
       type="submit" 
-      variant="primary" 
-      loading={isSubmitting}
+      disabled={isSubmitting}
+      className="bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50"
     >
-      Salvar
-    </Button>
+      {isSubmitting ? 'Salvando...' : 'Salvar'}
+    </button>
   </div>
 </form>
 ```
@@ -1222,12 +1220,18 @@ ratio: '1/1' | '4/3' | '16/9' | '21/9' | string
     
     {/* Footer */}
     <div className="flex gap-3 p-6 border-t border-[#262626] bg-[#171717]">
-      <Button variant="secondary" onClick={onClose} fullWidth>
+      <button 
+        onClick={onClose}
+        className="flex-1 text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors"
+      >
         Cancelar
-      </Button>
-      <Button variant="primary" onClick={onConfirm} fullWidth>
+      </button>
+      <button 
+        onClick={onConfirm}
+        className="flex-1 bg-[#01C38D] text-white px-4 py-2 rounded-lg hover:bg-[#00b37e] transition-colors"
+      >
         Confirmar
-      </Button>
+      </button>
     </div>
   </div>
 </div>
@@ -1247,13 +1251,13 @@ ratio: '1/1' | '4/3' | '16/9' | '21/9' | string
   
   {hasMore && (
     <div className="flex justify-center pt-4">
-      <Button 
-        variant="ghost" 
+      <button 
         onClick={loadMore}
-        loading={isLoadingMore}
+        disabled={isLoadingMore}
+        className="text-white hover:text-[#01C38D] px-6 py-2 rounded-lg transition-colors disabled:opacity-50"
       >
-        Carregar Mais
-      </Button>
+        {isLoadingMore ? 'Carregando...' : 'Carregar Mais'}
+      </button>
     </div>
   )}
 </div>
@@ -1883,13 +1887,12 @@ class ErrorBoundary extends React.Component {
           <Text variant="muted" className="mt-2">
             Tente recarregar a página
           </Text>
-          <Button 
+          <button 
             onClick={() => window.location.reload()}
-            variant="primary"
-            className="mt-4"
+            className="mt-4 bg-[#01C38D] text-white px-6 py-2 rounded-lg hover:bg-[#00b37e] transition-colors"
           >
             Recarregar
-          </Button>
+          </button>
         </div>
       );
     }
@@ -1932,13 +1935,12 @@ if (error) {
         <Text variant="muted" className="mt-2">
           {error.message || 'Ocorreu um erro inesperado'}
         </Text>
-        <Button 
-          variant="danger" 
+        <button 
           onClick={refetch}
-          className="mt-4"
+          className="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
         >
           Tentar Novamente
-        </Button>
+        </button>
       </div>
     </Card>
   );
@@ -2033,12 +2035,18 @@ function MyComponent() {
         {t('dashboard.greeting', { name: user.name })}
       </Text>
       
-      <Button onClick={() => changeLanguage('en')}>
+      <button 
+        onClick={() => changeLanguage('en')}
+        className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors"
+      >
         English
-      </Button>
-      <Button onClick={() => changeLanguage('pt')}>
+      </button>
+      <button 
+        onClick={() => changeLanguage('pt')}
+        className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors"
+      >
         Português
-      </Button>
+      </button>
     </div>
   );
 }
@@ -2156,34 +2164,22 @@ const Dashboard = () => {
           variant="elevated"
         >
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <Button 
-              variant="outline" 
-              fullWidth
-              leftIcon={<Icon name="Plus" size="sm" />}
-            >
+            <button className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <Icon name="Plus" size="sm" />
               {t('dashboard.add_income')}
-            </Button>
-            <Button 
-              variant="outline" 
-              fullWidth
-              leftIcon={<Icon name="Minus" size="sm" />}
-            >
+            </button>
+            <button className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <Icon name="Minus" size="sm" />
               {t('dashboard.add_expense')}
-            </Button>
-            <Button 
-              variant="outline" 
-              fullWidth
-              leftIcon={<Icon name="Target" size="sm" />}
-            >
+            </button>
+            <button className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <Icon name="Target" size="sm" />
               {t('dashboard.set_goal')}
-            </Button>
-            <Button 
-              variant="outline" 
-              fullWidth
-              leftIcon={<Icon name="Download" size="sm" />}
-            >
+            </button>
+            <button className="text-white hover:text-[#01C38D] px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <Icon name="Download" size="sm" />
               {t('dashboard.export')}
-            </Button>
+            </button>
           </div>
         </Card>
 
@@ -2192,9 +2188,9 @@ const Dashboard = () => {
           title={t('dashboard.recent_transactions')}
           subtitle={t('dashboard.last_30_days')}
           headerAction={
-            <Button variant="ghost" size="sm">
+            <button className="text-white hover:text-[#01C38D] text-sm px-3 py-1.5 rounded-lg transition-colors">
               {t('dashboard.view_all')}
-            </Button>
+            </button>
           }
           variant="elevated"
         >

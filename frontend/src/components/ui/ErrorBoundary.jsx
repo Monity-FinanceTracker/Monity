@@ -6,7 +6,7 @@ class ErrorBoundary extends React.Component {
     this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
@@ -33,7 +33,7 @@ class ErrorBoundary extends React.Component {
               The app encountered an unexpected error. Please refresh the page or check your environment configuration.
             </p>
             
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <details className="text-left text-sm text-gray-500 mt-4">
                 <summary className="cursor-pointer mb-2">Error Details (Development)</summary>
                 <pre className="bg-[#2a2a2a] p-2 rounded text-xs overflow-auto">

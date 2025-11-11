@@ -19,7 +19,6 @@ export const formatCurrency = (amount, typeId, showSign = true) => {
     // Para despesas (typeId === 1), o valor deve ser negativo
     // Para receitas (typeId === 2), o valor deve ser positivo
     const isExpense = typeId === 1;
-    const isNegative = numAmount < 0;
     
     // Determina o sinal a ser exibido
     let sign = '';

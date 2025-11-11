@@ -23,7 +23,7 @@ ChartJS.register(
     Filler
 );
 
-const InvestmentChart = ({ data, viewType }) => {
+const InvestmentChart = ({ data }) => {
     const { t } = useTranslation();
 
     if (!data || data.length === 0) {
@@ -196,6 +196,8 @@ const InvestmentChart = ({ data, viewType }) => {
 };
 
 export default InvestmentChart;
+
+
 
 
 

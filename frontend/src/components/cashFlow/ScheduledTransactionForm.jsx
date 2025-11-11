@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Banknote, Tag, Repeat } from 'lucide-react';
 import api from '../../utils/api';
@@ -38,12 +38,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     }
   }, [transaction]);
 
-  // Fetch categories when typeId changes
-  useEffect(() => {
-    fetchCategories();
-  }, [formData.typeId]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setLoadingCategories(true);
       const response = await api.get('/categories');
@@ -68,7 +63,12 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     } finally {
       setLoadingCategories(false);
     }
-  };
+  }, [formData.typeId, formData.category]);
+
+  // Fetch categories when typeId changes
+  useEffect(() => {
+    fetchCategories();
+  }, [formData.typeId, fetchCategories]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -303,14 +303,14 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-[#262626] text-white rounded-lg hover:bg-[#404040] transition-colors"
+              className="flex-1 px-4 py-2 text-white hover:text-[#01C38D] rounded-lg transition-colors"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-[#01C38D] text-[#232323] rounded-lg hover:bg-[#01C38D]/90 transition-colors font-medium disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-[#01C38D] text-white rounded-lg hover:bg-[#00b37e] transition-colors font-medium disabled:opacity-50"
             >
               {loading ? t('common.saving') : t('common.save')}
             </button>
