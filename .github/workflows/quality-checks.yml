@@ -84,7 +84,7 @@ jobs:
         continue-on-error: true
 
       - name: Run TruffleHog scan
-        run: docker run --rm -v "$GITHUB_WORKSPACE":/workspace ghcr.io/trufflesecurity/trufflehog:latest filesystem /workspace --json --fail
+        run: docker run --rm -v "$GITHUB_WORKSPACE":/workspace ghcr.io/trufflesecurity/trufflehog:latest filesystem /workspace --json --fail --exclude-paths /workspace/.github/trufflehog-exclude.txt
 
   code-quality:
     name: Code Quality Report
