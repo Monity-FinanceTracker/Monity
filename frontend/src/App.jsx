@@ -22,7 +22,6 @@ import Privace from './components/privace';
 import Terms from './components/terms';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
-import Terms from './components/terms';
 
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
