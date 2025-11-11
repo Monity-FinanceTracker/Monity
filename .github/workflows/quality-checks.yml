@@ -83,12 +83,15 @@ jobs:
         run: npm audit --audit-level=moderate
         continue-on-error: true
 
-      - name: Check for secrets in code
-        uses: trufflesecurity/trufflehog@main
-        with:
-          path: ./backend
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
+      - name: Install TruffleHog CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install trufflehog
+        working-directory: ${{ github.workspace }}
+
+      - name: Run TruffleHog scan
+        run: trufflehog filesystem --path "$GITHUB_WORKSPACE" --redact --json --fail
+        working-directory: ${{ github.workspace }}
 
   code-quality:
     name: Code Quality Report
