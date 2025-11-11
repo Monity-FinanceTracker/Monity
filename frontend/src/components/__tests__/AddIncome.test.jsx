@@ -1,39 +1,84 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
-import AddIncome from '../AddIncome';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AddIncome from '../forms/AddIncome';
 import * as api from '../../utils/api';
 
 vi.mock('../../utils/api');
+vi.mock('react-toastify', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+    i18n: {
+      language: 'en',
+      changeLanguage: vi.fn(),
+    },
+  }),
+}));
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+
+  return ({ children }) => (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        {children}
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};
 
 describe('AddIncome', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('renders the form and submits data correctly', async () => {
     const user = userEvent.setup();
     const categories = [
       { id: 1, name: 'Salary', typeId: 2 },
       { id: 2, name: 'Freelance', typeId: 2 },
     ];
-    api.get.mockResolvedValue({ data: categories });
-    const postMock = api.post.mockResolvedValue({ data: {} });
-    render(
-      <MemoryRouter>
-        <AddIncome />
-      </MemoryRouter>
-    );
-
-    await screen.findByText('Salary');
-    await user.selectOptions(screen.getByRole('combobox'), 'Salary');
-    await user.type(screen.getByPlaceholderText('Amount'), '1000');
-    await user.type(screen.getByPlaceholderText('Date'), '2024-01-01');
+    api.getCategories.mockResolvedValue(categories);
+    api.addTransaction.mockResolvedValue({});
     
-    const submitButton = screen.getByRole('button', { name: /add income/i });
+    render(<AddIncome />, { wrapper: createWrapper() });
+
+    // Aguardar categorias carregarem
+    await waitFor(() => {
+      const select = screen.getByRole('combobox');
+      expect(select.querySelectorAll('option').length).toBeGreaterThan(1);
+    });
+
+    await user.type(screen.getByPlaceholderText('addIncome.description'), 'Monthly Salary');
+    await user.selectOptions(screen.getByRole('combobox'), 'Salary');
+    await user.type(screen.getByPlaceholderText('addIncome.amount'), '3000');
+    
+    const submitButton = screen.getByRole('button', { name: /addIncome.add_income/i });
     await user.click(submitButton);
 
-    expect(postMock).toHaveBeenCalledWith('/add-income', {
-      category: 'Salary',
-      amount: '1000',
-      date: '2024-01-01',
+    await waitFor(() => {
+      expect(api.addTransaction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          description: 'Monthly Salary',
+          amount: 3000,
+          categoryName: 'Salary',
+          typeId: 2,
+        })
+      );
     });
   });
 }); 
