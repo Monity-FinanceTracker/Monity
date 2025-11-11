@@ -131,7 +131,6 @@ const NotificationContainer = () => {
  * Individual Notification Card
  */
 const NotificationCard = ({ notification, onClose }) => {
-    const { t } = useTranslation();
     const [isVisible, setIsVisible] = useState(false);
     const [isLeaving, setIsLeaving] = useState(false);
 

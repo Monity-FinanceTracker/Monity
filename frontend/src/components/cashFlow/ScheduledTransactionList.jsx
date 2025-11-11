@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Trash2, Edit, Repeat, Calendar, Banknote } from 'lucide-react';
 import api from '../../utils/api';
@@ -12,11 +12,7 @@ const ScheduledTransactionList = ({ onUpdate }) => {
   const [loading, setLoading] = useState(true);
   const [editingTransaction, setEditingTransaction] = useState(null);
 
-  useEffect(() => {
-    fetchScheduledTransactions();
-  }, []);
-
-  const fetchScheduledTransactions = async () => {
+  const fetchScheduledTransactions = useCallback(async () => {
     try {
       setLoading(true);
       const response = await api.get('/cashflow/scheduled-transactions');
@@ -27,7 +23,11 @@ const ScheduledTransactionList = ({ onUpdate }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    fetchScheduledTransactions();
+  }, [fetchScheduledTransactions]);
 
   const handleDelete = async (id) => {
     if (!window.confirm(t('cashFlow.confirm_delete'))) {

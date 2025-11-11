@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../ui/NotificationSystem';
 import { get, post, put, del } from '../../utils/api';
@@ -36,11 +36,7 @@ const EnhancedBudgets = () => {
         { value: 'yearly', label: t('budgets.yearly') }
     ];
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const [budgetsRes, categoriesRes] = await Promise.all([
                 get('/budgets'),
@@ -54,7 +50,11 @@ const EnhancedBudgets = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [notifyError, t]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const handleAddBudget = async (e) => {
         e.preventDefault();

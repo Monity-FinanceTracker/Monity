@@ -6,7 +6,7 @@ import { get } from '../../utils/api';
 import { formatCurrency, getAmountColor } from '../../utils/currency';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
-import { getIcon, Icon } from '../../utils/iconMapping.jsx';
+import { Icon } from '../../utils/iconMapping.jsx';
 import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 
 /**

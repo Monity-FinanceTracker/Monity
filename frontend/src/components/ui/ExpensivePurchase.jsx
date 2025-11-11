@@ -54,19 +54,19 @@ const ExpensivePurchase = React.memo(() => {
         }
     }
 
+    // Memoize expensive calculation - must be before any return statements
+    const topExpenses = useMemo(() => {
+        return expenses
+            .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))
+            .slice(0, 5);
+    }, [expenses]);
+
     if (loading) {
         return <Spinner message={t('expensivePurchase.loading')} />
     }
     if (error) {
         return <p>{t('expensivePurchase.error')}: {error}</p>
     }
-
-    // Memoize expensive calculation
-    const topExpenses = useMemo(() => {
-        return expenses
-            .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))
-            .slice(0, 5);
-    }, [expenses]);
 
     if (topExpenses.length === 0) {
         return <p className="text-white text-center py-4">{t('expensivePurchase.no_expenses')}</p>;

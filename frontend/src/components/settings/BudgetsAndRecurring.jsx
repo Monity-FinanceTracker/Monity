@@ -252,7 +252,7 @@ function RecurringTransactions() {
             await processRecurringTransactions();
             alert(t('recurring.processing_complete'));
             fetchData(); // Refresh data
-        } catch (err) {
+        } catch (_err) {
             setError(t('recurring.processing_error'));
         } finally {
             setIsLoading(false);
@@ -270,14 +270,14 @@ function RecurringTransactions() {
             }
             resetForm();
             fetchData();
-        } catch (err) {
+        } catch (_err) {
             setError(t('recurring.save_error'));
         } finally {
             setIsLoading(false);
         }
     };
     
-    const handleEdit = (item) => {
+    const _handleEdit = (item) => {
         setIsEditing(item.id);
         setForm({
             ...item,
@@ -286,12 +286,12 @@ function RecurringTransactions() {
         });
     };
     
-    const handleDelete = async (id) => {
+    const _handleDelete = async (id) => {
         setIsLoading(true);
         try {
             await deleteRecurringTransaction(id);
             fetchData();
-        } catch (err) {
+        } catch (_err) {
             setError(t('recurring.delete_error'));
         } finally {
             setIsLoading(false);

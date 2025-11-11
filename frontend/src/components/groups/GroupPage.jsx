@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getGroupById, addGroupExpense, searchUsers, sendGroupInvitation, settleExpenseShare } from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
@@ -23,7 +23,7 @@ const GroupPage = () => {
     const [showUserSearch, setShowUserSearch] = useState(false);
     const { user } = useAuth();
 
-    const fetchGroup = async () => {
+    const fetchGroup = useCallback(async () => {
         try {
             setLoading(true);
             const fetchedGroup = await getGroupById(id);
@@ -47,7 +47,11 @@ const GroupPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, t]);
+
+    useEffect(() => {
+        fetchGroup();
+    }, [fetchGroup]);
 
     useEffect(() => {
         fetchGroup();

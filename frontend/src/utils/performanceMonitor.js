@@ -2,6 +2,8 @@
  * Performance monitoring utilities for the frontend
  */
 
+import React from 'react';
+
 // Performance metrics collection
 const performanceMetrics = {
     componentRenderTimes: new Map(),
@@ -26,7 +28,7 @@ export const withPerformanceMonitoring = (WrappedComponent, componentName) => {
             performanceMetrics.componentRenderTimes.set(componentName, currentTimes);
             
             // Log slow renders in development
-            if (process.env.NODE_ENV === 'development' && renderTime > 16) {
+            if (import.meta.env.DEV && renderTime > 16) {
                 console.warn(`Slow render detected for ${componentName}: ${renderTime.toFixed(2)}ms`);
             }
         });
@@ -47,7 +49,7 @@ export const monitorApiCall = (endpoint, startTime, endTime, success = true) => 
     performanceMetrics.apiCallTimes.set(key, currentTimes);
     
     // Log slow API calls in development
-    if (process.env.NODE_ENV === 'development' && duration > 1000) {
+    if (import.meta.env.DEV && duration > 1000) {
         console.warn(`Slow API call detected for ${endpoint}: ${duration.toFixed(2)}ms`);
     }
 };
@@ -58,7 +60,7 @@ export const monitorApiCall = (endpoint, startTime, endTime, success = true) => 
 export const monitorBundleLoad = (bundleName, loadTime) => {
     performanceMetrics.bundleLoadTimes.set(bundleName, loadTime);
     
-    if (process.env.NODE_ENV === 'development' && loadTime > 500) {
+    if (import.meta.env.DEV && loadTime > 500) {
         console.warn(`Slow bundle load detected for ${bundleName}: ${loadTime.toFixed(2)}ms`);
     }
 };
