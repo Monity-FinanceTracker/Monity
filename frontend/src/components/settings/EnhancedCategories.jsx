@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNotifications } from '../ui/NotificationSystem';
+import { useNotifications } from '../ui/notificationContext';
 import { del } from '../../utils/api';
 import { useCategories, useAddCategory } from '../../hooks/useQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../../lib/queryClient';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
 import { Plus, Search, Trash2 } from 'lucide-react';
-import { categoryIconOptions, getIcon } from '../../utils/iconMapping.jsx';
+import { categoryIconOptions, getIcon } from '../../utils/iconMappingData';
 import { Dropdown, CloseButton } from '../ui';
 
 /**
