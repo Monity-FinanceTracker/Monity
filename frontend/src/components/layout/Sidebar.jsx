@@ -1,7 +1,6 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { isPremium } from "../../utils/premium";
+import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
 import CloseButton from "../ui/CloseButton";
 import {
@@ -54,7 +53,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               {/* Menu Toggle - alinhado exatamente com os ícones da navegação */}
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden text-gray-400 hover:text-white hover:bg-[#262626]"
+                  className="flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden text-gray-400 hover:text-white hover:bg-[#262626]"
                 style={{ 
                   border: 'none',
                   outline: 'none',
@@ -93,13 +92,14 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 py-6 px-[18px] overflow-y-auto min-h-0 custom-scrollbar">
-            <nav className="space-y-1">
+          <div className="flex-1 relative min-h-0">
+            <div className="absolute inset-0 pt-3 pb-6 px-[18px] overflow-y-auto custom-scrollbar">
+              <nav className="space-y-1">
               <NavLink
                 to="/"
                 end
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -110,12 +110,12 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <LayoutDashboard className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.dashboard')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.dashboard')}</span>
               </NavLink>
               <NavLink
                 to="/transactions"
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -126,12 +126,12 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <CreditCard className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.transactions')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.transactions')}</span>
               </NavLink>
               <NavLink
                 to="/groups"
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -142,12 +142,12 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Users className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.groups')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.groups')}</span>
               </NavLink>
               <NavLink
                 to="/categories"
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -158,12 +158,12 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Tag className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.categories')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.categories')}</span>
               </NavLink>
               <NavLink
                 to="/budgets"
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -174,13 +174,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <PieChart className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.budgets')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.budgets')}</span>
               </NavLink>
 
               <NavLink
                 to="/savings-goals"
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -191,13 +191,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Target className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.savings_goals')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.savings_goals')}</span>
               </NavLink>
 
               <NavLink
                 to="/financial-health"
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -208,42 +208,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <TrendingUp className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.financial_health')}</span>
-              </NavLink>
-
-              <NavLink
-                to="/ai-assistant"
-                className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
-                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
-                  }`
-                }
-                onClick={() => setIsMobileMenuOpen(false)}
-                title={isCollapsed ? t('sidebar.ai_assistant') : ''}
-              >
-                <div className="w-5 h-5 flex-shrink-0">
-                  <MessageSquare className="w-5 h-5" />
-                </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.ai_assistant')}</span>
-              </NavLink>
-
-              {/* Investment Calculator */}
-              <NavLink
-                to="/investment-calculator"
-                className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
-                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
-                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
-                  }`
-                }
-                onClick={() => setIsMobileMenuOpen(false)}
-                title={isCollapsed ? t('sidebar.investment_calculator') : ''}
-              >
-                <div className="w-5 h-5 flex-shrink-0">
-                  <Calculator className="w-5 h-5" />
-                </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.investment_calculator')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.financial_health')}</span>
               </NavLink>
 
               {/* Cash Flow - Premium Only */}
@@ -251,7 +216,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <NavLink
                   to="/cashflow"
                   className={({ isActive }) =>
-                    `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                    `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                       ? 'bg-[#01C38D]/10 text-[#01C38D] '
                       : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                     }`
@@ -262,11 +227,44 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0">
                     <CalendarDays className="w-5 h-5" />
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.cash_flow')}</span>
+                  <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.cash_flow')}</span>
                 </NavLink>
               )}
 
-            </nav>
+              <NavLink
+                to="/ai-assistant"
+                className={({ isActive }) =>
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
+                  }`
+                }
+                onClick={() => setIsMobileMenuOpen(false)}
+                title={isCollapsed ? t('sidebar.ai_assistant') : ''}
+              >
+                <div className="w-5 h-5 flex-shrink-0">
+                  <MessageSquare className="w-5 h-5" />
+                </div>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.ai_assistant')}</span>
+              </NavLink>
+
+              {/* Investment Calculator */}
+              <NavLink
+                to="/investment-calculator"
+                className={({ isActive }) =>
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                    ? 'bg-[#01C38D]/10 text-[#01C38D] '
+                    : 'text-gray-400 hover:text-white hover:bg-[#262626]'
+                  }`
+                }
+                onClick={() => setIsMobileMenuOpen(false)}
+                title={isCollapsed ? t('sidebar.investment_calculator') : ''}
+              >
+                <div className="w-5 h-5 flex-shrink-0">
+                  <Calculator className="w-5 h-5" />
+                </div>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.investment_calculator')}</span>
+              </NavLink>
 
             {/* Premium/Subscription Section */}
             {!premiumUser && (
@@ -274,7 +272,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <NavLink
                   to="/subscription"
                   className={({ isActive }) =>
-                    `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color,border-color] duration-200 group overflow-hidden transform-gpu ${isActive
+                    `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color,border-color] duration-200 group overflow-hidden transform-gpu ${isActive
                       ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
                       : 'text-yellow-400 hover:bg-yellow-400/5 border border-yellow-400/10 hover:border-yellow-400/20'
                     }`
@@ -290,7 +288,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.go_premium')}</span>
+                  <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.go_premium')}</span>
                 </NavLink>
               </div>
             )}
@@ -300,7 +298,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <NavLink
                   to="/subscription"
                   className={({ isActive }) =>
-                    `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color,border-color] duration-200 group overflow-hidden transform-gpu ${isActive
+                    `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color,border-color] duration-200 group overflow-hidden transform-gpu ${isActive
                       ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
                       : 'text-yellow-400 hover:bg-yellow-400/5 border border-yellow-400/10 hover:border-yellow-400/20'
                     }`
@@ -316,15 +314,20 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.premium')}</span>
+                  <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.premium')}</span>
                 </NavLink>
               </div>
             )}
 
+            </nav>
           </div>
+          
+          {/* Fade effect at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#171717] to-transparent pointer-events-none z-10"></div>
+        </div>
 
           {/* Admin and Settings at bottom */}
-          <div className="border-t border-[#262626] px-[18px] py-4 flex-shrink-0">
+          <div className="border-t border-[#262626] px-[18px] py-4 flex-shrink-0 bg-[#171717] relative z-20">
             <div className="space-y-2">
               {/* Admin Dashboard First */}
               {isAdmin && (
@@ -332,7 +335,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   to="/admin"
                   end
                   className={({ isActive }) =>
-                    `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                    `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                       ? 'bg-[#01C38D]/10 text-[#01C38D] '
                       : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                     }`
@@ -343,14 +346,14 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
                     <span className="material-symbols-outlined text-lg">eye_tracking</span>
                   </div>
-                  <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.admin_dashboard')}</span>
+                  <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.admin_dashboard')}</span>
                 </NavLink>
               )}
               
               <NavLink
                 to="/settings"
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
+                  `flex items-center px-1.5 py-2.5 rounded-lg transition-[background-color,color] duration-200 group overflow-hidden ${isActive
                     ? 'bg-[#01C38D]/10 text-[#01C38D] '
                     : 'text-gray-400 hover:text-white hover:bg-[#262626]'
                   }`
@@ -361,7 +364,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <div className="w-5 h-5 flex-shrink-0">
                   <Settings className="w-5 h-5" />
                 </div>
-                <span className={`font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-4 translate-x-0'}`}>{t('sidebar.settings')}</span>
+                <span className={`text-[15px] font-medium whitespace-nowrap transition-all duration-200 ease-in-out ${isCollapsed ? 'opacity-0 w-0 -translate-x-2' : 'opacity-100 ml-2.5 translate-x-0'}`}>{t('sidebar.settings')}</span>
               </NavLink>
             </div>
           </div>

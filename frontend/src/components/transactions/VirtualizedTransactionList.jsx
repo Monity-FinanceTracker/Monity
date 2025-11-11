@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { List } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { useQueryClient } from '@tanstack/react-query';
@@ -79,7 +79,7 @@ const VirtualizedTransactionList = React.memo(({
         setCurrentPage(1);
         setHasNextPage(true);
         loadMoreItems();
-    }, [searchQuery, transactionType, filters]);
+    }, [searchQuery, transactionType, filters, loadMoreItems]);
 
     // Reset search and filters
     const handleSearchChange = useCallback((value) => {
@@ -114,7 +114,7 @@ const VirtualizedTransactionList = React.memo(({
             console.error('Error deleting transaction:', err);
             alert(t('transactions.delete_error'));
         }
-    }, [t]);
+    }, [t, queryClient]);
 
     // Helper function to get type ID
     const getTypeId = (type) => {
@@ -146,7 +146,7 @@ const VirtualizedTransactionList = React.memo(({
             );
         }
 
-        const getTypeColor = (typeId) => {
+        const _getTypeColor = (typeId) => {
             switch (typeId) {
                 case 1: return 'text-red-400'; // Expense
                 case 2: return 'text-green-400'; // Income

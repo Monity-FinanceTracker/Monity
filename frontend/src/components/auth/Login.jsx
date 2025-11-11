@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from '../../utils/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
@@ -202,6 +201,27 @@ function Login() {
                             </svg>
                         </Link>
                     </div>
+                </div>
+
+                {/* Footer with Privacy Policy and Terms Links */}
+                <div className="mt-8 text-center">
+                    <a 
+                        href="/privacy" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                    >
+                        Privacy Policy
+                    </a>
+                    <span className="text-gray-600 mx-3">•</span>
+                    <a 
+                        href="/terms" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                    >
+                        Terms of Service
+                    </a>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
 import { Icon } from "../../utils/iconMapping.jsx";
 

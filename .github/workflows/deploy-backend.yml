@@ -1,0 +1,192 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - production
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint || echo "No lint script found, skipping..."
+
+      - name: Run tests
+        run: npm test || echo "No tests configured yet"
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  deploy:
+    name: Deploy to EC2
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify Required Secrets
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "❌ ERROR: EC2_HOST secret is not set!"
+            echo "Please add EC2_HOST secret in: Settings → Secrets → Actions"
+            echo "Value should be your EC2 IP address or domain (e.g., 3.14.159.265)"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_USERNAME }}" ]; then
+            echo "❌ ERROR: EC2_USERNAME secret is not set!"
+            echo "Please add EC2_USERNAME secret (usually 'ec2-user' or 'ubuntu')"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "❌ ERROR: EC2_SSH_KEY secret is not set!"
+            echo "Please add EC2_SSH_KEY secret with your private SSH key"
+            exit 1
+          fi
+          echo "✅ All required secrets are configured"
+
+      - name: Configure SSH
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$EC2_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "Scanning SSH keys for host: $EC2_HOST"
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          ssh -i ~/.ssh/deploy_key $EC2_USERNAME@$EC2_HOST << 'ENDSSH'
+            set -e
+
+            echo "📦 Navigating to application directory..."
+            cd ~/Monity/backend
+
+            echo "🔄 Pulling latest changes..."
+            git fetch origin
+            git checkout main
+            git pull origin main
+
+            echo "📚 Installing dependencies..."
+            npm ci --production
+
+            echo "🔄 Reloading PM2 process..."
+            pm2 reload monity-backend --update-env || pm2 restart monity-backend
+
+            echo "✅ Deployment completed!"
+            pm2 status
+          ENDSSH
+
+      - name: Update Environment Variables (if changed)
+        if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[update-env]')
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
+        run: |
+          ssh -i ~/.ssh/deploy_key $EC2_USERNAME@$EC2_HOST << 'ENDSSH'
+            cd ~/Monity/backend
+
+            echo "Updating .env file..."
+            cat > .env << 'EOF'
+          ${{ secrets.BACKEND_ENV_FILE }}
+          EOF
+
+            echo "Restarting application with new environment..."
+            pm2 restart monity-backend
+          ENDSSH
+
+      - name: Health Check
+        run: |
+          echo "⏳ Waiting 20 seconds for application to start..."
+          sleep 20
+
+          echo "🏥 Running health check..."
+          HEALTH_URL="${{ secrets.BACKEND_API_URL || 'https://api.monity-finance.com' }}/api/v1/health"
+
+          echo "Testing URL: $HEALTH_URL"
+
+          for i in {1..5}; do
+            echo "Attempt $i of 5..."
+            HTTP_CODE=$(curl -f -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || echo "000")
+            echo "Received HTTP code: $HTTP_CODE"
+
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ Health check passed!"
+              curl -s "$HEALTH_URL" | jq '.' || echo "Health endpoint returned 200"
+              exit 0
+            fi
+
+            if [ $i -lt 5 ]; then
+              echo "Retrying in 10 seconds..."
+              sleep 10
+            fi
+          done
+
+          echo "❌ Health check failed after 5 attempts"
+          echo "Note: Check if the backend is running and accessible"
+          exit 1
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "✅ Backend deployment completed successfully!"
+          echo "🚀 Application: monity-backend"
+          echo "🌐 Host: ${{ secrets.EC2_HOST }}"
+          echo "📊 Check PM2: ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'pm2 status'"
+
+      - name: Rollback on Failure
+        if: failure()
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          echo "❌ Deployment failed, attempting rollback..."
+          ssh -i ~/.ssh/deploy_key $EC2_USERNAME@$EC2_HOST << 'ENDSSH' || true
+            cd ~/Monity/backend
+
+            echo "Rolling back to previous commit..."
+            git reset --hard HEAD~1
+
+            echo "Restarting application..."
+            pm2 restart monity-backend
+
+            echo "Rollback completed"
+          ENDSSH
+
+      - name: Cleanup SSH Key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

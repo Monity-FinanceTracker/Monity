@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { get } from '../../utils/api';
 import { formatCurrency, getAmountColor } from '../../utils/currency';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
-import { getIcon, Icon } from '../../utils/iconMapping.jsx';
+import { Icon } from '../../utils/iconMapping.jsx';
 import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 
 /**
@@ -30,10 +30,10 @@ const EnhancedDashboard = () => {
 
     const fetchDashboardData = async () => {
         try {
-            // Fetch recent transactions
-            const { data: transactions } = await get('/transactions');
-            const recentTransactions = Array.isArray(transactions) 
-                ? transactions.slice(0, 3) 
+            // Fetch only the 3 most recent transactions (optimized query)
+            const { data: transactions } = await get('/transactions?limit=3');
+            const recentTransactions = Array.isArray(transactions)
+                ? transactions
                 : [];
 
             setDashboardData(prev => ({
