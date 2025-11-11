@@ -78,6 +78,10 @@ dist-ssr
 *.sln
 *.sw?
 .env
+frontend/.env.production
+frontend/.env.production.local
+frontend/.env.production.*
+!frontend/.env.production.example
 
 # Test coverage
 coverage/

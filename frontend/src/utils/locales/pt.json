@@ -16,7 +16,10 @@
     "save": "Salvar",
     "cancel": "Cancelar",
     "transactions": "Transações",
-    "not_set": "Não definido"
+    "not_set": "Não definido",
+    "or": "ou",
+    "continue_with_google": "Continuar com Google",
+    "loading": "Carregando..."
   },
   "loginPage": {
     "slogan": "Bem-vindo de volta!",

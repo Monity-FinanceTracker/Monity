@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
+import GoogleOAuthButton from './GoogleOAuthButton';
 
 function Signup() {
     const { t } = useTranslation();
@@ -38,17 +39,22 @@ function Signup() {
         }
 
         try {
-            const { error } = await signup(name, email, password);
-            if (error) {
-                throw new Error(error);
+            const result = await signup(name, email, password);
+            
+            if (!result.success) {
+                // Mostrar erro do backend (ex: "Emails temporários não são permitidos")
+                setError(result.error || t('signupPage.failed'));
+                setLoading(false);
+                return;
             }
-            // If user is signing up for premium, redirect to subscription page
-            if (premium) {
-                navigate('/subscription');
-            } else {
-                navigate('/');
-            }
+            
+            // Redirecionar para tela de confirmação de email
+            navigate('/email-confirmation', { 
+                state: { email: email },
+                replace: true 
+            });
         } catch (err) {
+            // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
         } finally {
             setLoading(false);
@@ -353,6 +359,19 @@ function Signup() {
                         </button>
                     </form>
 
+                    {/* OAuth Divider */}
+                    <div className="relative my-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-700"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-[#171717] text-gray-400">{t('common.or') || 'ou'}</span>
+                        </div>
+                    </div>
+
+                    {/* Google OAuth Button */}
+                    <GoogleOAuthButton onError={(err) => setError(err)} />
+
                     {/* Enhanced Login Link */}
                     <div className="mt-6 text-center">
                         <Link 
@@ -390,7 +409,7 @@ function Signup() {
             </div>
 
             {/* Custom CSS for animations */}
-            <style jsx>{`
+            <style>{`
                 @keyframes fade-in-up {
                     from {
                         opacity: 0;
