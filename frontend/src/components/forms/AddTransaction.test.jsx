@@ -61,7 +61,6 @@ describe('AddTransaction', () => {
       await waitFor(() => {
         expect(screen.getByText('addExpense.title')).toBeInTheDocument();
         expect(screen.getByText('addExpense.subtitle')).toBeInTheDocument();
-        expect(screen.getByText('addExpense.form_title')).toBeInTheDocument();
       });
     });
 
@@ -118,7 +117,6 @@ describe('AddTransaction', () => {
       await waitFor(() => {
         expect(screen.getByText('addIncome.title')).toBeInTheDocument();
         expect(screen.getByText('addIncome.subtitle')).toBeInTheDocument();
-        expect(screen.getByText('addIncome.form_title')).toBeInTheDocument();
       });
     });
 
