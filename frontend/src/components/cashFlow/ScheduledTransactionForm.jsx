@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Banknote, Tag, Repeat } from 'lucide-react';
 import api from '../../utils/api';
@@ -38,12 +38,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     }
   }, [transaction]);
 
-  // Fetch categories when typeId changes
-  useEffect(() => {
-    fetchCategories();
-  }, [formData.typeId]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setLoadingCategories(true);
       const response = await api.get('/categories');
@@ -68,7 +63,12 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     } finally {
       setLoadingCategories(false);
     }
-  };
+  }, [formData.typeId, formData.category]);
+
+  // Fetch categories when typeId changes
+  useEffect(() => {
+    fetchCategories();
+  }, [formData.typeId, fetchCategories]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

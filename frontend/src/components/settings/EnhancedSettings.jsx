@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../context/AuthContext';
-import { useNotifications } from '../ui/NotificationSystem';
+import { useAuth } from '../../context/useAuth';
+import { useNotifications } from '../ui/notificationContext';
 import { supabase } from '../../utils/supabase';
 import LanguageSwitcher from '../navigation/LanguageSwitcher';
 import CloseButton from '../ui/CloseButton';
@@ -39,13 +39,8 @@ const EnhancedSettings = () => {
         currency: 'BRL'
     });
     const [isUpgrading, setIsUpgrading] = useState(false);
-    
-    // Load user preferences
-    useEffect(() => {
-        loadUserPreferences();
-    }, []);
 
-    const loadUserPreferences = async () => {
+    const loadUserPreferences = useCallback(async () => {
         try {
             const { data, error } = await supabase
                 .from('user_preferences')
@@ -66,7 +61,7 @@ const EnhancedSettings = () => {
                     language: 'pt'
                 };
                 
-                const { data: newData, error: insertError } = await supabase
+                const { error: insertError } = await supabase
                     .from('user_preferences')
                     .insert(defaultPrefs)
                     .single();
@@ -79,7 +74,12 @@ const EnhancedSettings = () => {
             console.error('Error loading preferences:', err);
             // Continue with default preferences if table doesn't exist
         }
-    };
+    }, [user.id]);
+    
+    // Load user preferences
+    useEffect(() => {
+        loadUserPreferences();
+    }, [loadUserPreferences]);
 
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
@@ -159,7 +159,7 @@ const EnhancedSettings = () => {
             await new Promise(resolve => setTimeout(resolve, 2000));
             await refreshSubscription();
             success(t('subscription.upgrade_successful'));
-        } catch (error) {
+        } catch {
             notifyError(t('subscription.upgrade_failed'));
         } finally {
             setIsUpgrading(false);

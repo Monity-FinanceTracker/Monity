@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../../utils/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
 import CloseButton from './CloseButton';
 import { formatSimpleCurrency } from '../../utils/currency';
 
 const SavingsGoals = () => {
     const { t } = useTranslation();
-    const { user, subscriptionTier } = useAuth();
+    const { subscriptionTier } = useAuth();
     
     // Add CSS to fix date input styling
     useEffect(() => {

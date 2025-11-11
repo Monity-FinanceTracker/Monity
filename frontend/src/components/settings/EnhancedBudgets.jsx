@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNotifications } from '../ui/NotificationSystem';
+import { useNotifications } from '../ui/notificationContext';
 import { get, post, put, del } from '../../utils/api';
 import { EmptyBudgets, LoadingState } from '../ui/EmptyStates';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { CloseButton } from '../ui';
@@ -36,11 +36,7 @@ const EnhancedBudgets = () => {
         { value: 'yearly', label: t('budgets.yearly') }
     ];
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const [budgetsRes, categoriesRes] = await Promise.all([
                 get('/budgets'),
@@ -54,7 +50,11 @@ const EnhancedBudgets = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [notifyError, t]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const handleAddBudget = async (e) => {
         e.preventDefault();

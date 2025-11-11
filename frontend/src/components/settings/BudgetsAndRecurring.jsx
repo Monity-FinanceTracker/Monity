@@ -11,7 +11,7 @@ import {
     processRecurringTransactions, 
     getTransactionTypes 
 } from '../../utils/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 
@@ -235,7 +235,7 @@ function RecurringTransactions() {
             setRecurring(recData);
             setCategories(catData);
             setTypes(typeData);
-        } catch (err) {
+        } catch {
             setError('Failed to fetch recurring transactions');
         } finally {
             setIsLoading(false);
@@ -252,7 +252,7 @@ function RecurringTransactions() {
             await processRecurringTransactions();
             alert(t('recurring.processing_complete'));
             fetchData(); // Refresh data
-        } catch (err) {
+        } catch {
             setError(t('recurring.processing_error'));
         } finally {
             setIsLoading(false);
@@ -270,14 +270,14 @@ function RecurringTransactions() {
             }
             resetForm();
             fetchData();
-        } catch (err) {
+        } catch {
             setError(t('recurring.save_error'));
         } finally {
             setIsLoading(false);
         }
     };
     
-    const handleEdit = (item) => {
+    const _handleEdit = (item) => {
         setIsEditing(item.id);
         setForm({
             ...item,
@@ -286,12 +286,12 @@ function RecurringTransactions() {
         });
     };
     
-    const handleDelete = async (id) => {
+    const _handleDelete = async (id) => {
         setIsLoading(true);
         try {
             await deleteRecurringTransaction(id);
             fetchData();
-        } catch (err) {
+        } catch {
             setError(t('recurring.delete_error'));
         } finally {
             setIsLoading(false);
