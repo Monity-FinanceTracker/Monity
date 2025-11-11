@@ -19,6 +19,7 @@ import {
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import ConfigCheck from './components/ui/ConfigCheck';
 import Privace from './components/privace';
+import Terms from './components/terms';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
 import Terms from './components/terms';
