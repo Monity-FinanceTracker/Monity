@@ -3,8 +3,9 @@
  * This shows how React Query and our custom optimizations work together
  */
 
+import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { optimizedGet, optimizedPost, batchRequests } from './optimizedApi';
+import { optimizedGet, batchRequests } from './optimizedApi';
 import { useSearchDebounce } from '../hooks/useDebounce';
 import { monitorApiCall } from './performanceMonitor';
 

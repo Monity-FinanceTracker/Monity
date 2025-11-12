@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 /**
  * Modal utilities for proper modal behavior
  */
@@ -20,7 +22,7 @@ export const unlockBodyScroll = () => {
  * Handle modal open/close with scroll locking
  */
 export const useModalScrollLock = (isOpen) => {
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       lockBodyScroll();
     } else {

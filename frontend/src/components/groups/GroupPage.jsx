@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getGroupById, addGroupExpense, searchUsers, sendGroupInvitation, settleExpenseShare } from '../../utils/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../utils/supabase';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
@@ -23,7 +23,7 @@ const GroupPage = () => {
     const [showUserSearch, setShowUserSearch] = useState(false);
     const { user } = useAuth();
 
-    const fetchGroup = async () => {
+    const fetchGroup = useCallback(async () => {
         try {
             setLoading(true);
             const fetchedGroup = await getGroupById(id);
@@ -47,11 +47,13 @@ const GroupPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, t]);
 
     useEffect(() => {
         fetchGroup();
+    }, [fetchGroup]);
 
+    useEffect(() => {
         // Set up real-time subscriptions for this group
         if (user) {
             const groupSubscription = supabase
@@ -86,7 +88,7 @@ const GroupPage = () => {
                 supabase.removeChannel(groupSubscription);
             };
         }
-    }, [id, user]);
+    }, [id, user, fetchGroup]);
 
     const handleSearchUsers = async (query) => {
         if (query.length < 2) {

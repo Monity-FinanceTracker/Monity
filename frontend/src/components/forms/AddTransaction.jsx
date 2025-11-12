@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, CloseButton } from '../ui';
 import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { FaMoneyBillWave, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
-import { categoryIconOptions } from '../../utils/iconMapping.jsx';
+import { categoryIconOptions } from '../../utils/iconMappingData';
 
 /**
  * Componente unificado para adicionar receitas e despesas
@@ -90,7 +90,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             try {
                 const fetchedCategories = await getCategories();
                 setCategories(fetchedCategories);
-            } catch (err) {
+            } catch {
                 setError(t(`${currentConfig.translationKey}.failed_load_categories`));
                 toast.error(t(`${currentConfig.translationKey}.failed_load_categories`));
             }

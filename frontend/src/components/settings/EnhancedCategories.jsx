@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNotifications } from '../ui/NotificationSystem';
-import { post, del } from '../../utils/api';
+import { useNotifications } from '../ui/notificationContext';
+import { del } from '../../utils/api';
 import { useCategories, useAddCategory } from '../../hooks/useQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../../lib/queryClient';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
 import { Plus, Search, Trash2 } from 'lucide-react';
-import { iconMap, categoryIconOptions, getIcon } from '../../utils/iconMapping.jsx';
+import { categoryIconOptions, getIcon } from '../../utils/iconMappingData';
 import { Dropdown, CloseButton } from '../ui';
 
 /**
@@ -31,7 +31,6 @@ const EnhancedCategories = () => {
         color: '#01C38D',
         icon: 'Package'
     });
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
     const categoryTypes = [
         { id: 'all', label: t('categories.all'), value: 'all' },
@@ -180,7 +179,7 @@ const EnhancedCategories = () => {
                                 </div>
                                 <button
                                     onClick={() => handleDeleteCategory(category.id)}
-                                    className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all p-1"
+                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                     title={t('categories.delete')}
                                 >
                                     <Trash2 className="w-4 h-4" />
@@ -222,43 +221,17 @@ const EnhancedCategories = () => {
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
                                     {t('categories.type')}
                                 </label>
-                                <div className="relative" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                                    <select
-                                        value={newCategory.typeId}
-                                        onChange={(e) => {
-                                            setNewCategory(prev => ({ ...prev, typeId: parseInt(e.target.value) }));
-                                            setIsDropdownOpen(false);
-                                        }}
-                                        onFocus={() => setIsDropdownOpen(true)}
-                                        onBlur={() => {
-                                            setTimeout(() => setIsDropdownOpen(false), 150);
-                                        }}
-                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer"
-                                        style={{ 
-                                            background: '#232323',
-                                            color: 'white',
-                                            appearance: 'none',
-                                            WebkitAppearance: 'none',
-                                            MozAppearance: 'none'
-                                        }}
-                                    >
-                                        {categoryTypes.slice(1).map((type) => (
-                                            <option key={type.id} value={type.id}>
-                                                {type.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                                        <svg 
-                                            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} 
-                                            fill="none" 
-                                            stroke="currentColor" 
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                                        </svg>
-                                    </div>
-                                </div>
+                                <Dropdown
+                                    value={newCategory.typeId}
+                                    onChange={(value) => setNewCategory(prev => ({ ...prev, typeId: parseInt(value) }))}
+                                    options={categoryTypes.slice(1).map(type => ({
+                                        value: type.id,
+                                        label: type.label
+                                    }))}
+                                    placeholder={t('categories.type')}
+                                    bgColor="#232323"
+                                    menuBgColor="#232323"
+                                />
                             </div>
 
                             <div>

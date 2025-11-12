@@ -1,20 +1,9 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../utils/supabase";
 import { checkSubscription, clearSubscriptionCache } from "../utils/subscription";
 import { queryClient } from "../lib/queryClient";
+import { AuthContext } from "./useAuth";
 import API from "../utils/api";
-
-const AuthContext = createContext();
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
 
 let subscriptionCheckPromise = null;
 
