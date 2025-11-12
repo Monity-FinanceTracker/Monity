@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -51,14 +51,12 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     // UI states
     const [selectedTransactions, setSelectedTransactions] = useState(new Set());
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
-    const [viewMode, setViewMode] = useState('card'); // 'card' or 'table'
 
     // React Query for server state management
     const { 
         data: transactionsData = [], 
         isLoading: queryLoading, 
-        error: queryError,
-        refetch 
+        error: queryError
     } = useQuery({
         queryKey: ['transactions', 'list', transactionType],
         queryFn: async () => {
@@ -190,10 +188,11 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         return filtered;
     }, [transactions, debouncedSearchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
 
+    const queryClient = useQueryClient();
+
 
     // Optimized delete mutation with React Query
-    const queryClient = useQueryClient();
-    const deleteTransactionMutation = useMutation({
+    const _deleteTransactionMutation = useMutation({
         mutationFn: async (transactionId) => {
             const startTime = performance.now();
             try {

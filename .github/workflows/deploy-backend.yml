@@ -53,14 +53,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify Required Secrets
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "❌ ERROR: EC2_HOST secret is not set!"
+            echo "Please add EC2_HOST secret in: Settings → Secrets → Actions"
+            echo "Value should be your EC2 IP address or domain (e.g., 3.14.159.265)"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_USERNAME }}" ]; then
+            echo "❌ ERROR: EC2_USERNAME secret is not set!"
+            echo "Please add EC2_USERNAME secret (usually 'ec2-user' or 'ubuntu')"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "❌ ERROR: EC2_SSH_KEY secret is not set!"
+            echo "Please add EC2_SSH_KEY secret with your private SSH key"
+            exit 1
+          fi
+          echo "✅ All required secrets are configured"
+
       - name: Configure SSH
         env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           mkdir -p ~/.ssh
           echo "$EC2_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          echo "Scanning SSH keys for host: $EC2_HOST"
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
         env:
@@ -71,7 +93,7 @@ jobs:
             set -e
 
             echo "📦 Navigating to application directory..."
-            cd ~/Monity/backend || cd /home/ec2-user/Monity/backend || cd /var/www/Monity/backend
+            cd ~/Monity/backend
 
             echo "🔄 Pulling latest changes..."
             git fetch origin
@@ -96,7 +118,7 @@ jobs:
           BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
         run: |
           ssh -i ~/.ssh/deploy_key $EC2_USERNAME@$EC2_HOST << 'ENDSSH'
-            cd ~/Monity/backend || cd /home/ec2-user/Monity/backend || cd /var/www/Monity/backend
+            cd ~/Monity/backend
 
             echo "Updating .env file..."
             cat > .env << 'EOF'
@@ -109,27 +131,34 @@ jobs:
 
       - name: Health Check
         run: |
-          echo "⏳ Waiting 10 seconds for application to start..."
-          sleep 10
+          echo "⏳ Waiting 20 seconds for application to start..."
+          sleep 20
 
           echo "🏥 Running health check..."
           HEALTH_URL="${{ secrets.BACKEND_API_URL || 'https://api.monity-finance.com' }}/api/v1/health"
 
+          echo "Testing URL: $HEALTH_URL"
+
           for i in {1..5}; do
-            if curl -f -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" | grep -q "200"; then
+            echo "Attempt $i of 5..."
+            HTTP_CODE=$(curl -f -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || echo "000")
+            echo "Received HTTP code: $HTTP_CODE"
+
+            if [ "$HTTP_CODE" = "200" ]; then
               echo "✅ Health check passed!"
+              curl -s "$HEALTH_URL" | jq '.' || echo "Health endpoint returned 200"
               exit 0
             fi
-            echo "Attempt $i failed, retrying in 5 seconds..."
-            sleep 5
+
+            if [ $i -lt 5 ]; then
+              echo "Retrying in 10 seconds..."
+              sleep 10
+            fi
           done
 
           echo "❌ Health check failed after 5 attempts"
+          echo "Note: Check if the backend is running and accessible"
           exit 1
-
-      - name: Cleanup SSH Key
-        if: always()
-        run: rm -f ~/.ssh/deploy_key
 
       - name: Deployment Summary
         if: success()
@@ -147,7 +176,7 @@ jobs:
         run: |
           echo "❌ Deployment failed, attempting rollback..."
           ssh -i ~/.ssh/deploy_key $EC2_USERNAME@$EC2_HOST << 'ENDSSH' || true
-            cd ~/Monity/backend || cd /home/ec2-user/Monity/backend || cd /var/www/Monity/backend
+            cd ~/Monity/backend
 
             echo "Rolling back to previous commit..."
             git reset --hard HEAD~1
@@ -157,3 +186,7 @@ jobs:
 
             echo "Rollback completed"
           ENDSSH
+
+      - name: Cleanup SSH Key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

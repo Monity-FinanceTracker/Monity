@@ -197,10 +197,10 @@ function AddCategory() {
                                         </div>
                                         <button
                                             onClick={() => handleDelete(category.id)}
-                                            className="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-3 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
+                                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                             title="Delete category"
                                         >
-                                            <FaTrash className="text-sm" />
+                                            <FaTrash className="w-4 h-4" />
                                         </button>
                                     </div>
                                 </div>

@@ -73,6 +73,5 @@ export default defineConfig({
   // React 19 compatibility fixes
   define: {
     global: 'globalThis',
-    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
   }
 })

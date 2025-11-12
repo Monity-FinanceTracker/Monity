@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { Icon } from '../../utils/iconMapping.jsx';
@@ -20,12 +20,7 @@ const MobileOptimizedForm = ({
     const [touched, setTouched] = useState({});
     const [isValid, setIsValid] = useState(false);
 
-    // Real-time validation
-    useEffect(() => {
-        validateForm();
-    }, [formData]);
-
-    const validateForm = () => {
+    const validateForm = useCallback(() => {
         const newErrors = {};
         let valid = true;
 
@@ -66,7 +61,12 @@ const MobileOptimizedForm = ({
 
         setErrors(newErrors);
         setIsValid(valid && Object.keys(formData).length > 0);
-    };
+    }, [formData, fields, t]);
+
+    // Real-time validation
+    useEffect(() => {
+        validateForm();
+    }, [formData, validateForm]);
 
     const handleFieldChange = (fieldName, value) => {
         setFormData(prev => ({
@@ -254,7 +254,7 @@ const MobileOptimizedForm = ({
             </div>
 
             {/* Form Fields */}
-            {fields.map((field, index) => (
+            {fields.map((field) => (
                 <FormField key={field.name} field={field} />
             ))}
 

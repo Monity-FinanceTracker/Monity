@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 
@@ -48,7 +48,8 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao reenviar email');
             }
-        } catch (err) {
+        } catch (error) {
+            console.error('Erro ao reenviar email:', error);
             setError('Erro ao reenviar email. Tente novamente.');
         } finally {
             setLoading(false);
@@ -73,7 +74,8 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao verificar confirmação');
             }
-        } catch (err) {
+        } catch (error) {
+            console.error('Erro ao verificar confirmação:', error);
             setError('Erro ao verificar confirmação. Tente novamente.');
         } finally {
             setChecking(false);

@@ -96,9 +96,6 @@ const CashFlowCalendar = () => {
       currency: 'BRL',
     }).format(dayData.balance);
 
-    // Determine if this day has financial activity (income or expenses)
-    const hasFinancialActivity = dayData.income > 0 || dayData.expenses > 0;
-
     return (
       <div className={`h-full p-2 flex flex-col items-start ${dayData.isNegative ? 'bg-red-900/20' : ''}`}>
         <div className={`text-xs font-semibold mb-1 ${isToday ? 'w-6 h-6 flex items-center justify-center rounded-full text-white self-center' : 'self-center'}`} style={isToday ? { backgroundColor: '#08bf8c' } : {}}>
@@ -169,7 +166,7 @@ const CashFlowCalendar = () => {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#01C38D] text-[#232323] rounded-lg hover:bg-[#01C38D]/90 transition-colors font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-[#01C38D] text-white rounded-lg hover:bg-[#00b37e] transition-colors font-medium"
         >
           <Plus className="w-4 h-4" />
           {t('cashFlow.add_scheduled')}
@@ -249,8 +246,8 @@ const CashFlowCalendar = () => {
         }
         .calendar-container :global(.rbc-toolbar button) {
           color: white;
-          background: #262626;
-          border: 1px solid #1D1E24;
+          background: transparent;
+          border: none;
           padding: 8px 16px;
           border-radius: 8px;
           font-weight: 500;
@@ -258,14 +255,12 @@ const CashFlowCalendar = () => {
           transition: all 0.2s ease;
         }
         .calendar-container :global(.rbc-toolbar button:hover) {
-          background: #404040;
-          border-color: #505050;
+          color: #01C38D;
         }
         .calendar-container :global(.rbc-toolbar button:active),
         .calendar-container :global(.rbc-toolbar button.rbc-active) {
           background: #01C38D;
-          color: #232323;
-          border-color: #01C38D;
+          color: white;
         }
         .calendar-container :global(.rbc-btn-group) {
           display: flex;
@@ -297,11 +292,11 @@ const CashFlowCalendar = () => {
         .calendar-container :global(.rbc-off-range-bg),
         .calendar-container :global(.rbc-today),
         .calendar-container :global(.rbc-header),
-        .calendar-container :global(.rbc-toolbar),
-        .calendar-container :global(.rbc-toolbar button),
-        .calendar-container :global(.rbc-btn-group),
-        .calendar-container :global(.rbc-btn-group button) {
+        .calendar-container :global(.rbc-toolbar) {
           border-color: #1D1E24 !important;
+        }
+        .calendar-container :global(.rbc-toolbar button) {
+          border: none !important;
         }
       `}</style>
     </div>
