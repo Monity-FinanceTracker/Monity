@@ -3,6 +3,7 @@ import { supabase } from "../utils/supabase";
 import { checkSubscription, clearSubscriptionCache } from "../utils/subscription";
 import { queryClient } from "../lib/queryClient";
 import { AuthContext } from "./useAuth";
+import API from "../utils/api";
 
 let subscriptionCheckPromise = null;
 
@@ -105,20 +106,38 @@ export function AuthProvider({ children }) {
   };
 
   const signup = async (name, email, password, role = "user") => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
-          role,
-        },
-      },
-    });
-    if (error) {
-      return { success: false, error: error.message };
+    try {
+      // Chamar nosso backend que tem validação de email
+      const response = await API.post('/auth/register', {
+        email,
+        password,
+        name,
+        role,
+      });
+      
+      // Se sucesso, fazer login automaticamente
+      if (response.data.user && response.data.session) {
+        // Supabase session já foi criada pelo backend
+        await supabase.auth.setSession({
+          access_token: response.data.session.access_token,
+          refresh_token: response.data.session.refresh_token,
+        });
+        
+        // Clear caches para o novo usuário
+        clearSubscriptionCache();
+        queryClient.clear();
+        await refreshSubscription();
+      }
+      
+      return { success: true, user: response.data.user };
+    } catch (error) {
+      // Capturar mensagem de erro do backend
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Erro ao criar conta';
+      return { success: false, error: errorMessage };
     }
-    return { success: true };
   };
 
   const logout = async () => {
@@ -127,6 +146,36 @@ export function AuthProvider({ children }) {
     queryClient.clear(); // Clear React Query cache
     await supabase.auth.signOut();
     setUser(null);
+  };
+
+  const resendConfirmationEmail = async () => {
+    try {
+      const response = await API.post('/auth/resend-confirmation');
+      return { success: true, data: response.data };
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Erro ao reenviar email';
+      return { success: false, error: errorMessage };
+    }
+  };
+
+  const checkEmailVerification = async () => {
+    try {
+      const response = await API.get('/auth/check-verification');
+      return { 
+        success: true, 
+        verified: response.data?.verified || false,
+        data: response.data 
+      };
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Erro ao verificar email';
+      return { success: false, error: errorMessage, verified: false };
+    }
   };
 
   const value = {
@@ -138,6 +187,8 @@ export function AuthProvider({ children }) {
     signup,
     logout,
     refreshSubscription,
+    resendConfirmationEmail,
+    checkEmailVerification,
   };
 
   return (

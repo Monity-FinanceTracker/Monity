@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const xss = require('xss');
 const { logger } = require('../utils');
+const { emailValidationService } = require('../services');
 
 const xssOptions = {
     whiteList: {}, // No HTML tags allowed
@@ -12,6 +13,85 @@ const sanitize = (value) => {
     if (typeof value !== 'string') return value;
     const cleaned = xss(value, xssOptions);
     return cleaned.trim();
+};
+
+// Cache em memória para validações de email (previne abuse)
+const emailValidationCache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
+// Middleware para validar email profundamente (bloqueia emails temporários e inválidos)
+const validateEmailDeep = async (req, res, next) => {
+    const email = req.body.email;
+
+    if (!email) {
+        return res.status(400).json({
+            success: false,
+            error: 'Email é obrigatório'
+        });
+    }
+
+    try {
+        const normalizedEmail = email.trim().toLowerCase();
+        
+        // Verificar cache primeiro (evita múltiplas validações DNS)
+        const cached = emailValidationCache.get(normalizedEmail);
+        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+            if (!cached.isValid) {
+                return res.status(400).json({
+                    success: false,
+                    error: cached.reason,
+                    details: cached.details?.step
+                });
+            }
+            req.body.email = normalizedEmail;
+            return next();
+        }
+
+        const validation = await emailValidationService.validateEmail(email);
+
+        // Cachear resultado (válido ou inválido)
+        emailValidationCache.set(normalizedEmail, {
+            ...validation,
+            timestamp: Date.now()
+        });
+
+        // Limpar cache antigo periodicamente
+        if (emailValidationCache.size > 10000) {
+            const now = Date.now();
+            for (const [key, value] of emailValidationCache.entries()) {
+                if (now - value.timestamp > CACHE_TTL) {
+                    emailValidationCache.delete(key);
+                }
+            }
+        }
+
+        if (!validation.isValid) {
+            logger.warn('Email validation blocked registration', {
+                email: normalizedEmail,
+                reason: validation.reason,
+                details: validation.details
+            });
+
+            return res.status(400).json({
+                success: false,
+                error: validation.reason,
+                details: validation.details?.step
+            });
+        }
+
+        // Email válido, normalizar e continuar
+        req.body.email = validation.details.email;
+        next();
+
+    } catch (error) {
+        logger.error('Error in email validation middleware', {
+            error: error.message,
+            email
+        });
+
+        // Em caso de erro, permitir mas logar (fail-safe)
+        next();
+    }
 };
 
 const validate = (schema, property = 'body') => {
@@ -63,5 +143,6 @@ const schemas = {
 
 module.exports = {
     validate,
+    validateEmailDeep,
     schemas
 };

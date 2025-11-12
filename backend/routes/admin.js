@@ -15,6 +15,9 @@ module.exports = (controllers) => {
     router.get('/monetization', (req, res, next) => adminController.getMonetizationMetrics(req, res, next));
     router.get('/errors', (req, res, next) => adminController.getErrorPerformanceMetrics(req, res, next));
     router.get('/segments', (req, res, next) => adminController.getSegments(req, res, next));
+    
+    // Email validation metrics
+    router.get('/email-metrics', (req, res, next) => adminController.getEmailMetrics(req, res, next));
 
     return router;
 };

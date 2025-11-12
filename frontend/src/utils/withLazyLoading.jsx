@@ -1,7 +1,7 @@
-import { memo, lazy, Suspense, useCallback, useEffect, useState } from 'react';
-import Spinner from './ui/Spinner';
+import { memo, lazy, Suspense, useEffect, useState } from 'react';
+import Spinner from '../components/ui/Spinner';
 
-export const LazyErrorBoundary = ({ children, fallback }) => {
+const LazyErrorBoundary = ({ children, fallback }) => {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export const LazyErrorBoundary = ({ children, fallback }) => {
   return children;
 };
 
-export const withLazyLoading = (importFunc, fallback = null) => {
+const withLazyLoading = (importFunc, fallback = null) => {
   const LazyComponent = lazy(() =>
     importFunc().catch((error) => {
       console.warn('Lazy loading failed, retrying...', error);
@@ -79,25 +79,5 @@ export const withLazyLoading = (importFunc, fallback = null) => {
   return WrappedComponent;
 };
 
-export const useLazyComponentPreloader = () => {
-  const preloadComponent = useCallback((importFunc) => {
-    importFunc().catch(() => {
-      // ignore preload errors
-    });
-  }, []);
-
-  const preloadCriticalComponents = useCallback(() => {
-    setTimeout(() => {
-      preloadComponent(() => import('./dashboard/EnhancedDashboard'));
-      preloadComponent(() => import('./transactions/ImprovedTransactionList'));
-    }, 2000);
-
-    setTimeout(() => {
-      preloadComponent(() => import('./settings/EnhancedSettings'));
-      preloadComponent(() => import('./groups/Groups'));
-    }, 5000);
-  }, [preloadComponent]);
-
-  return { preloadComponent, preloadCriticalComponents };
-};
+export default withLazyLoading;
 

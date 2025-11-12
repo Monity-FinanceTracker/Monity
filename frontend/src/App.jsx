@@ -20,6 +20,8 @@ import ErrorBoundary from './components/ui/ErrorBoundary';
 import ConfigCheck from './components/ui/ConfigCheck';
 import Privace from './components/privace';
 import Terms from './components/terms';
+import AuthCallback from './pages/AuthCallback';
+import EmailConfirmation from './pages/EmailConfirmation';
 
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
@@ -42,7 +44,7 @@ import {
   LazyCreateGroup,
   LazyGroupPage
 } from './components/LazyComponents';
-import { useLazyComponentPreloader } from './components/lazyHelpers';
+import useLazyComponentPreloader from './hooks/useLazyComponentPreloader';
 
 
 // Protected route component
@@ -161,6 +163,8 @@ const App = React.memo(() => {
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/email-confirmation" element={<EmailConfirmation />} />
         <Route path="/privacy" element={<Privace />} />
         <Route path="/terms" element={<Terms />} />
 

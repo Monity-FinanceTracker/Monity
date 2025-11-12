@@ -1,9 +1,31 @@
 const { logger } = require('../utils/logger');
 const { supabaseAdmin } = require('../config/supabase');
+const { emailMetricsService } = require('../services');
 
 class AdminController {
     constructor(supabase) {
         this.supabase = supabaseAdmin;
+    }
+
+    /**
+     * GET /api/v1/admin/email-metrics
+     * Retorna métricas de validação de email
+     */
+    async getEmailMetrics(req, res) {
+        try {
+            const metrics = emailMetricsService.getMetrics();
+            
+            res.status(200).json({
+                success: true,
+                data: metrics
+            });
+        } catch (error) {
+            logger.error('Erro ao buscar métricas de email', { error: error.message });
+            res.status(500).json({
+                success: false,
+                error: 'Erro ao buscar métricas'
+            });
+        }
     }
 
     async getSystemHealth(req, res) {
