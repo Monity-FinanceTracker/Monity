@@ -458,12 +458,6 @@ const EnhancedSettings = () => {
             case 'account':
                 return (
                     <div className="space-y-4">
-                        {/* Account Info */}
-                        <div className="py-3 border-b border-[#262626]">
-                            <h4 className="text-white text-sm font-medium mb-1">Account ID</h4>
-                            <p className="text-gray-400 text-xs font-mono">{user?.id?.substring(0, 20)}...</p>
-                        </div>
-
                         {/* Export Data */}
                         <div className="py-3 border-b border-[#262626]">
                             <h4 className="text-white text-sm font-medium mb-1">{t('settings.export_data')}</h4>
