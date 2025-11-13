@@ -114,27 +114,41 @@ export function AuthProvider({ children }) {
         name,
         role,
       });
-      
-      // Se sucesso, fazer login automaticamente
+
+      // Se email confirmation está habilitado, session será null
+      if (response.data.requiresEmailConfirmation) {
+        return {
+          success: true,
+          user: response.data.user,
+          requiresEmailConfirmation: true,
+          message: response.data.message
+        };
+      }
+
+      // Se sucesso e não requer confirmação, fazer login automaticamente
       if (response.data.user && response.data.session) {
         // Supabase session já foi criada pelo backend
         await supabase.auth.setSession({
           access_token: response.data.session.access_token,
           refresh_token: response.data.session.refresh_token,
         });
-        
+
         // Clear caches para o novo usuário
         clearSubscriptionCache();
         queryClient.clear();
         await refreshSubscription();
       }
-      
-      return { success: true, user: response.data.user };
+
+      return {
+        success: true,
+        user: response.data.user,
+        requiresEmailConfirmation: false
+      };
     } catch (error) {
       // Capturar mensagem de erro do backend
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
+      const errorMessage = error.response?.data?.error ||
+                          error.response?.data?.message ||
+                          error.message ||
                           'Erro ao criar conta';
       return { success: false, error: errorMessage };
     }

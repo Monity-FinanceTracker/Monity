@@ -37,6 +37,12 @@ module.exports = (controllers, middleware) => {
         (req, res, next) => authController.checkEmailVerification(req, res, next)
     );
 
+    // Account Initialization - Inicializar conta após confirmação de email
+    router.post('/initialize',
+        middleware.auth.authenticate,
+        (req, res, next) => authController.initializeAccount(req, res, next)
+    );
+
     // Rotas protegidas
     router.get('/profile', middleware.auth.authenticate, (req, res, next) => authController.getProfile(req, res, next));
     router.get('/financial-health', middleware.auth.authenticate, (req, res, next) => authController.getFinancialHealth(req, res, next));
