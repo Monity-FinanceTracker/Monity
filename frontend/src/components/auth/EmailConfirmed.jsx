@@ -52,13 +52,19 @@ const EmailConfirmed = () => {
 
     if (status === 'checking') {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-                <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg text-center">
-                    <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600"></div>
-                    <h2 className="text-2xl font-bold text-gray-900">
+            <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] px-4 relative overflow-hidden">
+                {/* Animated Background */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                </div>
+
+                <div className="max-w-md w-full space-y-8 bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] text-center relative z-10">
+                    <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-[#262626] border-t-[#01C38D]"></div>
+                    <h2 className="text-2xl font-bold text-white">
                         {t('emailConfirmed.checking_title')}
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-gray-400">
                         {t('emailConfirmed.checking_subtitle')}
                     </p>
                 </div>
@@ -68,19 +74,26 @@ const EmailConfirmed = () => {
 
     if (status === 'error') {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-100 px-4">
-                <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+            <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] px-4 relative overflow-hidden">
+                {/* Animated Background */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-500/5 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-red-500/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                </div>
+
+                <div className="max-w-md w-full space-y-8 bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] relative z-10">
                     <div className="text-center">
-                        <div className="mx-auto h-20 w-20 bg-red-100 rounded-full flex items-center justify-center">
-                            <FaTimesCircle className="h-10 w-10 text-red-600" />
+                        <div className="mx-auto h-20 w-20 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/30">
+                            <FaTimesCircle className="h-10 w-10 text-red-400" />
                         </div>
                     </div>
 
                     <div className="text-center space-y-4">
-                        <h2 className="text-2xl font-bold text-gray-900">
+                        <h2 className="text-2xl font-bold text-white">
                             {t('emailConfirmed.error_title')}
                         </h2>
-                        <p className="text-gray-600">
+                        <div className="w-12 h-1 bg-gradient-to-r from-red-400 to-red-400/50 mx-auto rounded-full"></div>
+                        <p className="text-gray-400">
                             {t('emailConfirmed.error_subtitle')}
                         </p>
                     </div>
@@ -88,13 +101,13 @@ const EmailConfirmed = () => {
                     <div className="space-y-3">
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                            className="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:outline-none focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                         >
                             {t('emailConfirmed.go_to_login')}
                         </button>
                         <button
                             onClick={() => navigate('/confirm-email')}
-                            className="w-full px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                            className="w-full px-4 py-2 border border-[#262626] text-sm font-medium rounded-xl text-gray-300 bg-[#0A0A0A] hover:bg-[#1A1A1A] focus:outline-none focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300"
                         >
                             {t('emailConfirmed.resend_confirmation')}
                         </button>
@@ -105,19 +118,27 @@ const EmailConfirmed = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+        <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] px-4 relative overflow-hidden">
+            {/* Animated Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+            </div>
+
+            <div className="max-w-md w-full space-y-8 bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] relative z-10">
                 <div className="text-center">
-                    <div className="mx-auto h-20 w-20 bg-green-100 rounded-full flex items-center justify-center animate-bounce">
-                        <FaCheckCircle className="h-10 w-10 text-green-600" />
+                    <div className="mx-auto h-20 w-20 bg-[#01C38D]/10 rounded-full flex items-center justify-center border border-[#01C38D]/30 animate-bounce">
+                        <FaCheckCircle className="h-10 w-10 text-[#01C38D]" />
                     </div>
                 </div>
 
                 <div className="text-center space-y-4">
-                    <h2 className="text-3xl font-bold text-gray-900">
+                    <h2 className="text-3xl font-bold text-white">
                         {t('emailConfirmed.success_title')}
                     </h2>
-                    <p className="text-lg text-gray-600">
+                    <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
+                    <p className="text-lg text-gray-400">
                         {t('emailConfirmed.success_subtitle')}
                     </p>
                     <p className="text-sm text-gray-500">
@@ -125,15 +146,15 @@ const EmailConfirmed = () => {
                     </p>
                 </div>
 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <p className="text-sm text-green-700 text-center">
+                <div className="bg-[#01C38D]/5 border border-[#01C38D]/20 rounded-xl p-4">
+                    <p className="text-sm text-gray-300 text-center">
                         {t('emailConfirmed.can_access')}
                     </p>
                 </div>
 
                 <button
                     onClick={() => navigate('/')}
-                    className="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                    className="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:outline-none focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                 >
                     {t('emailConfirmed.go_to_dashboard')}
                 </button>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../context/AuthContext';
+import API from '../utils/api';
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 
 function AuthCallback() {
@@ -30,13 +31,29 @@ function AuthCallback() {
                 }
 
                 if (session) {
+                    // Inicializar conta (criar categorias padrão se necessário)
+                    try {
+                        await API.post('/auth/initialize');
+                    } catch (initError) {
+                        // Se erro ao inicializar, logar mas não bloquear
+                        console.error('Failed to initialize account:', initError);
+                    }
+
                     // Refresh subscription para o novo usuário
                     await refreshSubscription();
-                    
-                    // Redirecionar para dashboard
-                    navigate('/', { replace: true });
+
+                    // Verificar se veio de confirmação de email (type=signup) ou OAuth
+                    const type = searchParams.get('type');
+
+                    if (type === 'signup' || type === 'email') {
+                        // Redirecionar para página de email confirmado (mostra sucesso)
+                        navigate('/email-confirmed', { replace: true });
+                    } else {
+                        // OAuth ou outro tipo de login - ir direto para dashboard
+                        navigate('/', { replace: true });
+                    }
                 } else {
-                    setError('Não foi possível completar o login com Google');
+                    setError('Não foi possível completar o login');
                     setProcessing(false);
                 }
             } catch (err) {
@@ -77,7 +94,7 @@ function AuthCallback() {
                             </div>
                             
                             <h2 className="text-2xl font-bold text-white mb-2">Processando Login</h2>
-                            <p className="text-gray-400">Aguarde enquanto completamos seu login com Google...</p>
+                            <p className="text-gray-400">Aguarde enquanto completamos seu login...</p>
                         </div>
                     ) : error ? (
                         <div className="text-center">
