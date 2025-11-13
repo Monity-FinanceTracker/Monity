@@ -40,7 +40,7 @@ function EmailConfirmation() {
 
         try {
             const result = await resendConfirmationEmail();
-            
+
             if (result.success) {
                 setMessage('Email de confirmação enviado com sucesso! Verifique sua caixa de entrada.');
                 setCanResend(false);
@@ -48,7 +48,7 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao reenviar email');
             }
-        } catch (err) {
+        } catch {
             setError('Erro ao reenviar email. Tente novamente.');
         } finally {
             setLoading(false);
@@ -62,7 +62,7 @@ function EmailConfirmation() {
 
         try {
             const result = await checkEmailVerification();
-            
+
             if (result.success && result.verified) {
                 setMessage('Email confirmado com sucesso! Redirecionando...');
                 setTimeout(() => {
@@ -73,7 +73,7 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao verificar confirmação');
             }
-        } catch (err) {
+        } catch {
             setError('Erro ao verificar confirmação. Tente novamente.');
         } finally {
             setChecking(false);
