@@ -41,22 +41,51 @@ class AuthController {
 
             if (data.user) {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 logger.info('User registered successfully', { 
+=======
+                logger.info('User registered successfully', {
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
                     userId: data.user.id,
-                    email: data.user.email 
+                    email: data.user.email,
+                    emailConfirmed: data.user.email_confirmed_at !== null
                 });
 
-                // Criar categorias padrão de forma assíncrona
-                this.userModel.createDefaultCategories(data.user.id)
-                    .catch(err => logger.error('Failed to create default categories', { 
-                        userId: data.user.id, 
-                        error: err.message 
-                    }));
+                // Criar categorias padrão de forma assíncrona apenas se email já confirmado
+                // Se email não confirmado, categorias serão criadas após confirmação
+                if (data.user.email_confirmed_at) {
+                    this.userModel.createDefaultCategories(data.user.id)
+                        .catch(err => logger.error('Failed to create default categories', {
+                            userId: data.user.id,
+                            error: err.message
+                        }));
+                }
             }
 
-            res.status(201).json({ 
-                user: data.user, 
+            // Se email confirmation está habilitado, session será null
+            // Neste caso, instruir usuário a verificar o email
+            if (!data.session) {
+                logger.info('Email confirmation required', {
+                    userId: data.user.id,
+                    email: data.user.email
+                });
+
+                return res.status(201).json({
+                    user: {
+                        id: data.user.id,
+                        email: data.user.email
+                    },
+                    session: null,
+                    requiresEmailConfirmation: true,
+                    message: 'Conta criada! Por favor, verifique seu email para confirmar seu cadastro.'
+                });
+            }
+
+            // Email já confirmado ou confirmation desabilitado - retornar session
+            res.status(201).json({
+                user: data.user,
                 session: data.session,
+<<<<<<< HEAD
                 message: 'Conta criada com sucesso!' 
 =======
                 logger.info('User registered successfully', {
@@ -102,6 +131,10 @@ class AuthController {
                 requiresEmailConfirmation: false,
                 message: 'Conta criada com sucesso!'
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+                requiresEmailConfirmation: false,
+                message: 'Conta criada com sucesso!'
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
             });
 
         } catch (error) {
@@ -515,10 +548,14 @@ class AuthController {
                 email: email,
                 options: {
 <<<<<<< HEAD
+<<<<<<< HEAD
                     emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/verify`
 =======
                     emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?type=email`
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+                    emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?type=email`
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
                 }
             });
 
@@ -642,7 +679,10 @@ class AuthController {
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
      * Inicializa a conta do usuário após confirmação de email
      * Cria categorias padrão e retorna perfil do usuário
      */
@@ -707,7 +747,10 @@ class AuthController {
     }
 
     /**
+<<<<<<< HEAD
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
      * Middleware para verificar se o email do usuário está confirmado
      * Pode ser usado em rotas que exigem email confirmado
      */

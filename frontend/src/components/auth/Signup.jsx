@@ -40,6 +40,7 @@ function Signup() {
 
         try {
 <<<<<<< HEAD
+<<<<<<< HEAD
             const result = await signup(name, email, password);
             
             if (!result.success) {
@@ -62,6 +63,14 @@ function Signup() {
             // Redirect to email confirmation page
             navigate('/confirm-email', { state: { email } });
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+            const { error } = await signup(name, email, password);
+            if (error) {
+                throw new Error(error);
+            }
+            // Redirect to email confirmation page
+            navigate('/confirm-email', { state: { email } });
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
