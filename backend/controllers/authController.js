@@ -26,7 +26,8 @@ class AuthController {
                     data: {
                         role: 'user',
                         name: name
-                    }
+                    },
+                    emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?type=email`
                 }
             });
 
@@ -39,6 +40,7 @@ class AuthController {
             }
 
             if (data.user) {
+<<<<<<< HEAD
                 logger.info('User registered successfully', { 
                     userId: data.user.id,
                     email: data.user.email 
@@ -56,6 +58,50 @@ class AuthController {
                 user: data.user, 
                 session: data.session,
                 message: 'Conta criada com sucesso!' 
+=======
+                logger.info('User registered successfully', {
+                    userId: data.user.id,
+                    email: data.user.email,
+                    emailConfirmed: data.user.email_confirmed_at !== null
+                });
+
+                // Criar categorias padrão de forma assíncrona apenas se email já confirmado
+                // Se email não confirmado, categorias serão criadas após confirmação
+                if (data.user.email_confirmed_at) {
+                    this.userModel.createDefaultCategories(data.user.id)
+                        .catch(err => logger.error('Failed to create default categories', {
+                            userId: data.user.id,
+                            error: err.message
+                        }));
+                }
+            }
+
+            // Se email confirmation está habilitado, session será null
+            // Neste caso, instruir usuário a verificar o email
+            if (!data.session) {
+                logger.info('Email confirmation required', {
+                    userId: data.user.id,
+                    email: data.user.email
+                });
+
+                return res.status(201).json({
+                    user: {
+                        id: data.user.id,
+                        email: data.user.email
+                    },
+                    session: null,
+                    requiresEmailConfirmation: true,
+                    message: 'Conta criada! Por favor, verifique seu email para confirmar seu cadastro.'
+                });
+            }
+
+            // Email já confirmado ou confirmation desabilitado - retornar session
+            res.status(201).json({
+                user: data.user,
+                session: data.session,
+                requiresEmailConfirmation: false,
+                message: 'Conta criada com sucesso!'
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
             });
 
         } catch (error) {
@@ -468,7 +514,11 @@ class AuthController {
                 type: 'signup',
                 email: email,
                 options: {
+<<<<<<< HEAD
                     emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/verify`
+=======
+                    emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?type=email`
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
                 }
             });
 
@@ -591,6 +641,73 @@ class AuthController {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Inicializa a conta do usuário após confirmação de email
+     * Cria categorias padrão e retorna perfil do usuário
+     */
+    async initializeAccount(req, res) {
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                error: 'Autenticação necessária'
+            });
+        }
+
+        try {
+            logger.info('Initializing user account', { userId });
+
+            // Verificar se usuário já tem categorias (conta já foi inicializada)
+            const { data: existingCategories } = await this.supabase
+                .from('categories')
+                .select('id')
+                .eq('user_id', userId)
+                .limit(1);
+
+            // Se não tem categorias, criar as padrões
+            if (!existingCategories || existingCategories.length === 0) {
+                logger.info('Creating default categories for new user', { userId });
+                await this.userModel.createDefaultCategories(userId);
+            }
+
+            // Buscar perfil do usuário
+            const { data: profile, error: profileError } = await this.userModel.getById(userId);
+
+            if (profileError) {
+                logger.error('Failed to get user profile during initialization', {
+                    userId,
+                    error: profileError.message
+                });
+                return res.status(500).json({
+                    success: false,
+                    error: 'Erro ao buscar perfil do usuário'
+                });
+            }
+
+            logger.info('User account initialized successfully', { userId });
+
+            res.json({
+                success: true,
+                message: 'Conta inicializada com sucesso',
+                user: profile
+            });
+
+        } catch (error) {
+            logger.error('An unexpected error occurred during account initialization', {
+                userId,
+                error: error.message
+            });
+            res.status(500).json({
+                success: false,
+                error: 'Erro ao inicializar conta'
+            });
+        }
+    }
+
+    /**
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
      * Middleware para verificar se o email do usuário está confirmado
      * Pode ser usado em rotas que exigem email confirmado
      */

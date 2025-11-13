@@ -29,7 +29,8 @@
     "logging_in": "Entrando...",
     "invalid_credentials": "E-mail ou senha inválidos",
     "no_account": "Não tem uma conta?",
-    "signup": "Cadastre-se"
+    "signup": "Cadastre-se",
+    "forgot_password": "Esqueceu a Senha?"
   },
   "signupPage": {
     "slogan": "Bem-vindo de volta!",
@@ -52,6 +53,67 @@
     "failed": "Falha ao criar conta",
     "already_account": "Já tem uma conta?",
     "login": "Entrar"
+  },
+  "confirmEmail": {
+    "title": "Verifique seu e-mail",
+    "subtitle": "Enviamos um link de confirmação para",
+    "next_steps_title": "Próximos passos:",
+    "step_1": "Clique no link de confirmação no e-mail",
+    "step_2": "Você será redirecionado de volta para fazer login",
+    "step_3": "Comece a usar o Monity!",
+    "didnt_receive": "Não recebeu o e-mail?",
+    "resend_button": "Reenviar e-mail de confirmação",
+    "resending": "Enviando...",
+    "resend_success": "E-mail de confirmação enviado! Por favor, verifique sua caixa de entrada.",
+    "resend_error": "Falha ao reenviar e-mail. Por favor, tente novamente.",
+    "email_not_found": "Endereço de e-mail não encontrado. Por favor, tente se cadastrar novamente.",
+    "check_spam": "Verifique sua pasta de spam se não vir o e-mail. Para ajuda, entre em contato com o suporte.",
+    "already_confirmed": "Já confirmou? Entrar",
+    "back_to_login": "Voltar ao login"
+  },
+  "emailConfirmed": {
+    "checking_title": "Confirmando seu e-mail...",
+    "checking_subtitle": "Por favor, aguarde enquanto verificamos seu endereço de e-mail.",
+    "success_title": "E-mail Confirmado!",
+    "success_subtitle": "Seu e-mail foi verificado com sucesso.",
+    "redirecting": "Redirecionando para o painel em {{count}} segundos...",
+    "can_access": "Você agora pode acessar todos os recursos do Monity!",
+    "go_to_dashboard": "Ir para o Painel Agora",
+    "error_title": "Falha na Confirmação",
+    "error_subtitle": "Não conseguimos confirmar seu endereço de e-mail. O link pode ter expirado ou é inválido.",
+    "go_to_login": "Ir para Login",
+    "resend_confirmation": "Reenviar E-mail de Confirmação"
+  },
+  "forgotPassword": {
+    "title": "Esqueceu a Senha",
+    "subtitle": "Digite seu e-mail para receber instruções de redefinição",
+    "email": "Endereço de E-mail",
+    "send_reset_link": "Enviar Link de Redefinição",
+    "sending": "Enviando...",
+    "check_email": "Verifique seu e-mail",
+    "instructions_sent": "Enviamos instruções de redefinição de senha para",
+    "didnt_receive": "Não recebeu o e-mail?",
+    "resend": "Reenviar link de redefinição",
+    "back_to_login": "Voltar ao login",
+    "invalid_email": "Por favor, insira um endereço de e-mail válido",
+    "send_error": "Falha ao enviar e-mail de redefinição. Por favor, tente novamente.",
+    "check_spam": "Verifique sua pasta de spam se não vir o e-mail em alguns minutos."
+  },
+  "resetPassword": {
+    "title": "Redefinir Senha",
+    "subtitle": "Digite sua nova senha",
+    "new_password": "Nova Senha",
+    "confirm_password": "Confirmar Senha",
+    "reset_button": "Redefinir Senha",
+    "resetting": "Redefinindo...",
+    "success_title": "Senha Redefinida com Sucesso!",
+    "success_subtitle": "Você já pode fazer login com sua nova senha",
+    "go_to_login": "Ir para Login",
+    "error_title": "Falha na Redefinição",
+    "error_subtitle": "O link de redefinição pode ter expirado ou é inválido. Por favor, solicite um novo.",
+    "passwords_no_match": "As senhas não correspondem",
+    "password_too_weak": "A senha é muito fraca. Por favor, escolha uma senha mais forte.",
+    "can_login": "Você já pode fazer login com sua nova senha!"
   },
   "addExpense": {
     "title": "Adicionar Despesa",
