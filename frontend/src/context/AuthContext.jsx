@@ -196,19 +196,6 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const resendConfirmationEmail = async () => {
-    try {
-      const response = await API.post('/auth/resend-confirmation');
-      return { success: true, data: response.data };
-    } catch (error) {
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
-                          'Erro ao reenviar email';
-      return { success: false, error: errorMessage };
-    }
-  };
-
   const checkEmailVerification = async () => {
     try {
       const response = await API.get('/auth/check-verification');
