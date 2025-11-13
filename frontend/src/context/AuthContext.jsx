@@ -114,20 +114,40 @@ export function AuthProvider({ children }) {
         name,
         role,
       });
+<<<<<<< HEAD
       
       // Se sucesso, fazer login automaticamente
+=======
+
+      // Se email confirmation está habilitado, session será null
+      if (response.data.requiresEmailConfirmation) {
+        return {
+          success: true,
+          user: response.data.user,
+          requiresEmailConfirmation: true,
+          message: response.data.message
+        };
+      }
+
+      // Se sucesso e não requer confirmação, fazer login automaticamente
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
       if (response.data.user && response.data.session) {
         // Supabase session já foi criada pelo backend
         await supabase.auth.setSession({
           access_token: response.data.session.access_token,
           refresh_token: response.data.session.refresh_token,
         });
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
         // Clear caches para o novo usuário
         clearSubscriptionCache();
         queryClient.clear();
         await refreshSubscription();
       }
+<<<<<<< HEAD
       
       return { success: true, user: response.data.user };
     } catch (error) {
@@ -137,6 +157,69 @@ export function AuthProvider({ children }) {
                           error.message || 
                           'Erro ao criar conta';
       return { success: false, error: errorMessage };
+=======
+
+      return {
+        success: true,
+        user: response.data.user,
+        requiresEmailConfirmation: false
+      };
+    } catch (error) {
+      // Capturar mensagem de erro do backend
+      const errorMessage = error.response?.data?.error ||
+                          error.response?.data?.message ||
+                          error.message ||
+                          'Erro ao criar conta';
+      return { success: false, error: errorMessage };
+    }
+  };
+
+  const resendConfirmationEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to resend confirmation email' };
+    }
+  };
+
+  const isEmailConfirmed = () => {
+    if (!user) return false;
+    return user.email_confirmed_at != null;
+  };
+
+  const sendPasswordResetEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to send password reset email' };
+    }
+  };
+
+  const updatePassword = async (newPassword) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
     }
   };
 
@@ -148,6 +231,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+<<<<<<< HEAD
   const resendConfirmationEmail = async () => {
     try {
       const response = await API.post('/auth/resend-confirmation');
@@ -161,6 +245,8 @@ export function AuthProvider({ children }) {
     }
   };
 
+=======
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
   const checkEmailVerification = async () => {
     try {
       const response = await API.get('/auth/check-verification');
@@ -189,6 +275,12 @@ export function AuthProvider({ children }) {
     refreshSubscription,
     resendConfirmationEmail,
     checkEmailVerification,
+<<<<<<< HEAD
+=======
+    isEmailConfirmed,
+    sendPasswordResetEmail,
+    updatePassword,
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
   };
 
   return (
@@ -197,3 +289,6 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+// Re-export useAuth hook for convenience
+export { useAuth } from './useAuth';

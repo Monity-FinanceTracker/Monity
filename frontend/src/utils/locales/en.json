@@ -29,7 +29,8 @@
     "logging_in": "Logging in...",
     "invalid_credentials": "Invalid email or password",
     "no_account": "Don't have an account?",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "forgot_password": "Forgot Password?"
   },
   "signupPage": {
     "slogan": "Welcome Back!",
@@ -52,6 +53,67 @@
     "failed": "Failed to create account",
     "already_account": "Already have an account?",
     "login": "Login"
+  },
+  "confirmEmail": {
+    "title": "Check your email",
+    "subtitle": "We've sent a confirmation link to",
+    "next_steps_title": "Next steps:",
+    "step_1": "Click the confirmation link in the email",
+    "step_2": "You'll be redirected back to sign in",
+    "step_3": "Start using Monity!",
+    "didnt_receive": "Didn't receive the email?",
+    "resend_button": "Resend confirmation email",
+    "resending": "Sending...",
+    "resend_success": "Confirmation email sent! Please check your inbox.",
+    "resend_error": "Failed to resend email. Please try again.",
+    "email_not_found": "Email address not found. Please try signing up again.",
+    "check_spam": "Check your spam folder if you don't see the email. For help, contact support.",
+    "already_confirmed": "Already confirmed? Sign in",
+    "back_to_login": "Back to login"
+  },
+  "emailConfirmed": {
+    "checking_title": "Confirming your email...",
+    "checking_subtitle": "Please wait while we verify your email address.",
+    "success_title": "Email Confirmed!",
+    "success_subtitle": "Your email has been successfully verified.",
+    "redirecting": "Redirecting to dashboard in {{count}} seconds...",
+    "can_access": "You can now access all features of Monity!",
+    "go_to_dashboard": "Go to Dashboard Now",
+    "error_title": "Confirmation Failed",
+    "error_subtitle": "We couldn't confirm your email address. The link may have expired or is invalid.",
+    "go_to_login": "Go to Login",
+    "resend_confirmation": "Resend Confirmation Email"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "subtitle": "Enter your email to receive reset instructions",
+    "email": "Email Address",
+    "send_reset_link": "Send Reset Link",
+    "sending": "Sending...",
+    "check_email": "Check your email",
+    "instructions_sent": "We've sent password reset instructions to",
+    "didnt_receive": "Didn't receive the email?",
+    "resend": "Resend reset link",
+    "back_to_login": "Back to login",
+    "invalid_email": "Please enter a valid email address",
+    "send_error": "Failed to send reset email. Please try again.",
+    "check_spam": "Check your spam folder if you don't see the email within a few minutes."
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "subtitle": "Enter your new password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "reset_button": "Reset Password",
+    "resetting": "Resetting...",
+    "success_title": "Password Reset Successfully!",
+    "success_subtitle": "You can now login with your new password",
+    "go_to_login": "Go to Login",
+    "error_title": "Reset Failed",
+    "error_subtitle": "The reset link may have expired or is invalid. Please request a new one.",
+    "passwords_no_match": "Passwords do not match",
+    "password_too_weak": "Password is too weak. Please choose a stronger password.",
+    "can_login": "You can now login with your new password!"
   },
   "addExpense": {
     "title": "Add Expense",
