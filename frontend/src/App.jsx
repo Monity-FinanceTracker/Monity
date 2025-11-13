@@ -12,6 +12,10 @@ import {
   Sidebar,
   Login,
   Signup,
+  ConfirmEmail,
+  EmailConfirmed,
+  ForgotPassword,
+  ResetPassword,
   Spinner,
   UnifiedTopBar,
   NotificationProvider
@@ -49,7 +53,7 @@ import useLazyComponentPreloader from './hooks/useLazyComponentPreloader';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, isEmailConfirmed } = useAuth();
 
   if (loading) {
     return <Spinner />;
@@ -58,6 +62,12 @@ const ProtectedRoute = ({ children }) => {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  // Check if user's email is confirmed
+  if (!isEmailConfirmed()) {
+    return <Navigate to="/confirm-email" replace state={{ email: user.email }} />;
+  }
+
   return children;
 };
 
@@ -165,6 +175,13 @@ const App = React.memo(() => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/email-confirmation" element={<EmailConfirmation />} />
+<<<<<<< HEAD
+=======
+        <Route path="/confirm-email" element={<ConfirmEmail />} />
+        <Route path="/email-confirmed" element={<EmailConfirmed />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+>>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
         <Route path="/privacy" element={<Privace />} />
         <Route path="/terms" element={<Terms />} />
 
