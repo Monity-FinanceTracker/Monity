@@ -96,7 +96,6 @@ jobs:
             cd ~/Monity/backend
 
             echo "🔄 Pulling latest changes..."
-            git fetch origin
             git checkout main
             git pull origin main
 
