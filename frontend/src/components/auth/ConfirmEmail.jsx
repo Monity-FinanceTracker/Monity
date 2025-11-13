@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { FaEnvelope, FaCheckCircle, FaRedo } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 const ConfirmEmail = () => {
     const { t } = useTranslation();
     const location = useLocation();
-    const navigate = useNavigate();
     const { resendConfirmationEmail } = useAuth();
     const [isResending, setIsResending] = useState(false);
     const [resendStatus, setResendStatus] = useState(null);
@@ -34,7 +33,7 @@ const ConfirmEmail = () => {
             } else {
                 setResendError(error || t('confirmEmail.resend_error'));
             }
-        } catch (err) {
+        } catch {
             setResendError(t('confirmEmail.resend_error'));
         } finally {
             setIsResending(false);
