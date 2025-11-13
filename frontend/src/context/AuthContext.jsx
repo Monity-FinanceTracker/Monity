@@ -107,155 +107,57 @@ export function AuthProvider({ children }) {
 
   const signup = async (name, email, password, role = "user") => {
     try {
-      // Chamar nosso backend que tem validação de email
       const response = await API.post('/auth/register', {
         email,
         password,
         name,
         role,
       });
-<<<<<<< HEAD
-<<<<<<< HEAD
-      
-      // Se sucesso, fazer login automaticamente
-=======
-=======
->>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
 
-      // Se email confirmation está habilitado, session será null
       if (response.data.requiresEmailConfirmation) {
         return {
           success: true,
           user: response.data.user,
           requiresEmailConfirmation: true,
-          message: response.data.message
+          message: response.data.message,
         };
       }
 
-      // Se sucesso e não requer confirmação, fazer login automaticamente
-<<<<<<< HEAD
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
-=======
->>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
       if (response.data.user && response.data.session) {
-        // Supabase session já foi criada pelo backend
         await supabase.auth.setSession({
           access_token: response.data.session.access_token,
           refresh_token: response.data.session.refresh_token,
         });
-<<<<<<< HEAD
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
-=======
-
->>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
-        // Clear caches para o novo usuário
         clearSubscriptionCache();
         queryClient.clear();
         await refreshSubscription();
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
-      
-      return { success: true, user: response.data.user };
-=======
 
       return {
         success: true,
         user: response.data.user,
-        requiresEmailConfirmation: false
-      };
->>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
-    } catch (error) {
-      // Capturar mensagem de erro do backend
-      const errorMessage = error.response?.data?.error ||
-                          error.response?.data?.message ||
-                          error.message ||
-                          'Erro ao criar conta';
-      return { success: false, error: errorMessage };
-=======
-
-      return {
-        success: true,
-        user: response.data.user,
-        requiresEmailConfirmation: false
+        requiresEmailConfirmation: false,
       };
     } catch (error) {
-      // Capturar mensagem de erro do backend
       const errorMessage = error.response?.data?.error ||
-                          error.response?.data?.message ||
-                          error.message ||
-                          'Erro ao criar conta';
+        error.response?.data?.message ||
+        error.message ||
+        'Erro ao criar conta';
       return { success: false, error: errorMessage };
     }
   };
 
   const resendConfirmationEmail = async (email) => {
     try {
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email,
-      });
-
-      if (error) {
-        return { success: false, error: error.message };
-      }
-
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message || 'Failed to resend confirmation email' };
-    }
-  };
-
-  const isEmailConfirmed = () => {
-    if (!user) return false;
-    return user.email_confirmed_at != null;
-  };
-
-  const sendPasswordResetEmail = async (email) => {
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-
-      if (error) {
-        return { success: false, error: error.message };
-      }
-
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message || 'Failed to send password reset email' };
-    }
-  };
-
-  const updatePassword = async (newPassword) => {
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
-
-    if (error) {
-      throw new Error(error.message);
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
-    }
-  };
-
-  const resendConfirmationEmail = async (email) => {
-    try {
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email,
-      });
-
-      if (error) {
-        return { success: false, error: error.message };
-      }
-
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message || 'Failed to resend confirmation email' };
+      const response = await API.post('/auth/resend-confirmation', { email });
+      return { success: true, data: response.data };
+    } catch (error) {
+      const errorMessage = error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        'Erro ao reenviar email';
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -291,45 +193,27 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    // Clear all caches before logging out
     clearSubscriptionCache();
-    queryClient.clear(); // Clear React Query cache
+    queryClient.clear();
     await supabase.auth.signOut();
     setUser(null);
   };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  const resendConfirmationEmail = async () => {
+  const checkEmailVerification = async (email) => {
     try {
-      const response = await API.post('/auth/resend-confirmation');
-      return { success: true, data: response.data };
-    } catch (error) {
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
-                          'Erro ao reenviar email';
-      return { success: false, error: errorMessage };
-    }
-  };
-
-=======
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
-=======
->>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
-  const checkEmailVerification = async () => {
-    try {
-      const response = await API.get('/auth/check-verification');
-      return { 
-        success: true, 
+      const response = await API.get('/auth/check-verification', {
+        params: { email },
+      });
+      return {
+        success: true,
         verified: response.data?.verified || false,
-        data: response.data 
+        data: response.data,
       };
     } catch (error) {
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
-                          'Erro ao verificar email';
+      const errorMessage = error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        'Erro ao verificar email';
       return { success: false, error: errorMessage, verified: false };
     }
   };
@@ -345,18 +229,9 @@ export function AuthProvider({ children }) {
     refreshSubscription,
     resendConfirmationEmail,
     checkEmailVerification,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     isEmailConfirmed,
     sendPasswordResetEmail,
     updatePassword,
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
-=======
-    isEmailConfirmed,
-    sendPasswordResetEmail,
-    updatePassword,
->>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
   };
 
   return (
