@@ -1,61 +1,51 @@
-import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
-import GoogleOAuthButton from './GoogleOAuthButton';
 
-function Signup() {
+function ResetPassword() {
     const { t } = useTranslation();
-    const [searchParams] = useSearchParams();
-    const premium = searchParams.get('premium') === 'true';
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { updatePassword } = useAuth();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
     const [focusedField, setFocusedField] = useState('');
-    const navigate = useNavigate();
-    const { signup } = useAuth();
+    const [countdown, setCountdown] = useState(3);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
+    // Check if we have access_token in URL (from Supabase email link)
+    useEffect(() => {
+        const params = new URLSearchParams(location.hash.substring(1)); // Remove # and parse
+        const accessToken = params.get('access_token');
 
-        if (password !== confirmPassword) {
-            setError(t('signupPage.passwords_no_match'));
-            setLoading(false);
-            return;
+        if (!accessToken) {
+            setError(t('resetPassword.error_subtitle'));
         }
+    }, [location, t]);
 
-        if (getPasswordStrength(password).score < 2) {
-            setError(t('signupPage.password_too_weak'));
-            setLoading(false);
-            return;
+    useEffect(() => {
+        if (success) {
+            const timer = setInterval(() => {
+                setCountdown((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(timer);
+                        navigate('/login');
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+
+            return () => clearInterval(timer);
         }
-
-        try {
-            const { error } = await signup(name, email, password);
-            if (error) {
-                throw new Error(error);
-            }
-            // Redirect to email confirmation page
-            navigate('/confirm-email', { state: { email } });
-        } catch (err) {
-            // Fallback para erros inesperados
-            setError(err.message || t('signupPage.failed'));
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const isValidEmail = (email) => {
-        return /\S+@\S+\.\S+/.test(email);
-    };
+    }, [success, navigate]);
 
     const getPasswordStrength = (password) => {
         let score = 0;
@@ -82,6 +72,81 @@ function Signup() {
     const passwordStrength = getPasswordStrength(password);
     const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (password !== confirmPassword) {
+            setError(t('resetPassword.passwords_no_match'));
+            return;
+        }
+
+        if (passwordStrength.score < 2) {
+            setError(t('resetPassword.password_too_weak'));
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            await updatePassword(password);
+            setSuccess(true);
+        } catch (err) {
+            setError(err.message || t('resetPassword.error_subtitle'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Success state
+    if (success) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
+                {/* Animated Background */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                </div>
+
+                <div className="relative z-10 w-full max-w-md">
+                    <div className="bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626]">
+                        <div className="text-center">
+                            <div className="mx-auto h-20 w-20 bg-[#01C38D]/10 rounded-full flex items-center justify-center border border-[#01C38D]/30 animate-bounce mb-6">
+                                <FaCheckCircle className="h-10 w-10 text-[#01C38D]" />
+                            </div>
+                        </div>
+
+                        <div className="text-center space-y-4 mb-6">
+                            <h2 className="text-3xl font-bold text-white">
+                                {t('resetPassword.success_title')}
+                            </h2>
+                            <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
+                            <p className="text-lg text-gray-400">
+                                {t('resetPassword.success_subtitle')}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                                {t('emailConfirmed.redirecting', { count: countdown })}
+                            </p>
+                        </div>
+
+                        <div className="bg-[#01C38D]/5 border border-[#01C38D]/20 rounded-xl p-4 mb-6">
+                            <p className="text-sm text-gray-300 text-center">
+                                {t('resetPassword.can_login')}
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={() => navigate('/login')}
+                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                        >
+                            {t('resetPassword.go_to_login')}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
             {/* Animated Background Elements */}
@@ -93,32 +158,21 @@ function Signup() {
 
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
-                {/* Monity Logo with Animation */}
+                {/* Monity Logo */}
                 <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
                     <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
                     <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
                 </div>
 
-                {/* Signup Card with Enhanced Design */}
+                {/* Reset Password Card */}
                 <div className="bg-[#171717] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
-                    {/* Premium Badge */}
-                    {premium && (
-                        <div className="mb-4 p-3 bg-gradient-to-r from-[#01C38D]/10 to-[#01a87a]/10 border border-[#01C38D]/30 rounded-xl">
-                            <div className="flex items-center justify-center gap-2 text-[#01C38D]">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <span className="font-semibold text-sm">Sign up for Premium</span>
-                            </div>
-                        </div>
-                    )}
-
                     <div className="text-center mb-6">
-                        <h2 className="text-2xl font-bold text-white mb-2">{t('signupPage.create_account')}</h2>
-                        <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
+                        <h2 className="text-2xl font-bold text-white mb-2">{t('resetPassword.title')}</h2>
+                        <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full mb-4"></div>
+                        <p className="text-gray-400 text-sm">{t('resetPassword.subtitle')}</p>
                     </div>
 
-                    {/* Error Message with Better Styling */}
+                    {/* Error Message */}
                     {error && (
                         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center backdrop-blur-sm animate-shake">
                             <div className="flex items-center justify-center text-sm">
@@ -131,78 +185,10 @@ function Signup() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        {/* Enhanced Name Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="name" className="block text-gray-300 font-medium text-sm">
-                                {t('signupPage.name')}
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                </div>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    onFocus={() => setFocusedField('name')}
-                                    onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'name' ? 'border-[#01C38D]' : 'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
-                                    placeholder="Your full name"
-                                    required
-                                />
-                                {name && name.length >= 2 && (
-                                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                        <svg className="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Enhanced Email Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="block text-gray-300 font-medium text-sm">
-                                {t('signupPage.email')}
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                                    </svg>
-                                </div>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    onFocus={() => setFocusedField('email')}
-                                    onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'email' ? 'border-[#01C38D]' : 'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
-                                    placeholder="your@email.com"
-                                    required
-                                />
-                                {email && isValidEmail(email) && (
-                                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                        <svg className="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Enhanced Password Input with Strength Indicator */}
+                        {/* New Password Input */}
                         <div className="space-y-2">
                             <label htmlFor="password" className="block text-gray-300 font-medium text-sm">
-                                {t('signupPage.password')}
+                                {t('resetPassword.new_password')}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -226,7 +212,6 @@ function Signup() {
                                 <div
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
-                                    title={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -245,7 +230,7 @@ function Signup() {
                                 <div className="mt-2 space-y-2">
                                     <div className="flex items-center space-x-2">
                                         <div className="flex-1 bg-gray-700 rounded-full h-1.5">
-                                            <div 
+                                            <div
                                                 className={`h-full rounded-full transition-all duration-300 ${
                                                     passwordStrength.score === 0 ? 'bg-red-500 w-1/5' :
                                                     passwordStrength.score === 1 ? 'bg-red-400 w-2/5' :
@@ -263,10 +248,10 @@ function Signup() {
                             )}
                         </div>
 
-                        {/* Enhanced Confirm Password Input */}
+                        {/* Confirm Password Input */}
                         <div className="space-y-2">
                             <label htmlFor="confirmPassword" className="block text-gray-300 font-medium text-sm">
-                                {t('signupPage.confirm_password')}
+                                {t('resetPassword.confirm_password')}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -282,7 +267,7 @@ function Signup() {
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
                                     className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'confirmPassword' ? 'border-[#01C38D]' : 
+                                        focusedField === 'confirmPassword' ? 'border-[#01C38D]' :
                                         confirmPassword && !passwordsMatch ? 'border-red-400' :
                                         'border-gray-300'
                                     } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
@@ -292,7 +277,6 @@ function Signup() {
                                 <div
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
-                                    title={showConfirmPassword ? "Hide password" : "Show password"}
                                 >
                                     {showConfirmPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -326,7 +310,7 @@ function Signup() {
                             )}
                         </div>
 
-                        {/* Enhanced Submit Button */}
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg mt-6"
@@ -338,70 +322,18 @@ function Signup() {
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    {t('signupPage.creating')}
+                                    {t('resetPassword.resetting')}
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center">
-                                    <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                                    </svg>
-                                    {t('signupPage.signup')}
-                                </div>
+                                t('resetPassword.reset_button')
                             )}
                         </button>
                     </form>
-
-                    {/* OAuth Divider */}
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-700"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-[#171717] text-gray-400">{t('common.or') || 'ou'}</span>
-                        </div>
-                    </div>
-
-                    {/* Google OAuth Button */}
-                    <GoogleOAuthButton onError={(err) => setError(err)} />
-
-                    {/* Enhanced Login Link */}
-                    <div className="mt-6 text-center">
-                        <Link 
-                            to="/login" 
-                            className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
-                        >
-                            {t('signupPage.login')}
-                            <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Footer with Privacy Policy and Terms Links */}
-                <div className="mt-8 text-center">
-                    <a 
-                        href="/privacy" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
-                    >
-                        Privacy Policy
-                    </a>
-                    <span className="text-gray-600 mx-3">•</span>
-                    <a 
-                        href="/terms" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
-                    >
-                        Terms of Service
-                    </a>
                 </div>
             </div>
 
             {/* Custom CSS for animations */}
-            <style>{`
+            <style jsx>{`
                 @keyframes fade-in-up {
                     from {
                         opacity: 0;
@@ -412,21 +344,21 @@ function Signup() {
                         transform: translateY(0);
                     }
                 }
-                
+
                 @keyframes shake {
                     0%, 100% { transform: translateX(0); }
                     25% { transform: translateX(-5px); }
                     75% { transform: translateX(5px); }
                 }
-                
+
                 .animate-fade-in-up {
                     animation: fade-in-up 0.6s ease-out;
                 }
-                
+
                 .delay-200 {
                     animation-delay: 200ms;
                 }
-                
+
                 .animate-shake {
                     animation: shake 0.5s ease-in-out;
                 }
@@ -435,4 +367,4 @@ function Signup() {
     );
 }
 
-export default Signup; 
+export default ResetPassword;

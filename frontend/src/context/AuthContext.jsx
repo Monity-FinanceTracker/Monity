@@ -140,6 +140,54 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const resendConfirmationEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to resend confirmation email' };
+    }
+  };
+
+  const isEmailConfirmed = () => {
+    if (!user) return false;
+    return user.email_confirmed_at != null;
+  };
+
+  const sendPasswordResetEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to send password reset email' };
+    }
+  };
+
+  const updatePassword = async (newPassword) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  };
+
   const logout = async () => {
     // Clear all caches before logging out
     clearSubscriptionCache();
@@ -189,6 +237,9 @@ export function AuthProvider({ children }) {
     refreshSubscription,
     resendConfirmationEmail,
     checkEmailVerification,
+    isEmailConfirmed,
+    sendPasswordResetEmail,
+    updatePassword,
   };
 
   return (

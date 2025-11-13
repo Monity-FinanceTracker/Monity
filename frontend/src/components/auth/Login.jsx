@@ -151,6 +151,16 @@ function Login() {
                             </div>
                         </div>
 
+                        {/* Forgot Password Link */}
+                        <div className="text-right">
+                            <Link
+                                to="/forgot-password"
+                                className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                            >
+                                {t('loginPage.forgot_password')}
+                            </Link>
+                        </div>
+
                         {/* Enhanced Submit Button */}
                         <button
                             type="submit"
