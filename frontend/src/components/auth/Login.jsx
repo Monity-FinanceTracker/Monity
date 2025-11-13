@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/useAuth';
+import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
@@ -149,6 +149,16 @@ function Login() {
                                     )}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Forgot Password Link */}
+                        <div className="text-right">
+                            <Link
+                                to="/forgot-password"
+                                className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                            >
+                                {t('loginPage.forgot_password')}
+                            </Link>
                         </div>
 
                         {/* Enhanced Submit Button */}
