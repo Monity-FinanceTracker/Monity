@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useAuth } from '../context/useAuth';
 =======
 import { useAuth } from '../context/AuthContext';
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+import { useAuth } from '../context/AuthContext';
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 
@@ -44,12 +48,17 @@ function EmailConfirmation() {
 
         try {
 <<<<<<< HEAD
+<<<<<<< HEAD
             const result = await resendConfirmationEmail();
             
 =======
             const result = await resendConfirmationEmail(email);
 
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+            const result = await resendConfirmationEmail(email);
+
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
             if (result.success) {
                 setMessage('Email de confirmação enviado com sucesso! Verifique sua caixa de entrada.');
                 setCanResend(false);
@@ -58,11 +67,15 @@ function EmailConfirmation() {
                 setError(result.error || 'Erro ao reenviar email');
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
         } catch (error) {
             console.error('Erro ao reenviar email:', error);
 =======
         } catch {
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+        } catch {
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
             setError('Erro ao reenviar email. Tente novamente.');
         } finally {
             setLoading(false);
@@ -77,10 +90,14 @@ function EmailConfirmation() {
         try {
             const result = await checkEmailVerification();
 <<<<<<< HEAD
+<<<<<<< HEAD
             
 =======
 
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
             if (result.success && result.verified) {
                 setMessage('Email confirmado com sucesso! Redirecionando...');
                 setTimeout(() => {
@@ -92,11 +109,15 @@ function EmailConfirmation() {
                 setError(result.error || 'Erro ao verificar confirmação');
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
         } catch (error) {
             console.error('Erro ao verificar confirmação:', error);
 =======
         } catch {
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+        } catch {
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
             setError('Erro ao verificar confirmação. Tente novamente.');
         } finally {
             setChecking(false);

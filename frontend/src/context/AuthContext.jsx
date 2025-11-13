@@ -115,9 +115,12 @@ export function AuthProvider({ children }) {
         role,
       });
 <<<<<<< HEAD
+<<<<<<< HEAD
       
       // Se sucesso, fazer login automaticamente
 =======
+=======
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
 
       // Se email confirmation está habilitado, session será null
       if (response.data.requiresEmailConfirmation) {
@@ -130,7 +133,10 @@ export function AuthProvider({ children }) {
       }
 
       // Se sucesso e não requer confirmação, fazer login automaticamente
+<<<<<<< HEAD
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
       if (response.data.user && response.data.session) {
         // Supabase session já foi criada pelo backend
         await supabase.auth.setSession({
@@ -138,23 +144,36 @@ export function AuthProvider({ children }) {
           refresh_token: response.data.session.refresh_token,
         });
 <<<<<<< HEAD
+<<<<<<< HEAD
         
 =======
 
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
         // Clear caches para o novo usuário
         clearSubscriptionCache();
         queryClient.clear();
         await refreshSubscription();
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
       
       return { success: true, user: response.data.user };
+=======
+
+      return {
+        success: true,
+        user: response.data.user,
+        requiresEmailConfirmation: false
+      };
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
     } catch (error) {
       // Capturar mensagem de erro do backend
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
+      const errorMessage = error.response?.data?.error ||
+                          error.response?.data?.message ||
+                          error.message ||
                           'Erro ao criar conta';
       return { success: false, error: errorMessage };
 =======
@@ -223,6 +242,54 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const resendConfirmationEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to resend confirmation email' };
+    }
+  };
+
+  const isEmailConfirmed = () => {
+    if (!user) return false;
+    return user.email_confirmed_at != null;
+  };
+
+  const sendPasswordResetEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to send password reset email' };
+    }
+  };
+
+  const updatePassword = async (newPassword) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  };
+
   const logout = async () => {
     // Clear all caches before logging out
     clearSubscriptionCache();
@@ -231,6 +298,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   const resendConfirmationEmail = async () => {
     try {
@@ -247,6 +315,8 @@ export function AuthProvider({ children }) {
 
 =======
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
   const checkEmailVerification = async () => {
     try {
       const response = await API.get('/auth/check-verification');
@@ -276,11 +346,17 @@ export function AuthProvider({ children }) {
     resendConfirmationEmail,
     checkEmailVerification,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     isEmailConfirmed,
     sendPasswordResetEmail,
     updatePassword,
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+    isEmailConfirmed,
+    sendPasswordResetEmail,
+    updatePassword,
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
   };
 
   return (

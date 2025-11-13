@@ -176,12 +176,18 @@ const App = React.memo(() => {
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/email-confirmation" element={<EmailConfirmation />} />
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
         <Route path="/confirm-email" element={<ConfirmEmail />} />
         <Route path="/email-confirmed" element={<EmailConfirmed />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+<<<<<<< HEAD
 >>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+=======
+>>>>>>> 358f1f6517ea7c6b697ad4b44c8a7e1bbbaac84f
         <Route path="/privacy" element={<Privace />} />
         <Route path="/terms" element={<Terms />} />
 
