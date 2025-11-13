@@ -1,31 +1,79 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="google-site-verification" content="wvkQ65r7sHdnMxDIfL-yR2kV5b-HYo9K9X4ttWB7A_U" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet"></noscript>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"></noscript>
-    <link rel="icon" type="image/png" href="/monity-logo.png" />
-    <link rel="apple-touch-icon" href="/monity-logo.png" />
-    <link rel="logo" type="image" href="/monity-logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google-site-verification" content="aMuD-GwkqZ6oFHQ-gwNClGunVHPX09fgIWlhPm8rsBw" />
-    <link rel="stylesheet" href="src/index.css">
-    <style>
-      /* Critical CSS for initial render */
-      body { margin: 0; background: #0A0A0A; color: white; font-family: 'DM Sans', sans-serif; }
-      #root { min-height: 100vh; }
-      .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #01C38D; border-radius: 50%; animation: spin 1s linear infinite; }
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-    <title>Monity</title>
-  </head>
-  <body class="font-sans">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="google-site-verification" content="wvkQ65r7sHdnMxDIfL-yR2kV5b-HYo9K9X4ttWB7A_U" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  </noscript>
+  <link rel="icon" type="image/png" href="/monity-logo.png" />
+  <link rel="apple-touch-icon" href="/monity-logo.png" />
+  <link rel="logo" type="image" href="/monity-logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="src/index.css">
+  <style>
+    /* Critical CSS for initial render */
+    body {
+      margin: 0;
+      background: #0A0A0A;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    #root {
+      min-height: 100vh;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #01C38D;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <title>Monity</title>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17721604470"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17721604470');
+</script>
+
+<body class="font-sans">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
