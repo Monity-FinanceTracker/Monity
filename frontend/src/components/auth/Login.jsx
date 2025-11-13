@@ -213,11 +213,7 @@ function Login() {
                     </div>
                 </div>
 
-<<<<<<< HEAD
                 {/* Footer with Privacy Policy and Terms Links */}
-=======
-                {/* Footer with Privacy Policy Link */}
->>>>>>> 078423915422c927683e5db10bb574ac45d07565
                 <div className="mt-8 text-center">
                     <a 
                         href="/privacy" 
@@ -227,7 +223,6 @@ function Login() {
                     >
                         Privacy Policy
                     </a>
-<<<<<<< HEAD
                     <span className="text-gray-600 mx-3">•</span>
                     <a 
                         href="/terms" 
@@ -237,8 +232,6 @@ function Login() {
                     >
                         Terms of Service
                     </a>
-=======
->>>>>>> 078423915422c927683e5db10bb574ac45d07565
                 </div>
             </div>
 
