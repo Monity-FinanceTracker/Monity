@@ -114,29 +114,91 @@ export function AuthProvider({ children }) {
         name,
         role,
       });
-      
-      // Se sucesso, fazer login automaticamente
+
+      // Se email confirmation está habilitado, session será null
+      if (response.data.requiresEmailConfirmation) {
+        return {
+          success: true,
+          user: response.data.user,
+          requiresEmailConfirmation: true,
+          message: response.data.message
+        };
+      }
+
+      // Se sucesso e não requer confirmação, fazer login automaticamente
       if (response.data.user && response.data.session) {
         // Supabase session já foi criada pelo backend
         await supabase.auth.setSession({
           access_token: response.data.session.access_token,
           refresh_token: response.data.session.refresh_token,
         });
-        
+
         // Clear caches para o novo usuário
         clearSubscriptionCache();
         queryClient.clear();
         await refreshSubscription();
       }
-      
-      return { success: true, user: response.data.user };
+
+      return {
+        success: true,
+        user: response.data.user,
+        requiresEmailConfirmation: false
+      };
     } catch (error) {
       // Capturar mensagem de erro do backend
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
+      const errorMessage = error.response?.data?.error ||
+                          error.response?.data?.message ||
+                          error.message ||
                           'Erro ao criar conta';
       return { success: false, error: errorMessage };
+    }
+  };
+
+  const resendConfirmationEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to resend confirmation email' };
+    }
+  };
+
+  const isEmailConfirmed = () => {
+    if (!user) return false;
+    return user.email_confirmed_at != null;
+  };
+
+  const sendPasswordResetEmail = async (email) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to send password reset email' };
+    }
+  };
+
+  const updatePassword = async (newPassword) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      throw new Error(error.message);
     }
   };
 
@@ -146,19 +208,6 @@ export function AuthProvider({ children }) {
     queryClient.clear(); // Clear React Query cache
     await supabase.auth.signOut();
     setUser(null);
-  };
-
-  const resendConfirmationEmail = async () => {
-    try {
-      const response = await API.post('/auth/resend-confirmation');
-      return { success: true, data: response.data };
-    } catch (error) {
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
-                          'Erro ao reenviar email';
-      return { success: false, error: errorMessage };
-    }
   };
 
   const checkEmailVerification = async () => {
@@ -189,6 +238,9 @@ export function AuthProvider({ children }) {
     refreshSubscription,
     resendConfirmationEmail,
     checkEmailVerification,
+    isEmailConfirmed,
+    sendPasswordResetEmail,
+    updatePassword,
   };
 
   return (
@@ -197,3 +249,6 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+// Re-export useAuth hook for convenience
+export { useAuth } from './useAuth';
