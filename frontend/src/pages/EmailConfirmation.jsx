@@ -39,7 +39,7 @@ function EmailConfirmation() {
         setMessage('');
 
         try {
-            const result = await resendConfirmationEmail();
+            const result = await resendConfirmationEmail(email);
 
             if (result.success) {
                 setMessage('Email de confirmação enviado com sucesso! Verifique sua caixa de entrada.');

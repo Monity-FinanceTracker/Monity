@@ -235,3 +235,6 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+// Re-export useAuth hook for convenience
+export { useAuth } from './useAuth';
