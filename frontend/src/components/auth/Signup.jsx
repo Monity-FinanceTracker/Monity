@@ -39,12 +39,25 @@ function Signup() {
         }
 
         try {
-            const { error } = await signup(name, email, password);
-            if (error) {
-                throw new Error(error);
+            const result = await signup(name, email, password);
+
+            if (!result.success) {
+                setError(result.error || t('signupPage.failed'));
+                setLoading(false);
+                return;
             }
-            // Redirect to email confirmation page
-            navigate('/confirm-email', { state: { email } });
+
+            if (result.requiresEmailConfirmation) {
+                navigate('/email-confirmation', {
+                    state: { email },
+                    replace: true
+                });
+                return;
+            }
+
+            // Se não requer confirmação, direcionar para dashboard
+            navigate('/', { replace: true });
+
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
