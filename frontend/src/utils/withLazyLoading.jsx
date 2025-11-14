@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { memo, lazy, Suspense, useEffect, useState } from 'react';
 import Spinner from '../components/ui/Spinner';
 

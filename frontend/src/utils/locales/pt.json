@@ -1131,13 +1131,15 @@
   },
   "subscription": {
     "loading": "Carregando...",
+    "current_plan": "Seu plano atual",
+    "manage_plan": "Gerencie sua assinatura",
     "premium_member": "Membro Premium",
     "upgrade_available": "Upgrade Disponível",
     "premium_title": "Você está no Premium!",
     "upgrade_title": "Assuma o Controle de Suas Finanças",
     "premium_subtitle": "Aproveite acesso ilimitado a todos os recursos Monity e insights de IA.",
     "upgrade_subtitle": "Desbloqueie ferramentas e insights poderosos para alcançar seus objetivos financeiros mais rápido.",
-    "premium_active": "Premium Ativo",
+    "premium_active": "Sua assinatura Premium está ativa",
     "full_access": "Você tem acesso completo a todos os recursos",
     "features": {
       "unlimited_ai": "Assistente Financeiro de IA Ilimitado",
@@ -1173,6 +1175,7 @@
       "full_access": "Acesso Completo",
       "simulations_per_month": "{{count}} simulações/mês"
     },
+    "cancel_subscription": "Cancelar assinatura",
     "cta": {
       "ready_to_upgrade": "Pronto para aprimorar suas finanças?",
       "join_thousands": "Junte-se a milhares de usuários gerenciando seu dinheiro de forma mais inteligente com Premium.",

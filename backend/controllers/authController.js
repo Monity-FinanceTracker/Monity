@@ -40,7 +40,7 @@ class AuthController {
             }
 
             if (data.user) {
-                logger.info('User registered successfully', {
+                logger.info('User registered successfully', { 
                     userId: data.user.id,
                     email: data.user.email,
                     emailConfirmed: data.user.email_confirmed_at !== null
