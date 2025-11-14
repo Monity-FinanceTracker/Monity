@@ -242,4 +242,5 @@ export function AuthProvider({ children }) {
 }
 
 // Re-export useAuth hook for convenience
+// eslint-disable-next-line react-refresh/only-export-components
 export { useAuth } from './useAuth';
