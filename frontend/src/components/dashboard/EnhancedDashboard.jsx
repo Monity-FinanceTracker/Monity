@@ -115,8 +115,8 @@ const EnhancedDashboard = () => {
                                 <div
                                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                         transaction.typeId === 1
-                                            ? 'bg-red-500/20 text-red-400'
-                                            : 'bg-green-500/20 text-green-400'
+                                            ? 'bg-[#FAF9F5]/20'
+                                            : 'bg-[#56a69f]/20'
                                     }`}
                                 >
                                     {transaction.typeId === 1 ? (
