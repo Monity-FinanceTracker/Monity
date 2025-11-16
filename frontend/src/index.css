@@ -1,6 +1,14 @@
 /* Fonts are loaded via HTML preload for better performance */
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Stratford';
+  src: url('./assets/fonts/stratford.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Responsive text handling */
 * {
   word-wrap: break-word;
@@ -58,6 +66,23 @@ input[type="date"]::-webkit-inner-spin-button,
 input[type="date"]::-webkit-clear-button {
     display: none !important;
     -webkit-appearance: none !important;
+}
+
+/* Fix browser autofill background color on dark theme inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #262624 inset !important;
+  box-shadow: 0 0 0 1000px #262624 inset !important;
+  -webkit-text-fill-color: #fcfaf5 !important;
+  caret-color: #fcfaf5 !important;
+  transition: background-color 9999s ease-out 0s;
 }
 
 /* Custom Scrollbar Styling - Applied to ALL scrollbars */
