@@ -24,7 +24,7 @@ const CustomSelect = ({
             <select
                 value={value}
                 onChange={onChange}
-                className={`w-full bg-[#171717] border border-[#262626] text-white rounded-xl px-4 py-3 focus:ring-0 focus:ring-transparent focus:border-[#01C38D] transition-all appearance-none cursor-pointer font-sans text-sm font-medium ${
+                className={`w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl px-4 py-3 focus:ring-0 focus:ring-transparent focus:border-[#56a69f] transition-all appearance-none cursor-pointer font-sans text-sm font-medium ${
                     leftIcon ? 'pl-10' : 'pl-4'
                 } pr-14 ${className}`}
                 style={{

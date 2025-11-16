@@ -36,6 +36,7 @@ const Savings = lazy(() => import('./components/ui/Savings'));
 const CashFlowCalendar = lazy(() => import('./components/cashFlow/CashFlowCalendar'));
 const AIAssistantPage = lazy(() => import('./components/ai/AIAssistantPage'));
 const InvestmentCalculator = lazy(() => import('./components/investment/InvestmentCalculator'));
+const GroupsInfo = lazy(() => import('./components/groups/GroupsInfo'));
 
 // Import lazy components with optimized loading
 import {
@@ -130,8 +131,8 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
   }, [preloadCriticalComponents]);
 
   return (
-    <div className="flex min-h-screen bg-[#0A0A0A] font-sans">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#01C38D] text-[#232323] p-2 z-50 rounded">
+    <div className="flex min-h-screen bg-[#262624] font-sans">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#56a69f] text-[#1F1E1D] p-2 z-50 rounded">
         Skip to main content
       </a>
       {/* Sidebar - Full height */}
@@ -219,6 +220,7 @@ const App = React.memo(() => {
         <Route path="/ai-assistant" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><AIAssistantPage /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/investment-calculator" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><InvestmentCalculator /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroups /></MainLayout></ViewOnlyRoute>} />
+        <Route path="/groups/info" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><GroupsInfo /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyCreateGroup /></MainLayout></ProtectedRoute>} />
         <Route path="/groups/:id" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroupPage /></MainLayout></ViewOnlyRoute>} />
 

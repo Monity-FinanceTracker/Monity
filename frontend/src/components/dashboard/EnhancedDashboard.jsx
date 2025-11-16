@@ -6,7 +6,7 @@ import { get } from '../../utils/api';
 import { formatCurrency, getAmountColor } from '../../utils/currency';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
-import { Icon } from '../../utils/iconMapping.jsx';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 
 /**
@@ -47,68 +47,31 @@ const EnhancedDashboard = () => {
         }
     };
 
-    const quickActions = [
-        {
-            id: 'add-expense',
-            title: t('quickActions.add_expense'),
-            description: t('quickActions.add_expense_desc'),
-            icon: <Icon name="CreditCard" size="xl" className="text-white" />,
-            color: 'from-red-500 to-red-600',
-            path: '/add-expense',
-            shortcut: 'E'
-        },
-        {
-            id: 'add-income',
-            title: t('quickActions.add_income'),
-            description: t('quickActions.add_income_desc'),
-            icon: <Icon name="TrendingUp" size="xl" className="text-white" />,
-            color: 'from-green-500 to-green-600',
-            path: '/add-income',
-            shortcut: 'I'
-        },
-        {
-            id: 'view-transactions',
-            title: t('quickActions.view_transactions'),
-            description: t('quickActions.view_transactions_desc'),
-            icon: <Icon name="BarChart3" size="xl" className="text-white" />,
-            color: 'from-blue-500 to-blue-600',
-            path: '/transactions',
-            shortcut: 'T'
-        },
-        {
-            id: 'manage-budgets',
-            title: t('quickActions.manage_budgets'),
-            description: t('quickActions.manage_budgets_desc'),
-            icon: <Icon name="Target" size="xl" className="text-white" />,
-            color: 'from-purple-500 to-purple-600',
-            path: '/budgets',
-            shortcut: 'B'
-        }
-    ];
-
     // Enhanced card wrapper with loading states
     const EnhancedCard = ({ children, title, subtitle, accent, isLoading = false, action, className = '' }) => {
         return (
-            <div className={`bg-[#171717] border border-[#262626] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${className}`}>
+            <div className={`bg-[#1F1E1D] border border-[#262626] rounded-xl hover:border-[#3a3a3a] transition-all duration-200 ${className}`}>
                 <div className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 className={`text-sm font-medium ${accent}`}>{title}</h3>
-                            {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
+                    <div className="flex items-start justify-between mb-6">
+                        <div className="flex-1 text-left">
+                            <h3 className={`text-xl font-bold ${accent || 'text-white'} mb-1`}>{title}</h3>
+                            {subtitle && <p className="text-gray-400 text-sm">{subtitle}</p>}
                         </div>
                         {action && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center">
                                 {action}
                             </div>
                         )}
                     </div>
                     
                     {isLoading ? (
-                        <div className="flex justify-center items-center h-32">
-                            <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
+                        <div className="flex justify-center items-center min-h-[120px]">
+                            <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#56a69f] animate-spin"></div>
                         </div>
                     ) : (
-                        children
+                        <div className="w-full text-left">
+                            {children}
+                        </div>
                     )}
                 </div>
             </div>
@@ -124,7 +87,7 @@ const EnhancedDashboard = () => {
             action={
                 <Link
                     to="/transactions"
-                    className="text-[#01C38D] hover:text-[#01A071] text-sm font-medium"
+                    className="text-[#56a69f] hover:text-[#4a8f88] text-sm font-medium"
                 >
                     {t('dashboard.view_all')} →
                 </Link>
@@ -141,14 +104,14 @@ const EnhancedDashboard = () => {
                                 <div
                                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                         transaction.typeId === 1
-                                            ? 'bg-red-500/20 text-red-400'
-                                            : 'bg-green-500/20 text-green-400'
+                                            ? 'bg-[#FAF9F5]/20'
+                                            : 'bg-[#56a69f]/20'
                                     }`}
                                 >
                                     {transaction.typeId === 1 ? (
-                                        <Icon name="CreditCard" size="sm" className="text-red-400" />
+                                        <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
                                     ) : (
-                                        <Icon name="TrendingUp" size="sm" className="text-green-400" />
+                                        <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                                     )}
                                 </div>
                                 <div className="flex flex-col items-start text-left">
@@ -171,47 +134,13 @@ const EnhancedDashboard = () => {
                         </div>
                     ))
                 ) : (
-                    <div className="text-center py-8">
+                    <div className="text-left py-8">
                         <p className="text-gray-400">{t('dashboard.no_recent_transactions')}</p>
-                        <Link to="/add-expense" className="text-[#01C38D] hover:text-[#01A071] text-sm font-medium mt-2 inline-block">
+                        <Link to="/add-expense" className="text-[#56a69f] hover:text-[#4a8f88] text-sm font-medium mt-2 inline-block">
                             {t('dashboard.add_first_transaction')}
                         </Link>
                     </div>
                 )}
-            </div>
-        </EnhancedCard>
-    );
-
-    // Quick actions grid
-    const QuickActionsGrid = () => (
-        <EnhancedCard
-            title={t('dashboard.quick_actions')}
-            subtitle={t('dashboard.quick_actions_desc')}
-            accent="text-[#01C38D]"
-        >
-            <div className="grid grid-cols-2 gap-4">
-                {quickActions.map((action) => (
-                    <Link
-                        key={action.id}
-                        to={action.path}
-                        className={`group relative overflow-hidden rounded-xl bg-gradient-to-r ${action.color} p-4 hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg`}
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className="text-2xl">{action.icon}</div>
-                            <div className="flex-1">
-                                <h4 className="text-white font-medium text-sm">{action.title}</h4>
-                                <p className="text-white/80 text-xs mt-1">{action.description}</p>
-                            </div>
-                        </div>
-                        
-                        {/* Keyboard shortcut hint */}
-                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="bg-white/20 text-white text-xs px-2 py-1 rounded">
-                                ⌘{action.shortcut}
-                            </span>
-                        </div>
-                    </Link>
-                ))}
             </div>
         </EnhancedCard>
     );
@@ -235,30 +164,31 @@ const EnhancedDashboard = () => {
                 </div>
             </div>
 
-            {/* Financial Overview Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <EnhancedCard 
-                    title={t('dashboardPage.balance_card_title')} 
-                    accent="text-[#01C38D]"
-                    isLoading={isLoading}
-                >
+            {/* Balance Card - Full Width */}
+            <EnhancedCard 
+                title={t('dashboardPage.balance_card_title')} 
+                accent="text-[#56a69f]"
+                isLoading={isLoading}
+                className="w-full"
+            >
+                <div className="text-left">
                     <BalanceCard selectedRange="all_time" />
-                </EnhancedCard>
+                </div>
+            </EnhancedCard>
 
+            {/* Recent Transactions and Savings Goals - Side by Side */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <RecentTransactionsPreview />
 
                 <SavingsOverviewCard />
             </div>
-
-            {/* Quick Actions */}
-            <QuickActionsGrid />
 
             {/* Detailed Charts */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <EnhancedCard 
                     title={t('dashboardPage.balance_per_month_title')} 
                     subtitle={t('dashboard.balance_chart_desc')}
-                    accent="text-[#01C38D]"
+                    accent="text-[#56a69f]"
                     isLoading={isLoading}
                     className="xl:col-span-1"
                 >
@@ -267,7 +197,7 @@ const EnhancedDashboard = () => {
 
                 <EnhancedCard 
                     title={t('dashboardPage.expense_chart_title')} 
-                    accent="text-red-400"
+                    accent="text-[#FAF9F5]"
                     isLoading={isLoading}
                 >
                     <LazyExpenseChart selectedRange="all_time" />

@@ -48,8 +48,8 @@ function Settings() {
     };
 
     return (
-        <div className="bg-[#171717] p-4 md:p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold text-[#01C38D] mb-6">{t('settingsPage.title')}</h2>
+        <div className="bg-[#1F1E1D] p-4 md:p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-bold text-[#56a69f] mb-6">{t('settingsPage.title')}</h2>
             {/* Language Toggle */}
             <div className="flex flex-col items-center mb-8">
                 <h3 className="text-xl font-semibold text-white mb-4">{t('settingsPage.language_selection', 'Change Language')}</h3>
@@ -68,7 +68,7 @@ function Settings() {
                             id="currentPassword"
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
+                            className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#56a69f] focus:border-[#56a69f]"
                             required
                         />
                     </div>
@@ -79,7 +79,7 @@ function Settings() {
                             id="newPassword"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
+                            className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#56a69f] focus:border-[#56a69f]"
                             required
                         />
                     </div>
@@ -90,13 +90,13 @@ function Settings() {
                             id="confirmNewPassword"
                             value={confirmNewPassword}
                             onChange={(e) => setConfirmNewPassword(e.target.value)}
-                            className="w-full bg-[#171717] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#01C38D] focus:border-[#01C38D]"
+                            className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-[#56a69f] focus:border-[#56a69f]"
                             required
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-lg hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 transition-all disabled:opacity-50"
+                        className="w-full bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 text-white py-3 rounded-lg hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 transition-all disabled:opacity-50"
                         disabled={loading}
                     >
                         {loading ? t('settingsPage.changing_password') : t('settingsPage.change_password_button')}

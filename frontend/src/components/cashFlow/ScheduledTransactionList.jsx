@@ -76,7 +76,7 @@ const ScheduledTransactionList = ({ onUpdate }) => {
 
   if (loading) {
     return (
-      <div className="bg-[#171717] rounded-xl border border-[#262626] p-6">
+      <div className="bg-[#1F1E1D] rounded-xl border border-[#262626] p-6">
         <div className="text-center text-gray-400">{t('common.loading')}</div>
       </div>
     );
@@ -84,7 +84,7 @@ const ScheduledTransactionList = ({ onUpdate }) => {
 
   return (
     <>
-      <div className="bg-[#171717] rounded-xl border border-[#262626]">
+      <div className="bg-[#1F1E1D] rounded-xl border border-[#262626]">
         <div className="p-6 border-b border-[#262626]">
           <h2 className="text-lg font-bold text-white">{t('cashFlow.scheduled_list_title')}</h2>
           <p className="text-sm text-gray-400 mt-1">{t('cashFlow.scheduled_list_subtitle')}</p>
@@ -105,11 +105,11 @@ const ScheduledTransactionList = ({ onUpdate }) => {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <div className={`w-2 h-2 rounded-full ${
-                        transaction.typeId === 2 ? 'bg-green-400' : 'bg-red-400'
+                        transaction.typeId === 2 ? 'bg-[#56a69f]' : 'bg-red-400'
                       }`} />
                       <h3 className="font-semibold text-white">{transaction.description}</h3>
                       <span className={`text-sm font-bold ${
-                        transaction.typeId === 2 ? 'text-green-400' : 'text-red-400'
+                        transaction.typeId === 2 ? 'text-[#56a69f]' : 'text-red-400'
                       }`}>
                         {transaction.typeId === 2 ? '+' : '-'}
                         {new Intl.NumberFormat('pt-BR', {
@@ -129,7 +129,7 @@ const ScheduledTransactionList = ({ onUpdate }) => {
                         <span>{getRecurrenceText(transaction)}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="text-xs px-2 py-1 bg-[#01C38D]/10 text-[#01C38D] rounded">
+                        <span className="text-xs px-2 py-1 bg-[#56a69f]/10 text-[#56a69f] rounded">
                           {transaction.category}
                         </span>
                       </div>
@@ -139,7 +139,7 @@ const ScheduledTransactionList = ({ onUpdate }) => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleEdit(transaction)}
-                      className="p-2 text-gray-400 hover:text-[#01C38D] hover:bg-[#01C38D]/10 rounded-lg transition-colors"
+                      className="p-2 text-gray-400 hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
                       title={t('common.edit')}
                     >
                       <Edit className="w-4 h-4" />

@@ -137,7 +137,7 @@ function Login() {
                                 />
                                 <div
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                     title={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? (
@@ -190,7 +190,7 @@ function Login() {
                     <div className="mt-4 text-center">
                         <Link
                             to="/signup"
-                            className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
+                            className="inline-flex items-center justify-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 group"
                         >
                             {t('loginPage.signup')}
                             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -206,7 +206,7 @@ function Login() {
                         href="/privacy" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Privacy Policy
                     </a>
@@ -215,7 +215,7 @@ function Login() {
                         href="/terms" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Terms of Service
                     </a>

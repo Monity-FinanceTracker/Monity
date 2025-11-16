@@ -118,8 +118,8 @@ function Signup() {
                 <div className="p-5 rounded-2xl transform animate-fade-in-up delay-200">
                     {/* Premium Badge */}
                     {premium && (
-                        <div className="mb-4 p-3 bg-gradient-to-r from-[#01C38D]/10 to-[#01a87a]/10 border border-[#01C38D]/30 rounded-xl">
-                            <div className="flex items-center justify-center gap-2 text-[#01C38D]">
+                        <div className="mb-4 p-3 bg-gradient-to-r from-[#56a69f]/10 to-[#01a87a]/10 border border-[#56a69f]/30 rounded-xl">
+                            <div className="flex items-center justify-center gap-2 text-[#56a69f]">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
@@ -229,7 +229,7 @@ function Signup() {
                                 />
                                 <div
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                     title={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? (
@@ -291,7 +291,7 @@ function Signup() {
                                 />
                                 <div
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                     title={showConfirmPassword ? "Hide password" : "Show password"}
                                 >
                                     {showConfirmPassword ? (
@@ -363,7 +363,7 @@ function Signup() {
                     <div className="mt-4 text-center">
                         <Link 
                             to="/login" 
-                            className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
+                            className="inline-flex items-center justify-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 group"
                         >
                             {t('signupPage.login')}
                             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -379,7 +379,7 @@ function Signup() {
                         href="/privacy" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Privacy Policy
                     </a>
@@ -388,7 +388,7 @@ function Signup() {
                         href="/terms" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Terms of Service
                     </a>
