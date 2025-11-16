@@ -170,23 +170,23 @@ const AddTransaction = ({ type = 'expense' }) => {
     const filteredCategories = categories.filter(c => c.typeId === currentConfig.typeId);
 
     return (
-        <div className="min-h-screen bg-[#0A0A0A] p-4 md:p-6">
-            <div className="max-w-2xl mx-auto">
+        <div className="min-h-[calc(100vh-80px)] bg-[#0A0A0A] px-3 py-2 sm:px-4 sm:py-3 flex flex-col -mb-4 sm:-mb-6">
+            <div className="max-w-2xl mx-auto flex-1 flex flex-col">
                 {/* Header Section */}
-                <div className="text-center mb-8">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${currentConfig.gradient} rounded-2xl mb-4 shadow-lg`}>
-                        <Icon className="text-white text-2xl" />
+                <div className="text-center mb-4">
+                    <div className={`inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r ${currentConfig.gradient} rounded-xl mb-3 shadow-lg`}>
+                        <Icon className="text-white text-lg" />
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                    <h1 className="text-2xl md:text-3xl font-semibold text-white mb-1">
                         {t(`${currentConfig.translationKey}.title`)}
                     </h1>
-                    <p className="text-gray-400 text-lg">
+                    <p className="text-gray-400 text-sm md:text-base">
                         {t(`${currentConfig.translationKey}.subtitle`)}
                     </p>
                 </div>
 
                 {/* Add Transaction Form */}
-                <div className={`bg-[#171717] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all ${shakeForm ? 'animate-shake' : ''}`}>
+                <div className={`bg-[#171717] px-4 pt-3 pb-1 sm:px-5 sm:pt-4 sm:pb-1 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all flex flex-col flex-1 ${shakeForm ? 'animate-shake' : ''}`}>
                     <style>{`
                         @keyframes shake {
                             0%, 100% { transform: translateX(0); }
@@ -211,156 +211,160 @@ const AddTransaction = ({ type = 'expense' }) => {
                         }
                     `}</style>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Description Input */}
-                        <div className="space-y-2">
-                            <label className="block text-white font-medium text-sm uppercase tracking-wide">
-                                {t(`${currentConfig.translationKey}.description_label`)}
-                            </label>
-                            <div className="relative">
-                                <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
-                                <input
-                                    className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500`}
-                                    placeholder={t(`${currentConfig.translationKey}.description`)}
-                                    value={transaction.description}
-                                    onChange={e => setTransaction(prev => ({ ...prev, description: e.target.value }))}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="relative">
-                                <FaMoneyBillWave className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]`}
-                                    placeholder={t(`${currentConfig.translationKey}.amount`)}
-                                    value={transaction.amount}
-                                    onChange={e => setTransaction(prev => ({ ...prev, amount: e.target.value }))}
-                                    required
-                                />
-                                {/* Custom spinner arrows */}
-                                <div className="absolute top-1/2 right-3 -translate-y-1/2 flex flex-col gap-0.5">
-                                    <button
-                                        type="button"
-                                        onClick={() => setTransaction(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
-                                        className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
-                                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
-                                    >
-                                        <FaChevronUp className="w-3 h-3 text-white stroke-2" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setTransaction(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
-                                        className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
-                                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
-                                    >
-                                        <FaChevronDown className="w-3 h-3 text-white stroke-2" />
-                                    </button>
+                    <form onSubmit={handleSubmit} className="flex flex-col h-full justify-between">
+                        <div className="space-y-6 overflow-y-auto pr-1 flex-1">
+                            {/* Description Input */}
+                            <div className="space-y-3">
+                                <label className="block text-white font-medium text-[11px] uppercase tracking-wide">
+                                    {t(`${currentConfig.translationKey}.description_label`)}
+                                </label>
+                                <div className="relative">
+                                    <FaStickyNote className="absolute top-1/2 left-3 -translate-y-1/2 text-white text-sm" />
+                                    <input
+                                        className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl py-2.5 px-3 pl-9 text-sm ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500`}
+                                        placeholder={t(`${currentConfig.translationKey}.description`)}
+                                        value={transaction.description}
+                                        onChange={e => setTransaction(prev => ({ ...prev, description: e.target.value }))}
+                                        required
+                                    />
                                 </div>
                             </div>
-                            <div className="relative">
-                                <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
-                                <input
-                                    type="date"
-                                    className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4`}
-                                    value={transaction.date}
-                                    onChange={e => setTransaction(prev => ({ ...prev, date: e.target.value }))}
-                                    required
-                                />
-                            </div>
-                        </div>
-                        
-                        <div className="relative">
-                            <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-white z-10" />
-                            <select
-                                className={`w-full bg-[#232323] border ${showCategoryError ? 'border-red-500' : 'border-[#262626]'} text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium`}
-                                style={{
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    fontSize: '14px',
-                                    fontWeight: '500'
-                                }}
-                                value={transaction.categoryName}
-                                onChange={e => {
-                                    setTransaction(prev => ({ ...prev, categoryName: e.target.value }));
-                                    setShowCategoryError(false);
-                                }}
-                            >
-                                <option 
-                                    value="" 
-                                    className="bg-[#232323] text-white font-medium"
-                                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
-                                >
-                                    {filteredCategories.length === 0 
-                                        ? t('addTransaction.no_categories_available')
-                                        : t(`${currentConfig.translationKey}.select_category`)
-                                    }
-                                </option>
-                                {filteredCategories.map(category => (
-                                    <option 
-                                        key={category.id} 
-                                        value={category.name} 
-                                        className="bg-[#232323] text-white font-medium"
-                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
-                                    >
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                        </div>
 
-                        {/* Error Alert - No Categories */}
-                        {showCategoryError && (
-                            <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-4 animate-fadeIn">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="text-red-400 font-semibold mb-1">
-                                            {t('addTransaction.no_category_alert_title')}
-                                        </h3>
-                                        <p className="text-red-300 text-sm mb-3">
-                                            {t('addTransaction.no_category_alert_message')}
-                                        </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="relative">
+                                    <FaMoneyBillWave className="absolute top-1/2 left-3 -translate-y-1/2 text-white text-sm" />
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl py-2.5 px-3 pl-9 pr-10 text-sm ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]`}
+                                        placeholder={t(`${currentConfig.translationKey}.amount`)}
+                                        value={transaction.amount}
+                                        onChange={e => setTransaction(prev => ({ ...prev, amount: e.target.value }))}
+                                        required
+                                    />
+                                    {/* Custom spinner arrows */}
+                                    <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
                                         <button
                                             type="button"
-                                            onClick={() => setShowAddCategoryModal(true)}
-                                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors font-medium text-sm flex items-center gap-2"
+                                            onClick={() => setTransaction(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                         >
-                                            <FaPlus className="text-xs" />
-                                            {t('addTransaction.create_category_now')}
+                                            <FaChevronUp className="w-2.5 h-2.5 text-white stroke-2" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setTransaction(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                        >
+                                            <FaChevronDown className="w-2.5 h-2.5 text-white stroke-2" />
                                         </button>
                                     </div>
                                 </div>
+                                <div className="relative">
+                                    <FaCalendarAlt className="absolute top-1/2 left-3 -translate-y-1/2 text-white text-sm" />
+                                    <input
+                                        type="date"
+                                        className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl py-2.5 px-3 pl-9 text-sm ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:w-3 [&::-webkit-calendar-picker-indicator]:h-3`}
+                                        value={transaction.date}
+                                        onChange={e => setTransaction(prev => ({ ...prev, date: e.target.value }))}
+                                        required
+                                    />
+                                </div>
                             </div>
-                        )}
+                            
+                            <div className="relative">
+                                <FaListUl className="absolute top-1/2 left-3 -translate-y-1/2 text-white z-10 text-sm" />
+                                <select
+                                    className={`w-full bg-[#232323] border ${showCategoryError ? 'border-red-500' : 'border-[#262626]'} text-white rounded-xl py-2.5 px-3 pl-9 pr-9 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 appearance-none cursor-pointer font-sans text-xs md:text-sm font-medium`}
+                                    style={{
+                                        fontFamily: "'DM Sans', sans-serif",
+                                        fontSize: '13px',
+                                        fontWeight: '500'
+                                    }}
+                                    value={transaction.categoryName}
+                                    onChange={e => {
+                                        setTransaction(prev => ({ ...prev, categoryName: e.target.value }));
+                                        setShowCategoryError(false);
+                                    }}
+                                >
+                                    <option 
+                                        value="" 
+                                        className="bg-[#232323] text-white font-medium"
+                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '13px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
+                                    >
+                                        {filteredCategories.length === 0 
+                                            ? t('addTransaction.no_categories_available')
+                                            : t(`${currentConfig.translationKey}.select_category`)
+                                        }
+                                    </option>
+                                    {filteredCategories.map(category => (
+                                        <option 
+                                            key={category.id} 
+                                            value={category.name} 
+                                        className="bg-[#232323] text-white font-medium"
+                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '13px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
+                                        >
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
 
-                        {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            variant={currentConfig.buttonVariant}
-                            size="lg"
-                            fullWidth
-                            loading={loading}
-                            disabled={loading}
-                            leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
-                            style={{ justifyContent: 'center' }}
-                        >
-                            {loading 
-                                ? t(`${currentConfig.translationKey}.adding`) 
-                                : t(`${currentConfig.translationKey}.add_${type}`)
-                            }
-                        </Button>
+                            {/* Error Alert - No Categories */}
+                            {showCategoryError && (
+                                <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-3 animate-fadeIn text-sm">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-red-400 font-semibold mb-1 text-sm">
+                                                {t('addTransaction.no_category_alert_title')}
+                                            </h3>
+                                            <p className="text-red-300 text-xs mb-2">
+                                                {t('addTransaction.no_category_alert_message')}
+                                            </p>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowAddCategoryModal(true)}
+                                                className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors font-medium text-xs flex items-center gap-2"
+                                            >
+                                                <FaPlus className="text-xs" />
+                                                {t('addTransaction.create_category_now')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Submit Button - fixed at bottom of card */}
+                        <div className="pt-2">
+                            <Button
+                                type="submit"
+                                variant={currentConfig.buttonVariant}
+                                size="md"
+                                fullWidth
+                                loading={loading}
+                                disabled={loading}
+                                leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
+                                style={{ justifyContent: 'center' }}
+                            >
+                                {loading 
+                                    ? t(`${currentConfig.translationKey}.adding`) 
+                                    : t(`${currentConfig.translationKey}.add_${type}`)
+                                }
+                            </Button>
+                        </div>
                     </form>
                 </div>
             </div>

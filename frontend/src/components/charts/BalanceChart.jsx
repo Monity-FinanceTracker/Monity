@@ -12,16 +12,25 @@ import {
 import Spinner from '../ui/Spinner';
 import { get } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/useAuth';
   
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function BalanceChart({ selectedRange }){
     const { t } = useTranslation();
+    const { user } = useAuth();
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!user) {
+            setHistory([]);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
         if (selectedRange === 'current_month') {
             setLoading(false);
             return;
@@ -77,7 +86,11 @@ function BalanceChart({ selectedRange }){
             }
         };
         fetchChartData();
-    }, [selectedRange, t]);
+    }, [selectedRange, t, user]);
+
+    if (!user) {
+        return <p className="text-center text-gray-400">{t('balanceChart.loginToView', 'Faça login para ver o gráfico de saldo.')}</p>;
+    }
 
     if (loading) {
         return <Spinner message={t('balanceChart.loading')} />

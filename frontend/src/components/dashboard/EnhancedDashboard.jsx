@@ -25,27 +25,32 @@ const EnhancedDashboard = () => {
     // Removed activeQuickAction state to prevent unnecessary re-renders on hover
 
     useEffect(() => {
-        fetchDashboardData();
-    }, []);
-
-    const fetchDashboardData = async () => {
-        try {
-            // Fetch only the 3 most recent transactions (optimized query)
-            const { data: transactions } = await get('/transactions?limit=3');
-            const recentTransactions = Array.isArray(transactions)
-                ? transactions
-                : [];
-
-            setDashboardData(prev => ({
-                ...prev,
-                recentTransactions
-            }));
-        } catch (error) {
-            console.error('Error fetching dashboard data:', error);
-        } finally {
+        if (!user) {
             setIsLoading(false);
+            return;
         }
-    };
+
+        const fetchDashboardData = async () => {
+            try {
+                // Fetch only the 3 most recent transactions (optimized query)
+                const { data: transactions } = await get('/transactions?limit=3');
+                const recentTransactions = Array.isArray(transactions)
+                    ? transactions
+                    : [];
+
+                setDashboardData(prev => ({
+                    ...prev,
+                    recentTransactions
+                }));
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, [user]);
 
     const quickActions = [
         {
@@ -131,7 +136,13 @@ const EnhancedDashboard = () => {
             }
         >
             <div className="space-y-3">
-                {dashboardData.recentTransactions.length > 0 ? (
+                {!user ? (
+                    <div className="text-center py-8">
+                        <p className="text-gray-400">
+                            {t('dashboard.login_to_view_data', 'Faça login para ver suas últimas transações.')}
+                        </p>
+                    </div>
+                ) : dashboardData.recentTransactions.length > 0 ? (
                     dashboardData.recentTransactions.map((transaction, index) => (
                         <div
                             key={transaction.id || index}

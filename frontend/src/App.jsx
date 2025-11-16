@@ -155,8 +155,13 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
         </div>
 
         {/* Main content */}
-        <main id="main-content" className="flex-1 p-4 sm:p-6 content-container overflow-x-hidden relative">
-          {children}
+        <main
+          id="main-content"
+          className="flex-1 px-4 sm:px-6 pt-4 sm:pt-6 pb-1 sm:pb-2 content-container overflow-x-hidden relative"
+        >
+          <div className={isUnauthenticated ? 'pointer-events-none opacity-60' : ''}>
+            {children}
+          </div>
           {isUnauthenticated && <BlockingAuthModal />}
         </main>
       </div>

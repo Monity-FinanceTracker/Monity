@@ -182,8 +182,8 @@ const SavingsGoals = () => {
             </div>
 
             {isModalOpen && !isLimited && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6">
+                <div className="fixed inset-0 bg-black/50 flex items-start md:items-center justify-center z-50 p-4 overflow-y-auto">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6 mt-10 mb-10 max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('savings_goals.add_new_goal_modal_title')}</h2>
                             <CloseButton onClick={() => setIsModalOpen(false)} />
