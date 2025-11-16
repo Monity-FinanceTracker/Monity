@@ -63,8 +63,8 @@ const Dropdown = ({
                 className={`
                     w-full h-12 border border-[#262626] text-white rounded-xl px-4 
                     focus:ring-0 focus:ring-transparent focus:border-[#56a69f] transition-all 
-                    cursor-pointer font-sans text-base font-medium flex items-center justify-between
-                    ${leftIcon ? 'pl-10' : 'pl-4'} pr-4
+                    cursor-pointer font-sans text-base font-medium flex items-center
+                    ${leftIcon ? 'pl-10' : 'pl-4'} pr-10
                     ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#56a69f]'}
                 `}
                 style={{
@@ -80,19 +80,20 @@ const Dropdown = ({
                     </div>
                 )}
                 
-                <span className="text-left">
+                <span className="text-left flex-1">
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
                 
                 <svg 
-                    className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                    className={`absolute top-1/2 right-2 -translate-y-1/2 w-4 h-4 text-gray-400 transition-transform duration-200 ${
                         isOpen ? 'rotate-180' : 'rotate-0'
                     }`} 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
+                    strokeWidth={2}
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
 
