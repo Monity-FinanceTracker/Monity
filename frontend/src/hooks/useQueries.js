@@ -8,7 +8,9 @@ import { queryKeys } from '../lib/queryClient';
  */
 
 // Balance Queries
-export const useBalance = (selectedRange = 'all_time') => {
+export const useBalance = (selectedRange = 'all_time', options = {}) => {
+  const { enabled = true } = options;
+
   return useQuery({
     queryKey: selectedRange === 'all_time' 
       ? queryKeys.balance.allTime() 
@@ -30,6 +32,7 @@ export const useBalance = (selectedRange = 'all_time') => {
     },
     select: (data) => data?.balance || 0,
     staleTime: 2 * 60 * 1000, // 2 minutes for balance data
+    enabled,
   });
 };
 

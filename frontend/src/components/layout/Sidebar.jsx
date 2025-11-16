@@ -522,7 +522,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
                   style={{ background: 'transparent', border: 'none', outline: 'none' }}
                 >
-                  <ArrowDownCircle className="w-5 h-5 text-[#FAF9F5]" />
+                  <ArrowDownCircle className="w-5 h-5 text-red-500" />
                   <div>
                     <div className="text-white text-sm font-medium">Adicionar Despesa</div>
                     <div className="text-gray-400 text-xs">Registrar nova despesa</div>
