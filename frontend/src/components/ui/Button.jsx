@@ -6,7 +6,7 @@ import React, { memo } from 'react';
  * DESIGN PRINCIPLE: All buttons have WHITE TEXT with NO BACKGROUND by default
  * Only action buttons (submit, save) should have colored backgrounds
  * 
- * @param {string} variant - 'default' (white text) | 'action' (green bg) | 'danger' (red text) | 'dangerAction' (red bg)
+ * @param {string} variant - 'default' (white text) | 'action' (green bg) | 'danger' (red text) | 'dangerAction' (red bg) | 'successAction' (green bg)
  * @param {string} size - 'xs' | 'sm' | 'md' | 'lg' | 'xl'
  * @param {boolean} loading - Shows spinner when true
  * @param {boolean} fullWidth - Makes button full width
@@ -37,14 +37,17 @@ const Button = memo(({
     danger: 'text-monity-error hover:text-red-300',
     
     // Danger Action: Red background (for critical destructive actions)
-    dangerAction: 'bg-red-600 text-white hover:bg-red-700',
+    dangerAction: 'bg-red-800 text-white hover:bg-red-500',
     
+    // Success Action: Green background (for income, positive actions)
+    successAction: 'bg-green-700 text-white hover:bg-green-600',
+
     // Legacy support (maps old variants to new system)
     primary: 'bg-monity-accent text-monity-textPrimary hover:bg-monity-accentHover',  // maps to 'action'
     secondary: 'text-monity-textPrimary hover:text-monity-accent',           // maps to 'default'
     ghost: 'text-monity-textPrimary hover:text-monity-accent',               // maps to 'default'
     minimal: 'text-monity-textPrimary hover:text-monity-accent',             // maps to 'default'
-    success: 'bg-monity-accent text-monity-textPrimary hover:bg-monity-accentHover',  // maps to 'action'
+    success: 'bg-green-500 text-white hover:bg-green-600',  // Green background for income actions
     outline: 'text-monity-textPrimary hover:text-monity-accent'              // maps to 'default' (NO BORDERS!)
   };
   
