@@ -166,7 +166,7 @@ function Signup() {
                                     onChange={(e) => setName(e.target.value)}
                                     onFocus={() => setFocusedField('name')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#1F1E1C] border ${
+                                    className={`w-full bg-[#262624] border ${
                                         focusedField === 'name' ? 'border-gray-400' : 'border-gray-400'
                                     } text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="Your full name"
@@ -200,7 +200,7 @@ function Signup() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setFocusedField('email')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#1F1E1C] border ${
+                                    className={`w-full bg-[#262624] border ${
                                         focusedField === 'email' ? 'border-gray-400' : 'border-gray-400'
                                     } text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="your@email.com"
@@ -234,7 +234,7 @@ function Signup() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setFocusedField('password')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#1F1E1C] border ${
+                                    className={`w-full bg-[#262624] border ${
                                         focusedField === 'password' ? 'border-gray-400' : 'border-gray-400'
                                     } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
@@ -298,7 +298,7 @@ function Signup() {
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#1F1E1C] border ${
+                                    className={`w-full bg-[#262624] border ${
                                         focusedField === 'confirmPassword' ? 'border-gray-400' : 
                                         confirmPassword && !passwordsMatch ? 'border-red-400' :
                                         'border-gray-400'

@@ -97,7 +97,7 @@ function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setEmailFocused(true)}
                                     onBlur={() => setEmailFocused(false)}
-                                    className={`w-full bg-[#1F1E1C] border ${
+                                    className={`w-full bg-[#262624] border ${
                                         emailFocused ? 'border-gray-400' : 'border-gray-400'
                                     } text-white rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="your@email.com"
@@ -140,7 +140,7 @@ function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setPasswordFocused(true)}
                                     onBlur={() => setPasswordFocused(false)}
-                                    className={`w-full bg-[#1F1E1C] border ${
+                                    className={`w-full bg-[#262624] border ${
                                         passwordFocused ? 'border-gray-400' : 'border-gray-400'
                                     } text-white rounded-xl pl-10 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
