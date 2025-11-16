@@ -120,14 +120,25 @@ function BalanceChart({ selectedRange }){
 
     const options = {
         responsive: true,
+        maintainAspectRatio: true,
         plugins: {
-            legend: { position: 'top' },
-            title: { display: true, text: t('balanceChart.title') },
+            legend: { 
+                position: 'top',
+                align: 'start'
+            },
+            title: { 
+                display: true, 
+                text: t('balanceChart.title'),
+                align: 'start'
+            },
         },
+        layout: {
+            padding: 0
+        }
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto">
+        <div className="w-full">
             <Bar options={options} data={data}/>
         </div>
     )        

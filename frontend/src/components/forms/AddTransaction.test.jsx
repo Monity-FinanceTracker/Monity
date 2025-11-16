@@ -199,25 +199,29 @@ describe('AddTransaction', () => {
   });
 
   describe('Configuration Differences', () => {
-    it('should use different colors for expense and income', async () => {
-      const { container: expenseContainer } = render(
+    it('should use different configurations for expense and income', async () => {
+      // Renderizar formulário de despesa
+      const { getByText: getExpenseText } = render(
         <AddTransaction type="expense" />, 
         { wrapper: createWrapper() }
       );
 
-      // Procurar por elementos com classes específicas de despesa (red)
+      // Verificar título e subtítulo específicos de despesa
       await waitFor(() => {
-        expect(expenseContainer.querySelector('.from-red-500')).toBeInTheDocument();
+        expect(getExpenseText('addExpense.title')).toBeInTheDocument();
+        expect(getExpenseText('addExpense.subtitle')).toBeInTheDocument();
       });
 
-      const { container: incomeContainer } = render(
+      // Renderizar formulário de receita
+      const { getByText: getIncomeText } = render(
         <AddTransaction type="income" />, 
         { wrapper: createWrapper() }
       );
 
-      // Procurar por elementos com classes específicas de receita (green)
+      // Verificar título e subtítulo específicos de receita
       await waitFor(() => {
-        expect(incomeContainer.querySelector('.from-green-500')).toBeInTheDocument();
+        expect(getIncomeText('addIncome.title')).toBeInTheDocument();
+        expect(getIncomeText('addIncome.subtitle')).toBeInTheDocument();
       });
     });
   });

@@ -2,30 +2,30 @@ import React from 'react';
 
 const Terms = () => {
   return (
-    <div className="min-h-screen bg-[#0A0A0A] p-4 sm:p-6">
+    <div className="min-h-screen bg-[#262624] p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="mb-8 text-center">
           <div className="relative mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#01C38D] to-[#01C38D]/70 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#56a69f] to-[#56a69f]/70 bg-clip-text text-transparent">
               Monity
             </h1>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#01C38D] to-transparent rounded-full"></div>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#56a69f] to-transparent rounded-full"></div>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
             Termos de Serviço
           </h2>
-          <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
+          <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full"></div>
         </div>
 
         {/* Terms of Service Card */}
-        <div className="bg-[#171717] backdrop-blur-xl rounded-2xl shadow-2xl border border-[#262626] p-6 md:p-8">
+        <div className="bg-[#1F1E1D] backdrop-blur-xl rounded-2xl shadow-2xl border border-[#262626] p-6 md:p-8">
           <div className="prose prose-invert max-w-none">
             <p className="text-gray-300 text-base leading-relaxed mb-6">
-              Bem-vindo ao <span className="text-[#01C38D] font-semibold">Monity</span>. Ao acessar e utilizar nosso aplicativo disponível em{' '}
+              Bem-vindo ao <span className="text-[#56a69f] font-semibold">Monity</span>. Ao acessar e utilizar nosso aplicativo disponível em{' '}
               <a
                 href="https://app.monity-finance.com/"
-                className="text-[#01C38D] hover:text-[#01A071] transition-colors duration-200 font-medium underline decoration-[#01C38D]/30 hover:decoration-[#01C38D]/60"
+                className="text-[#56a69f] hover:text-[#4a8f88] transition-colors duration-200 font-medium underline decoration-[#56a69f]/30 hover:decoration-[#56a69f]/60"
               >
                 app.monity-finance.com
               </a>
@@ -34,7 +34,7 @@ const Terms = () => {
             
             <div className="bg-[#262626]/50 rounded-xl p-6 mb-6 border border-[#262626]/50">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <div className="w-2 h-2 bg-[#01C38D] rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-[#56a69f] rounded-full mr-3"></div>
                 Aceitação dos Termos
               </h3>
               <p className="text-gray-300 text-base leading-relaxed">
@@ -44,7 +44,7 @@ const Terms = () => {
 
             <div className="bg-[#262626]/50 rounded-xl p-6 mb-6 border border-[#262626]/50">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <div className="w-2 h-2 bg-[#01C38D] rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-[#56a69f] rounded-full mr-3"></div>
                 Uso do Serviço
               </h3>
               <p className="text-gray-300 text-base leading-relaxed mb-4">
@@ -52,19 +52,19 @@ const Terms = () => {
               </p>
               <ul className="text-gray-300 text-base leading-relaxed space-y-2 ml-4">
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Utilizar o serviço para qualquer finalidade ilegal ou não autorizada</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Tentar obter acesso não autorizado a qualquer parte do serviço</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Interferir ou interromper o funcionamento do serviço</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Transmitir vírus, malware ou qualquer código malicioso</span>
                 </li>
               </ul>
@@ -72,7 +72,7 @@ const Terms = () => {
 
             <div className="bg-[#262626]/50 rounded-xl p-6 mb-6 border border-[#262626]/50">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <div className="w-2 h-2 bg-[#01C38D] rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-[#56a69f] rounded-full mr-3"></div>
                 Contas de Usuário
               </h3>
               <p className="text-gray-300 text-base leading-relaxed mb-4">
@@ -80,15 +80,15 @@ const Terms = () => {
               </p>
               <ul className="text-gray-300 text-base leading-relaxed space-y-2 ml-4 mb-4">
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Manter a confidencialidade de suas credenciais de acesso</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Todas as atividades realizadas em sua conta</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Notificar-nos imediatamente sobre qualquer uso não autorizado</span>
                 </li>
               </ul>
@@ -99,14 +99,14 @@ const Terms = () => {
 
             <div className="bg-[#262626]/50 rounded-xl p-6 mb-6 border border-[#262626]/50">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <div className="w-2 h-2 bg-[#01C38D] rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-[#56a69f] rounded-full mr-3"></div>
                 Privacidade e Segurança
               </h3>
               <p className="text-gray-300 text-base leading-relaxed">
                 A proteção de seus dados é nossa prioridade. Implementamos medidas de segurança técnicas e organizacionais para proteger suas informações financeiras. Seus dados são criptografados e armazenados com segurança. Para mais detalhes sobre como coletamos, usamos e protegemos suas informações, consulte nossa{' '}
                 <a
                   href="/privacy"
-                  className="text-[#01C38D] hover:text-[#01A071] transition-colors duration-200 font-medium underline decoration-[#01C38D]/30 hover:decoration-[#01C38D]/60"
+                  className="text-[#56a69f] hover:text-[#4a8f88] transition-colors duration-200 font-medium underline decoration-[#56a69f]/30 hover:decoration-[#56a69f]/60"
                 >
                   Política de Privacidade
                 </a>
@@ -116,7 +116,7 @@ const Terms = () => {
 
             <div className="bg-[#262626]/50 rounded-xl p-6 mb-6 border border-[#262626]/50">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <div className="w-2 h-2 bg-[#01C38D] rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-[#56a69f] rounded-full mr-3"></div>
                 Limitação de Responsabilidade
               </h3>
               <p className="text-gray-300 text-base leading-relaxed mb-4">
@@ -124,15 +124,15 @@ const Terms = () => {
               </p>
               <ul className="text-gray-300 text-base leading-relaxed space-y-2 ml-4 mb-4">
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Não nos responsabilizamos por decisões financeiras tomadas com base nas informações fornecidas pelo aplicativo</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Não somos responsáveis por perdas ou danos indiretos, incidentais ou consequentes</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#01C38D] mr-2">•</span>
+                  <span className="text-[#56a69f] mr-2">•</span>
                   <span>Não garantimos a exatidão das análises e projeções financeiras geradas</span>
                 </li>
               </ul>
@@ -143,7 +143,7 @@ const Terms = () => {
 
             <div className="bg-[#262626]/50 rounded-xl p-6 mb-6 border border-[#262626]/50">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <div className="w-2 h-2 bg-[#01C38D] rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-[#56a69f] rounded-full mr-3"></div>
                 Modificações dos Termos
               </h3>
               <p className="text-gray-300 text-base leading-relaxed">
@@ -153,7 +153,7 @@ const Terms = () => {
 
             <div className="bg-[#262626]/50 rounded-xl p-6 mb-6 border border-[#262626]/50">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <div className="w-2 h-2 bg-[#01C38D] rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-[#56a69f] rounded-full mr-3"></div>
                 Lei Aplicável
               </h3>
               <p className="text-gray-300 text-base leading-relaxed">
@@ -167,8 +167,8 @@ const Terms = () => {
                 <p className="text-gray-400 text-sm mb-4">
                   Dúvidas sobre nossos termos de serviço?
                 </p>
-                <div className="inline-flex items-center px-4 py-2 bg-[#01C38D]/10 border border-[#01C38D]/20 rounded-lg">
-                  <span className="text-[#01C38D] text-sm font-medium">
+                <div className="inline-flex items-center px-4 py-2 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">
+                  <span className="text-[#56a69f] text-sm font-medium">
                     Entre em contato conosco
                   </span>
                 </div>

@@ -5,37 +5,32 @@ import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-function ModernCard({ children, title, subtitle, icon, accent, isLoading = false, action }) {
+function ModernCard({ children, title, subtitle, accent, isLoading = false, action }) {
     return (
-        <div className="bg-[#171717] border border-[#262626] rounded-xl p-6 hover:border-[#262626]/80 transition-all duration-200 group">
+        <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                    {icon && (
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${accent === 'text-[#01C38D]' ? 'bg-[#01C38D]/10' : accent === 'text-red-400' ? 'bg-red-400/10' : 'bg-[#01C38D]/10'}`}>
-                            {icon}
-                        </div>
-                    )}
-                    <div>
-                        <h3 className={`text-sm font-medium ${accent || 'text-white'}`}>{title}</h3>
-                        {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
-                    </div>
+            <div className="flex items-start justify-between mb-6">
+                <div className="flex-1 text-left">
+                    <h3 className={`text-xl font-bold ${accent || 'text-white'} mb-1`}>{title}</h3>
+                    {subtitle && <p className="text-gray-400 text-sm">{subtitle}</p>}
                 </div>
                 {action && (
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div className="flex items-center">
                         {action}
                     </div>
                 )}
             </div>
 
             {/* Content */}
-            <div className="min-h-[120px] flex items-center justify-center">
+            <div className="min-h-[120px]">
                 {isLoading ? (
-                    <div className="flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
+                    <div className="flex items-center justify-center min-h-[120px]">
+                        <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#56a69f] animate-spin"></div>
                     </div>
                 ) : (
-                    children
+                    <div className="w-full text-left">
+                        {children}
+                    </div>
                 )}
             </div>
         </div>
@@ -67,12 +62,7 @@ function Dashboard() {
                 <ModernCard 
                     title={t('dashboardPage.balance_card_title')} 
                     subtitle="Total available balance"
-                    accent="text-[#01C38D]"
-                    icon={
-                        <svg className="w-6 h-6 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" />
-                        </svg>
-                    }
+                    accent="text-[#56a69f]"
                 >
                     <BalanceCard selectedRange="all_time" />
                 </ModernCard>
@@ -80,12 +70,7 @@ function Dashboard() {
                 <ModernCard 
                     title={t('dashboardPage.expense_chart_title')} 
                     subtitle="Monthly spending breakdown"
-                    accent="text-red-400"
-                    icon={
-                        <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                        </svg>
-                    }
+                    accent="text-[#FAF9F5]"
                 >
                     <LazyExpenseChart selectedRange="all_time" />
                 </ModernCard>
@@ -94,11 +79,6 @@ function Dashboard() {
                     title={t('dashboardPage.savings_card_title')} 
                     subtitle="Your savings progress"
                     accent="text-green-400"
-                    icon={
-                        <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    }
                 >
                     <Savings selectedRange="all_time" />
                 </ModernCard>
@@ -112,16 +92,11 @@ function Dashboard() {
                 <ModernCard 
                     title={t('dashboardPage.balance_per_month_title')} 
                     subtitle="Track your balance over time"
-                    accent="text-[#01C38D]"
-                    icon={
-                        <svg className="w-6 h-6 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    }
+                    accent="text-[#56a69f]"
                     action={
                         <Link 
                             to="/transactions" 
-                            className="text-[#01C38D] hover:text-[#01A071] text-sm font-medium"
+                            className="text-[#56a69f] hover:text-[#4a8f88] text-sm font-medium transition-colors"
                         >
                             View all →
                         </Link>
@@ -134,15 +109,10 @@ function Dashboard() {
                     title={t('dashboardPage.expensive_purchases_title')} 
                     subtitle="Your largest transactions"
                     accent="text-orange-400"
-                    icon={
-                        <svg className="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" />
-                        </svg>
-                    }
                     action={
                         <Link 
                             to="/transactions" 
-                            className="text-orange-400 hover:text-orange-300 text-sm font-medium"
+                            className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors"
                         >
                             View all →
                         </Link>
@@ -156,12 +126,12 @@ function Dashboard() {
             <div className="fixed bottom-8 right-8 z-50">
                 <div className="relative">
                     <button 
-                        className="w-16 h-16 rounded-full bg-[#01C38D] flex items-center justify-center shadow-xl hover:bg-[#01A071] hover:scale-105 transition-all duration-300"
+                        className="w-16 h-16 rounded-full bg-[#56a69f] flex items-center justify-center shadow-xl hover:bg-[#4a8f88] hover:scale-105 transition-all duration-300"
                         onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
                         aria-haspopup="true"
                         aria-expanded={isFabMenuOpen}
                     >
-                        <svg className={`w-6 h-6 text-[#232323] transition-transform duration-300 ${isFabMenuOpen ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className={`w-6 h-6 text-[#1F1E1D] transition-transform duration-300 ${isFabMenuOpen ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                     </button>
@@ -169,10 +139,10 @@ function Dashboard() {
                     <div 
                         className={`absolute bottom-full right-0 mb-4 transition-all duration-300 ${isFabMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}
                     >
-                        <div className="bg-[#171717] rounded-xl shadow-xl border border-[#262626] overflow-hidden min-w-[200px]">
+                        <div className="bg-[#1F1E1D] rounded-xl shadow-xl border border-[#262626] overflow-hidden min-w-[200px]">
                             <Link 
                                 to="/add-income" 
-                                className="flex items-center gap-3 px-4 py-3 text-green-400 hover:bg-[#171717] transition-colors"
+                                className="flex items-center gap-3 px-4 py-3 text-green-400 hover:bg-[#1F1E1D] transition-colors"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,7 +152,7 @@ function Dashboard() {
                             </Link>
                             <Link 
                                 to="/add-expense" 
-                                className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-[#171717] transition-colors border-t border-[#262626]/50"
+                                className="flex items-center gap-3 px-4 py-3 text-[#FAF9F5] hover:bg-[#1F1E1D] transition-colors border-t border-[#262626]/50"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,7 +162,7 @@ function Dashboard() {
                             </Link>
                             <Link 
                                 to="/categories" 
-                                className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#171717] transition-colors border-t border-[#262626]/50"
+                                className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-[#1F1E1D] transition-colors border-t border-[#262626]/50"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

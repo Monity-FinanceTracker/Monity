@@ -12,7 +12,7 @@ const ConfigCheck = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#0A0A0A] flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-[#262624] flex items-center justify-center p-4 z-50">
       <div className="max-w-2xl w-full bg-[#1a1a1a] rounded-lg p-6 text-white">
         <div className="text-center mb-6">
           <div className="text-6xl mb-4">⚙️</div>
@@ -64,7 +64,7 @@ VITE_API_URL=http://localhost:3001/api/v1
         <div className="text-center">
           <button
             onClick={() => window.location.reload()}
-            className="bg-[#01C38D] text-[#232323] px-6 py-2 rounded font-medium hover:bg-[#01B37A] transition-colors"
+            className="bg-[#56a69f] text-[#1F1E1D] px-6 py-2 rounded font-medium hover:bg-[#4A8F88] transition-colors"
           >
             Refresh After Configuration
           </button>

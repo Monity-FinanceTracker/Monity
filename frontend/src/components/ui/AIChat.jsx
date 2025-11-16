@@ -182,7 +182,7 @@ const AIChat = ({ isOpen, onClose }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-700">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#01C38D] to-[#01a87a] rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#56a69f] to-[#01a87a] rounded-full flex items-center justify-center">
                             <FiMessageSquare className="text-white" size={20} />
                         </div>
                         <div>
@@ -190,7 +190,7 @@ const AIChat = ({ isOpen, onClose }) => {
                             {usage && (
                                 <p className="text-sm text-gray-400">
                                     {isPremium ? (
-                                        <span className="text-[#01C38D]">{t('aiChat.unlimited_messages')}</span>
+                                        <span className="text-[#56a69f]">{t('aiChat.unlimited_messages')}</span>
                                     ) : (
                                         <span>
                                             {messagesRemainingText}
@@ -223,7 +223,7 @@ const AIChat = ({ isOpen, onClose }) => {
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     {messages.length === 0 && showPrompts ? (
                         <div className="h-full flex flex-col items-center justify-center text-center p-6">
-                            <div className="w-16 h-16 bg-gradient-to-br from-[#01C38D] to-[#01a87a] rounded-full flex items-center justify-center mb-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-[#56a69f] to-[#01a87a] rounded-full flex items-center justify-center mb-4">
                                 <FiMessageSquare className="text-white" size={32} />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2">
@@ -256,7 +256,7 @@ const AIChat = ({ isOpen, onClose }) => {
                                     <div
                                         className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                                             message.role === 'user'
-                                                ? 'bg-[#01C38D] text-white'
+                                                ? 'bg-[#56a69f] text-white'
                                                 : 'bg-gray-800 text-white'
                                         }`}
                                     >
@@ -312,12 +312,12 @@ const AIChat = ({ isOpen, onClose }) => {
                                     : t('aiChat.input_placeholder')
                             }
                             disabled={loading || (!isPremium && messagesRemaining === 0)}
-                            className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#56a69f] disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         <button
                             onClick={() => handleSendMessage()}
                             disabled={!input.trim() || loading || (!isPremium && messagesRemaining === 0)}
-                            className="bg-[#01C38D] text-white rounded-lg px-6 py-3 hover:bg-[#01a87a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="bg-[#56a69f] text-white rounded-lg px-6 py-3 hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {loading ? <FiLoader className="animate-spin" /> : <FiSend />}
                             {t('aiChat.send_button')}

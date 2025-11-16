@@ -85,7 +85,7 @@ function AdminDashboard() {
           {/* Overview cards skeleton */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="bg-[#171717] border border-[#262626] rounded-2xl p-6">
+              <div key={index} className="bg-[#1F1E1D] border border-[#262626] rounded-2xl p-6">
                 <div className="h-6 w-24 bg-gray-700/50 rounded animate-pulse mb-2"></div>
                 <div className="h-8 w-16 bg-gray-700/50 rounded animate-pulse"></div>
               </div>
@@ -94,18 +94,18 @@ function AdminDashboard() {
           
           {/* Main content skeleton */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-[#171717] border border-[#262626] rounded-2xl p-6">
+            <div className="lg:col-span-2 bg-[#1F1E1D] border border-[#262626] rounded-2xl p-6">
               <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse mb-4"></div>
               <div className="grid grid-cols-2 gap-4">
                 {Array.from({ length: 4 }).map((_, index) => (
-                  <div key={index} className="bg-[#171717] border border-[#262626] rounded-xl p-4">
+                  <div key={index} className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-4">
                     <div className="h-6 w-16 bg-gray-700/50 rounded animate-pulse mb-2"></div>
                     <div className="h-4 w-12 bg-gray-700/50 rounded animate-pulse"></div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="bg-[#171717] border border-[#262626] rounded-2xl p-6">
+            <div className="bg-[#1F1E1D] border border-[#262626] rounded-2xl p-6">
               <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse mb-4"></div>
               <div className="h-24 bg-gray-700/30 rounded-lg mb-4"></div>
               <div className="space-y-4">
@@ -160,8 +160,8 @@ function AdminDashboard() {
         <MetricCard
           title="Total Users"
           value={analytics?.users.total || 0}
-          color="text-[#01C38D]"
-          bgGradient="from-[#01C38D]/20 to-[#01C38D]/5"
+          color="text-[#56a69f]"
+          bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
         />
         <MetricCard
           title="Total Transactions"
@@ -185,8 +185,8 @@ function AdminDashboard() {
           <MetricCard
             title="MRR"
             value={formatCurrency(monetization?.revenue?.mrr || 0)}
-            color="text-[#01C38D]"
-            bgGradient="from-[#01C38D]/20 to-[#01C38D]/5"
+            color="text-[#56a69f]"
+            bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
           />
         )}
         {monetization && (
@@ -201,34 +201,34 @@ function AdminDashboard() {
 
       {/* User Metrics and Monthly Growth */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="lg:col-span-2 bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Growth Metrics</h2>
           <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
-              <div className="text-2xl font-bold text-[#01C38D]">{analytics?.users.premium || 0}</div>
+            <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
+              <div className="text-2xl font-bold text-[#56a69f]">{analytics?.users.premium || 0}</div>
               <div className="text-sm text-gray-400">Premium Users</div>
             </div>
-            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
+            <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#36A2EB]">{analytics?.users.free || 0}</div>
               <div className="text-sm text-gray-400">Free Users</div>
             </div>
-            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
+            <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#FFCE56]">{analytics?.users.recentSignups || 0}</div>
               <div className="text-sm text-gray-400">Recent Signups</div>
             </div>
-            <div className="text-center p-4 bg-[#171717] rounded-xl border border-[#262626]">
+            <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#FF6384]">{analytics?.categories.total || 0}</div>
               <div className="text-sm text-gray-400">Categories</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Monthly Growth</h2>
           
           {/* Chart Area - Real Data Only */}
           <div className="mb-6">
-            <div className="h-24 bg-[#171717] rounded-lg border border-[#262626] p-4 flex items-center justify-center">
+            <div className="h-24 bg-[#1F1E1D] rounded-lg border border-[#262626] p-4 flex items-center justify-center">
               {trends?.monthlyData && trends.monthlyData.length > 0 ? (
                 <div className="h-full flex items-end justify-between gap-1 w-full">
                   {trends.monthlyData.map((monthData, i) => {
@@ -240,7 +240,7 @@ function AdminDashboard() {
                     return (
                       <div key={i} className="flex flex-col items-center justify-end flex-1 h-full">
                         <div 
-                          className={`w-full rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer ${isCurrentMonth ? 'bg-[#01C38D]' : 'bg-[#36A2EB]'}`}
+                          className={`w-full rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer ${isCurrentMonth ? 'bg-[#56a69f]' : 'bg-[#36A2EB]'}`}
                           style={{ height: `${height}%` }}
                           title={`${monthNames[i]}: ${monthData.value}`}
                         ></div>
@@ -260,7 +260,7 @@ function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>New Users</span>
-              <span className="font-semibold text-[#01C38D] flex-shrink-0">+{trends?.monthlyGrowth?.users || 0}</span>
+              <span className="font-semibold text-[#56a69f] flex-shrink-0">+{trends?.monthlyGrowth?.users || 0}</span>
             </div>
             <div className="flex justify-between items-start">
               <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>New Transactions</span>
@@ -279,16 +279,16 @@ function AdminDashboard() {
       </div>
 
       {/* Most Used Categories */}
-      <div className="bg-gradient-to-br from-[##171717] to-[#242532] p-6 rounded-2xl border border-[#242532]">
+      <div className="bg-gradient-to-br from-[##1F1E1D] to-[#242532] p-6 rounded-2xl border border-[#242532]">
         <h2 className="text-xl font-semibold mb-4">Most Used Categories</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {(analytics?.categories.mostUsed || []).slice(0, 6).map((category, index) => (
-            <div key={index} className="bg-[#171717] p-4 rounded-xl border border-[#262626]">
+            <div key={index} className="bg-[#1F1E1D] p-4 rounded-xl border border-[#262626]">
               <div className="flex items-start justify-between mb-2">
                 <span className="font-medium text-white flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>{category.name || 'Category'}</span>
                 <span className="text-sm text-gray-400 flex-shrink-0 mt-0.5">#{index + 1}</span>
               </div>
-              <div className="text-2xl font-bold text-[#01C38D]">{category.count || 0}</div>
+              <div className="text-2xl font-bold text-[#56a69f]">{category.count || 0}</div>
               <div className="text-sm text-gray-400">transactions</div>
             </div>
           ))}
@@ -302,15 +302,15 @@ function AdminDashboard() {
 
       {/* Engagement */}
       {engagement && (
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Engagement</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <MetricCard title="DAU" value={engagement.dau} color="text-[#01C38D]" bgGradient="from-[#01C38D]/20 to-[#01C38D]/5" />
+            <MetricCard title="DAU" value={engagement.dau} color="text-[#56a69f]" bgGradient="from-[#56a69f]/20 to-[#56a69f]/5" />
             <MetricCard title="WAU" value={engagement.wau} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
             <MetricCard title="MAU" value={engagement.mau} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
             <MetricCard title="Retention Cohorts" value={`${engagement.cohort?.length || 0} wks`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/20 to-[#FF6384]/5" />
           </div>
-          <div className="h-24 bg-[#171717] rounded-lg border border-[#262626] p-4 flex items-center justify-center">
+          <div className="h-24 bg-[#1F1E1D] rounded-lg border border-[#262626] p-4 flex items-center justify-center">
             {engagement.cohort && engagement.cohort.length > 0 ? (
               <div className="h-full flex items-end justify-between gap-1 w-full">
                 {engagement.cohort.map((c, i) => {
@@ -333,11 +333,11 @@ function AdminDashboard() {
 
       {/* Monetization Funnel */}
       {monetization && (
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Monetization</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <MetricCard title="Users" value={monetization.users?.total || 0} color="text-white" bgGradient="from-[#242532]/40 to-[#171717]/0" />
-            <MetricCard title="Premium" value={monetization.users?.premium || 0} color="text-[#01C38D]" bgGradient="from-[#01C38D]/20 to-[#01C38D]/5" />
+            <MetricCard title="Users" value={monetization.users?.total || 0} color="text-white" bgGradient="from-[#242532]/40 to-[#1F1E1D]/0" />
+            <MetricCard title="Premium" value={monetization.users?.premium || 0} color="text-[#56a69f]" bgGradient="from-[#56a69f]/20 to-[#56a69f]/5" />
             <MetricCard title="MRR" value={formatCurrency(monetization.revenue?.mrr || 0)} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
             <MetricCard title="ARPU" value={formatCurrency(monetization.revenue?.arpu || 0)} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
           </div>
@@ -348,7 +348,7 @@ function AdminDashboard() {
             </div>
             <div className="p-4 rounded-xl border border-[#262626]">
               <div className="text-gray-400 mb-2">30d Active</div>
-              <div className="text-2xl font-bold text-[#01C38D]">{monetization.funnel?.active30 || 0}</div>
+              <div className="text-2xl font-bold text-[#56a69f]">{monetization.funnel?.active30 || 0}</div>
             </div>
             <div className="p-4 rounded-xl border border-[#262626]">
               <div className="text-gray-400 mb-2">30d Premium</div>
@@ -360,10 +360,10 @@ function AdminDashboard() {
 
       {/* Errors & Performance */}
       {errorsPerf && (
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Errors & Performance</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <MetricCard title="p50 Latency" value={`${errorsPerf.latencyMs?.p50 || 0} ms`} color="text-[#01C38D]" bgGradient="from-[#01C38D]/20 to-[#01C38D]/5" />
+            <MetricCard title="p50 Latency" value={`${errorsPerf.latencyMs?.p50 || 0} ms`} color="text-[#56a69f]" bgGradient="from-[#56a69f]/20 to-[#56a69f]/5" />
             <MetricCard title="p95 Latency" value={`${errorsPerf.latencyMs?.p95 || 0} ms`} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
             <MetricCard title="p99 Latency" value={`${errorsPerf.latencyMs?.p99 || 0} ms`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/20 to-[#FF6384]/5" />
             <MetricCard title="Avg Latency" value={`${errorsPerf.latencyMs?.avg || 0} ms`} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
@@ -373,7 +373,7 @@ function AdminDashboard() {
 
       {/* Segments */}
       {segments && (
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Segments</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 rounded-xl border border-[#262626]">
@@ -385,7 +385,7 @@ function AdminDashboard() {
                 </div>
                 <div className="flex-1">
                   <div className="text-sm text-gray-400">Premium</div>
-                  <div className="text-2xl font-bold text-[#01C38D]">{segments.segments?.byTier?.premium || 0}</div>
+                  <div className="text-2xl font-bold text-[#56a69f]">{segments.segments?.byTier?.premium || 0}</div>
                 </div>
               </div>
             </div>
@@ -412,14 +412,14 @@ function AdminDashboard() {
 
       {/* Financial Health Overview */}
       {financialHealth && (
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Financial Health Overview</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <MetricCard
               title="Avg Monthly Income"
               value={formatCurrency(financialHealth.avgMonthlyIncome)}
-              color="text-[#01C38D]"
-              bgGradient="from-[#01C38D]/20 to-[#01C38D]/5"
+              color="text-[#56a69f]"
+              bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
             />
             <MetricCard
               title="Avg Monthly Expenses"
@@ -445,14 +445,14 @@ function AdminDashboard() {
 
       {/* AI Statistics */}
       {aiStats && (
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">AI Performance</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <MetricCard
               title="Prediction Accuracy"
               value={`${aiStats.accuracy}%`}
-              color="text-[#01C38D]"
-              bgGradient="from-[#01C38D]/20 to-[#01C38D]/5"
+              color="text-[#56a69f]"
+              bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
             />
             <MetricCard
               title="Total Predictions"
@@ -466,7 +466,7 @@ function AdminDashboard() {
 
       {/* Engagement Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Engagement Metrics</h2>
           <div className="space-y-4">
             <div className="flex justify-between items-start">
@@ -489,7 +489,7 @@ function AdminDashboard() {
         </div>
 
         {/* System Health */}
-        <div className="bg-[#171717] p-6 rounded-2xl border border-[#262626]">
+        <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">System Health</h2>
           <div className="grid grid-cols-2 gap-4">
             <HealthIndicator 
