@@ -73,5 +73,5 @@ export const formatSimpleCurrency = (amount, showSign = false) => {
  * @returns {string} CSS class for the amount color
  */
 export const getAmountColor = (typeId) => {
-    return typeId === 1 ? 'text-red-400' : 'text-green-400';
+    return typeId === 1 ? 'text-[#FAF9F5]' : 'text-[#56a69f]';
 };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { post, get, remove } from '../../utils/api';
-import { FaArrowTrendUp, FaArrowTrendDown, FaPlus, FaTrash, FaTag } from 'react-icons/fa6';
+import { FaPlus, FaTrash, FaTag } from 'react-icons/fa6';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 function AddCategory() {
@@ -60,11 +61,11 @@ function AddCategory() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0A0A0A] p-4 md:p-6">
+        <div className="min-h-screen bg-[#262624] p-4 md:p-6">
             <div className="max-w-4xl mx-auto space-y-8">
                 {/* Header Section */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#01C38D] to-[#00A876] rounded-2xl mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#56a69f] to-[#00A876] rounded-2xl mb-4 shadow-lg">
                         <FaTag className="text-white text-2xl" />
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('addCategory.title')}</h1>
@@ -74,8 +75,8 @@ function AddCategory() {
                 {/* Add Category Form */}
                 <div className="bg-gradient-to-r from-[#23263a] to-[#2a2f45] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#262626]/50 backdrop-blur-sm">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                            <FaPlus className="text-[#01C38D] text-lg" />
+                        <div className="w-10 h-10 bg-[#56a69f]/20 rounded-lg flex items-center justify-center">
+                            <FaPlus className="text-[#56a69f] text-lg" />
                         </div>
                         <h2 className="text-2xl font-bold text-white">Create New Category</h2>
                     </div>
@@ -106,7 +107,7 @@ function AddCategory() {
                                         id="categoryName"
                                         value={categoryName}
                                         onChange={(e) => setCategoryName(e.target.value)}
-                                        className="w-full bg-[#232323] border border-[#262626]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                        className="w-full bg-[#1F1E1D] border border-[#262626]/50 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                         placeholder="e.g., Groceries, Salary, etc."
                                         required
                                     />
@@ -122,15 +123,37 @@ function AddCategory() {
                                         id="categoryType"
                                         value={categoryType}
                                         onChange={(e) => setCategoryType(e.target.value)}
-                                        className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 pr-10 text-white focus:ring-0 focus:ring-transparent appearance-none cursor-pointer"
+                                        className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg px-4 py-2.5 pr-10 text-white focus:ring-0 focus:ring-transparent appearance-none cursor-pointer"
                                     >
-                                        <option value="expense">{t('addCategory.expenseOption')}</option>
-                                        <option value="income">{t('addCategory.incomeOption')}</option>
+                                        <option 
+                                            value="expense"
+                                            style={{
+                                                minWidth: '250px',
+                                                width: 'max-content',
+                                                padding: '8px 12px',
+                                                backgroundColor: '#1F1E1D',
+                                                color: 'white'
+                                            }}
+                                        >
+                                            {t('addCategory.expenseOption')}
+                                        </option>
+                                        <option 
+                                            value="income"
+                                            style={{
+                                                minWidth: '250px',
+                                                width: 'max-content',
+                                                padding: '8px 12px',
+                                                backgroundColor: '#1F1E1D',
+                                                color: 'white'
+                                            }}
+                                        >
+                                            {t('addCategory.incomeOption')}
+                                        </option>
                                     </select>
                                     {categoryType === 'expense' ? (
-                                        <FaArrowTrendDown className="absolute left-4 top-1/2 transform -translate-y-1/2 text-red-400" />
+                                        <ArrowUp className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#FAF9F5]" />
                                     ) : (
-                                        <FaArrowTrendUp className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-400" />
+                                        <ArrowDown className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#56a69f]" />
                                     )}
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                         <svg 
@@ -148,7 +171,7 @@ function AddCategory() {
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#00A876] text-white font-semibold py-4 rounded-xl hover:from-[#00A876] hover:to-[#01C38D] transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
+                            className="w-full bg-gradient-to-r from-[#56a69f] to-[#00A876] text-white font-semibold py-4 rounded-xl hover:from-[#00A876] hover:to-[#56a69f] transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
                         >
                             <FaPlus className="text-lg" />
                             {t('addCategory.addButton')}
@@ -159,8 +182,8 @@ function AddCategory() {
                 {/* Categories List */}
                 <div className="bg-gradient-to-r from-[#23263a] to-[#2a2f45] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#262626]/50 backdrop-blur-sm">
                     <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                            <FaTag className="text-[#01C38D]" />
+                        <div className="w-10 h-10 bg-[#56a69f]/20 rounded-lg flex items-center justify-center">
+                            <FaTag className="text-[#56a69f]" />
                         </div>
                         {t('addCategory.yourCategories')}
                     </h3>
@@ -176,16 +199,16 @@ function AddCategory() {
                     ) : (
                         <div className="grid gap-3">
                             {categories.map(category => (
-                                <div key={category.id} className="bg-[#232323]/60 backdrop-blur-sm border border-[#262626]/30 p-4 rounded-xl hover:bg-[#232323]/80 transition-all duration-200 group">
+                                <div key={category.id} className="bg-[#1F1E1D]/60 backdrop-blur-sm border border-[#262626]/30 p-4 rounded-xl hover:bg-[#1F1E1D]/80 transition-all duration-200 group">
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center gap-4">
                                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                                                category.typeId === 1 ? 'bg-red-500/20' : 'bg-green-500/20'
+                                                category.typeId === 1 ? 'bg-[#FAF9F5]/20' : 'bg-[#56a69f]/20'
                                             }`}>
                                                 {category.typeId === 1 ? (
-                                                    <FaArrowTrendDown className="text-red-400 text-lg" />
+                                                    <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
                                                 ) : (
-                                                    <FaArrowTrendUp className="text-green-400 text-lg" />
+                                                    <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                                                 )}
                                             </div>
                                             <div>

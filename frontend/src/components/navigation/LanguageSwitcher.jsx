@@ -11,10 +11,10 @@ const LanguageSwitcher = () => {
         const baseClasses = 'w-full px-4 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer';
 
         if (i18n.language === lang) {
-            return `${baseClasses} bg-[#01C38D] text-primary-foreground`;
+            return `${baseClasses} bg-[#56a69f] text-primary-foreground`;
         }
 
-        return `${baseClasses} text-muted-foreground hover:bg-[#01C38D1A] hover:text-foreground hover:shadow-sm`;
+        return `${baseClasses} text-muted-foreground hover:bg-[#56a69f1A] hover:text-foreground hover:shadow-sm`;
     };
 
     return (

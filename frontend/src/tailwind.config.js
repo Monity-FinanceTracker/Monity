@@ -1,3 +1,5 @@
+import { COLORS, SEMANTIC_COLORS } from '../color';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -7,7 +9,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Clean black and white color scheme matching v0 prototype
+        // Using colors from color.ts design system
         background: "var(--background)",
         foreground: "var(--foreground)",
         card: {
@@ -31,7 +33,10 @@ export default {
           foreground: "var(--muted-foreground)",
         },
         accent: {
-          DEFAULT: "var(--accent)",
+          DEFAULT: COLORS.accent,
+          hover: COLORS.accentHover,
+          light: COLORS.accentLight,
+          medium: COLORS.accentMedium,
           foreground: "var(--accent-foreground)",
         },
         destructive: {
@@ -41,6 +46,27 @@ export default {
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
+        // Monity design system colors
+        monity: {
+          background: COLORS.background,
+          primaryBg: COLORS.primaryBg,
+          secondaryBg: COLORS.secondaryBg,
+          cardBg: COLORS.cardBg,
+          inputBg: COLORS.inputBg,
+          border: COLORS.border,
+          accent: COLORS.accent,
+          accentHover: COLORS.accentHover,
+          textPrimary: COLORS.textPrimary,
+          textSecondary: COLORS.textSecondary,
+          textMuted: COLORS.textMuted,
+          success: COLORS.success,
+          error: COLORS.error,
+          warning: COLORS.warning,
+          info: COLORS.info,
+          income: COLORS.income,
+          expense: COLORS.expense,
+          savings: COLORS.savings,
+        },
         chart: {
           "1": "var(--chart-1)",
           "2": "var(--chart-2)",

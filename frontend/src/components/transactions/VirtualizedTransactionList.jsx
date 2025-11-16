@@ -148,8 +148,8 @@ const VirtualizedTransactionList = React.memo(({
 
         const _getTypeColor = (typeId) => {
             switch (typeId) {
-                case 1: return 'text-red-400'; // Expense
-                case 2: return 'text-green-400'; // Income
+                case 1: return 'text-[#FAF9F5]'; // Expense
+                case 2: return 'text-[#56a69f]'; // Income
                 case 3: return 'text-blue-400'; // Savings
                 default: return 'text-gray-400';
             }
@@ -157,14 +157,14 @@ const VirtualizedTransactionList = React.memo(({
 
         const getTypeIcon = (typeId) => {
             switch (typeId) {
-                case 1: return ( // Expense
-                    <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                case 1: return ( // Expense - setinha para cima branca
+                    <svg className="w-5 h-5 text-[#FAF9F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                     </svg>
                 );
-                case 2: return ( // Income
-                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                case 2: return ( // Income - setinha para baixo na cor #56a69f
+                    <svg className="w-5 h-5 text-[#56a69f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                 );
                 case 3: return ( // Savings
@@ -235,10 +235,54 @@ const VirtualizedTransactionList = React.memo(({
                         onChange={(e) => handleFilterChange({ ...filters, type: e.target.value })}
                         className="bg-gray-800 border border-gray-600 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value="all">{t('transactions.all_types')}</option>
-                        <option value="expense">{t('transactions.expenses')}</option>
-                        <option value="income">{t('transactions.income')}</option>
-                        <option value="savings">{t('transactions.savings')}</option>
+                        <option 
+                            value="all"
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {t('transactions.all_types')}
+                        </option>
+                        <option 
+                            value="expense"
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {t('transactions.expenses')}
+                        </option>
+                        <option 
+                            value="income"
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {t('transactions.income')}
+                        </option>
+                        <option 
+                            value="savings"
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {t('transactions.savings')}
+                        </option>
                     </select>
                 </div>
             </div>

@@ -68,6 +68,29 @@ API.interceptors.request.use(
     }
 );
 
+// Global 401 handler: treat invalid/expired tokens as logged out
+API.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error?.response?.status;
+
+    if (status === 401) {
+      try {
+        clearTokenCache();
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session) {
+          await supabase.auth.signOut();
+        }
+      } catch (handleError) {
+        console.error('Failed to handle 401 response:', handleError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const get = (endpoint) => {
     return API.get(endpoint);
 };

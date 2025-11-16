@@ -38,7 +38,7 @@ const GroupInvitations = () => {
 
     if (loading) {
         return (
-            <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
+            <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                 <div className="text-center text-gray-400">{t('groups.loading')}</div>
             </div>
         );
@@ -49,13 +49,13 @@ const GroupInvitations = () => {
     }
 
     return (
-        <div className="bg-[#171717] rounded-lg border border-[#262626] p-6 mb-6">
+        <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6 mb-6">
             <h2 className="text-xl font-semibold text-white mb-4">
                 {t('groups.pending_invitations')} ({invitations.length})
             </h2>
             <div className="space-y-4">
                 {invitations.map(invitation => (
-                    <div key={invitation.id} className="bg-[#232323] rounded-lg p-4 flex items-center justify-between">
+                    <div key={invitation.id} className="bg-[#1F1E1D] rounded-lg p-4 flex items-center justify-between">
                         <div>
                             <h3 className="text-white font-medium">
                                 {invitation.groups?.name || t('groups.unknown_group')}
@@ -68,7 +68,7 @@ const GroupInvitations = () => {
                             <button
                                 onClick={() => handleResponse(invitation.id, 'accepted')}
                                 disabled={responding[invitation.id]}
-                                className="bg-[#01C38D] text-[#232323] font-medium px-4 py-2 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50"
+                                className="bg-[#56a69f] text-[#1F1E1D] font-medium px-4 py-2 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50"
                             >
                                 {responding[invitation.id] ? t('groups.accepting') : t('groups.accept')}
                             </button>

@@ -31,7 +31,7 @@ const CreateGroup = () => {
             <div className="max-w-md mx-auto">
                 <h1 className="text-3xl font-bold text-white mb-8 text-center">{t('groups.create_title')}</h1>
                 
-                <div className="bg-[#171717] rounded-lg border border-[#262626] p-8">
+                <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label htmlFor="name" className="block text-white font-medium mb-2">
@@ -42,7 +42,7 @@ const CreateGroup = () => {
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-3 bg-[#232323] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-3 bg-[#1F1E1D] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent"
                                 placeholder={t('groups.group_name')}
                                 required
                             />
@@ -56,7 +56,7 @@ const CreateGroup = () => {
                         
                         <button
                             type="submit"
-                            className="w-full bg-[#01C38D] text-[#232323] font-bold px-4 py-3 rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold px-4 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={loading}
                         >
                             {loading ? t('groups.creating') : t('groups.create')}

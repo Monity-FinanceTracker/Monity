@@ -20,7 +20,7 @@ const Spinner = ({
   };
 
   const variants = {
-    primary: 'border-[#01C38D] border-t-transparent',
+    primary: 'border-[#56a69f] border-t-transparent',
     secondary: 'border-gray-400 border-t-transparent',
     white: 'border-white border-t-transparent'
   };
