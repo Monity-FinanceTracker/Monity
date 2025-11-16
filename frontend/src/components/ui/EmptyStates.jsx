@@ -170,7 +170,6 @@ export const EmptyGroups = () => {
     
     return (
         <EmptyStateBase
-            icon={<Icon name="Users" size="xxl" className="text-orange-400" />}
             title={t('emptyStates.groups.title')}
             description={t('emptyStates.groups.description')}
             actions={[
@@ -182,7 +181,7 @@ export const EmptyGroups = () => {
                 },
                 {
                     label: t('emptyStates.groups.learn_more'),
-                    onClick: () => {/* Show groups tutorial */},
+                    href: '/groups/info',
                     icon: <BookOpen className="w-4 h-4" />
                 }
             ]}
@@ -195,7 +194,6 @@ export const EmptyBudgets = () => {
     
     return (
         <EmptyStateBase
-            icon={<Icon name="Target" size="xxl" className="text-purple-400" />}
             title={t('emptyStates.budgets.title')}
             description={t('emptyStates.budgets.description')}
         />
