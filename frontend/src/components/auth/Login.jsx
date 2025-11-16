@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import monityLogo from '../../assets/LOGO_MONITY_512px512px.png';
+import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
 
 function Login() {
@@ -48,11 +48,11 @@ function Login() {
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
                 {/* Monity Logo with Custom Slogan */}
-                <div className="mt-6 mb-3 flex flex-col items-center justify-center transform animate-fade-in-up">
+                <div className="mt-6 mb-4 flex flex-col items-center justify-center transform animate-fade-in-up">
                     <img
                         src={monityLogo}
                         alt="Monity Logo"
-                        className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                        className="w-24 h-24 md:w-55 md:h-55 object-contain"
                     />
                     <p
                         className="mt-4 text-xl md:text-2xl font-medium text-center px-6"
@@ -80,7 +80,7 @@ function Login() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Enhanced Email Input */}
                         <div className="space-y-1.5">
-                            <label htmlFor="email" className="block text-gray-300 font-medium text-sm text-left">
+                            <label htmlFor="email" className="block text-white font-medium text-sm text-left">
                                 {t('loginPage.email')}
                             </label>
                             <div className="relative">
@@ -97,9 +97,7 @@ function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setEmailFocused(true)}
                                     onBlur={() => setEmailFocused(false)}
-                                    className={`w-full bg-[#262624] border ${
-                                        emailFocused ? 'border-gray-400' : 'border-gray-400'
-                                    } text-white rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -116,12 +114,12 @@ function Login() {
                         {/* Enhanced Password Input */}
                         <div className="space-y-1.5">
                             <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-gray-300 font-medium text-sm">
+                                <label htmlFor="password" className="block text-white font-medium text-sm">
                                     {t('loginPage.password')}
                                 </label>
                                 <Link
                                     to="/forgot-password"
-                                    className="text-xs sm:text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                                    className="text-xs sm:text-sm !text-slate-300 hover:!text-[#01C38D] transition-colors duration-200"
                                 >
                                     {t('loginPage.forgot_password')}
                                 </Link>
@@ -140,9 +138,7 @@ function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setPasswordFocused(true)}
                                     onBlur={() => setPasswordFocused(false)}
-                                    className={`w-full bg-[#262624] border ${
-                                        passwordFocused ? 'border-gray-400' : 'border-gray-400'
-                                    } text-white rounded-xl pl-10 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
