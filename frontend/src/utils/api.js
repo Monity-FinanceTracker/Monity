@@ -56,16 +56,28 @@ supabase.auth.onAuthStateChange((event) => {
 });
 
 API.interceptors.request.use(
-    async (config) => {
-        const token = await getAccessToken();
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+  async (config) => {
+    const token = await getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+
+    if (status === 401 || status === 403) {
+      const url = error.config?.url;
+      console.warn(`API request unauthorized (${status}) for ${url || 'unknown URL'}`);
+    }
+
+    return Promise.reject(error);
+  }
 );
 
 export const get = (endpoint) => {

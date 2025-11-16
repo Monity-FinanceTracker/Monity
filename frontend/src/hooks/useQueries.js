@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { get, post } from '../utils/api';
 import { queryKeys } from '../lib/queryClient';
+import { useAuth } from '../context/useAuth';
 
 /**
  * Custom hooks for React Query - Optimized for performance
@@ -9,6 +10,9 @@ import { queryKeys } from '../lib/queryClient';
 
 // Balance Queries
 export const useBalance = (selectedRange = 'all_time') => {
+  const { isAuthenticated, loading } = useAuth();
+  const enabled = isAuthenticated && !loading;
+
   return useQuery({
     queryKey: selectedRange === 'all_time' 
       ? queryKeys.balance.allTime() 
@@ -30,11 +34,15 @@ export const useBalance = (selectedRange = 'all_time') => {
     },
     select: (data) => data?.balance || 0,
     staleTime: 2 * 60 * 1000, // 2 minutes for balance data
+    enabled,
   });
 };
 
 // Categories Query
 export const useCategories = (typeId = null) => {
+  const { isAuthenticated, loading } = useAuth();
+  const enabled = isAuthenticated && !loading;
+
   return useQuery({
     queryKey: typeId ? queryKeys.categories.byType(typeId) : queryKeys.categories.all,
     queryFn: async () => {
@@ -48,11 +56,15 @@ export const useCategories = (typeId = null) => {
       );
     },
     staleTime: 10 * 60 * 1000, // 10 minutes for categories (rarely change)
+    enabled,
   });
 };
 
 // Transactions Query
 export const useTransactions = (filters = {}) => {
+  const { isAuthenticated, loading } = useAuth();
+  const enabled = isAuthenticated && !loading;
+
   return useQuery({
     queryKey: queryKeys.transactions.list(filters),
     queryFn: async () => {
@@ -61,11 +73,15 @@ export const useTransactions = (filters = {}) => {
     },
     select: (data) => Array.isArray(data) ? data : [],
     staleTime: 1 * 60 * 1000, // 1 minute for transactions
+    enabled,
   });
 };
 
 // Savings Goals Query
 export const useSavingsGoals = () => {
+  const { isAuthenticated, loading } = useAuth();
+  const enabled = isAuthenticated && !loading;
+
   return useQuery({
     queryKey: queryKeys.savings.goals,
     queryFn: async () => {
@@ -73,11 +89,15 @@ export const useSavingsGoals = () => {
       return response.data;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes for savings goals
+    enabled,
   });
 };
 
 // Budgets Query
 export const useBudgets = () => {
+  const { isAuthenticated, loading } = useAuth();
+  const enabled = isAuthenticated && !loading;
+
   return useQuery({
     queryKey: queryKeys.budgets.all,
     queryFn: async () => {
@@ -85,11 +105,15 @@ export const useBudgets = () => {
       return response.data;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes for budgets
+    enabled,
   });
 };
 
 // Groups Query
 export const useGroups = () => {
+  const { isAuthenticated, loading } = useAuth();
+  const enabled = isAuthenticated && !loading;
+
   return useQuery({
     queryKey: queryKeys.groups.all,
     queryFn: async () => {
@@ -97,6 +121,7 @@ export const useGroups = () => {
       return response.data;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes for groups
+    enabled,
   });
 };
 

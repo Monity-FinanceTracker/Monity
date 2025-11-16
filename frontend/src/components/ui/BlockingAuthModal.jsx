@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const BlockingAuthModal = () => {
   return (
-    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-start justify-center p-4 pt-24">
       <div className="bg-[#171717] border border-[#262626] rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
         <div className="mb-6">
           <div className="w-16 h-16 bg-[#01C38D]/10 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -12,16 +12,29 @@ import {
 import Spinner from '../ui/Spinner';
 import { get } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/useAuth';
   
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function BalanceChart({ selectedRange }){
     const { t } = useTranslation();
+    const { user, loading: authLoading } = useAuth();
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (authLoading) {
+            return;
+        }
+
+        // In view-only / unauthenticated mode, don't fetch data
+        if (!user) {
+            setHistory([]);
+            setLoading(false);
+            return;
+        }
+
         if (selectedRange === 'current_month') {
             setLoading(false);
             return;
@@ -77,7 +90,7 @@ function BalanceChart({ selectedRange }){
             }
         };
         fetchChartData();
-    }, [selectedRange, t]);
+    }, [selectedRange, t, user, authLoading]);
 
     if (loading) {
         return <Spinner message={t('balanceChart.loading')} />

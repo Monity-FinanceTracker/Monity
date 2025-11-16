@@ -9,16 +9,29 @@ import {
 } from 'chart.js';
 import { get } from '../../utils/api';
 import { useTranslation } from "react-i18next";
+import { useAuth } from '../../context/useAuth';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function ExpenseChart() {
     const { t } = useTranslation();
+    const { user, loading: authLoading } = useAuth();
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (authLoading) {
+            return;
+        }
+
+        // Skip fetching expenses for unauthenticated users (view-only mode)
+        if (!user) {
+            setExpenses([]);
+            setLoading(false);
+            return;
+        }
+
         const fetchExpenses = async () => {
             setLoading(true);
             setError(null);

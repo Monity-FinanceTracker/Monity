@@ -14,7 +14,7 @@ import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
  */
 const EnhancedDashboard = () => {
     const { t } = useTranslation();
-    const { user, subscriptionTier } = useAuth();
+    const { user, subscriptionTier, loading, isViewOnly } = useAuth();
     const [dashboardData, setDashboardData] = useState({
         recentTransactions: [],
         upcomingBills: [],
@@ -25,8 +25,16 @@ const EnhancedDashboard = () => {
     // Removed activeQuickAction state to prevent unnecessary re-renders on hover
 
     useEffect(() => {
+        // Skip authenticated data fetching when user is not logged in
+        if (loading || !user) {
+            setIsLoading(false);
+            return;
+        }
+
         fetchDashboardData();
-    }, []);
+        // Only run when auth state changes or component mounts
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, user]);
 
     const fetchDashboardData = async () => {
         try {
@@ -131,7 +139,13 @@ const EnhancedDashboard = () => {
             }
         >
             <div className="space-y-3">
-                {dashboardData.recentTransactions.length > 0 ? (
+                {isViewOnly ? (
+                    <div className="text-center py-8">
+                        <p className="text-gray-400">
+                            {t('dashboard.login_to_view_recent_transactions')}
+                        </p>
+                    </div>
+                ) : dashboardData.recentTransactions.length > 0 ? (
                     dashboardData.recentTransactions.map((transaction, index) => (
                         <div
                             key={transaction.id || index}

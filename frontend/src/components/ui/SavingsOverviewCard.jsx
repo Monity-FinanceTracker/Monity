@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../../utils/api';
+import { useAuth } from '../../context/useAuth';
 
 const SavingsOverviewCard = () => {
     const { t } = useTranslation();
+    const { user, loading: authLoading } = useAuth();
     const [savingsData, setSavingsData] = useState({
         totalAllocated: 0,
         totalTargets: 0,
@@ -16,8 +18,18 @@ const SavingsOverviewCard = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (authLoading) {
+            return;
+        }
+
+        // Do not fetch savings overview data in view-only / unauthenticated mode
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
         fetchSavingsOverview();
-    }, []);
+    }, [user, authLoading]);
 
     const fetchSavingsOverview = async () => {
         try {

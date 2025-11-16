@@ -1,4 +1,5 @@
 import { get } from "./api";
+import { supabase } from "./supabase";
 
 let subscriptionCache = null;
 let cacheTimestamp = null;
@@ -43,6 +44,18 @@ export const checkSubscription = async (options = {}) => {
   }
 
   try {
+    // Skip remote subscription checks when there is no active Supabase session
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      console.warn("Skipping subscription check: no authenticated session");
+      subscriptionCache = "free";
+      cacheTimestamp = now;
+      return "free";
+    }
+
     const response = await get("/subscription-tier");
     const tier = response.data.subscription_tier || "free";
     subscriptionCache = tier;

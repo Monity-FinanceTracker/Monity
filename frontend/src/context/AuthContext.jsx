@@ -195,7 +195,26 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     clearSubscriptionCache();
     queryClient.clear();
-    await supabase.auth.signOut();
+
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      // Only call Supabase signOut if there is an active session
+      if (session) {
+        const { error } = await supabase.auth.signOut();
+
+        // Ignore 403 errors which can happen if the session is already invalidated
+        if (error && error.status !== 403) {
+          throw error;
+        }
+      }
+    } catch (error) {
+      // Non-fatal logout errors should not break the UI
+      console.error("Logout error:", error?.message || error);
+    }
+
     setUser(null);
   };
 
@@ -218,11 +237,16 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const isAuthenticated = !!user;
+  const isViewOnly = !loading && !isAuthenticated;
+
   const value = {
     user,
     loading,
     isAdmin,
     subscriptionTier,
+    isAuthenticated,
+    isViewOnly,
     login,
     signup,
     logout,
