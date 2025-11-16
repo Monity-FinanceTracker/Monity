@@ -5,9 +5,8 @@ import { getCategories, addTransaction, post } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button, CloseButton } from '../ui';
-import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown, FaArrowLeft } from 'react-icons/fa6';
 import { FaMoneyBillWave, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
-import { categoryIconOptions } from '../../utils/iconMappingData';
 
 /**
  * Componente unificado para adicionar receitas e despesas
@@ -27,9 +26,11 @@ const AddTransaction = ({ type = 'expense' }) => {
             colorClass: 'red',
             gradient: 'from-red-500 to-red-600',
             bgColor: 'bg-red-500/20',
+            iconColor: 'text-red-500',
             textColor: 'text-red-400',
             focusRing: 'focus:ring-red-500',
-            buttonVariant: 'danger',
+            // Use solid red background for the main call-to-action
+            buttonVariant: 'dangerAction',
             translationKey: 'addExpense'
         },
         income: {
@@ -37,10 +38,11 @@ const AddTransaction = ({ type = 'expense' }) => {
             icon: FaArrowTrendUp,
             colorClass: 'green',
             gradient: 'from-green-500 to-green-600',
-            bgColor: 'bg-green-500/20',
+            bgColor: 'bg-[#56a69f]/20',
+            iconColor: 'text-[#56a69f]',
             textColor: 'text-green-400',
             focusRing: 'focus:ring-green-500',
-            buttonVariant: 'success',
+            buttonVariant: 'successAction',
             translationKey: 'addIncome'
         }
     };
@@ -61,21 +63,11 @@ const AddTransaction = ({ type = 'expense' }) => {
     const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
     const [newCategory, setNewCategory] = useState({
         name: '',
-        typeId: currentConfig.typeId,
-        color: '#01C38D',
-        icon: 'Package'
+        typeId: currentConfig.typeId
     });
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [showCategoryError, setShowCategoryError] = useState(false);
     const [shakeForm, setShakeForm] = useState(false);
-
-    const colorOptions = [
-        '#01C38D', '#EF4444', '#3B82F6', '#F59E0B', 
-        '#8B5CF6', '#EC4899', '#10B981', '#F97316',
-        '#6366F1', '#84CC16', '#06B6D4', '#EAB308'
-    ];
-
-    const iconOptions = categoryIconOptions;
 
     // Set default date after component mounts to avoid hydration issues
     useEffect(() => {
@@ -148,9 +140,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             setCategories(prev => [...prev, data]);
             setNewCategory({ 
                 name: '', 
-                typeId: currentConfig.typeId, 
-                color: '#01C38D', 
-                icon: 'Package' 
+                typeId: currentConfig.typeId
             });
             setShowAddCategoryModal(false);
             setShowCategoryError(false);
@@ -170,23 +160,37 @@ const AddTransaction = ({ type = 'expense' }) => {
     const filteredCategories = categories.filter(c => c.typeId === currentConfig.typeId);
 
     return (
-        <div className="min-h-screen bg-[#0A0A0A] p-4 md:p-6">
+        <div className="min-h-screen bg-[#262624] p-4 md:p-6">
             <div className="max-w-2xl mx-auto">
+                {/* Back Button */}
+                <div className="mb-4">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="p-2 hover:bg-[#1F1E1D] rounded-lg transition-colors group flex items-center gap-2"
+                        aria-label="Back"
+                    >
+                        <FaArrowLeft className="w-4 h-4 text-gray-400 group-hover:text-[#56a69f] transition-colors" />
+                        <span className="text-gray-400 group-hover:text-[#56a69f] transition-colors text-sm">
+                            {t('common.back')}
+                        </span>
+                    </button>
+                </div>
+
                 {/* Header Section */}
                 <div className="text-center mb-8">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${currentConfig.gradient} rounded-2xl mb-4 shadow-lg`}>
-                        <Icon className="text-white text-2xl" />
+                    <div className={`inline-flex items-center justify-center w-16 h-16 ${currentConfig.bgColor} rounded-full mb-4 shadow-lg`}>
+                        <Icon className={`${currentConfig.iconColor} text-2xl`} />
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                    <h1 className="text-2xl md:text-3xl font-semibold text-white mb-1">
                         {t(`${currentConfig.translationKey}.title`)}
                     </h1>
-                    <p className="text-gray-400 text-lg">
+                    <p className="text-gray-400 text-sm md:text-base">
                         {t(`${currentConfig.translationKey}.subtitle`)}
                     </p>
                 </div>
 
                 {/* Add Transaction Form */}
-                <div className={`bg-[#171717] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all ${shakeForm ? 'animate-shake' : ''}`}>
+                <div className={`bg-[#1F1E1D] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all ${shakeForm ? 'animate-shake' : ''}`}>
                     <style>{`
                         @keyframes shake {
                             0%, 100% { transform: translateX(0); }
@@ -220,7 +224,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                             <div className="relative">
                                 <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
-                                    className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500`}
+                                    className={`w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500`}
                                     placeholder={t(`${currentConfig.translationKey}.description`)}
                                     value={transaction.description}
                                     onChange={e => setTransaction(prev => ({ ...prev, description: e.target.value }))}
@@ -235,7 +239,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                 <input
                                     type="number"
                                     step="0.01"
-                                    className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]`}
+                                    className={`w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]`}
                                     placeholder={t(`${currentConfig.translationKey}.amount`)}
                                     value={transaction.amount}
                                     onChange={e => setTransaction(prev => ({ ...prev, amount: e.target.value }))}
@@ -265,7 +269,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                 <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     type="date"
-                                    className={`w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4`}
+                                    className={`w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4`}
                                     value={transaction.date}
                                     onChange={e => setTransaction(prev => ({ ...prev, date: e.target.value }))}
                                     required
@@ -276,7 +280,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                         <div className="relative">
                             <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-white z-10" />
                             <select
-                                className={`w-full bg-[#232323] border ${showCategoryError ? 'border-red-500' : 'border-[#262626]'} text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium`}
+                                className={`w-full bg-[#1F1E1D] border ${showCategoryError ? 'border-red-500' : 'border-[#262626]'} text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium`}
                                 style={{
                                     fontFamily: "'DM Sans', sans-serif",
                                     fontSize: '14px',
@@ -290,8 +294,17 @@ const AddTransaction = ({ type = 'expense' }) => {
                             >
                                 <option 
                                     value="" 
-                                    className="bg-[#232323] text-white font-medium"
-                                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
+                                    className="bg-[#1F1E1D] text-white font-medium"
+                                    style={{ 
+                                        fontFamily: "'DM Sans', sans-serif", 
+                                        fontSize: '14px', 
+                                        fontWeight: '500', 
+                                        backgroundColor: '#1F1E1D', 
+                                        color: 'white',
+                                        minWidth: '250px',
+                                        width: 'max-content',
+                                        padding: '8px 12px'
+                                    }}
                                 >
                                     {filteredCategories.length === 0 
                                         ? t('addTransaction.no_categories_available')
@@ -302,8 +315,17 @@ const AddTransaction = ({ type = 'expense' }) => {
                                     <option 
                                         key={category.id} 
                                         value={category.name} 
-                                        className="bg-[#232323] text-white font-medium"
-                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#232323', color: 'white' }}
+                                        className="bg-[#1F1E1D] text-white font-medium"
+                                        style={{ 
+                                            fontFamily: "'DM Sans', sans-serif", 
+                                            fontSize: '14px', 
+                                            fontWeight: '500', 
+                                            backgroundColor: '#1F1E1D', 
+                                            color: 'white',
+                                            minWidth: '250px',
+                                            width: 'max-content',
+                                            padding: '8px 12px'
+                                        }}
                                     >
                                         {category.name}
                                     </option>
@@ -318,24 +340,24 @@ const AddTransaction = ({ type = 'expense' }) => {
 
                         {/* Error Alert - No Categories */}
                         {showCategoryError && (
-                            <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-4 animate-fadeIn">
+                            <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-3 animate-fadeIn text-sm">
                                 <div className="flex items-start gap-3">
-                                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                         </svg>
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="text-red-400 font-semibold mb-1">
+                                        <h3 className="text-red-400 font-semibold mb-1 text-sm">
                                             {t('addTransaction.no_category_alert_title')}
                                         </h3>
-                                        <p className="text-red-300 text-sm mb-3">
+                                        <p className="text-red-300 text-xs mb-2">
                                             {t('addTransaction.no_category_alert_message')}
                                         </p>
                                         <button
                                             type="button"
                                             onClick={() => setShowAddCategoryModal(true)}
-                                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors font-medium text-sm flex items-center gap-2"
+                                            className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors font-medium text-xs flex items-center gap-2"
                                         >
                                             <FaPlus className="text-xs" />
                                             {t('addTransaction.create_category_now')}
@@ -346,21 +368,23 @@ const AddTransaction = ({ type = 'expense' }) => {
                         )}
 
                         {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            variant={currentConfig.buttonVariant}
-                            size="lg"
-                            fullWidth
-                            loading={loading}
-                            disabled={loading}
-                            leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
-                            style={{ justifyContent: 'center' }}
-                        >
-                            {loading 
-                                ? t(`${currentConfig.translationKey}.adding`) 
-                                : t(`${currentConfig.translationKey}.add_${type}`)
-                            }
-                        </Button>
+                        <div className="pt-2">
+                            <Button
+                                type="submit"
+                                variant={currentConfig.buttonVariant}
+                                size="md"
+                                fullWidth
+                                loading={loading}
+                                disabled={loading}
+                                leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
+                                style={{ justifyContent: 'center' }}
+                            >
+                                {loading 
+                                    ? t(`${currentConfig.translationKey}.adding`) 
+                                    : t(`${currentConfig.translationKey}.add_${type}`)
+                                }
+                            </Button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -368,9 +392,23 @@ const AddTransaction = ({ type = 'expense' }) => {
             {/* Add Category Modal */}
             {showAddCategoryModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
-                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-lg sm:max-w-2xl max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
+                        <div className="flex items-center justify-between mb-6 relative">
+                            {/* Back Button */}
+                            <button
+                                onClick={() => setShowAddCategoryModal(false)}
+                                className="p-2 hover:bg-[#262626] rounded-lg transition-colors group"
+                                aria-label="Back"
+                            >
+                                <FaArrowLeft className="w-4 h-4 text-gray-400 group-hover:text-[#56a69f] transition-colors" />
+                            </button>
+                            
+                            {/* Centered Title */}
+                            <h2 className="text-xl font-bold text-white absolute left-1/2 transform -translate-x-1/2">
+                                {t('categories.add_new')}
+                            </h2>
+                            
+                            {/* Close Button */}
                             <CloseButton onClick={() => setShowAddCategoryModal(false)} />
                         </div>
 
@@ -383,7 +421,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                     type="text"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-2 sm:p-4 text-base sm:text-lg focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                                     placeholder={t('categories.name_placeholder')}
                                     required
                                 />
@@ -404,17 +442,41 @@ const AddTransaction = ({ type = 'expense' }) => {
                                         onBlur={() => {
                                             setTimeout(() => setIsDropdownOpen(false), 150);
                                         }}
-                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer"
+                                        className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-2 sm:p-4 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer text-base sm:text-lg"
                                         style={{ 
-                                            background: '#232323',
+                                            background: '#1F1E1D',
                                             color: 'white',
                                             appearance: 'none',
                                             WebkitAppearance: 'none',
                                             MozAppearance: 'none'
                                         }}
                                     >
-                                        <option value={1}>{t('categories.expense')}</option>
-                                        <option value={2}>{t('categories.income')}</option>
+                                        <option 
+                                            value={1}
+                                            style={{
+                                                minWidth: '400px',
+                                                width: 'max-content',
+                                                padding: '12px 16px',
+                                                backgroundColor: '#1F1E1D',
+                                                color: 'white',
+                                                fontSize: '16px'
+                                            }}
+                                        >
+                                            {t('categories.expense')}
+                                        </option>
+                                        <option 
+                                            value={2}
+                                            style={{
+                                                minWidth: '400px',
+                                                width: 'max-content',
+                                                padding: '12px 16px',
+                                                backgroundColor: '#1F1E1D',
+                                                color: 'white',
+                                                fontSize: '16px'
+                                            }}
+                                        >
+                                            {t('categories.income')}
+                                        </option>
                                     </select>
                                     <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                                         <svg 
@@ -429,64 +491,18 @@ const AddTransaction = ({ type = 'expense' }) => {
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="block text-gray-300 text-sm font-medium mb-2">
-                                    {t('categories.icon')}
-                                </label>
-                                <div className="grid grid-cols-5 gap-1 sm:gap-2">
-                                    {iconOptions.map((iconOption) => {
-                                        const IconComponent = iconOption.icon;
-                                        return (
-                                            <button
-                                                key={iconOption.name}
-                                                type="button"
-                                                onClick={() => setNewCategory(prev => ({ ...prev, icon: iconOption.name }))}
-                                                className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${
-                                                    newCategory.icon === iconOption.name 
-                                                        ? 'border-[#01C38D] bg-[#01C38D]/20 text-[#01C38D]' 
-                                                        : 'border-[#262626] hover:border-[#01C38D]/50 text-gray-400 hover:text-white'
-                                                }`}
-                                                title={iconOption.label}
-                                            >
-                                                <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-gray-300 text-sm font-medium mb-2">
-                                    {t('categories.color')}
-                                </label>
-                                <div className="grid grid-cols-6 gap-1 sm:gap-2">
-                                    {colorOptions.map((color) => (
-                                        <button
-                                            key={color}
-                                            type="button"
-                                            onClick={() => setNewCategory(prev => ({ ...prev, color }))}
-                                            className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 transition-all ${
-                                                newCategory.color === color 
-                                                    ? 'border-white' 
-                                                    : 'border-transparent hover:border-gray-400'
-                                            }`}
-                                            style={{ backgroundColor: color }}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
 
                             <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4">
                                 <button
                                     type="button"
                                     onClick={() => setShowAddCategoryModal(false)}
-                                    className="flex-1 bg-gray-600 text-white py-2 sm:py-3 rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
+                                    className="flex-1 bg-gray-600 text-white py-3 sm:py-4 rounded-lg hover:bg-gray-700 transition-colors text-base sm:text-lg font-medium"
                                 >
                                     {t('categories.cancel')}
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-[#01C38D] text-white py-2 sm:py-3 rounded-lg hover:bg-[#00b37e] transition-colors text-sm sm:text-base"
+                                    className="flex-1 bg-[#56a69f] text-white py-3 sm:py-4 rounded-lg hover:bg-[#4A8F88] transition-colors text-base sm:text-lg font-medium"
                                 >
                                     {t('categories.add')}
                                 </button>

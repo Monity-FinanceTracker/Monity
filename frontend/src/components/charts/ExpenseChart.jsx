@@ -9,16 +9,25 @@ import {
 } from 'chart.js';
 import { get } from '../../utils/api';
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/useAuth";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function ExpenseChart() {
     const { t } = useTranslation();
+    const { user } = useAuth();
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!user) {
+            setExpenses([]);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
         const fetchExpenses = async () => {
             setLoading(true);
             setError(null);
@@ -37,7 +46,11 @@ function ExpenseChart() {
         };
         
         fetchExpenses();
-    }, []);
+    }, [user]);
+
+    if (!user) {
+        return <p className="text-center text-gray-400">{t('expenseChart.loginToView', 'Faça login para ver seus gastos por categoria.')}</p>;
+    }
 
     if(loading){
         return <Spinner message={t('expenseChart.loading')} />
@@ -79,7 +92,7 @@ function ExpenseChart() {
 
     // Simple color palette
     const chartColors = [
-        '#01C38D', '#36A2EB', '#FF6384', '#FFCE56', '#9B59B6', '#B0BEC5'
+        '#56a69f', '#36A2EB', '#FAF9F5', '#FFCE56', '#9B59B6', '#B0BEC5'
     ];
 
     const chartData = {
@@ -98,6 +111,7 @@ function ExpenseChart() {
             legend: {
                 display: true,
                 position: 'bottom',
+                align: 'center',
                 labels: {
                     color: '#fff',
                     font: { size: 14 },
@@ -113,12 +127,15 @@ function ExpenseChart() {
         cutout: '65%',
         layout: {
             padding: 0
-        }
+        },
+        maintainAspectRatio: true
     };
 
     return (
-        <div className="bg-transparent rounded-xl flex justify-center items-center w-full h-full" style={{ minHeight: 340 }}>
-            <Doughnut data={chartData} options={chartOptions} />
+        <div className="w-full flex justify-center items-center" style={{ minHeight: 300 }}>
+            <div className="max-w-[300px] w-full">
+                <Doughnut data={chartData} options={chartOptions} />
+            </div>
         </div>
     )
 }

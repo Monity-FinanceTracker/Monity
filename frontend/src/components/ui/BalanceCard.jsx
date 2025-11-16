@@ -2,23 +2,33 @@ import React, { memo, useMemo } from "react";
 import Spinner from "./Spinner";
 import { useTranslation } from "react-i18next";
 import { useBalance } from "../../hooks/useQueries";
+import { useAuth } from "../../context/useAuth";
 
 const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     const { t } = useTranslation();
-    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange);
+    const { user } = useAuth();
+    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange, { enabled: !!user });
 
     // Calcula o tamanho da fonte baseado no comprimento do texto
     const fontSize = useMemo(() => {
         const formattedBalance = balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const totalLength = formattedBalance.length + 3; // +3 para "R$ "
         
-        // Escala o tamanho da fonte baseado no comprimento
-        if (totalLength <= 10) return 'text-4xl'; // Números pequenos
-        if (totalLength <= 15) return 'text-3xl'; // Números médios
-        if (totalLength <= 20) return 'text-2xl'; // Números grandes
-        if (totalLength <= 25) return 'text-xl';  // Números muito grandes
-        return 'text-lg'; // Números extremamente grandes
+        // Escala o tamanho da fonte baseado no comprimento (aumentado)
+        if (totalLength <= 10) return 'text-6xl'; // Números pequenos
+        if (totalLength <= 15) return 'text-5xl'; // Números médios
+        if (totalLength <= 20) return 'text-4xl'; // Números grandes
+        if (totalLength <= 25) return 'text-3xl';  // Números muito grandes
+        return 'text-2xl'; // Números extremamente grandes
     }, [balance]);
+
+    if (!user) {
+        return (
+            <p className="text-gray-400 text-lg mb-4">
+                {t('balanceCard.loginToView', 'Faça login para ver seu saldo.')}
+            </p>
+        );
+    }
 
     if (loading) {
         return <Spinner message={t('balanceCard.loading')} size="md" center={false} />;
@@ -28,7 +38,7 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     }
 
     return (
-        <h2 className={`${fontSize} font-bold text-white mb-4 whitespace-nowrap overflow-hidden`}>
+        <h2 className={`${fontSize} font-bold text-white whitespace-nowrap overflow-hidden text-left`}>
             R$ {balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </h2>
     );

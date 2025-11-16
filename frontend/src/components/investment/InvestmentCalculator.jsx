@@ -118,7 +118,7 @@ const InvestmentCalculator = () => {
                         
                         {/* Usage indicator */}
                         {usage && !usage.isPremium && (
-                            <div className="bg-[#171717] rounded-lg px-4 py-2 border border-[#262626]">
+                            <div className="bg-[#1F1E1D] rounded-lg px-4 py-2 border border-[#262626]">
                                 <p className="text-sm text-gray-400">
                                     {t('investmentCalculator.simulationsUsed', {
                                         used: Number(usage.simulationsUsed ?? 0),
@@ -155,7 +155,7 @@ const InvestmentCalculator = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Input Form */}
                     <div className="lg:col-span-1">
-                        <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
+                        <div className="bg-[#1F1E1D] rounded-xl p-6 border border-[#262626]">
                             <h2 className="text-xl font-semibold text-white mb-6">
                                 {t('investmentCalculator.inputParameters')}
                             </h2>
@@ -172,7 +172,7 @@ const InvestmentCalculator = () => {
                                             type="number"
                                             value={initialInvestment}
                                             onChange={(e) => setInitialInvestment(e.target.value)}
-                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
                                             min="0"
                                             step="0.01"
                                             required
@@ -191,7 +191,7 @@ const InvestmentCalculator = () => {
                                             type="number"
                                             value={contributionAmount}
                                             onChange={(e) => setContributionAmount(e.target.value)}
-                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
                                             min="0"
                                             step="0.01"
                                             required
@@ -213,8 +213,8 @@ const InvestmentCalculator = () => {
                                             { value: 'annually', label: t('investmentCalculator.annually') }
                                         ]}
                                         placeholder={t('investmentCalculator.contributionFrequency')}
-                                        bgColor="#232323"
-                                        menuBgColor="#232323"
+                                        bgColor="#1F1E1D"
+                                        menuBgColor="#1F1E1D"
                                     />
                                 </div>
 
@@ -228,7 +228,7 @@ const InvestmentCalculator = () => {
                                             type="number"
                                             value={annualInterestRate}
                                             onChange={(e) => setAnnualInterestRate(e.target.value)}
-                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 pr-10 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg px-4 pr-10 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                             min="0"
                                             max="100"
                                             step="0.1"
@@ -266,7 +266,7 @@ const InvestmentCalculator = () => {
                                             type="date"
                                             value={goalDate}
                                             onChange={(e) => setGoalDate(e.target.value)}
-                                            className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                                             style={{
                                                 colorScheme: 'dark'
                                             }}
@@ -283,10 +283,32 @@ const InvestmentCalculator = () => {
                                     <select
                                         value={viewType}
                                         onChange={(e) => setViewType(e.target.value)}
-                                        className="w-full bg-[#232323] border border-[#262626] rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                        className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg px-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
                                     >
-                                        <option value="monthly">{t('investmentCalculator.monthlyView')}</option>
-                                        <option value="annually">{t('investmentCalculator.annualView')}</option>
+                                        <option 
+                                            value="monthly"
+                                            style={{
+                                                minWidth: '250px',
+                                                width: 'max-content',
+                                                padding: '8px 12px',
+                                                backgroundColor: '#1F1E1D',
+                                                color: 'white'
+                                            }}
+                                        >
+                                            {t('investmentCalculator.monthlyView')}
+                                        </option>
+                                        <option 
+                                            value="annually"
+                                            style={{
+                                                minWidth: '250px',
+                                                width: 'max-content',
+                                                padding: '8px 12px',
+                                                backgroundColor: '#1F1E1D',
+                                                color: 'white'
+                                            }}
+                                        >
+                                            {t('investmentCalculator.annualView')}
+                                        </option>
                                     </select>
                                 </div>
 
@@ -369,7 +391,7 @@ const InvestmentCalculator = () => {
                                 </div>
 
                                 {/* Chart */}
-                                <div className="bg-[#171717] rounded-xl p-6 border border-[#262626]">
+                                <div className="bg-[#1F1E1D] rounded-xl p-6 border border-[#262626]">
                                     <h2 className="text-xl font-semibold text-white mb-4">
                                         {t('investmentCalculator.growthProjection')}
                                     </h2>
@@ -377,7 +399,7 @@ const InvestmentCalculator = () => {
                                 </div>
                             </>
                         ) : (
-                            <div className="bg-[#171717] rounded-xl p-12 border border-[#262626] text-center">
+                            <div className="bg-[#1F1E1D] rounded-xl p-12 border border-[#262626] text-center">
                                 <TrendingUp className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                                 <h3 className="text-xl font-semibold text-gray-400 mb-2">
                                     {t('investmentCalculator.noResults')}

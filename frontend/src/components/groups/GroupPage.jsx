@@ -195,7 +195,7 @@ const GroupPage = () => {
     return (
         <div className="flex-1 p-6">
             <div className="mb-6">
-                <Link to="/groups" className="text-[#01C38D] hover:text-[#00b37e] font-medium flex items-center gap-2 mb-4">
+                <Link to="/groups" className="text-[#56a69f] hover:text-[#00b37e] font-medium flex items-center gap-2 mb-4">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
@@ -206,12 +206,12 @@ const GroupPage = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Members Section */}
-                <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
+                <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                     <h2 className="text-xl font-semibold text-white mb-4">{t('groups.members')}</h2>
                     
                     <div className="space-y-3 mb-6">
                         {group.group_members.map(member => (
-                            <div key={member.profiles.id} className="flex items-center justify-between p-3 bg-[#232323] rounded-lg">
+                            <div key={member.profiles.id} className="flex items-center justify-between p-3 bg-[#1F1E1D] rounded-lg">
                                 <span className="text-white">{member.profiles.name}</span>
                             </div>
                         ))}
@@ -230,11 +230,11 @@ const GroupPage = () => {
                                     setShowUserSearch(e.target.value.length >= 2);
                                 }}
                                 placeholder={t('groups.enter_email')}
-                                className="w-full px-4 py-2 bg-[#232323] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent"
                             />
                             
                             {showUserSearch && (
-                                <div className="bg-[#232323] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar">
+                                <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar">
                                     {searchLoading ? (
                                         <div className="p-3 text-gray-400 text-center">{t('groups.searching')}</div>
                                     ) : userSearchResults.length > 0 ? (
@@ -243,7 +243,7 @@ const GroupPage = () => {
                                                 key={user.id}
                                                 onClick={() => handleSendInvitation(user.email)}
                                                 disabled={inviteLoading}
-                                                className="w-full text-left p-3 hover:bg-[#171717] transition-colors border-b border-[#262626] last:border-b-0"
+                                                className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0"
                                             >
                                                 <div className="text-white">{user.name}</div>
                                                 <div className="text-gray-400 text-sm">{user.email}</div>
@@ -255,7 +255,7 @@ const GroupPage = () => {
                                             <button
                                                 onClick={() => handleSendInvitation(newMemberEmail)}
                                                 disabled={inviteLoading}
-                                                className="text-[#01C38D] hover:text-[#00b37e] text-sm"
+                                                className="text-[#56a69f] hover:text-[#00b37e] text-sm"
                                             >
                                                 {t('groups.send_invitation_to')} {newMemberEmail}
                                             </button>
@@ -268,7 +268,7 @@ const GroupPage = () => {
                 </div>
 
                 {/* Expenses Section - Same as before */}
-                <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
+                <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                     <h2 className="text-xl font-semibold text-white mb-4">{t('groups.expenses')}</h2>
                     
                     <div className="space-y-4 mb-6 max-h-80 overflow-y-auto custom-scrollbar">
@@ -276,10 +276,10 @@ const GroupPage = () => {
                             <p className="text-gray-400 text-center py-8">{t('groups.no_expenses')}</p>
                         ) : (
                             group.group_expenses.map(expense => (
-                                <div key={expense.id} className="p-4 bg-[#232323] rounded-lg">
+                                <div key={expense.id} className="p-4 bg-[#1F1E1D] rounded-lg">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-white font-medium">{expense.description}</span>
-                                        <span className="text-[#01C38D] font-bold">R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                        <span className="text-[#56a69f] font-bold">R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="text-sm text-gray-400 mb-3">{t('groups.paid_by')} {expense.profiles.name}</div>
                                     <div className="space-y-1">
@@ -291,7 +291,7 @@ const GroupPage = () => {
                                                 ) : share.user_id === user.id ? (
                                                     <button 
                                                         onClick={() => handleSettleShare(share.id)}
-                                                        className="text-[#01C38D] hover:text-[#00b37e] text-xs"
+                                                        className="text-[#56a69f] hover:text-[#00b37e] text-xs"
                                                     >
                                                         {t('groups.settle')}
                                                     </button>
@@ -316,7 +316,7 @@ const GroupPage = () => {
                                 id="description"
                                 value={expenseDescription}
                                 onChange={(e) => setExpenseDescription(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#232323] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent"
                                 required
                             />
                         </div>
@@ -329,7 +329,7 @@ const GroupPage = () => {
                                 id="amount"
                                 value={expenseAmount}
                                 onChange={(e) => setExpenseAmount(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#232323] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#01C38D] focus:border-transparent"
+                                className="w-full px-4 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent"
                                 required
                             />
                         </div>
@@ -340,7 +340,7 @@ const GroupPage = () => {
                                 <button
                                     type="button"
                                     onClick={autoSplitExpense}
-                                    className="text-[#01C38D] hover:text-[#00b37e] text-sm"
+                                    className="text-[#56a69f] hover:text-[#00b37e] text-sm"
                                 >
                                     {t('groups.split_equally')}
                                 </button>
@@ -355,7 +355,7 @@ const GroupPage = () => {
                                                 step="0.01"
                                                 value={share.amount_owed}
                                                 onChange={(e) => handleShareChange(share.user_id, e.target.value)}
-                                                className="w-24 px-2 py-1 pr-6 bg-[#232323] border border-[#262626] rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#01C38D] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                                className="w-24 px-2 py-1 pr-6 bg-[#1F1E1D] border border-[#262626] rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#56a69f] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                                 placeholder="0.00"
                                             />
                                             {/* Custom spinner arrows */}
@@ -385,7 +385,7 @@ const GroupPage = () => {
                         
                         <button 
                             type="submit" 
-                            className="w-full bg-[#01C38D] text-[#232323] font-bold py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
+                            className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold py-3 rounded-lg hover:bg-[#4A8F88] transition-colors"
                         >
                             {t('groups.add_expense_button')}
                         </button>
