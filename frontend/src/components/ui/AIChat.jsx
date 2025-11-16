@@ -21,26 +21,25 @@ const AIChat = ({ isOpen, onClose }) => {
     const [usage, setUsage] = useState(null);
     const [suggestedPrompts, setSuggestedPrompts] = useState([]);
     const [showPrompts, setShowPrompts] = useState(true);
-    const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
 
     useEffect(() => {
         if (isOpen) {
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
             loadChatHistory();
             loadUsage();
             loadSuggestedPrompts();
-            // Focus input when chat opens
-            setTimeout(() => inputRef.current?.focus(), 100);
+        } else {
+            // Restore body scroll when modal is closed
+            document.body.style.overflow = '';
         }
-    }, [isOpen]);
 
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+        // Cleanup function
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
 
     const loadChatHistory = async () => {
         try {
@@ -177,8 +176,19 @@ const AIChat = ({ isOpen, onClose }) => {
         : t('aiChat.messages_remaining_plural', { count: messagesRemaining });
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-[#1a1a1a] rounded-2xl shadow-2xl w-full max-w-3xl h-[80vh] flex flex-col">
+        <div 
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            onClick={(e) => {
+                // Close modal if clicking on backdrop
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            }}
+        >
+            <div 
+                className="bg-[#1a1a1a] rounded-2xl shadow-2xl w-full max-w-3xl h-[80vh] flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+            >
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-700">
                     <div className="flex items-center gap-3">
@@ -274,7 +284,6 @@ const AIChat = ({ isOpen, onClose }) => {
                                     </div>
                                 </div>
                             )}
-                            <div ref={messagesEndRef} />
                         </>
                     )}
                 </div>

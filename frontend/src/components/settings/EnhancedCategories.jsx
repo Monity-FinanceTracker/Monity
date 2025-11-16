@@ -6,8 +6,7 @@ import { useCategories, useAddCategory } from '../../hooks/useQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../../lib/queryClient';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
-import { Plus, Search, Trash2 } from 'lucide-react';
-import { categoryIconOptions, getIcon } from '../../utils/iconMappingData';
+import { Plus, Search, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import { Dropdown, CloseButton } from '../ui';
 
 /**
@@ -27,9 +26,7 @@ const EnhancedCategories = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [newCategory, setNewCategory] = useState({
         name: '',
-        typeId: 1,
-        color: '#01C38D',
-        icon: 'Package'
+        typeId: 1
     });
     
     const categoryTypes = [
@@ -37,15 +34,6 @@ const EnhancedCategories = () => {
         { id: 1, label: t('categories.expense'), value: 'expense' },
         { id: 2, label: t('categories.income'), value: 'income' }
     ];
-
-    const colorOptions = [
-        '#01C38D', '#EF4444', '#3B82F6', '#F59E0B', 
-        '#8B5CF6', '#EC4899', '#10B981', '#F97316',
-        '#6366F1', '#84CC16', '#06B6D4', '#EAB308'
-    ];
-
-    // Use centralized icon options
-    const iconOptions = categoryIconOptions;
 
     // Handle query errors
     useEffect(() => {
@@ -60,7 +48,7 @@ const EnhancedCategories = () => {
         
         try {
             await addCategoryMutation.mutateAsync(newCategory);
-            setNewCategory({ name: '', typeId: 1, color: '#01C38D', icon: 'Package' });
+            setNewCategory({ name: '', typeId: 1 });
             setShowAddForm(false);
             success(t('categories.add_success'));
         } catch (error) {
@@ -92,54 +80,50 @@ const EnhancedCategories = () => {
         return type ? type.label : '';
     };
 
-    if (loading) {
-        return <LoadingState message={t('categories.loading')} />;
-    }
-
     return (
-        <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">{t('categories.title')}</h1>
-                    <p className="text-gray-400">{t('categories.subtitle')}</p>
-                </div>
+        <div className="flex-1 p-6">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-white">{t('categories.title')}</h1>
                 <button
                     onClick={() => setShowAddForm(true)}
-                    className="mt-4 sm:mt-0 bg-[#01C38D] text-white px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors flex items-center gap-2 font-medium"
+                    className="bg-[#56A69f] !text-[#1F1E1D] px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors font-medium"
                 >
-                    <Plus className="w-4 h-4" />
                     {t('categories.add_new')}
                 </button>
             </div>
 
-            {/* Search and Filter Bar */}
-            <div className="bg-[#171717] rounded-lg border border-[#262626] p-4 mb-6">
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                placeholder={t('categories.search_placeholder')}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full h-12 bg-[#171717] border border-[#262626] text-white rounded-xl pl-10 pr-4 text-base font-medium focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
-                            />
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            {loading ? (
+                <LoadingState message={t('categories.loading')} />
+            ) : (
+                <>
+                    {/* Search and Filter Bar */}
+                    <div className="mb-6">
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex-1">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder={t('categories.search_placeholder')}
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full h-12 bg-[#1F1E1D] border border-[#262626] text-white rounded-xl pl-10 pr-4 text-base font-medium focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
+                                    />
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                </div>
+                            </div>
+                            <div className="sm:w-64">
+                                <Dropdown
+                                    value={selectedType}
+                                    onChange={(value) => setSelectedType(value === 'all' ? 'all' : parseInt(value))}
+                                    options={categoryTypes.map(type => ({
+                                        value: type.id,
+                                        label: type.label
+                                    }))}
+                                    placeholder={t('categories.all')}
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="sm:w-64">
-                        <Dropdown
-                            value={selectedType}
-                            onChange={(value) => setSelectedType(value === 'all' ? 'all' : parseInt(value))}
-                            options={categoryTypes.map(type => ({
-                                value: type.id,
-                                label: type.label
-                            }))}
-                            placeholder={t('categories.all')}
-                        />
-                    </div>
-                </div>
-            </div>
 
             {/* Categories Grid */}
             {filteredCategories.length === 0 ? (
@@ -154,43 +138,48 @@ const EnhancedCategories = () => {
                 )
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {filteredCategories.map((category) => (
-                        <div
-                            key={category.id}
-                            className="bg-[#171717] rounded-lg border border-[#262626] p-4 hover:border-[#01C38D]/30 transition-all group"
-                        >
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                    <div 
-                                        className="w-10 h-10 rounded-lg flex items-center justify-center"
-                                        style={{ backgroundColor: category.color || '#01C38D' }}
+                    {filteredCategories.map((category) => {
+                        const isExpense = category.typeId === 1;
+                        const ArrowIcon = isExpense ? ArrowUp : ArrowDown;
+                        const iconColor = isExpense ? '#FAF9F5' : '#56A69f';
+                        const bgClass = isExpense ? 'bg-[#FAF9F5]/20' : 'bg-[#56A69f]/20';
+                        
+                        return (
+                            <div
+                                key={category.id}
+                                className="bg-[#171717] rounded-lg border border-[#262626] p-4 hover:border-[#56A69f]/30 transition-all group"
+                            >
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex items-center gap-3">
+                                        <div 
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center ${bgClass}`}
+                                        >
+                                            <ArrowIcon className="w-5 h-5" style={{ color: iconColor }} />
+                                        </div>
+                                        <div className="text-left">
+                                            <h3 className="text-white font-medium">{category.name}</h3>
+                                            <span className="text-xs px-2 py-1 rounded-full bg-[#242532] text-gray-300">
+                                                {getTypeLabel(category.typeId)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDeleteCategory(category.id)}
+                                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                        title={t('categories.delete')}
                                     >
-                                        {(() => {
-                                            const IconComponent = getIcon(category.icon);
-                                            return <IconComponent className="w-5 h-5 text-white" />;
-                                        })()}
-                                    </div>
-                                    <div className="text-left">
-                                        <h3 className="text-white font-medium">{category.name}</h3>
-                                        <span className="text-xs px-2 py-1 rounded-full bg-[#242532] text-gray-300">
-                                            {getTypeLabel(category.typeId)}
-                                        </span>
-                                    </div>
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() => handleDeleteCategory(category.id)}
-                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                                    title={t('categories.delete')}
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
+                                <div className="text-gray-400 text-sm">
+                                    {t('categories.transaction_count', { count: category.transactionCount || 0 })}
+                                </div>
                             </div>
-                            <div className="text-gray-400 text-sm">
-                                {t('categories.transaction_count', { count: category.transactionCount || 0 })}
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
+            )}
+                </>
             )}
 
             {/* Add Category Modal */}
@@ -211,7 +200,7 @@ const EnhancedCategories = () => {
                                     type="text"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
                                     placeholder={t('categories.name_placeholder')}
                                     required
                                 />
@@ -234,53 +223,6 @@ const EnhancedCategories = () => {
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-gray-300 text-sm font-medium mb-2">
-                                    {t('categories.icon')}
-                                </label>
-                                <div className="grid grid-cols-5 gap-1 sm:gap-2">
-                                    {iconOptions.map((iconOption) => {
-                                        const IconComponent = iconOption.icon;
-                                        return (
-                                            <button
-                                                key={iconOption.name}
-                                                type="button"
-                                                onClick={() => setNewCategory(prev => ({ ...prev, icon: iconOption.name }))}
-                                                className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${
-                                                    newCategory.icon === iconOption.name 
-                                                        ? 'border-[#01C38D] bg-[#01C38D]/20 text-[#01C38D]' 
-                                                        : 'border-[#262626] hover:border-[#01C38D]/50 text-gray-400 hover:text-white'
-                                                }`}
-                                                title={iconOption.label}
-                                            >
-                                                <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-gray-300 text-sm font-medium mb-2">
-                                    {t('categories.color')}
-                                </label>
-                                <div className="grid grid-cols-6 gap-1 sm:gap-2">
-                                    {colorOptions.map((color) => (
-                                        <button
-                                            key={color}
-                                            type="button"
-                                            onClick={() => setNewCategory(prev => ({ ...prev, color }))}
-                                            className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 transition-all ${
-                                                newCategory.color === color 
-                                                    ? 'border-white' 
-                                                    : 'border-transparent hover:border-gray-400'
-                                            }`}
-                                            style={{ backgroundColor: color }}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-
                             <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4">
                                 <button
                                     type="button"
@@ -291,7 +233,7 @@ const EnhancedCategories = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-[#01C38D] text-white py-2 sm:py-3 rounded-lg hover:bg-[#00b37e] transition-colors text-sm sm:text-base"
+                                    className="flex-1 bg-[#56A69f] text-white py-2 sm:py-3 rounded-lg hover:bg-[#4A8F88] transition-colors text-sm sm:text-base"
                                 >
                                     {t('categories.add')}
                                 </button>

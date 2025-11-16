@@ -159,21 +159,21 @@ const SavingsGoals = () => {
     };
 
     return (
-        <div className="p-4 md:p-6">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-white">{t('savings_goals.title')}</h2>
+        <div className="flex-1 p-6">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-white">{t('savings_goals.title')}</h1>
                 <div className="flex items-center gap-4">
                     {isLimited && (
                         <Link
                             to="/subscription"
-                            className="bg-yellow-400 text-black font-bold px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors"
+                            className="bg-yellow-400 text-black font-bold px-6 py-3 rounded-lg hover:bg-yellow-500 transition-colors"
                         >
                             {t('savings_goals.upgrade_to_add')}
                         </Link>
                     )}
                     <button 
                         onClick={() => setIsModalOpen(true)} 
-                        className={`bg-[#56a69f] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#01a87a] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#56a69f] !text-[#1F1E1D] px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors font-medium ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={isLimited}
                     >
                         {t('savings_goals.add_new_goal')}
@@ -304,7 +304,7 @@ const SavingsGoals = () => {
                                     <span>{formatSimpleCurrency(goal.target_amount)}</span>
                                 </div>
                                 <div className="mt-4 flex space-x-4">
-                                    <button onClick={() => handleAddMoneyClick(goal.id)} className="bg-[#56a69f] hover:bg-[#4a8f88] text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md">
+                                    <button onClick={() => handleAddMoneyClick(goal.id)} className="bg-[#56a69f] hover:bg-[#4a8f88] !text-[#1F1E1D] font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md">
                                         {addingMoney[goal.id]?.isAdding ? t('common.cancel') : t('savings_goals.allocate_funds')}
                                     </button>
                                     {parseFloat(goal.current_amount) > 0 && (

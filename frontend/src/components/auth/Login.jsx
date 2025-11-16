@@ -38,13 +38,6 @@ function Login() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#01C38D]/6 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-[#01C38D]/4 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-500"></div>
-            </div>
-
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
                 {/* Monity Logo with Custom Slogan */}
@@ -63,7 +56,7 @@ function Login() {
                 </div>
 
                 {/* Login Card with Enhanced Design */}
-                <div className="bg-transparent backdrop-blur-xl p-5 rounded-2xl border border-[#262626] transform animate-fade-in-up delay-200">
+                <div className="p-5 rounded-2xl transform animate-fade-in-up delay-200">
 
                     {/* Error Message with Better Styling */}
                     {error && (
@@ -97,7 +90,7 @@ function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setEmailFocused(true)}
                                     onBlur={() => setEmailFocused(false)}
-                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -138,7 +131,7 @@ function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setPasswordFocused(true)}
                                     onBlur={() => setPasswordFocused(false)}
-                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -163,7 +156,7 @@ function Login() {
                         {/* Enhanced Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.01] active:scale-[0.99] shadow-lg"
+                            className="w-full bg-[#56A69f] text-white py-3 rounded-xl font-semibold hover:bg-[#4A8F88] focus:ring-4 focus:ring-[#56A69f]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.01] active:scale-[0.99] shadow-lg"
                             disabled={loading}
                         >
                             {loading ? (
@@ -175,12 +168,7 @@ function Login() {
                                     {t('loginPage.logging_in')}
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center">
-                                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                                    </svg>
-                                    {t('common.login')}
-                                </div>
+                                'Continuar'
                             )}
                         </button>
                     </form>
@@ -188,7 +176,7 @@ function Login() {
                     {/* OAuth Divider */}
                     <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-700"></div>
+                            <div className="w-full border-t border-[#9C9A92]"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
                             <span className="px-2 bg-[#262624] text-gray-400">{t('common.or') || 'ou'}</span>
