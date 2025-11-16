@@ -19,12 +19,12 @@ export const Heading = memo(({
   
   const variants = {
     default: '',
-    gradient: 'bg-gradient-to-r from-[#01C38D] to-[#01A071] bg-clip-text text-transparent',
-    accent: 'text-[#01C38D]',
+    gradient: 'bg-gradient-to-r from-monity-accent to-monity-accentHover bg-clip-text text-transparent',
+    accent: 'text-monity-accent',
     muted: 'text-muted-foreground',
-    error: 'text-red-400',
-    success: 'text-green-400',
-    warning: 'text-yellow-400'
+    error: 'text-monity-error',
+    success: 'text-monity-success',
+    warning: 'text-monity-warning'
   };
 
   const weights = {
@@ -71,10 +71,10 @@ export const Text = memo(({
   const variants = {
     default: 'text-foreground',
     muted: 'text-muted-foreground',
-    accent: 'text-[#01C38D]',
-    error: 'text-red-400',
-    success: 'text-green-400',
-    warning: 'text-yellow-400'
+    accent: 'text-monity-accent',
+    error: 'text-monity-error',
+    success: 'text-monity-success',
+    warning: 'text-monity-warning'
   };
 
   const sizes = {
@@ -123,9 +123,9 @@ export const Label = memo(({
   const variants = {
     default: 'text-foreground',
     muted: 'text-muted-foreground',
-    accent: 'text-[#01C38D]',
-    error: 'text-red-400',
-    required: 'text-foreground after:content-["*"] after:text-red-400 after:ml-1'
+    accent: 'text-monity-accent',
+    error: 'text-monity-error',
+    required: 'text-foreground after:content-["*"] after:text-monity-error after:ml-1'
   };
 
   const sizes = {
@@ -153,8 +153,8 @@ export const Caption = memo(({
   const variants = {
     default: 'text-foreground',
     muted: 'text-muted-foreground',
-    accent: 'text-[#01C38D]',
-    error: 'text-red-400'
+    accent: 'text-monity-accent',
+    error: 'text-monity-error'
   };
 
   const classes = `text-xs ${variants[variant]} ${className}`;
@@ -175,9 +175,9 @@ export const TextLink = memo(({
   ...props 
 }) => {
   const variants = {
-    default: 'text-[#01C38D] hover:text-[#01A071]',
+    default: 'text-monity-accent hover:text-monity-accentHover',
     muted: 'text-muted-foreground hover:text-foreground',
-    accent: 'text-[#01C38D] hover:text-[#01A071]'
+    accent: 'text-monity-accent hover:text-monity-accentHover'
   };
 
   const underlines = {
@@ -203,7 +203,7 @@ export const Code = memo(({
   ...props 
 }) => {
   const variants = {
-    default: 'bg-muted text-[#01C38D]',
+    default: 'bg-muted text-monity-accent',
     muted: 'bg-muted text-muted-foreground'
   };
 
@@ -226,7 +226,7 @@ export const Display = memo(({
 }) => {
   const variants = {
     default: 'text-foreground',
-    gradient: 'bg-gradient-to-r from-[#01C38D] to-[#01A071] bg-clip-text text-transparent'
+    gradient: 'bg-gradient-to-r from-monity-accent to-monity-accentHover bg-clip-text text-transparent'
   };
 
   const sizes = {
