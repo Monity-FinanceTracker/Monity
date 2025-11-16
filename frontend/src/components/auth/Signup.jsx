@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import monityLogo from '../../assets/LOGO_MONITY_512px512px.png';
+import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
 
 function Signup() {
@@ -17,7 +17,7 @@ function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [focusedField, setFocusedField] = useState('');
+    const [, setFocusedField] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
 
@@ -107,11 +107,11 @@ function Signup() {
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
                 {/* Monity Logo with Custom Slogan */}
-                <div className="mt-6 mb-3 flex flex-col items-center justify-center transform animate-fade-in-up">
+                <div className="mt-6 mb-4 flex flex-col items-center justify-center transform animate-fade-in-up">
                     <img
                         src={monityLogo}
                         alt="Monity Logo"
-                        className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                        className="w-24 h-24 md:w-55 md:h-55 object-contain"
                     />
                     <p
                         className="mt-4 text-xl md:text-2xl font-medium text-center px-6"
@@ -150,7 +150,7 @@ function Signup() {
                     <form onSubmit={handleSubmit} className="space-y-3">
                         {/* Enhanced Name Input */}
                         <div className="space-y-1.5">
-                            <label htmlFor="name" className="block text-gray-300 font-medium text-sm text-left">
+                            <label htmlFor="name" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.name')}
                             </label>
                             <div className="relative">
@@ -166,9 +166,7 @@ function Signup() {
                                     onChange={(e) => setName(e.target.value)}
                                     onFocus={() => setFocusedField('name')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#262624] border ${
-                                        focusedField === 'name' ? 'border-gray-400' : 'border-gray-400'
-                                    } text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="Your full name"
                                     required
                                 />
@@ -184,7 +182,7 @@ function Signup() {
 
                         {/* Enhanced Email Input */}
                         <div className="space-y-1.5">
-                            <label htmlFor="email" className="block text-gray-300 font-medium text-sm text-left">
+                            <label htmlFor="email" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.email')}
                             </label>
                             <div className="relative">
@@ -200,9 +198,7 @@ function Signup() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setFocusedField('email')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#262624] border ${
-                                        focusedField === 'email' ? 'border-gray-400' : 'border-gray-400'
-                                    } text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -218,7 +214,7 @@ function Signup() {
 
                         {/* Enhanced Password Input with Strength Indicator */}
                         <div className="space-y-1.5">
-                            <label htmlFor="password" className="block text-gray-300 font-medium text-sm text-left">
+                            <label htmlFor="password" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.password')}
                             </label>
                             <div className="relative">
@@ -234,9 +230,7 @@ function Signup() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setFocusedField('password')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#262624] border ${
-                                        focusedField === 'password' ? 'border-gray-400' : 'border-gray-400'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -282,7 +276,7 @@ function Signup() {
 
                         {/* Enhanced Confirm Password Input */}
                         <div className="space-y-1.5">
-                            <label htmlFor="confirmPassword" className="block text-gray-300 font-medium text-sm text-left">
+                            <label htmlFor="confirmPassword" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.confirm_password')}
                             </label>
                             <div className="relative">
@@ -299,9 +293,7 @@ function Signup() {
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
                                     className={`w-full bg-[#262624] border ${
-                                        focusedField === 'confirmPassword' ? 'border-gray-400' : 
-                                        confirmPassword && !passwordsMatch ? 'border-red-400' :
-                                        'border-gray-400'
+                                        confirmPassword && !passwordsMatch ? 'border-red-400' : 'border-[#3A3935]'
                                     } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
