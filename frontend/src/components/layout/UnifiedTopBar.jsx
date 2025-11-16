@@ -149,29 +149,6 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 
                                 {/* Menu Items - Updated with white text */}
                                 <div className="py-1">
-                                    <button
-                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 text-left rounded-none"
-                                        style={{ 
-                                            backgroundColor: 'transparent', 
-                                            border: 'none',
-                                            color: '#ffffff !important',
-                                            padding: '0.5rem 0.75rem',
-                                            margin: '0',
-                                            textAlign: 'left',
-                                            borderRadius: '0'
-                                        }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
-                                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                                        onClick={() => {
-                                            setIsUserMenuOpen(false);
-                                            // TODO: Navigate to profile when profile page is implemented
-                                            console.log('Profile clicked - not implemented yet');
-                                        }}
-                                    >
-                                        <Icon name="User" size="sm" className="text-white" />
-                                        <span style={{ color: '#ffffff' }}>Profile</span>
-                                    </button>
-                                    
                                     <Link
                                         to="/settings"
                                         className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 rounded-none"
