@@ -15,10 +15,10 @@ const Card = memo(({
   variant = 'default'
 }) => {
   const variants = {
-    default: 'bg-[#171717] border border-[#262626]',
-    elevated: 'bg-[#171717] border border-[#262626] shadow-lg',
+    default: 'bg-[#1F1E1D] border border-[#262626]',
+    elevated: 'bg-[#1F1E1D] border border-[#262626] shadow-lg',
     outline: 'bg-transparent border-2 border-[#262626]',
-    glass: 'bg-[#171717]/80 border border-[#262626]/50 backdrop-blur-sm'
+    glass: 'bg-[#1F1E1D]/80 border border-[#262626]/50 backdrop-blur-sm'
   };
 
   const paddingClass = noPadding ? '' : 'p-6';
@@ -29,7 +29,7 @@ const Card = memo(({
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             {icon && (
-              <div className="w-10 h-10 bg-[#01C38D]/10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-[#56a69f]/10 rounded-lg flex items-center justify-center">
                 {icon}
               </div>
             )}

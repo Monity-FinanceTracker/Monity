@@ -1,6 +1,15 @@
 /* Fonts are loaded via HTML preload for better performance */
 @import 'tailwindcss';
 
+/* Stratford Font */
+@font-face {
+  font-family: 'Stratford';
+  src: url('/stratford.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Responsive text handling */
 * {
   word-wrap: break-word;
@@ -67,34 +76,34 @@ input[type="date"]::-webkit-clear-button {
 }
 
 ::-webkit-scrollbar-track {
-  background: #171717;
+  background: #1F1E1D;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #242532;
+  background: #30302E;
   border-radius: 4px;
   transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #01C38D;
+  background: #56a69f;
 }
 
 ::-webkit-scrollbar-corner {
-  background: #171717;
+  background: #1F1E1D;
 }
 
 /* Firefox scrollbar styling */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #242532 #171717;
+  scrollbar-color: #30302E #1F1E1D;
 }
 
 /* Ensure scrollbars are styled in all containers */
 html, body, div, section, article, aside, nav, main, header, footer {
   scrollbar-width: thin;
-  scrollbar-color: #242532 #171717;
+  scrollbar-color: #30302E #1F1E1D;
 }
 
 /* Force scrollbar styling on all overflow containers */
@@ -103,13 +112,13 @@ html, body, div, section, article, aside, nav, main, header, footer {
 [class*="overflow-auto"], 
 [class*="overflow-scroll"] {
   scrollbar-width: thin;
-  scrollbar-color: #242532 #171717;
+  scrollbar-color: #30302E #1F1E1D;
 }
 
 /* Custom scrollbar class for explicit application */
 .custom-scrollbar {
   scrollbar-width: auto;
-  scrollbar-color: #3D3F42 #171717;
+  scrollbar-color: #30302E #1F1E1D;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -118,22 +127,22 @@ html, body, div, section, article, aside, nav, main, header, footer {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #171717;
+  background: #1F1E1D;
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #3D3F42;
+  background: #30302E;
   border-radius: 4px;
   transition: background 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #01C38D;
+  background: #56a69f;
 }
 
 .custom-scrollbar::-webkit-scrollbar-corner {
-  background: #171717;
+  background: #1F1E1D;
 }
 
 /* Remove scrollbar arrows/buttons */
@@ -147,40 +156,40 @@ html, body, div, section, article, aside, nav, main, header, footer {
   /* Font variables to match prototype setup */
   --font-dm-sans: 'DM Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
   --font-sans: var(--font-dm-sans);
-  /* Dark theme - matching v0 prototype: black background, dark gray containers, white text */
-  --background: #0A0A0A; /* Very dark background */
-  --foreground: oklch(0.985 0 0); /* White text */
-  --card: oklch(0.205 0 0); /* Dark gray card background */
-  --card-foreground: oklch(0.985 0 0); /* White text on cards */
-  --popover: oklch(0.205 0 0); /* Dark gray popover background */
-  --popover-foreground: oklch(0.985 0 0); /* White text in popovers */
-  --primary: oklch(0.985 0 0); /* White primary color */
-  --primary-foreground: oklch(0.145 0 0); /* Black text on primary */
-  --secondary: oklch(0.269 0 0); /* Medium dark gray secondary */
-  --secondary-foreground: oklch(0.985 0 0); /* White text on secondary */
-  --muted: oklch(0.269 0 0); /* Medium dark gray muted backgrounds */
-  --muted-foreground: oklch(0.556 0 0); /* Medium gray text */
-  --accent: oklch(0.269 0 0); /* Medium dark gray accent */
-  --accent-foreground: oklch(0.985 0 0); /* White text on accent */
-  --destructive: oklch(0.577 0.245 27.325); /* Red for destructive actions */
-  --destructive-foreground: oklch(0.985 0 0); /* White text on destructive */
-  --border: #262626; /* Dark gray borders */
-  --input: oklch(0.269 0 0); /* Dark gray input background */
-  --ring: oklch(0.708 0 0); /* Light gray focus ring */
-  --chart-1: oklch(0.646 0.222 41.116); /* Chart colors */
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* Dark theme - using colors from color.ts design system */
+  --background: #262624; /* Main background from color.ts */
+  --foreground: #FAF9F5; /* Primary text from color.ts */
+  --card: #1F1E1D; /* Card background from color.ts */
+  --card-foreground: #FAF9F5; /* White text on cards */
+  --popover: #1F1E1D; /* Popover background from color.ts */
+  --popover-foreground: #FAF9F5; /* White text in popovers */
+  --primary: #FAF9F5; /* Primary color (white text) */
+  --primary-foreground: #262624; /* Dark text on primary */
+  --secondary: #1F1E1D; /* Secondary background from color.ts */
+  --secondary-foreground: #FAF9F5; /* White text on secondary */
+  --muted: #30302E; /* Muted backgrounds from color.ts */
+  --muted-foreground: #8F8D85; /* Secondary text from color.ts */
+  --accent: #56a69f; /* Primary accent from color.ts */
+  --accent-foreground: #FAF9F5; /* White text on accent */
+  --destructive: #EF4444; /* Error color from color.ts */
+  --destructive-foreground: #FAF9F5; /* White text on destructive */
+  --border: #262626; /* Borders from color.ts */
+  --input: #30302E; /* Input background from color.ts */
+  --ring: #56a69f; /* Focus ring using accent color */
+  --chart-1: #56a69f; /* Chart colors using accent */
+  --chart-2: #4a8f88;
+  --chart-3: #3B82F6;
+  --chart-4: #F59E0B;
+  --chart-5: #EF4444;
   --radius: 0.625rem; /* Border radius */
-  --sidebar: oklch(0.205 0 0); /* Dark gray sidebar background */
-  --sidebar-foreground: oklch(0.985 0 0); /* White sidebar text */
-  --sidebar-primary: oklch(0.985 0 0); /* White primary in sidebar */
-  --sidebar-primary-foreground: oklch(0.145 0 0); /* Black text on sidebar primary */
-  --sidebar-accent: oklch(0.269 0 0); /* Medium dark gray accent in sidebar */
-  --sidebar-accent-foreground: oklch(0.985 0 0); /* White text on sidebar accent */
-  --sidebar-border: #262626; /* Dark gray sidebar border */
-  --sidebar-ring: oklch(0.708 0 0); /* Light gray sidebar focus ring */
+  --sidebar: #1F1E1D; /* Sidebar background from color.ts */
+  --sidebar-foreground: #FAF9F5; /* White sidebar text */
+  --sidebar-primary: #56a69f; /* Accent color in sidebar */
+  --sidebar-primary-foreground: #FAF9F5; /* White text on sidebar primary */
+  --sidebar-accent: #56a69f; /* Accent color in sidebar */
+  --sidebar-accent-foreground: #FAF9F5; /* White text on sidebar accent */
+  --sidebar-border: #262626; /* Sidebar border from color.ts */
+  --sidebar-ring: #56a69f; /* Sidebar focus ring using accent */
   
   /* Font and rendering settings */
   font-family: var(--font-sans);
@@ -253,7 +262,7 @@ a:hover {
 }
 
 body {
-  background-color: #0A0A0A;
+  background-color: #262624;
   color: var(--foreground);
   margin: 0;
   padding: 0;
@@ -426,8 +435,8 @@ select:focus {
 }
 
 select option {
-  background-color: #171717 !important;
-  color: white !important;
+  background-color: #1F1E1D !important;
+  color: #FAF9F5 !important;
   font-family: 'DM Sans', sans-serif !important;
   font-size: 14px !important;
   font-weight: 500 !important;
@@ -436,22 +445,22 @@ select option {
 
 select option:hover {
   background-color: #262626 !important;
-  color: white !important;
+  color: #FAF9F5 !important;
 }
 
 select option:checked {
-  background-color: #01C38D !important;
-  color: white !important;
+  background-color: #56a69f !important;
+  color: #FAF9F5 !important;
 }
 
 select option:focus {
   background-color: #262626 !important;
-  color: white !important;
+  color: #FAF9F5 !important;
 }
 
 /* Specific styling for different dropdown backgrounds */
 select[class*="bg-[#232323]"] option {
-  background-color: #232323 !important;
+  background-color: #1F1E1D !important;
 }
 
 select[class*="bg-[#262626]"] option {
@@ -460,13 +469,13 @@ select[class*="bg-[#262626]"] option {
 
 /* Additional dropdown styling for better browser compatibility */
 select option:active {
-  background-color: #01C38D !important;
-  color: white !important;
+  background-color: #56a69f !important;
+  color: #FAF9F5 !important;
 }
 
 select option:checked {
-  background-color: #01C38D !important;
-  color: white !important;
+  background-color: #56a69f !important;
+  color: #FAF9F5 !important;
 }
 
 /* Override any browser-specific styling */
@@ -495,14 +504,14 @@ select option:checked,
 select option:checked {
   background: #262626 !important;
   background-color: #262626 !important;
-  color: white !important;
+  color: #FAF9F5 !important;
   outline: none !important;
   border: none !important;
 }
 
 /* Specific override for selected option */
 select option[selected] {
-  background: #01C38D !important;
-  background-color: #01C38D !important;
-  color: white !important;
+  background: #56a69f !important;
+  background-color: #56a69f !important;
+  color: #FAF9F5 !important;
 }

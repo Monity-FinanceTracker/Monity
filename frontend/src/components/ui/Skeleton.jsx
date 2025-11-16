@@ -11,14 +11,14 @@ export const Skeleton = ({
     lines = 1,
     ...props 
 }) => {
-    const baseClasses = 'animate-pulse bg-gray-700/50 rounded';
+    const baseClasses = 'animate-pulse bg-[#262626]/50 rounded';
     
     const variants = {
-        default: 'bg-gray-700/50',
-        card: 'bg-gray-700/30 rounded-xl',
-        text: 'bg-gray-700/40 rounded-sm',
-        avatar: 'bg-gray-700/50 rounded-full',
-        button: 'bg-gray-700/40 rounded-lg'
+        default: 'bg-[#262626]/50',
+        card: 'bg-[#262626]/30 rounded-xl',
+        text: 'bg-[#262626]/40 rounded-sm',
+        avatar: 'bg-[#262626]/50 rounded-full',
+        button: 'bg-[#262626]/40 rounded-lg'
     };
 
     const getSizeClasses = () => {
@@ -64,7 +64,7 @@ export const Skeleton = ({
  * Card skeleton for dashboard cards
  */
 export const CardSkeleton = ({ className = '' }) => (
-    <div className={`bg-[#171717] border border-[#262626] rounded-xl p-6 ${className}`}>
+    <div className={`bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 ${className}`}>
         <div className="flex items-center gap-3 mb-4">
             <Skeleton variant="avatar" width={40} height={40} />
             <div className="flex-1">
@@ -86,7 +86,7 @@ export const CardSkeleton = ({ className = '' }) => (
 export const TransactionSkeleton = ({ count = 5 }) => (
     <div className="space-y-4">
         {Array.from({ length: count }).map((_, index) => (
-            <div key={index} className="flex items-center gap-4 p-4 bg-[#171717] rounded-lg">
+            <div key={index} className="flex items-center gap-4 p-4 bg-[#1F1E1D] rounded-lg">
                 <Skeleton variant="avatar" width={40} height={40} />
                 <div className="flex-1 space-y-2">
                     <Skeleton variant="text" width="70%" height={16} />

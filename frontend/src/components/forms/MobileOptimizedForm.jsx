@@ -136,7 +136,7 @@ const MobileOptimizedForm = ({
 
         const baseInputClasses = `
             w-full px-4 py-4 text-lg
-            bg-[#232323] border rounded-xl 
+            bg-[#1F1E1D] border rounded-xl 
             text-white placeholder-gray-400
             transition-all duration-200
             focus:outline-none focus:ring-2
@@ -144,7 +144,7 @@ const MobileOptimizedForm = ({
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' 
                 : isSuccess
                     ? 'border-green-500 focus:border-green-500 focus:ring-green-500/20'
-                    : 'border-[#242532] focus:border-[#01C38D] focus:ring-[#01C38D]/20'
+                    : 'border-[#242532] focus:border-[#56a69f] focus:ring-[#56a69f]/20'
             }
         `;
 
@@ -157,9 +157,30 @@ const MobileOptimizedForm = ({
                         className={baseInputClasses}
                         required={field.required}
                     >
-                        <option value="">{field.placeholder}</option>
+                        <option 
+                            value=""
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {field.placeholder}
+                        </option>
                         {field.options?.map(option => (
-                            <option key={option.value} value={option.value}>
+                            <option 
+                                key={option.value} 
+                                value={option.value}
+                                style={{
+                                    minWidth: '250px',
+                                    width: 'max-content',
+                                    padding: '8px 12px',
+                                    backgroundColor: '#1F1E1D',
+                                    color: 'white'
+                                }}
+                            >
                                 {option.label}
                             </option>
                         ))}
@@ -245,7 +266,7 @@ const MobileOptimizedForm = ({
                 </div>
                 <div className="w-full bg-[#242532] rounded-full h-1">
                     <div 
-                        className="bg-[#01C38D] h-1 rounded-full transition-all duration-300"
+                        className="bg-[#56a69f] h-1 rounded-full transition-all duration-300"
                         style={{ 
                             width: `${(Object.keys(touched).length / fields.length) * 100}%` 
                         }}
@@ -268,7 +289,7 @@ const MobileOptimizedForm = ({
                         transition-all duration-200 
                         flex items-center justify-center gap-3
                         ${isValid && !isLoading
-                            ? 'bg-[#01C38D] text-[#232323] hover:bg-[#01A071] hover:scale-[1.02] shadow-lg hover:shadow-xl'
+                            ? 'bg-[#56a69f] text-[#1F1E1D] hover:bg-[#4a8f88] hover:scale-[1.02] shadow-lg hover:shadow-xl'
                             : 'bg-[#242532] text-gray-400 cursor-not-allowed'
                         }
                     `}

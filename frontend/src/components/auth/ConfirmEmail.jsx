@@ -41,19 +41,19 @@ const ConfirmEmail = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-[#262624] px-4 sm:px-6 lg:px-8 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#56a69f]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
-            <div className="max-w-md w-full space-y-8 bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] relative z-10">
+            <div className="max-w-md w-full space-y-8 bg-[#1F1E1D] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] relative z-10">
                 {/* Icon */}
                 <div className="text-center">
-                    <div className="mx-auto h-20 w-20 bg-[#01C38D]/10 rounded-full flex items-center justify-center border border-[#01C38D]/30">
-                        <FaEnvelope className="h-10 w-10 text-[#01C38D]" />
+                    <div className="mx-auto h-20 w-20 bg-[#56a69f]/10 rounded-full flex items-center justify-center border border-[#56a69f]/30">
+                        <FaEnvelope className="h-10 w-10 text-[#56a69f]" />
                     </div>
                 </div>
 
@@ -62,21 +62,21 @@ const ConfirmEmail = () => {
                     <h2 className="text-3xl font-bold text-white">
                         {t('confirmEmail.title')}
                     </h2>
-                    <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full my-4"></div>
+                    <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full my-4"></div>
                     <p className="mt-4 text-gray-400">
                         {t('confirmEmail.subtitle')}
                     </p>
                     {email && (
-                        <p className="mt-2 text-lg font-semibold text-[#01C38D]">
+                        <p className="mt-2 text-lg font-semibold text-[#56a69f]">
                             {email}
                         </p>
                     )}
                 </div>
 
                 {/* Instructions */}
-                <div className="bg-[#01C38D]/5 border border-[#01C38D]/20 rounded-xl p-4">
+                <div className="bg-[#56a69f]/5 border border-[#56a69f]/20 rounded-xl p-4">
                     <div className="flex items-start space-x-3">
-                        <FaCheckCircle className="h-5 w-5 text-[#01C38D] mt-0.5 flex-shrink-0" />
+                        <FaCheckCircle className="h-5 w-5 text-[#56a69f] mt-0.5 flex-shrink-0" />
                         <div className="flex-1">
                             <h3 className="text-sm font-semibold text-white mb-2">
                                 {t('confirmEmail.next_steps_title')}
@@ -111,7 +111,7 @@ const ConfirmEmail = () => {
                     <button
                         onClick={handleResendEmail}
                         disabled={isResending || !email}
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:outline-none focus:ring-4 focus:ring-[#01C38D]/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 focus:outline-none focus:ring-4 focus:ring-[#56a69f]/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
                     >
                         <FaRedo className={`h-4 w-4 mr-2 ${isResending ? 'animate-spin' : ''}`} />
                         {isResending ? t('confirmEmail.resending') : t('confirmEmail.resend_button')}
@@ -129,7 +129,7 @@ const ConfirmEmail = () => {
                 <div className="text-center">
                     <Link
                         to="/login"
-                        className="text-sm text-[#01C38D] hover:text-[#01C38D]/80 font-medium transition-colors duration-200"
+                        className="text-sm text-[#56a69f] hover:text-[#56a69f]/80 font-medium transition-colors duration-200"
                     >
                         {t('confirmEmail.already_confirmed')}
                     </Link>

@@ -17,7 +17,7 @@ import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 
 function CardWrapper({ children, title, accent }) {
     return (
-        <div className="flex-1 min-w-[250px] p-6 rounded-2xl shadow-lg border border-[#262626] bg-[#171717] flex flex-col items-center justify-center">
+        <div className="flex-1 min-w-[250px] p-6 rounded-2xl shadow-lg border border-[#262626] bg-[#1F1E1D] flex flex-col items-center justify-center">
             <h2 className={`text-2xl font-bold mb-4 ${accent}`}>{title}</h2>
             <div className="w-full flex justify-center items-center">
                 {children}
@@ -112,18 +112,41 @@ function Budget() {
 
     return (
         <div className="w-full">
-            <h3 className="text-xl font-bold mb-4 text-[#01C38D]">{t('budgets.set_new_budget')}</h3>
+            <h3 className="text-xl font-bold mb-4 text-[#56a69f]">{t('budgets.set_new_budget')}</h3>
             {error && <p className="text-red-500">{error}</p>}
             <form onSubmit={handleSetBudget} className="flex flex-col gap-4 mb-6">
                 <select 
                     value={selectedCategory} 
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="p-3 rounded bg-[#171717] text-white w-full"
+                    className="p-3 rounded bg-[#1F1E1D] text-white w-full"
                     required
                 >
-                    <option value="">{t('budgets.select_category')}</option>
+                    <option 
+                        value=""
+                        style={{
+                            minWidth: '250px',
+                            width: 'max-content',
+                            padding: '8px 12px',
+                            backgroundColor: '#1F1E1D',
+                            color: 'white'
+                        }}
+                    >
+                        {t('budgets.select_category')}
+                    </option>
                     {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        <option 
+                            key={cat.id} 
+                            value={cat.id}
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {cat.name}
+                        </option>
                     ))}
                 </select>
                 <div className="relative">
@@ -132,7 +155,7 @@ function Budget() {
                         value={amount} 
                         onChange={(e) => setAmount(e.target.value)} 
                         placeholder={t('budgets.amount_placeholder')}
-                        className="p-3 pr-10 rounded bg-[#171717] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                        className="p-3 pr-10 rounded bg-[#1F1E1D] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                         required
                     />
                     {/* Custom spinner arrows */}
@@ -159,33 +182,33 @@ function Budget() {
                     type="month" 
                     value={month} 
                     onChange={(e) => setMonth(e.target.value)}
-                    className="p-3 rounded bg-[#171717] text-white w-full"
+                    className="p-3 rounded bg-[#1F1E1D] text-white w-full"
                     required
                 />
                 <button 
                     type="submit" 
                     disabled={isLoading}
-                    className="p-3 rounded bg-[#01C38D] text-white font-bold hover:bg-[#01A071] transition-colors w-full"
+                    className="p-3 rounded bg-[#56a69f] text-white font-bold hover:bg-[#4a8f88] transition-colors w-full"
                 >
                     {isLoading ? t('budgets.saving') : t('budgets.set_budget_button')}
                 </button>
             </form>
 
-            <h3 className="text-xl font-bold mb-4 text-[#01C38D]">{t('budgets.your_budgets')}</h3>
+            <h3 className="text-xl font-bold mb-4 text-[#56a69f]">{t('budgets.your_budgets')}</h3>
             {isLoading && budgets.length === 0 ? (
                  <div className="w-full h-40 flex justify-center items-center">
-                    <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
+                    <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#56a69f] animate-spin"></div>
                 </div>
             ) : (
                 <ul className="space-y-2">
                     {budgets.map(budget => (
-                        <li key={budget.id} className="flex justify-between items-center p-3 bg-[#171717] rounded-lg">
+                        <li key={budget.id} className="flex justify-between items-center p-3 bg-[#1F1E1D] rounded-lg">
                             <div>
                                 <span className="font-bold">{budget.categories.name}</span>
                                 <span className="text-sm text-gray-400 block">{new Date(budget.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
                             </div>
                             <div className="flex items-center gap-4">
-                               <span className="font-bold text-[#01C38D]">R$ {parseFloat(budget.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                               <span className="font-bold text-[#56a69f]">R$ {parseFloat(budget.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                 <button 
                                     onClick={() => handleDeleteBudget(budget.id)} 
                                     className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
@@ -314,7 +337,7 @@ function RecurringTransactions() {
     if (isLoading && recurring.length === 0) {
         return (
             <div className="w-full h-40 flex justify-center items-center">
-                <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#01C38D] animate-spin"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-[#242532] border-t-[#56a69f] animate-spin"></div>
             </div>
         );
     }
@@ -326,9 +349,9 @@ function RecurringTransactions() {
             </button>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <input type="text" name="description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder={t('recurring.description_placeholder')} className="p-3 rounded bg-[#232323] text-white w-full" required />
+                <input type="text" name="description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder={t('recurring.description_placeholder')} className="p-3 rounded bg-[#1F1E1D] text-white w-full" required />
                 <div className="relative">
-                    <input type="number" name="amount" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} placeholder={t('recurring.amount_placeholder')} className="p-3 pr-10 rounded bg-[#232323] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]" required />
+                    <input type="number" name="amount" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} placeholder={t('recurring.amount_placeholder')} className="p-3 pr-10 rounded bg-[#1F1E1D] text-white w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]" required />
                     {/* Custom spinner arrows */}
                     <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
                         <button
@@ -349,22 +372,116 @@ function RecurringTransactions() {
                         </button>
                     </div>
                 </div>
-                <select name="typeId" value={form.typeId} onChange={e => setForm({...form, typeId: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required>
-                    <option value="">{t('recurring.select_type')}</option>
-                    {types.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                <select name="typeId" value={form.typeId} onChange={e => setForm({...form, typeId: e.target.value})} className="p-3 rounded bg-[#1F1E1D] text-white w-full" required>
+                    <option 
+                        value=""
+                        style={{
+                            minWidth: '250px',
+                            width: 'max-content',
+                            padding: '8px 12px',
+                            backgroundColor: '#1F1E1D',
+                            color: 'white'
+                        }}
+                    >
+                        {t('recurring.select_type')}
+                    </option>
+                    {types.map(t => (
+                        <option 
+                            key={t.id} 
+                            value={t.id}
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {t.name}
+                        </option>
+                    ))}
                 </select>
-                <select name="categoryId" value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required>
-                    <option value="">{t('recurring.select_category')}</option>
-                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                <select name="categoryId" value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})} className="p-3 rounded bg-[#1F1E1D] text-white w-full" required>
+                    <option 
+                        value=""
+                        style={{
+                            minWidth: '250px',
+                            width: 'max-content',
+                            padding: '8px 12px',
+                            backgroundColor: '#1F1E1D',
+                            color: 'white'
+                        }}
+                    >
+                        {t('recurring.select_category')}
+                    </option>
+                    {categories.map(c => (
+                        <option 
+                            key={c.id} 
+                            value={c.id}
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            {c.name}
+                        </option>
+                    ))}
                 </select>
-                <select name="frequency" value={form.frequency} onChange={e => setForm({...form, frequency: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required>
-                    <option value="daily">{t('recurring.daily')}</option>
-                    <option value="weekly">{t('recurring.weekly')}</option>
-                    <option value="monthly">{t('recurring.monthly')}</option>
-                    <option value="yearly">{t('recurring.yearly')}</option>
+                <select name="frequency" value={form.frequency} onChange={e => setForm({...form, frequency: e.target.value})} className="p-3 rounded bg-[#1F1E1D] text-white w-full" required>
+                    <option 
+                        value="daily"
+                        style={{
+                            minWidth: '250px',
+                            width: 'max-content',
+                            padding: '8px 12px',
+                            backgroundColor: '#1F1E1D',
+                            color: 'white'
+                        }}
+                    >
+                        {t('recurring.daily')}
+                    </option>
+                    <option 
+                        value="weekly"
+                        style={{
+                            minWidth: '250px',
+                            width: 'max-content',
+                            padding: '8px 12px',
+                            backgroundColor: '#1F1E1D',
+                            color: 'white'
+                        }}
+                    >
+                        {t('recurring.weekly')}
+                    </option>
+                    <option 
+                        value="monthly"
+                        style={{
+                            minWidth: '250px',
+                            width: 'max-content',
+                            padding: '8px 12px',
+                            backgroundColor: '#1F1E1D',
+                            color: 'white'
+                        }}
+                    >
+                        {t('recurring.monthly')}
+                    </option>
+                    <option 
+                        value="yearly"
+                        style={{
+                            minWidth: '250px',
+                            width: 'max-content',
+                            padding: '8px 12px',
+                            backgroundColor: '#1F1E1D',
+                            color: 'white'
+                        }}
+                    >
+                        {t('recurring.yearly')}
+                    </option>
                 </select>
-                <input type="date" name="startDate" value={form.startDate} onChange={e => setForm({...form, startDate: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" required />
-                <input type="date" name="endDate" value={form.endDate} onChange={e => setForm({...form, endDate: e.target.value})} className="p-3 rounded bg-[#232323] text-white w-full" />
+                <input type="date" name="startDate" value={form.startDate} onChange={e => setForm({...form, startDate: e.target.value})} className="p-3 rounded bg-[#1F1E1D] text-white w-full" required />
+                <input type="date" name="endDate" value={form.endDate} onChange={e => setForm({...form, endDate: e.target.value})} className="p-3 rounded bg-[#1F1E1D] text-white w-full" />
                 <button type="submit" disabled={isLoading} className="p-3 rounded bg-green-500 text-white">
                     {isEditing ? t('recurring.update_button') : t('recurring.add_button')}
                 </button>
@@ -380,10 +497,10 @@ function BudgetsAndRecurring() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col md:flex-row gap-8">
-            <CardWrapper title={t('budgets.card_title')} accent="text-[#01C38D]">
+            <CardWrapper title={t('budgets.card_title')} accent="text-[#56a69f]">
                 <Budget />
             </CardWrapper>
-            <CardWrapper title={t('recurring.card_title')} accent="text-[#01C38D]">
+            <CardWrapper title={t('recurring.card_title')} accent="text-[#56a69f]">
                 <RecurringTransactions />
             </CardWrapper>
         </div>
