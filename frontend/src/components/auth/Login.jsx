@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import monityLogo from '../../assets/Logo-Escrito-Branca.png';
+import monityLogo from '../../assets/LOGO_MONITY_512px512px.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
 
 function Login() {
@@ -37,32 +37,37 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+                <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#01C38D]/6 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-[#01C38D]/4 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
-                {/* Monity Logo with Animation */}
-                <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
-                    <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
-                    <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
+                {/* Monity Logo with Custom Slogan */}
+                <div className="mt-6 mb-3 flex flex-col items-center justify-center transform animate-fade-in-up">
+                    <img
+                        src={monityLogo}
+                        alt="Monity Logo"
+                        className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                    />
+                    <p
+                        className="mt-4 text-xl md:text-2xl font-medium text-center px-6"
+                        style={{ fontFamily: `'Stratford', var(--font-sans)`, color: '#fcfaf5' }}
+                    >
+                        {t('loginPage.slogan')}
+                    </p>
                 </div>
 
                 {/* Login Card with Enhanced Design */}
-                <div className="bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold text-white mb-2">{t('loginPage.welcome')}</h2>
-                        <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
-                    </div>
+                <div className="bg-transparent backdrop-blur-xl p-5 rounded-2xl border border-[#262626] transform animate-fade-in-up delay-200">
 
                     {/* Error Message with Better Styling */}
                     {error && (
-                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center backdrop-blur-sm animate-shake">
+                        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center backdrop-blur-sm animate-shake">
                             <div className="flex items-center justify-center">
                                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -72,10 +77,10 @@ function Login() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Enhanced Email Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="email" className="block text-gray-300 font-medium text-sm text-left">
                                 {t('loginPage.email')}
                             </label>
                             <div className="relative">
@@ -92,9 +97,9 @@ function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setEmailFocused(true)}
                                     onBlur={() => setEmailFocused(false)}
-                                    className={`w-full bg-[#171717] border-2 ${
-                                        emailFocused ? 'border-[#01C38D]' : 'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-4 py-3 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className={`w-full bg-[#1F1E1C] border ${
+                                        emailFocused ? 'border-gray-400' : 'border-gray-400'
+                                    } text-white rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -109,10 +114,18 @@ function Login() {
                         </div>
 
                         {/* Enhanced Password Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="password" className="block text-gray-300 font-medium text-sm">
-                                {t('loginPage.password')}
-                            </label>
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <label htmlFor="password" className="block text-gray-300 font-medium text-sm">
+                                    {t('loginPage.password')}
+                                </label>
+                                <Link
+                                    to="/forgot-password"
+                                    className="text-xs sm:text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                                >
+                                    {t('loginPage.forgot_password')}
+                                </Link>
+                            </div>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,9 +140,9 @@ function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setPasswordFocused(true)}
                                     onBlur={() => setPasswordFocused(false)}
-                                    className={`w-full bg-[#171717] border-2 ${
-                                        passwordFocused ? 'border-[#01C38D]' : 'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-12 py-3 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className={`w-full bg-[#1F1E1C] border ${
+                                        passwordFocused ? 'border-gray-400' : 'border-gray-400'
+                                    } text-white rounded-xl pl-10 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
@@ -151,20 +164,10 @@ function Login() {
                             </div>
                         </div>
 
-                        {/* Forgot Password Link */}
-                        <div className="text-right">
-                            <Link
-                                to="/forgot-password"
-                                className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
-                            >
-                                {t('loginPage.forgot_password')}
-                            </Link>
-                        </div>
-
                         {/* Enhanced Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3.5 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.01] active:scale-[0.99] shadow-lg"
                             disabled={loading}
                         >
                             {loading ? (
@@ -187,12 +190,12 @@ function Login() {
                     </form>
 
                     {/* OAuth Divider */}
-                    <div className="relative my-6">
+                    <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-700"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-[#171717] text-gray-400">{t('common.or') || 'ou'}</span>
+                            <span className="px-2 bg-[#262624] text-gray-400">{t('common.or') || 'ou'}</span>
                         </div>
                     </div>
 
@@ -200,7 +203,7 @@ function Login() {
                     <GoogleOAuthButton onError={(err) => setError(err)} />
 
                     {/* Enhanced Sign Up Link */}
-                    <div className="mt-6 text-center">
+                    <div className="mt-4 text-center">
                         <Link
                             to="/signup"
                             className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"

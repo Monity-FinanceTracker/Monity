@@ -1,6 +1,14 @@
 /* Fonts are loaded via HTML preload for better performance */
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Stratford';
+  src: url('./assets/fonts/stratford.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Responsive text handling */
 * {
   word-wrap: break-word;
