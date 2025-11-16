@@ -194,7 +194,6 @@ export const EmptyBudgets = () => {
     
     return (
         <EmptyStateBase
-            icon={<Icon name="Target" size="xxl" className="text-purple-400" />}
             title={t('emptyStates.budgets.title')}
             description={t('emptyStates.budgets.description')}
         />
