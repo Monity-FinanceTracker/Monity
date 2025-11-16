@@ -7,6 +7,7 @@ import { del } from '../../utils/api';
 import { queryKeys } from '../../lib/queryClient';
 import formatDate from '../../utils/formatDate';
 import { formatCurrency, formatSimpleCurrency, getAmountColor } from '../../utils/currency';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
@@ -327,7 +328,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     // Transaction card component - Responsive for different screen sizes
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (
-        <div className={`bg-[#171717] border border-[#262626] rounded-lg p-3 sm:p-4 hover:border-[#01C38D] transition-all duration-200 dynamic-list-item w-full max-w-full min-w-0 flex-shrink-0 ${isSelected ? 'ring-2 ring-[#01C38D]' : ''}`}>
+        <div className={`bg-[#1F1E1D] border border-[#262626] rounded-lg p-3 sm:p-4 hover:border-[#56a69f] transition-all duration-200 dynamic-list-item w-full max-w-full min-w-0 flex-shrink-0 ${isSelected ? 'ring-2 ring-[#56a69f]' : ''}`}>
             <div className="flex items-start sm:items-center justify-between gap-3 w-full max-w-full min-w-0">
                 <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
                     <div className="relative cursor-pointer flex-shrink-0" onClick={() => onSelect(transaction.id)}>
@@ -339,8 +340,8 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         />
                         <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
                             isSelected 
-                                ? 'bg-[#01C38D] border-[#01C38D]' 
-                                : 'border-[#262626] hover:border-[#01C38D] bg-transparent'
+                                ? 'bg-[#56a69f] border-[#56a69f]' 
+                                : 'border-[#262626] hover:border-[#56a69f] bg-transparent'
                         }`}>
                             {isSelected && (
                                 <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -351,14 +352,14 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     </div>
                     
                     <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        transaction.typeId === 1 ? 'bg-red-500/20 text-red-400' :
-                        transaction.typeId === 2 ? 'bg-green-500/20 text-green-400' :
-                        'bg-blue-500/20 text-blue-400'
+                        transaction.typeId === 1 ? 'bg-[#FAF9F5]/20' :
+                        transaction.typeId === 2 ? 'bg-[#56a69f]/20' :
+                        'bg-blue-500/20'
                     }`}>
                         {transaction.typeId === 1 ? (
-                            <Icon name="CreditCard" size="sm" className="text-red-400" />
+                            <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
                         ) : transaction.typeId === 2 ? (
-                            <Icon name="TrendingUp" size="sm" className="text-green-400" />
+                            <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                         ) : (
                             <Icon name="PiggyBank" size="sm" className="text-blue-400" />
                         )}
@@ -427,25 +428,25 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         return (
             <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
                 {/* Header skeleton - Mobile responsive */}
-                <div className="bg-[#171717] rounded-xl p-4 sm:p-6 border border-[#262626]">
+                <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626]">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         {Array.from({ length: 4 }).map((_, index) => (
                             <div key={index} className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg">
-                                <div className="h-6 sm:h-8 bg-gray-700/50 rounded animate-pulse mb-2"></div>
-                                <div className="h-3 sm:h-4 bg-gray-700/30 rounded animate-pulse"></div>
+                                <div className="h-6 sm:h-8 bg-[#262626]/50 rounded animate-pulse mb-2"></div>
+                                <div className="h-3 sm:h-4 bg-[#262626]/30 rounded animate-pulse"></div>
                             </div>
                         ))}
                     </div>
                 </div>
                 
                 {/* Search and filters skeleton - Mobile responsive */}
-                <div className="bg-gray-900 rounded-xl p-4 sm:p-6">
+                <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626]">
                     <div className="space-y-4">
-                        <div className="h-12 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                        <div className="h-12 bg-[#262626]/50 rounded-lg animate-pulse"></div>
                         <div className="flex flex-col sm:flex-row gap-2">
-                            <div className="flex-1 h-10 bg-gray-700/50 rounded-lg animate-pulse"></div>
-                            <div className="h-10 w-12 bg-gray-700/50 rounded-lg animate-pulse"></div>
-                            <div className="h-10 w-20 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                            <div className="flex-1 h-10 bg-[#262626]/50 rounded-lg animate-pulse"></div>
+                            <div className="h-10 w-12 bg-[#262626]/50 rounded-lg animate-pulse"></div>
+                            <div className="h-10 w-20 bg-[#262626]/50 rounded-lg animate-pulse"></div>
                     </div>
                     </div>
                 </div>
@@ -467,20 +468,20 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     return (
         <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
             {/* Header with stats - Responsive for different screen sizes */}
-            <div className="bg-[#171717] rounded-xl p-4 sm:p-6 border border-[#262626] w-full max-w-full min-w-0 flex-shrink-0">
+            <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626] w-full max-w-full min-w-0 flex-shrink-0">
                 <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className="text-lg sm:text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`${getResponsiveFontSize(totals.income)} font-bold text-green-400 whitespace-nowrap overflow-hidden`}>
+                        <div className={`${getResponsiveFontSize(totals.income)} font-bold text-[#56a69f] whitespace-nowrap overflow-hidden`}>
                             R$ {totals.income.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_income')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`${getResponsiveFontSize(totals.expenses)} font-bold text-red-400 whitespace-nowrap overflow-hidden`}>
+                        <div className={`${getResponsiveFontSize(totals.expenses)} font-bold text-[#FAF9F5] whitespace-nowrap overflow-hidden`}>
                             {formatSimpleCurrency(totals.expenses, true)}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
@@ -492,7 +493,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_savings')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`${getResponsiveFontSize(balance)} font-bold whitespace-nowrap overflow-hidden ${balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        <div className={`${getResponsiveFontSize(balance)} font-bold whitespace-nowrap overflow-hidden ${balance >= 0 ? 'text-[#56a69f]' : 'text-red-400'}`}>
                             {balance >= 0 ? 'R$ ' : '-R$ '}{Math.abs(balance).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.net_balance')}</div>
@@ -501,7 +502,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             </div>
 
             {/* Search and filters - Responsive for different screen sizes */}
-            <div className="bg-[#171717] border border-[#262626] rounded-xl p-4 w-full max-w-full min-w-0 flex-shrink-0">
+            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-4 w-full max-w-full min-w-0 flex-shrink-0">
                 <div className="space-y-4">
                     {/* Search */}
                         <div className="relative">
@@ -510,7 +511,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                 placeholder={t('transactions.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-12 bg-[#262626] border border-[#262626] rounded-xl px-4 pl-10 text-white placeholder-gray-400 text-base font-medium focus:outline-none focus:border-[#01C38D] min-w-0 max-w-full"
+                            className="w-full h-12 bg-[#262626] border border-[#262626] rounded-xl px-4 pl-10 text-white placeholder-gray-400 text-base font-medium focus:outline-none focus:border-[#56a69f] min-w-0 max-w-full"
                             />
                             <svg className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -535,7 +536,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
                         <button
                             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                                className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors min-w-[48px] flex-shrink-0"
+                                className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#56a69f] transition-colors min-w-[48px] flex-shrink-0"
                                 title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                         >
                             {sortOrder === 'asc' ? '↑' : '↓'}
@@ -544,7 +545,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
                         <button
                             onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#01C38D] transition-colors flex items-center justify-center gap-2 w-full md:w-auto flex-shrink-0"
+                            className="bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white hover:border-[#56a69f] transition-colors flex items-center justify-center gap-2 w-full md:w-auto flex-shrink-0"
                         >
                             <Icon name="Filter" size="sm" />
                             <span>{t('transactions.filters')}</span>
@@ -611,9 +612,9 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
             {/* Bulk actions - Responsive for different screen sizes */}
             {selectedTransactions.size > 0 && (
-                <div className="bg-[#01C38D]/10 border border-[#01C38D]/20 rounded-xl p-4 w-full max-w-full min-w-0">
+                <div className="bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-xl p-4 w-full max-w-full min-w-0">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full max-w-full min-w-0">
-                        <span className="text-[#01C38D] font-medium">
+                        <span className="text-[#56a69f] font-medium">
                             {t('transactions.selected_count', { count: selectedTransactions.size })}
                         </span>
                         <div className="flex gap-2 w-full sm:w-auto">
@@ -649,8 +650,8 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                 />
                                 <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
                                     selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0
-                                        ? 'bg-[#01C38D] border-[#01C38D]' 
-                                        : 'border-[#262626] hover:border-[#01C38D] bg-transparent'
+                                        ? 'bg-[#56a69f] border-[#56a69f]' 
+                                        : 'border-[#262626] hover:border-[#56a69f] bg-transparent'
                                 }`}>
                                     {selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0 && (
                                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -666,7 +667,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="relative flex-shrink-0" ref={dropdownRef}>
                         <button
                             onClick={handleAddNewClick}
-                            className="bg-[#01C38D] text-[#232323] px-3 py-2 rounded-lg font-medium hover:bg-[#01A071] transition-colors flex items-center gap-2 whitespace-nowrap flex-shrink-0"
+                            className="bg-[#56a69f] text-[#1F1E1D] px-3 py-2 rounded-lg font-medium hover:bg-[#4a8f88] transition-colors flex items-center gap-2 whitespace-nowrap flex-shrink-0"
                         >
                             <span>+ {t('transactions.add_new')}</span>
                             <svg 
@@ -680,34 +681,34 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         </button>
                         
                         {isAddNewDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-[#171717] border border-[#262626] rounded-lg shadow-lg z-50">
-                                <div className="py-1">
+                            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#1F1E1D] border border-[#262626] rounded-lg shadow-lg z-50">
+                                <div className="py-2">
                                     <button
                                         onClick={handleAddIncome}
-                                        className="w-full text-left px-4 py-3 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                        className="w-full text-left px-4 py-4 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
                                     >
-                                        <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                                            <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className="w-10 h-10 rounded-full bg-[#56a69f]/20 flex items-center justify-center flex-shrink-0">
+                                            <svg className="w-5 h-5 text-[#56a69f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                             </svg>
                                         </div>
-                                        <div>
-                                            <div className="font-medium">Add Income</div>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-base">Add Income</div>
                                             <div className="text-sm text-gray-400">Record money received</div>
                                         </div>
                                     </button>
                                     
                                     <button
                                         onClick={handleAddExpense}
-                                        className="w-full text-left px-4 py-3 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                        className="w-full text-left px-4 py-4 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
                                     >
-                                        <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
-                                            <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className="w-10 h-10 rounded-full bg-[#FAF9F5]/20 flex items-center justify-center flex-shrink-0">
+                                            <svg className="w-5 h-5 text-[#FAF9F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                             </svg>
                                         </div>
-                                        <div>
-                                            <div className="font-medium">Add Expense</div>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-base">Add Expense</div>
                                             <div className="text-sm text-gray-400">Record money spent</div>
                                         </div>
                                     </button>
@@ -719,7 +720,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 )}
 
                 {filteredAndSortedTransactions.length === 0 ? (
-                    <div className="bg-[#171717] border border-[#262626] rounded-xl p-6 sm:p-12 text-center w-full max-w-full min-w-0">
+                    <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 sm:p-12 text-center w-full max-w-full min-w-0">
                         <div className="mb-4">
                             <Icon name="BarChart3" size="xxl" className="mx-auto text-blue-400" />
                         </div>
@@ -735,7 +736,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             </Link>
                             <Link
                                 to="/add-income"
-                                className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                                className="bg-[#56a69f] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#4a8f88] transition-colors flex items-center justify-center gap-2"
                             >
                                 <Icon name="TrendingUp" size="md" />
                                 <span className="text-sm sm:text-base">{t('transactions.add_income')}</span>

@@ -78,22 +78,22 @@ const ExpensivePurchase = React.memo(() => {
             <div className="hidden md:block">
                 <table className="w-full text-left bg-transparent text-white rounded-lg">
                     <thead>
-                        <tr className="bg-transparent text-[#FF6384]">
-                            <th className="py-3 px-4">{t('expensivePurchase.date')}</th>
+                        <tr className="bg-transparent text-[#FAF9F5]">
+                            <th className="py-3 pr-4">{t('expensivePurchase.date')}</th>
                             <th className="py-3 px-4">{t('expensivePurchase.category')}</th>
                             <th className="py-3 px-4">{t('expensivePurchase.description')}</th>
                             <th className="py-3 px-4 text-right">{t('expensivePurchase.amount')}</th>
-                            <th className="py-3 px-4 text-center">{t('expensivePurchase.actions')}</th>
+                            <th className="py-3 pl-4 text-center">{t('expensivePurchase.actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {topExpenses.map((expense) => (
                             <tr key={expense.id} className="border-t border-[#262626] hover:bg-[#262626] transition-colors">
-                                <td className="py-3 px-4">{formatDate(expense.date)}</td>
+                                <td className="py-3 pr-4">{formatDate(expense.date)}</td>
                                 <td className="py-3 px-4">{expense.category}</td>
                                 <td className="py-3 px-4">{expense.description}</td>
-                                <td className="text-red-400 py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
-                                <td className="py-3 px-4 text-center">
+                                <td className="text-[#FAF9F5] py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
+                                <td className="py-3 pl-4 text-center">
                                     <button className="text-red-400 hover:text-red-300 font-semibold transition-colors" onClick={() => handleDelete(expense.id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
                                             <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.024l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m3.5-.012l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m3.5-.012l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06"/>
@@ -109,13 +109,13 @@ const ExpensivePurchase = React.memo(() => {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
                 {topExpenses.map((expense) => (
-                    <div key={expense.id} className="bg-[#232323] p-4 rounded-lg border border-[#262626]">
+                    <div key={expense.id} className="bg-[#1F1E1D] p-4 rounded-lg border border-[#262626]">
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
                                 <p className="text-sm text-gray-400">{expense.category}</p>
                             </div>
-                            <p className="text-red-400 font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
+                            <p className="text-[#FAF9F5] font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{formatDate(expense.date)}</p>

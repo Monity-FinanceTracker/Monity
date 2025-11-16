@@ -12,8 +12,8 @@ const Dropdown = ({
     className = '',
     leftIcon = null,
     disabled = false,
-    bgColor = '#171717',
-    menuBgColor = '#171717'
+    bgColor = '#1F1E1D',
+    menuBgColor = '#1F1E1D'
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -62,10 +62,10 @@ const Dropdown = ({
                 disabled={disabled}
                 className={`
                     w-full h-12 border border-[#262626] text-white rounded-xl px-4 
-                    focus:ring-0 focus:ring-transparent focus:border-[#01C38D] transition-all 
+                    focus:ring-0 focus:ring-transparent focus:border-[#56a69f] transition-all 
                     cursor-pointer font-sans text-base font-medium flex items-center justify-between
                     ${leftIcon ? 'pl-10' : 'pl-4'} pr-4
-                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#01C38D]'}
+                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#56a69f]'}
                 `}
                 style={{
                     backgroundColor: bgColor,
@@ -113,7 +113,7 @@ const Dropdown = ({
                                 ${index === 0 ? 'rounded-t-xl' : ''}
                                 ${index === options.length - 1 ? 'rounded-b-xl' : ''}
                                 ${option.value === value 
-                                    ? 'bg-[#01C38D] text-white' 
+                                    ? 'bg-[#56a69f] text-white' 
                                     : 'hover:bg-[#262626] text-white'
                                 }
                             `}

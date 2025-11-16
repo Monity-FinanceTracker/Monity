@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useTranslation } from 'react-i18next';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import Spinner from '../ui/Spinner';
 import ScheduledTransactionForm from './ScheduledTransactionForm';
 import ScheduledTransactionList from './ScheduledTransactionList';
-import { Calendar as CalendarIcon, Plus } from 'lucide-react';
-
-const localizer = momentLocalizer(moment);
+import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const CashFlowCalendar = () => {
   const { t } = useTranslation();
@@ -54,12 +50,16 @@ const CashFlowCalendar = () => {
     fetchCalendarData(currentMonth);
   }, [currentMonth, fetchCalendarData]);
 
-  const handleNavigate = (date) => {
-    setCurrentMonth(date);
+  const handlePrevMonth = () => {
+    setCurrentMonth(moment(currentMonth).subtract(1, 'month').toDate());
   };
 
-  const handleSelectSlot = ({ start }) => {
-    setSelectedDate(start);
+  const handleNextMonth = () => {
+    setCurrentMonth(moment(currentMonth).add(1, 'month').toDate());
+  };
+
+  const handleSelectDay = (date) => {
+    setSelectedDate(date);
     setShowForm(true);
   };
 
@@ -74,74 +74,26 @@ const CashFlowCalendar = () => {
     await fetchCalendarData(currentMonth);
   };
 
-  // Custom day cell renderer
-  const CustomDayCell = ({ date }) => {
-    const dateStr = moment(date).format('YYYY-MM-DD');
-    const dayData = dailyBalances[dateStr];
-    const isToday = moment(date).isSame(moment(), 'day');
+  // Generate calendar days
+  const generateCalendarDays = () => {
+    const startOfMonth = moment(currentMonth).startOf('month');
+    const endOfMonth = moment(currentMonth).endOf('month');
+    const startDate = moment(startOfMonth).startOf('week');
+    const endDate = moment(endOfMonth).endOf('week');
 
-    // If no data, show just the day number
-    if (!dayData) {
-      return (
-        <div className="h-full p-2 flex flex-col items-center">
-          <div className={`text-xs font-semibold mb-1 ${isToday ? 'w-6 h-6 flex items-center justify-center rounded-full text-white' : 'text-gray-400'}`} style={isToday ? { backgroundColor: '#08bf8c' } : {}}>
-            {moment(date).format('D')}
-          </div>
-        </div>
-      );
+    const days = [];
+    let day = startDate.clone();
+
+    while (day.isBefore(endDate)) {
+      days.push(day.clone());
+      day.add(1, 'day');
     }
 
-    const formattedBalance = new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(dayData.balance);
-
-    return (
-      <div className={`h-full p-2 flex flex-col items-start ${dayData.isNegative ? 'bg-red-900/20' : ''}`}>
-        <div className={`text-xs font-semibold mb-1 ${isToday ? 'w-6 h-6 flex items-center justify-center rounded-full text-white self-center' : 'self-center'}`} style={isToday ? { backgroundColor: '#08bf8c' } : {}}>
-          {moment(date).format('D')}
-        </div>
-        <div className={`text-xs font-bold ${dayData.isNegative ? 'text-red-400' : 'text-green-400'}`}>
-          {formattedBalance}
-        </div>
-        {dayData.income > 0 && (
-          <div className="text-xs text-green-300 mt-1">
-            +{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.income)}
-          </div>
-        )}
-        {dayData.expenses > 0 && (
-          <div className="text-xs text-red-300">
-            -{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.expenses)}
-          </div>
-        )}
-      </div>
-    );
+    return days;
   };
 
-  const components = {
-    month: {
-      dateHeader: ({ date }) => {
-        return (
-          <div className="flex flex-col h-full">
-            <CustomDayCell date={date} />
-          </div>
-        );
-      },
-    },
-  };
-
-  // Aplicar estilos às células dos dias
-  const dayPropGetter = (date) => {
-    const isToday = moment(date).isSame(moment(), 'day');
-    if (isToday) {
-      return {
-        style: {
-          backgroundColor: '#171717',
-        },
-      };
-    }
-    return {};
-  };
+  const calendarDays = generateCalendarDays();
+  const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   if (loading) {
     return (
@@ -156,9 +108,6 @@ const CashFlowCalendar = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {/* <div className="w-10 h-10 bg-[#01C38D]/10 rounded-lg flex items-center justify-center">
-            <CalendarIcon className="w-5 h-5 text-[#01C38D]" />
-          </div> */}
           <div>
             <h1 className="text-2xl font-bold text-white">{t('cashFlow.title')}</h1>
             <p className="text-sm text-gray-400">{t('cashFlow.subtitle')}</p>
@@ -166,7 +115,7 @@ const CashFlowCalendar = () => {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#01C38D] text-white rounded-lg hover:bg-[#00b37e] transition-colors font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-[#56a69f] text-white rounded-lg hover:bg-[#4a8f88] transition-colors font-medium"
         >
           <Plus className="w-4 h-4" />
           {t('cashFlow.add_scheduled')}
@@ -174,24 +123,90 @@ const CashFlowCalendar = () => {
       </div>
 
       {/* Calendar */}
-      <div className="bg-[#171717] rounded-xl border border-[#262626] overflow-hidden">
-        <div className="calendar-container">
-          <Calendar
-            localizer={localizer}
-            events={[]}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 600 }}
-            views={['month']}
-            defaultView="month"
-            date={currentMonth}
-            onNavigate={handleNavigate}
-            onSelectSlot={handleSelectSlot}
-            selectable
-            components={components}
-            dayPropGetter={dayPropGetter}
-            className="custom-calendar"
-          />
+      <div className="bg-[#1F1E1D] rounded-xl border border-[#262626] overflow-hidden">
+        {/* Calendar Toolbar */}
+        <div className="p-4 bg-[#1F1E1D] border-b border-[#262626] flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrevMonth}
+              className="p-2 hover:bg-[#262626] rounded-lg transition-colors text-white"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleNextMonth}
+              className="p-2 hover:bg-[#262626] rounded-lg transition-colors text-white"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+          <h2 className="text-lg font-semibold text-white">
+            {moment(currentMonth).format('MMMM YYYY')}
+          </h2>
+          <div className="w-[80px]" /> {/* Spacer for layout balance */}
+        </div>
+
+        {/* Calendar Grid */}
+        <div className="p-4">
+          {/* Week Days Header */}
+          <div className="grid grid-cols-7 gap-2 mb-2">
+            {weekDays.map((day) => (
+              <div key={day} className="text-center text-sm font-semibold text-gray-400 py-2">
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Calendar Days */}
+          <div className="grid grid-cols-7 gap-2">
+            {calendarDays.map((day) => {
+              const dateStr = day.format('YYYY-MM-DD');
+              const dayData = dailyBalances[dateStr];
+              const isToday = day.isSame(moment(), 'day');
+              const isCurrentMonth = day.month() === moment(currentMonth).month();
+
+              return (
+                <div
+                  key={dateStr}
+                  onClick={() => handleSelectDay(day.toDate())}
+                  className={`
+                    min-h-[100px] p-2 rounded-lg border cursor-pointer transition-all
+                    ${isCurrentMonth ? 'bg-[#262624] border-[#262626]' : 'bg-[#1a1a18] border-[#1a1a18] opacity-50'}
+                    ${dayData?.isNegative ? 'bg-red-900/20 border-red-900/30' : ''}
+                    hover:border-[#56a69f] hover:shadow-lg
+                  `}
+                >
+                  <div className={`
+                    text-xs font-semibold mb-1 w-6 h-6 flex items-center justify-center rounded-full
+                    ${isToday ? 'bg-[#56a69f] text-white' : 'text-gray-400'}
+                  `}>
+                    {day.format('D')}
+                  </div>
+
+                  {dayData && (
+                    <div className="space-y-1">
+                      <div className={`text-xs font-bold ${dayData.isNegative ? 'text-red-400' : 'text-green-400'}`}>
+                        {new Intl.NumberFormat('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                        }).format(dayData.balance)}
+                      </div>
+                      {dayData.income > 0 && (
+                        <div className="text-xs text-green-300">
+                          +{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.income)}
+                        </div>
+                      )}
+                      {dayData.expenses > 0 && (
+                        <div className="text-xs text-red-300">
+                          -{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.expenses)}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -208,97 +223,6 @@ const CashFlowCalendar = () => {
           onSubmit={handleFormSubmit}
         />
       )}
-
-      <style jsx>{`
-        .calendar-container :global(.rbc-calendar) {
-          color: white;
-          background: transparent;
-        }
-        .calendar-container :global(.rbc-header) {
-          background: #262626;
-          padding: 12px 8px;
-          font-weight: 600;
-          border-bottom: 1px solid #1D1E24;
-          color: #f3f4f6;
-        }
-        .calendar-container :global(.rbc-month-view) {
-          border: none;
-        }
-        .calendar-container :global(.rbc-month-row) {
-          border-top: 1px solid #1D1E24;
-        }
-        .calendar-container :global(.rbc-day-bg) {
-          border-left: 1px solid #1D1E24;
-          background: #0A0A0A;
-        }
-        .calendar-container :global(.rbc-off-range-bg) {
-          background: #050505;
-          opacity: 0.4;
-        }
-        .calendar-container :global(.rbc-toolbar) {
-          padding: 16px;
-          background: #171717;
-          border-bottom: 1px solid #1D1E24;
-          margin-bottom: 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .calendar-container :global(.rbc-toolbar button) {
-          color: white;
-          background: transparent;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 8px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        .calendar-container :global(.rbc-toolbar button:hover) {
-          color: #01C38D;
-        }
-        .calendar-container :global(.rbc-toolbar button:active),
-        .calendar-container :global(.rbc-toolbar button.rbc-active) {
-          background: #01C38D;
-          color: white;
-        }
-        .calendar-container :global(.rbc-btn-group) {
-          display: flex;
-          gap: 8px;
-        }
-        .calendar-container :global(.rbc-btn-group button:first-child) {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-        .calendar-container :global(.rbc-btn-group button:last-child) {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-        .calendar-container :global(.rbc-btn-group button:not(:first-child):not(:last-child)) {
-          border-radius: 0;
-        }
-        .calendar-container :global(.rbc-toolbar-label) {
-          color: white;
-          font-weight: 600;
-          font-size: 18px;
-        }
-        .calendar-container :global(*) {
-          border-color: #1D1E24 !important;
-        }
-        .calendar-container :global(.rbc-month-view),
-        .calendar-container :global(.rbc-month-row),
-        .calendar-container :global(.rbc-date-cell),
-        .calendar-container :global(.rbc-day-bg),
-        .calendar-container :global(.rbc-off-range-bg),
-        .calendar-container :global(.rbc-today),
-        .calendar-container :global(.rbc-header),
-        .calendar-container :global(.rbc-toolbar) {
-          border-color: #1D1E24 !important;
-        }
-        .calendar-container :global(.rbc-toolbar button) {
-          border: none !important;
-        }
-      `}</style>
     </div>
   );
 };

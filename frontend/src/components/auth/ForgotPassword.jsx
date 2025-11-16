@@ -63,22 +63,22 @@ function ForgotPassword() {
 
     if (emailSent) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                    <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                    <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#56a69f]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
                 </div>
 
                 {/* Content */}
                 <div className="relative z-10 w-full max-w-md mx-auto">
                     {/* Success Card */}
-                    <div className="bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up">
+                    <div className="bg-[#1F1E1D] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up">
                         {/* Icon */}
                         <div className="text-center mb-6">
-                            <div className="mx-auto h-20 w-20 bg-[#01C38D]/10 rounded-full flex items-center justify-center border border-[#01C38D]/30">
-                                <FaEnvelope className="h-10 w-10 text-[#01C38D]" />
+                            <div className="mx-auto h-20 w-20 bg-[#56a69f]/10 rounded-full flex items-center justify-center border border-[#56a69f]/30">
+                                <FaEnvelope className="h-10 w-10 text-[#56a69f]" />
                             </div>
                         </div>
 
@@ -87,17 +87,17 @@ function ForgotPassword() {
                             <h2 className="text-2xl font-bold text-white mb-2">
                                 {t('forgotPassword.check_email')}
                             </h2>
-                            <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full mb-4"></div>
+                            <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full mb-4"></div>
                             <p className="text-gray-400 mb-2">
                                 {t('forgotPassword.instructions_sent')}
                             </p>
-                            <p className="text-[#01C38D] font-semibold">
+                            <p className="text-[#56a69f] font-semibold">
                                 {email}
                             </p>
                         </div>
 
                         {/* Instructions */}
-                        <div className="bg-[#01C38D]/5 border border-[#01C38D]/20 rounded-xl p-4 mb-6">
+                        <div className="bg-[#56a69f]/5 border border-[#56a69f]/20 rounded-xl p-4 mb-6">
                             <p className="text-sm text-gray-300 text-center">
                                 {t('forgotPassword.check_spam')}
                             </p>
@@ -123,7 +123,7 @@ function ForgotPassword() {
                             <button
                                 onClick={handleResend}
                                 disabled={loading}
-                                className="inline-flex items-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="inline-flex items-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <FaRedo className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                                 {loading ? t('forgotPassword.sending') : t('forgotPassword.resend')}
@@ -147,12 +147,12 @@ function ForgotPassword() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#56a69f]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
             {/* Content */}
@@ -164,10 +164,10 @@ function ForgotPassword() {
                 </div>
 
                 {/* Forgot Password Card */}
-                <div className="bg-[#171717] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
+                <div className="bg-[#1F1E1D] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
                     <div className="text-center mb-6">
                         <h2 className="text-2xl font-bold text-white mb-2">{t('forgotPassword.title')}</h2>
-                        <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full mb-4"></div>
+                        <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full mb-4"></div>
                         <p className="text-gray-400 text-sm">{t('forgotPassword.subtitle')}</p>
                     </div>
 
@@ -201,8 +201,8 @@ function ForgotPassword() {
                                     onFocus={() => setFocusedField('email')}
                                     onBlur={() => setFocusedField('')}
                                     className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'email' ? 'border-[#01C38D]' : 'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                        focusedField === 'email' ? 'border-[#56a69f]' : 'border-gray-300'
+                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#56a69f] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -219,7 +219,7 @@ function ForgotPassword() {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg mt-6"
+                            className="w-full bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 text-white py-3 rounded-xl font-semibold hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 focus:ring-4 focus:ring-[#56a69f]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg mt-6"
                             disabled={loading || !isValidEmail(email)}
                         >
                             {loading ? (
@@ -240,7 +240,7 @@ function ForgotPassword() {
                     <div className="mt-6 text-center">
                         <Link
                             to="/login"
-                            className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
+                            className="inline-flex items-center justify-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 group"
                         >
                             <FaArrowLeft className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform duration-200" />
                             {t('forgotPassword.back_to_login')}
