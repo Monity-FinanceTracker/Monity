@@ -17,7 +17,7 @@ function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [focusedField, setFocusedField] = useState('');
+    const [, setFocusedField] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
 
