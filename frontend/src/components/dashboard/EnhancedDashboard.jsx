@@ -107,16 +107,22 @@ const EnhancedDashboard = () => {
                                         <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                                     )}
                                 </div>
-                                <div>
-                                    <p className="text-white font-medium">{transaction.description}</p>
-                                    <p className="text-gray-400 text-sm">{transaction.category}</p>
+                                <div className="flex flex-col items-start text-left">
+                                    <p className="text-white font-medium text-left">
+                                        {transaction.description}
+                                    </p>
+                                    <p className="text-gray-400 text-sm text-left">
+                                        {transaction.category}
+                                    </p>
                                 </div>
                             </div>
-                            <div className="text-right">
+                            <div className="ml-auto text-right">
                                 <p className={`font-bold ${getAmountColor(transaction.typeId)}`}>
                                     {formatCurrency(transaction.amount || 0, transaction.typeId)}
                                 </p>
-                                <p className="text-gray-400 text-xs">{new Date(transaction.date).toLocaleDateString()}</p>
+                                <p className="text-gray-400 text-xs">
+                                    {new Date(transaction.date).toLocaleDateString()}
+                                </p>
                             </div>
                         </div>
                     ))

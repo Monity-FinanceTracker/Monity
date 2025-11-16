@@ -17,7 +17,7 @@ function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [focusedField, setFocusedField] = useState('');
+    const [, setFocusedField] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
 
@@ -106,10 +106,19 @@ function Signup() {
 
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
-                {/* Monity Logo with Animation */}
-                <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
-                    <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
-                    <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
+                {/* Monity Logo with Custom Slogan */}
+                <div className="mt-6 mb-4 flex flex-col items-center justify-center transform animate-fade-in-up">
+                    <img
+                        src={monityLogo}
+                        alt="Monity Logo"
+                        className="w-24 h-24 md:w-55 md:h-55 object-contain"
+                    />
+                    <p
+                        className="mt-4 text-xl md:text-2xl font-medium text-center px-6"
+                        style={{ fontFamily: `'Stratford', var(--font-sans)`, color: '#F5F0E6' }}
+                    >
+                        {t('loginPage.slogan')}
+                    </p>
                 </div>
 
                 {/* Signup Card with Enhanced Design */}
@@ -133,7 +142,7 @@ function Signup() {
 
                     {/* Error Message with Better Styling */}
                     {error && (
-                        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center backdrop-blur-sm animate-shake">
+                        <div className="mb-3 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center backdrop-blur-sm animate-shake">
                             <div className="flex items-center justify-center text-sm">
                                 <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -143,10 +152,10 @@ function Signup() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-3">
                         {/* Enhanced Name Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="name" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="name" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.name')}
                             </label>
                             <div className="relative">
@@ -179,8 +188,8 @@ function Signup() {
                         </div>
 
                         {/* Enhanced Email Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="email" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.email')}
                             </label>
                             <div className="relative">
@@ -213,8 +222,8 @@ function Signup() {
                         </div>
 
                         {/* Enhanced Password Input with Strength Indicator */}
-                        <div className="space-y-2">
-                            <label htmlFor="password" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="password" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.password')}
                             </label>
                             <div className="relative">
@@ -277,8 +286,8 @@ function Signup() {
                         </div>
 
                         {/* Enhanced Confirm Password Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="confirmPassword" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="confirmPassword" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.confirm_password')}
                             </label>
                             <div className="relative">
@@ -365,7 +374,7 @@ function Signup() {
                     </form>
 
                     {/* OAuth Divider */}
-                    <div className="relative my-6">
+                    <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-700"></div>
                         </div>
@@ -378,7 +387,7 @@ function Signup() {
                     <GoogleOAuthButton onError={(err) => setError(err)} />
 
                     {/* Enhanced Login Link */}
-                    <div className="mt-6 text-center">
+                    <div className="mt-4 text-center">
                         <Link 
                             to="/login" 
                             className="inline-flex items-center justify-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 group"

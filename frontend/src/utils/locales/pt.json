@@ -23,7 +23,7 @@
     "loading": "Carregando..."
   },
   "loginPage": {
-    "slogan": "Bem-vindo de volta!",
+    "slogan": "Sua vida financeira com a monity",
     "welcome": "Bem-vindo de volta",
     "email": "E-mail",
     "password": "Senha",
@@ -34,7 +34,7 @@
     "forgot_password": "Esqueceu a Senha?"
   },
   "signupPage": {
-    "slogan": "Bem-vindo de volta!",
+    "slogan": "Sua vida financeira com a monity",
     "create_account": "Criar Conta",
     "name": "Nome",
     "email": "E-mail",
