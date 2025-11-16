@@ -1245,5 +1245,91 @@
     "totalValue": "Valor Total",
     "contributions": "Contribuições",
     "interest": "Juros Ganhos"
+  },
+  "groupsInfo": {
+    "hero": {
+      "title": "Compartilhe Despesas com Grupos",
+      "subtitle": "Gerencie despesas compartilhadas facilmente com amigos, família, colegas de quarto e mais",
+      "createButton": "Criar Seu Primeiro Grupo",
+      "viewGroupsButton": "Ver Meus Grupos"
+    },
+    "features": {
+      "title": "Por Que Usar Grupos?",
+      "shared_expenses": {
+        "title": "Despesas Compartilhadas",
+        "description": "Rastreie despesas nas quais várias pessoas contribuem, perfeito para situações de moradia compartilhada ou atividades em grupo"
+      },
+      "split_bills": {
+        "title": "Divisão Automática de Contas",
+        "description": "Calcule automaticamente quanto cada membro deve com base em sua parte das despesas do grupo"
+      },
+      "track_spending": {
+        "title": "Rastreamento em Tempo Real",
+        "description": "Veja os gastos do grupo em tempo real. Todos ficam atualizados sobre despesas compartilhadas instantaneamente"
+      },
+      "notifications": {
+        "title": "Notificações Inteligentes",
+        "description": "Seja notificado quando novas despesas são adicionadas ou quando pagamentos são necessários"
+      },
+      "secure": {
+        "title": "Seguro e Privado",
+        "description": "Seus dados financeiros são criptografados e compartilhados apenas com membros do grupo que você convidar"
+      },
+      "insights": {
+        "title": "Insights do Grupo",
+        "description": "Visualize padrões de gastos do grupo com gráficos e análises para tomar melhores decisões"
+      }
+    },
+    "howItWorks": {
+      "title": "Como Funciona",
+      "step1": {
+        "title": "Crie um Grupo",
+        "description": "Dê um nome ao seu grupo e opcionalmente adicione uma descrição. Exemplos: 'Orçamento Familiar', 'Férias 2025', 'Aluguel do Apartamento'"
+      },
+      "step2": {
+        "title": "Convide Membros",
+        "description": "Adicione membros ao grupo por e-mail. Eles receberão um convite para participar e podem aceitar ou recusar"
+      },
+      "step3": {
+        "title": "Adicione Despesas Compartilhadas",
+        "description": "Qualquer membro pode adicionar despesas ao grupo. Marque transações como despesas do grupo ao adicioná-las"
+      },
+      "step4": {
+        "title": "Rastreie e Acerte Contas",
+        "description": "Veja quem deve o quê em tempo real. Use o resumo de saldos para acertar contas de forma justa entre todos os membros"
+      }
+    },
+    "useCases": {
+      "title": "Perfeito Para",
+      "family": {
+        "title": "Orçamentos Familiares",
+        "description": "Gerencie despesas domésticas juntos. Rastreie compras de supermercado, contas de serviços públicos e custos familiares compartilhados em um só lugar"
+      },
+      "roommates": {
+        "title": "Despesas de Colegas de Quarto",
+        "description": "Divida aluguel, contas e suprimentos compartilhados de forma justa. Chega de conversas constrangedoras sobre quem deve o quê"
+      },
+      "trips": {
+        "title": "Viagens em Grupo",
+        "description": "Planejando férias? Rastreie todas as despesas de viagem e divida os custos igualmente ou por valores personalizados"
+      },
+      "projects": {
+        "title": "Projetos em Equipe",
+        "description": "Gerencie orçamentos de projetos com sua equipe. Rastreie despesas e mantenha todos responsáveis"
+      }
+    },
+    "benefits": {
+      "title": "Benefícios de Usar Grupos",
+      "benefit1": "Chega de cálculos manuais ou planilhas",
+      "benefit2": "Todos veem as mesmas informações em tempo real",
+      "benefit3": "Divisão de despesas justa e transparente",
+      "benefit4": "Registros históricos de todas as transações do grupo",
+      "benefit5": "Fácil adicionar novos membros ou remover antigos"
+    },
+    "cta": {
+      "title": "Pronto Para Começar?",
+      "description": "Crie seu primeiro grupo hoje e comece a gerenciar despesas compartilhadas de forma inteligente",
+      "button": "Criar um Grupo Agora"
+    }
   }
 } 

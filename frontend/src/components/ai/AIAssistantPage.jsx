@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
-import MonityLogo from '../../assets/LOGO_MONITY_512px512px.png';
+import MonityLogo from '../../assets/monity-logo-semFundo-Branca.png';
 
 const AIAssistantPage = () => {
     const { t } = useTranslation();

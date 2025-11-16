@@ -97,13 +97,6 @@ function Signup() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#01C38D]/6 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-[#01C38D]/4 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-500"></div>
-            </div>
-
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
                 {/* Monity Logo with Custom Slogan */}
@@ -122,7 +115,7 @@ function Signup() {
                 </div>
 
                 {/* Signup Card with Enhanced Design */}
-                <div className="bg-transparent backdrop-blur-xl p-5 rounded-2xl border border-[#262626] transform animate-fade-in-up delay-200">
+                <div className="p-5 rounded-2xl transform animate-fade-in-up delay-200">
                     {/* Premium Badge */}
                     {premium && (
                         <div className="mb-4 p-3 bg-gradient-to-r from-[#56a69f]/10 to-[#01a87a]/10 border border-[#56a69f]/30 rounded-xl">
@@ -166,7 +159,7 @@ function Signup() {
                                     onChange={(e) => setName(e.target.value)}
                                     onFocus={() => setFocusedField('name')}
                                     onBlur={() => setFocusedField('')}
-                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="Your full name"
                                     required
                                 />
@@ -198,7 +191,7 @@ function Signup() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setFocusedField('email')}
                                     onBlur={() => setFocusedField('')}
-                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -230,7 +223,7 @@ function Signup() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setFocusedField('password')}
                                     onBlur={() => setFocusedField('')}
-                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -292,9 +285,7 @@ function Signup() {
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#262624] border ${
-                                        confirmPassword && !passwordsMatch ? 'border-red-400' : 'border-[#3A3935]'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -338,7 +329,7 @@ function Signup() {
                         {/* Enhanced Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-2.5 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.01] active:scale-[0.99] shadow-lg mt-4"
+                            className="w-full bg-[#56A69f] text-white py-2.5 rounded-xl font-semibold hover:bg-[#4A8F88] focus:ring-4 focus:ring-[#56A69f]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.01] active:scale-[0.99] shadow-lg mt-4"
                             disabled={loading || !passwordsMatch || passwordStrength.score < 2}
                         >
                             {loading ? (
@@ -350,12 +341,7 @@ function Signup() {
                                     {t('signupPage.creating')}
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center">
-                                    <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                                    </svg>
-                                    {t('signupPage.signup')}
-                                </div>
+                                'Continuar'
                             )}
                         </button>
                     </form>
@@ -363,7 +349,7 @@ function Signup() {
                     {/* OAuth Divider */}
                     <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-700"></div>
+                            <div className="w-full border-t border-[#9C9A92]"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
                             <span className="px-2 bg-[#262624] text-gray-400">{t('common.or') || 'ou'}</span>
