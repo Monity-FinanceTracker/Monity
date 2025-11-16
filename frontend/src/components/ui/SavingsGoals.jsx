@@ -173,7 +173,7 @@ const SavingsGoals = () => {
                     )}
                     <button 
                         onClick={() => setIsModalOpen(true)} 
-                        className={`bg-[#01C38D] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#01a87a] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#56a69f] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#01a87a] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={isLimited}
                     >
                         {t('savings_goals.add_new_goal')}
@@ -182,8 +182,13 @@ const SavingsGoals = () => {
             </div>
 
             {isModalOpen && !isLimited && (
+<<<<<<< HEAD
                 <div className="fixed inset-0 bg-black/50 flex items-start md:items-center justify-center z-50 p-4 overflow-y-auto">
                     <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6 mt-10 mb-10 max-h-[90vh] overflow-y-auto">
+=======
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-md p-6">
+>>>>>>> 082a3a0c8904bd8651c565e7f8da9ba8326164d3
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('savings_goals.add_new_goal_modal_title')}</h2>
                             <CloseButton onClick={() => setIsModalOpen(false)} />
@@ -201,7 +206,7 @@ const SavingsGoals = () => {
                                 value={newGoal.goal_name}
                                 onChange={handleInputChange}
                                 placeholder={t('savings_goals.goal_name_placeholder')}
-                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500"
                                 required
                             />
                         </div>
@@ -217,7 +222,7 @@ const SavingsGoals = () => {
                                 value={newGoal.target_amount}
                                 onChange={handleInputChange}
                                 placeholder={t('savings_goals.target_amount_placeholder')}
-                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                 required
                             />
                         </div>
@@ -233,7 +238,7 @@ const SavingsGoals = () => {
                                 value={newGoal.target_date}
                                 onChange={handleInputChange}
                                 placeholder="mm/dd/yyyy"
-                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500"
                             />
                         </div>
                         
@@ -248,7 +253,7 @@ const SavingsGoals = () => {
                                 value={newGoal.current_amount}
                                 onChange={handleInputChange}
                                 placeholder={t('savings_goals.initial_saved_amount_placeholder')}
-                                className="w-full bg-[#232323] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                             />
                         </div>
                         
@@ -256,13 +261,13 @@ const SavingsGoals = () => {
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="flex-1 text-white hover:text-[#01C38D] font-semibold py-4 rounded-xl transition-colors duration-200"
+                                className="flex-1 text-white hover:text-[#56a69f] font-semibold py-4 rounded-xl transition-colors duration-200"
                             >
                                 {t('common.cancel')}
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 bg-[#01C38D] text-white font-semibold py-4 rounded-xl hover:bg-[#00b37e] transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                                className="flex-1 bg-[#56a69f] text-white font-semibold py-4 rounded-xl hover:bg-[#00b37e] transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                             >
                                 {t('savings_goals.create_goal')}
                             </button>
@@ -275,9 +280,9 @@ const SavingsGoals = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
             {goals.length === 0 ? (
-                <div className="text-center py-16 px-4 border-2 border-dashed border-[#262626] rounded-xl bg-[#171717]">
+                <div className="text-center py-16 px-4 border-2 border-dashed border-[#262626] rounded-xl bg-[#1F1E1D]">
                     <div className="mb-6">
-                        <svg className="w-16 h-16 text-[#01C38D] mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-16 h-16 text-[#56a69f] mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                         </svg>
                     </div>
@@ -289,7 +294,7 @@ const SavingsGoals = () => {
                     {goals.map(goal => {
                         const progress = (goal.current_amount / goal.target_amount) * 100;
                         return (
-                            <div key={goal.id} className="bg-[#171717] border border-[#262626] p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#262626]/80">
+                            <div key={goal.id} className="bg-[#1F1E1D] border border-[#262626] p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#262626]/80">
                                 <div className="flex justify-between items-start">
                                     <h4 className="text-xl font-bold text-white">{goal.goal_name}</h4>
                                     <CloseButton onClick={() => handleDeleteGoal(goal.id)} />
@@ -297,18 +302,18 @@ const SavingsGoals = () => {
                                 <p className="text-sm text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
                                 
                                 <div className="w-full bg-[#262626] rounded-full h-4 mb-2">
-                                    <div className="bg-[#01C38D] h-4 rounded-full transition-all duration-300" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>
+                                    <div className="bg-[#56a69f] h-4 rounded-full transition-all duration-300" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>
                                 </div>
                                 <div className="flex justify-between text-sm font-medium text-white">
                                     <span>{formatSimpleCurrency(goal.current_amount)}</span>
                                     <span>{formatSimpleCurrency(goal.target_amount)}</span>
                                 </div>
                                 <div className="mt-4 flex space-x-4">
-                                    <button onClick={() => handleAddMoneyClick(goal.id)} className="bg-[#01C38D] hover:bg-[#01A071] text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md">
+                                    <button onClick={() => handleAddMoneyClick(goal.id)} className="bg-[#56a69f] hover:bg-[#4a8f88] text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md">
                                         {addingMoney[goal.id]?.isAdding ? t('common.cancel') : t('savings_goals.allocate_funds')}
                                     </button>
                                     {parseFloat(goal.current_amount) > 0 && (
-                                        <button onClick={() => handleWithdrawMoneyClick(goal.id)} className="text-white hover:text-[#01C38D] font-semibold px-4 py-2 rounded-lg transition-colors duration-200">
+                                        <button onClick={() => handleWithdrawMoneyClick(goal.id)} className="text-white hover:text-[#56a69f] font-semibold px-4 py-2 rounded-lg transition-colors duration-200">
                                             {withdrawingMoney[goal.id]?.isWithdrawing ? t('common.cancel') : t('savings_goals.withdraw_funds')}
                                         </button>
                                     )}
@@ -321,7 +326,7 @@ const SavingsGoals = () => {
                                             value={addingMoney[goal.id].amount}
                                             onChange={(e) => handleAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.amount_placeholder')}
-                                            className="flex-1 bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                            className="flex-1 bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         />
                                         <button
                                             onClick={() => {
@@ -337,7 +342,7 @@ const SavingsGoals = () => {
                                                 setError(null);
                                                 handleAllocateMoney(goal.id, amountToAdd);
                                             }}
-                                            className="bg-[#01C38D] hover:bg-[#01A071] text-white font-semibold px-4 py-3 rounded-lg ml-2 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="bg-[#56a69f] hover:bg-[#4a8f88] text-white font-semibold px-4 py-3 rounded-lg ml-2 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                             disabled={
                                                 !addingMoney[goal.id]?.amount || 
                                                 addingMoney[goal.id]?.amount.trim() === '' ||
@@ -359,7 +364,7 @@ const SavingsGoals = () => {
                                             onChange={(e) => handleWithdrawAmountChange(e, goal.id)}
                                             placeholder={t('savings_goals.withdraw_amount_placeholder')}
                                             max={goal.current_amount}
-                                            className="flex-1 bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                            className="flex-1 bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         />
                                         <button
                                             onClick={() => {

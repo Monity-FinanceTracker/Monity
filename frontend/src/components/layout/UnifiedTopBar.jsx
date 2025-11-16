@@ -34,7 +34,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     };
 
     return (
-        <header className="sticky top-0 z-30 bg-[#0A0A0A] border-b border-[#262626] w-full">
+        <header className="sticky top-0 z-30 bg-[#262624] border-b border-[#262626] w-full">
             <div className="flex items-center justify-between px-4 sm:px-6 py-4">
                 {/* Left Section: Mobile menu + Monity Title */}
                 <div className="flex items-center gap-4 flex-1">
@@ -51,15 +51,21 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                             <Icon name="Menu" size="sm" className="text-white" />
                         )}
                     </button>
-
-                    {/* Monity Title */}
-                    <Link to="/" className="flex items-center">
-                        <span className="text-2xl font-semibold text-white">Monity</span>
-                    </Link>
                 </div>
 
                 {/* Right Section: Notifications + PRO Badge + User Menu */}
                 <div className="flex items-center gap-4">
+                    {/* Free Plan Upgrade - Only for non-premium users */}
+                    {subscriptionTier !== 'premium' && (
+                        <button
+                            onClick={() => navigate('/subscription')}
+                            className="text-white hover:text-gray-300 transition-colors text-sm font-medium cursor-pointer bg-transparent border-none"
+                            style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
+                        >
+                            Free Plan Upgrade
+                        </button>
+                    )}
+
                     {/* Notifications */}
                     <Bell className="w-4 h-4 text-white hover:text-gray-300 transition-colors cursor-pointer" strokeWidth={2.6} />
 
@@ -79,7 +85,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                     style={{
                                         width: '32px',
                                         height: '32px',
-                                        backgroundColor: '#01C38D',
+                                        backgroundColor: '#56a69f',
                                         borderRadius: '50%',
                                         border: 'none',
                                         outline: 'none',
@@ -90,10 +96,10 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         position: 'relative',
                                         zIndex: 2
                                     }}
-                                    className="shadow-sm focus:ring-2 focus:ring-[#01C38D]/50"
+                                    className="shadow-sm focus:ring-2 focus:ring-[#56a69f]/50"
                                 >
                                 <span style={{ 
-                                    color: '#232323', 
+                                    color: '#1F1E1D', 
                                     fontSize: '13px', 
                                     fontWeight: 'bold',
                                     userSelect: 'none'
@@ -107,7 +113,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 </button>
                                 
                                 {/* Hover Tooltip */}
-                                <div className="absolute top-full right-0 mt-2 px-3 py-2 bg-[#171717] border border-[#262626] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap">
+                                <div className="absolute top-full right-0 mt-2 px-3 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap">
                                     <div className="text-white text-sm text-left">
                                         <div className="font-medium">
                                             Monity Account
@@ -126,7 +132,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                         </div>
 
                         {isUserMenuOpen && (
-                            <div className="absolute right-0 top-full mt-3 w-56 sm:w-64 bg-[#171717] border border-[#262626] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
+                            <div className="absolute right-0 top-full mt-3 w-56 sm:w-64 bg-[#1F1E1D] border border-[#262626] rounded-lg shadow-xl overflow-hidden z-50" key="user-dropdown">
                                 {/* User Info Header */}
                                 <div className="px-3 py-3 border-b border-[#262626]">
                                     <div className="flex flex-col space-y-1">
@@ -143,29 +149,6 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 
                                 {/* Menu Items - Updated with white text */}
                                 <div className="py-1">
-                                    <button
-                                        className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 text-left rounded-none"
-                                        style={{ 
-                                            backgroundColor: 'transparent', 
-                                            border: 'none',
-                                            color: '#ffffff !important',
-                                            padding: '0.5rem 0.75rem',
-                                            margin: '0',
-                                            textAlign: 'left',
-                                            borderRadius: '0'
-                                        }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
-                                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                                        onClick={() => {
-                                            setIsUserMenuOpen(false);
-                                            // TODO: Navigate to profile when profile page is implemented
-                                            console.log('Profile clicked - not implemented yet');
-                                        }}
-                                    >
-                                        <Icon name="User" size="sm" className="text-white" />
-                                        <span style={{ color: '#ffffff' }}>Profile</span>
-                                    </button>
-                                    
                                     <Link
                                         to="/settings"
                                         className="flex items-center gap-3 w-full px-3 py-2 text-sm transition-all duration-200 rounded-none"

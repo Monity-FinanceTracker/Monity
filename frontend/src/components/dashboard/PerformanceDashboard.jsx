@@ -392,10 +392,54 @@ const PerformanceDashboard = React.memo(() => {
                         onChange={(e) => setRefreshInterval(Number(e.target.value))}
                         className="bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value={5000}>5 seconds</option>
-                        <option value={15000}>15 seconds</option>
-                        <option value={30000}>30 seconds</option>
-                        <option value={60000}>1 minute</option>
+                        <option 
+                            value={5000}
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            5 seconds
+                        </option>
+                        <option 
+                            value={15000}
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            15 seconds
+                        </option>
+                        <option 
+                            value={30000}
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            30 seconds
+                        </option>
+                        <option 
+                            value={60000}
+                            style={{
+                                minWidth: '250px',
+                                width: 'max-content',
+                                padding: '8px 12px',
+                                backgroundColor: '#1F1E1D',
+                                color: 'white'
+                            }}
+                        >
+                            1 minute
+                        </option>
                     </select>
                 </div>
             </div>

@@ -130,8 +130,8 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
   }, [preloadCriticalComponents]);
 
   return (
-    <div className="flex min-h-screen bg-[#0A0A0A] font-sans">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#01C38D] text-[#232323] p-2 z-50 rounded">
+    <div className="flex min-h-screen bg-[#262624] font-sans">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#56a69f] text-[#1F1E1D] p-2 z-50 rounded">
         Skip to main content
       </a>
       {/* Sidebar - Full height */}
