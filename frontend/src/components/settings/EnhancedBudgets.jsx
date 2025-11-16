@@ -100,7 +100,7 @@ const EnhancedBudgets = () => {
     };
 
     const getProgressColor = (percentage) => {
-        if (percentage < 70) return 'bg-[#01C38D]';
+        if (percentage < 70) return 'bg-[#56a69f]';
         if (percentage < 90) return 'bg-yellow-500';
         return 'bg-red-500';
     };
@@ -134,7 +134,7 @@ const EnhancedBudgets = () => {
                     )}
                     <button
                         onClick={() => setShowAddForm(true)}
-                        className={`mt-4 sm:mt-0 bg-[#01C38D] text-white px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors flex items-center gap-2 font-medium ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`mt-4 sm:mt-0 bg-[#56a69f] text-white px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors flex items-center gap-2 font-medium ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={isLimited}
                     >
                         <span className="text-lg">+</span>
@@ -146,10 +146,10 @@ const EnhancedBudgets = () => {
             {/* Budgets Summary Cards */}
             {budgets.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                                <svg className="w-6 h-6 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-10 h-10 bg-[#56a69f]/20 rounded-lg flex items-center justify-center">
+                                <svg className="w-6 h-6 text-[#56a69f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                                 </svg>
                             </div>
@@ -163,7 +163,7 @@ const EnhancedBudgets = () => {
                         </p>
                     </div>
 
-                    <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-yellow-500/20 rounded-lg flex items-center justify-center">
                                 <svg className="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
@@ -180,7 +180,7 @@ const EnhancedBudgets = () => {
                         </p>
                     </div>
 
-                    <div className="bg-[#171717] rounded-lg border border-[#262626] p-6">
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
                                 <span className="text-red-500 text-xl">🚨</span>
@@ -210,12 +210,12 @@ const EnhancedBudgets = () => {
                         return (
                             <div
                                 key={budget.id}
-                                className="bg-[#171717] rounded-lg border border-[#262626] p-6 hover:border-[#01C38D]/30 transition-all"
+                                className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6 hover:border-[#56a69f]/30 transition-all"
                             >
                                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
                                     <div className="flex items-center gap-4 mb-4 lg:mb-0">
-                                        <div className="w-12 h-12 bg-[#01C38D]/20 rounded-lg flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-[#01C38D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className="w-12 h-12 bg-[#56a69f]/20 rounded-lg flex items-center justify-center">
+                                            <svg className="w-6 h-6 text-[#56a69f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                             </svg>
                                         </div>
@@ -232,7 +232,7 @@ const EnhancedBudgets = () => {
                                     <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => setEditingBudget(budget)}
-                                            className="p-2 text-gray-400 hover:text-[#01C38D] hover:bg-[#01C38D]/10 rounded-lg transition-colors"
+                                            className="p-2 text-gray-400 hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
                                             title={t('budgets.edit')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -259,13 +259,13 @@ const EnhancedBudgets = () => {
                                         </span>
                                         <span className={`font-medium ${
                                             percentage >= 100 ? 'text-red-400' :
-                                            percentage >= 80 ? 'text-yellow-400' : 'text-[#01C38D]'
+                                            percentage >= 80 ? 'text-yellow-400' : 'text-[#56a69f]'
                                         }`}>
                                             {percentage.toFixed(1)}%
                                         </span>
                                     </div>
                                     
-                                    <div className="w-full bg-[#232323] rounded-full h-3">
+                                    <div className="w-full bg-[#1F1E1D] rounded-full h-3">
                                         <div
                                             className={`h-3 rounded-full transition-all duration-300 ${getProgressColor(percentage)}`}
                                             style={{ width: `${percentage}%` }}
@@ -273,7 +273,7 @@ const EnhancedBudgets = () => {
                                     </div>
                                     
                                     <div className="flex justify-between text-sm">
-                                        <span className={`${remaining > 0 ? 'text-[#01C38D]' : 'text-red-400'}`}>
+                                        <span className={`${remaining > 0 ? 'text-[#56a69f]' : 'text-red-400'}`}>
                                             R$ {remaining.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {remaining > 0 ? t('budgets.remaining') : t('budgets.over_budget')}
                                         </span>
                                         <span className="text-gray-400">
@@ -290,7 +290,7 @@ const EnhancedBudgets = () => {
             {/* Add Budget Modal */}
             {showAddForm && !isLimited && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6">
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-md p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('budgets.add_new')}</h2>
                             <CloseButton onClick={() => setShowAddForm(false)} />
@@ -305,7 +305,7 @@ const EnhancedBudgets = () => {
                                     type="text"
                                     value={newBudget.name}
                                     onChange={(e) => setNewBudget(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                     placeholder={t('budgets.name_placeholder')}
                                     required
                                 />
@@ -321,7 +321,7 @@ const EnhancedBudgets = () => {
                                         step="0.01"
                                         value={newBudget.amount}
                                         onChange={(e) => setNewBudget(prev => ({ ...prev, amount: e.target.value }))}
-                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 pr-10 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 pr-10 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         placeholder="0.00"
                                         required
                                     />
@@ -354,7 +354,7 @@ const EnhancedBudgets = () => {
                                 <select
                                     value={newBudget.categoryId}
                                     onChange={(e) => setNewBudget(prev => ({ ...prev, categoryId: e.target.value }))}
-                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                     required
                                 >
                                     <option value="">{t('budgets.select_category')}</option>
@@ -373,7 +373,7 @@ const EnhancedBudgets = () => {
                                 <select
                                     value={newBudget.period}
                                     onChange={(e) => setNewBudget(prev => ({ ...prev, period: e.target.value }))}
-                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                 >
                                     {periods.map((period) => (
                                         <option key={period.value} value={period.value}>
@@ -393,7 +393,7 @@ const EnhancedBudgets = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-[#01C38D] text-white py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
+                                    className="flex-1 bg-[#56a69f] text-white py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
                                 >
                                     {t('budgets.add')}
                                 </button>
@@ -406,7 +406,7 @@ const EnhancedBudgets = () => {
             {/* Edit Budget Modal */}
             {editingBudget && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md p-6">
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-md p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">{t('budgets.edit')}</h2>
                             <CloseButton onClick={() => setEditingBudget(null)} />
@@ -421,7 +421,7 @@ const EnhancedBudgets = () => {
                                     type="text"
                                     value={editingBudget.name}
                                     onChange={(e) => setEditingBudget(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all"
                                     required
                                 />
                             </div>
@@ -436,7 +436,7 @@ const EnhancedBudgets = () => {
                                         step="0.01"
                                         value={editingBudget.amount}
                                         onChange={(e) => setEditingBudget(prev => ({ ...prev, amount: e.target.value }))}
-                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 pr-10 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-3 pr-10 focus:ring-0 focus:ring-transparent focus:border-[#262626] transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                         required
                                     />
                                     {/* Custom spinner arrows */}
@@ -471,7 +471,7 @@ const EnhancedBudgets = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-[#01C38D] text-white py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
+                                    className="flex-1 bg-[#56a69f] text-white py-3 rounded-lg hover:bg-[#00b37e] transition-colors"
                                 >
                                     {t('budgets.update')}
                                 </button>

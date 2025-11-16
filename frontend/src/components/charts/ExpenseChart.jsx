@@ -79,7 +79,7 @@ function ExpenseChart() {
 
     // Simple color palette
     const chartColors = [
-        '#01C38D', '#36A2EB', '#FF6384', '#FFCE56', '#9B59B6', '#B0BEC5'
+        '#56a69f', '#36A2EB', '#FAF9F5', '#FFCE56', '#9B59B6', '#B0BEC5'
     ];
 
     const chartData = {
@@ -98,6 +98,7 @@ function ExpenseChart() {
             legend: {
                 display: true,
                 position: 'bottom',
+                align: 'center',
                 labels: {
                     color: '#fff',
                     font: { size: 14 },
@@ -113,12 +114,15 @@ function ExpenseChart() {
         cutout: '65%',
         layout: {
             padding: 0
-        }
+        },
+        maintainAspectRatio: true
     };
 
     return (
-        <div className="bg-transparent rounded-xl flex justify-center items-center w-full h-full" style={{ minHeight: 340 }}>
-            <Doughnut data={chartData} options={chartOptions} />
+        <div className="w-full flex justify-center items-center" style={{ minHeight: 300 }}>
+            <div className="max-w-[300px] w-full">
+                <Doughnut data={chartData} options={chartOptions} />
+            </div>
         </div>
     )
 }

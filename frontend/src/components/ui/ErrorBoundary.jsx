@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       // Fallback UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] text-white p-4">
+        <div className="min-h-screen flex items-center justify-center bg-[#262624] text-white p-4">
           <div className="max-w-md w-full bg-[#1a1a1a] rounded-lg p-6 text-center">
             <div className="text-6xl mb-4">😵</div>
             <h1 className="text-xl font-bold mb-2">Oops! Something went wrong</h1>
@@ -46,7 +46,7 @@ class ErrorBoundary extends React.Component {
             
             <button
               onClick={() => window.location.reload()}
-              className="mt-4 bg-[#01C38D] text-[#232323] px-4 py-2 rounded font-medium hover:bg-[#01B37A] transition-colors"
+              className="mt-4 bg-[#56a69f] text-[#1F1E1D] px-4 py-2 rounded font-medium hover:bg-[#4A8F88] transition-colors"
             >
               Refresh Page
             </button>

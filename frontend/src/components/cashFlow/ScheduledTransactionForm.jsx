@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Calendar, Banknote, Tag, Repeat } from 'lucide-react';
+import { Calendar, Banknote, Tag, Repeat, TrendingUp, TrendingDown } from 'lucide-react';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import moment from 'moment';
@@ -115,13 +115,34 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#171717] rounded-xl border border-[#262626] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#262626]">
-          <h2 className="text-xl font-bold text-white">
+      <div className="bg-[#1F1E1D] rounded-xl border border-[#262626] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header with Icon */}
+        <div className="relative">
+          {/* Icon Banner */}
+          <div className="flex items-center justify-center pt-8 pb-4">
+            <div className={`
+              w-16 h-16 rounded-full flex items-center justify-center
+              ${formData.typeId === 2 ? 'bg-[#56a69f]/20' : 'bg-white/20'}
+            `}>
+              {formData.typeId === 2 ? (
+                <TrendingUp className="w-8 h-8" style={{ color: '#56a69f' }} />
+              ) : (
+                <TrendingDown className="w-8 h-8 text-white" />
+              )}
+            </div>
+          </div>
+          
+          {/* Close Button */}
+          <div className="absolute right-4 top-4">
+            <CloseButton onClick={onClose} size="sm" />
+          </div>
+        </div>
+
+        {/* Title */}
+        <div className="px-6 pb-4 border-b border-[#262626]">
+          <h2 className="text-xl font-bold text-white text-center">
             {transaction ? t('cashFlow.form.edit_title') : t('cashFlow.form.create_title')}
           </h2>
-          <CloseButton onClick={onClose} size="sm" />
         </div>
 
         {/* Form */}
@@ -137,7 +158,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                 onClick={() => setFormData(prev => ({ ...prev, typeId: 2 }))}
                 className={`p-3 rounded-lg border-2 transition-all ${
                   formData.typeId === 2
-                    ? 'border-[#01C38D] bg-[#01C38D]/10 text-[#01C38D]'
+                    ? 'border-[#56a69f] bg-[#56a69f]/10 text-[#56a69f]'
                     : 'border-[#262626] text-gray-400 hover:border-[#404040]'
                 }`}
               >
@@ -167,7 +188,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#262626] rounded-lg text-white focus:border-[#01C38D] focus:outline-none"
+              className="w-full px-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
               required
             />
           </div>
@@ -186,7 +207,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                 onChange={handleChange}
                 step="0.01"
                 min="0"
-                className="w-full pl-10 pr-4 py-2 bg-[#0A0A0A] border border-[#262626] rounded-lg text-white focus:border-[#01C38D] focus:outline-none"
+                className="w-full pl-10 pr-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
                 required
               />
             </div>
@@ -203,18 +224,49 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full pl-10 pr-4 py-2 bg-[#0A0A0A] border border-[#262626] rounded-lg text-white focus:border-[#01C38D] focus:outline-none appearance-none"
+                className="w-full pl-10 pr-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none appearance-none"
                 required
                 disabled={loadingCategories}
               >
-                <option value="">
+                <option 
+                  value=""
+                  style={{
+                    minWidth: '250px',
+                    width: 'max-content',
+                    padding: '8px 12px',
+                    backgroundColor: '#262624',
+                    color: 'white'
+                  }}
+                >
                   {loadingCategories ? 'Loading categories...' : t('cashFlow.form.select_category')}
                 </option>
                 {categories.length === 0 && !loadingCategories && (
-                  <option value="" disabled>No categories available</option>
+                  <option 
+                    value="" 
+                    disabled
+                    style={{
+                      minWidth: '250px',
+                      width: 'max-content',
+                      padding: '8px 12px',
+                      backgroundColor: '#262624',
+                      color: 'white'
+                    }}
+                  >
+                    No categories available
+                  </option>
                 )}
                 {categories.map(cat => (
-                  <option key={cat.id} value={cat.name}>
+                  <option 
+                    key={cat.id} 
+                    value={cat.name}
+                    style={{
+                      minWidth: '250px',
+                      width: 'max-content',
+                      padding: '8px 12px',
+                      backgroundColor: '#262624',
+                      color: 'white'
+                    }}
+                  >
                     {cat.name}
                   </option>
                 ))}
@@ -234,7 +286,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                 name="scheduled_date"
                 value={formData.scheduled_date}
                 onChange={handleChange}
-                className="w-full pl-10 pr-4 py-2 bg-[#0A0A0A] border border-[#262626] rounded-lg text-white focus:border-[#01C38D] focus:outline-none"
+                className="w-full pl-10 pr-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
                 required
               />
             </div>
@@ -250,13 +302,68 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               name="recurrence_pattern"
               value={formData.recurrence_pattern}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#262626] rounded-lg text-white focus:border-[#01C38D] focus:outline-none"
+              className="w-full px-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
             >
-              <option value="once">{t('cashFlow.form.once')}</option>
-              <option value="daily">{t('cashFlow.form.daily')}</option>
-              <option value="weekly">{t('cashFlow.form.weekly')}</option>
-              <option value="monthly">{t('cashFlow.form.monthly')}</option>
-              <option value="yearly">{t('cashFlow.form.yearly')}</option>
+              <option 
+                value="once"
+                style={{
+                  minWidth: '250px',
+                  width: 'max-content',
+                  padding: '8px 12px',
+                  backgroundColor: '#262624',
+                  color: 'white'
+                }}
+              >
+                {t('cashFlow.form.once')}
+              </option>
+              <option 
+                value="daily"
+                style={{
+                  minWidth: '250px',
+                  width: 'max-content',
+                  padding: '8px 12px',
+                  backgroundColor: '#262624',
+                  color: 'white'
+                }}
+              >
+                {t('cashFlow.form.daily')}
+              </option>
+              <option 
+                value="weekly"
+                style={{
+                  minWidth: '250px',
+                  width: 'max-content',
+                  padding: '8px 12px',
+                  backgroundColor: '#262624',
+                  color: 'white'
+                }}
+              >
+                {t('cashFlow.form.weekly')}
+              </option>
+              <option 
+                value="monthly"
+                style={{
+                  minWidth: '250px',
+                  width: 'max-content',
+                  padding: '8px 12px',
+                  backgroundColor: '#262624',
+                  color: 'white'
+                }}
+              >
+                {t('cashFlow.form.monthly')}
+              </option>
+              <option 
+                value="yearly"
+                style={{
+                  minWidth: '250px',
+                  width: 'max-content',
+                  padding: '8px 12px',
+                  backgroundColor: '#262624',
+                  color: 'white'
+                }}
+              >
+                {t('cashFlow.form.yearly')}
+              </option>
             </select>
           </div>
 
@@ -273,7 +380,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                   value={formData.recurrence_interval}
                   onChange={handleChange}
                   min="1"
-                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#262626] rounded-lg text-white focus:border-[#01C38D] focus:outline-none"
+                  className="w-full px-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   {t('cashFlow.form.interval_hint')}
@@ -289,7 +396,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                   name="recurrence_end_date"
                   value={formData.recurrence_end_date}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#262626] rounded-lg text-white focus:border-[#01C38D] focus:outline-none"
+                  className="w-full px-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   {t('cashFlow.form.end_date_hint')}
@@ -303,14 +410,14 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-white hover:text-[#01C38D] rounded-lg transition-colors"
+              className="flex-1 px-4 py-2 text-white hover:text-[#56a69f] rounded-lg transition-colors"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-[#01C38D] text-white rounded-lg hover:bg-[#00b37e] transition-colors font-medium disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-[#56a69f] text-white rounded-lg hover:bg-[#4A8F88] transition-colors font-medium disabled:opacity-50"
             >
               {loading ? t('common.saving') : t('common.save')}
             </button>
