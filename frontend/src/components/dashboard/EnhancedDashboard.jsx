@@ -96,11 +96,18 @@ const EnhancedDashboard = () => {
             <div className="space-y-3">
                 {dashboardData.recentTransactions.length > 0 ? (
                     dashboardData.recentTransactions.map((transaction, index) => (
-                        <div key={transaction.id || index} className="flex items-center justify-between p-4 bg-[#262626]/30 hover:bg-[#262626]/50 rounded-lg transition-colors border border-[#262626]">
+                        <div
+                            key={transaction.id || index}
+                            className="flex items-center p-3 bg-[#232323] rounded-lg gap-3"
+                        >
                             <div className="flex items-center gap-3">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                    transaction.typeId === 1 ? 'bg-[#FAF9F5]/20' : 'bg-[#56a69f]/20'
-                                }`}>
+                                <div
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                        transaction.typeId === 1
+                                            ? 'bg-red-500/20 text-red-400'
+                                            : 'bg-green-500/20 text-green-400'
+                                    }`}
+                                >
                                     {transaction.typeId === 1 ? (
                                         <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
                                     ) : (

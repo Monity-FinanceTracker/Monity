@@ -40,9 +40,9 @@ function Login() {
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#56a69f]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+                <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#01C38D]/6 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-[#01C38D]/4 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
             {/* Content */}
@@ -63,11 +63,7 @@ function Login() {
                 </div>
 
                 {/* Login Card with Enhanced Design */}
-                <div className="bg-[#1F1E1D] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold text-white mb-2">{t('loginPage.welcome')}</h2>
-                        <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full"></div>
-                    </div>
+                <div className="bg-transparent backdrop-blur-xl p-5 rounded-2xl border border-[#262626] transform animate-fade-in-up delay-200">
 
                     {/* Error Message with Better Styling */}
                     {error && (
@@ -101,9 +97,7 @@ function Login() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setEmailFocused(true)}
                                     onBlur={() => setEmailFocused(false)}
-                                    className={`w-full bg-[#1F1E1D] border-2 ${
-                                        emailFocused ? 'border-[#56a69f]' : 'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-4 py-3 focus:ring-0 focus:border-[#56a69f] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -144,9 +138,7 @@ function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setPasswordFocused(true)}
                                     onBlur={() => setPasswordFocused(false)}
-                                    className={`w-full bg-[#1F1E1D] border-2 ${
-                                        passwordFocused ? 'border-[#56a69f]' : 'border-[#262626]'
-                                    } text-white rounded-xl pl-10 pr-12 py-3 focus:ring-0 focus:border-[#56a69f] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#3A3935] text-white rounded-xl pl-10 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -168,20 +160,10 @@ function Login() {
                             </div>
                         </div>
 
-                        {/* Forgot Password Link */}
-                        <div className="text-right">
-                            <Link
-                                to="/forgot-password"
-                                className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
-                            >
-                                {t('loginPage.forgot_password')}
-                            </Link>
-                        </div>
-
                         {/* Enhanced Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 text-white py-3.5 rounded-xl font-semibold hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 focus:ring-4 focus:ring-[#56a69f]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.01] active:scale-[0.99] shadow-lg"
                             disabled={loading}
                         >
                             {loading ? (
@@ -209,7 +191,7 @@ function Login() {
                             <div className="w-full border-t border-gray-700"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-[#1F1E1D] text-gray-400">{t('common.or') || 'ou'}</span>
+                            <span className="px-2 bg-[#262624] text-gray-400">{t('common.or') || 'ou'}</span>
                         </div>
                     </div>
 

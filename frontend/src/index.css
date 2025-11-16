@@ -1,10 +1,9 @@
 /* Fonts are loaded via HTML preload for better performance */
 @import 'tailwindcss';
 
-/* Stratford Font */
 @font-face {
   font-family: 'Stratford';
-  src: url('/stratford.ttf') format('truetype');
+  src: url('./assets/fonts/stratford.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
