@@ -702,7 +702,11 @@
     "success": "Success",
     "error": "Error",
     "warning": "Warning",
-    "info": "Information"
+    "info": "Information",
+    "whats_new": "What's New",
+    "whats_new_tooltip": "See the latest updates and news from Monity",
+    "all": "All",
+    "no_new_updates": "No new updates"
   },
   "emptyStates": {
     "transactions": {
@@ -1235,5 +1239,97 @@
     "totalValue": "Total Value",
     "contributions": "Contributions",
     "interest": "Interest Earned"
+  },
+  "groupsInfo": {
+    "hero": {
+      "title": "Share Expenses with Groups",
+      "subtitle": "Manage shared expenses easily with friends, family, roommates, and more",
+      "createButton": "Create Your First Group",
+      "viewGroupsButton": "View My Groups"
+    },
+    "features": {
+      "title": "Why Use Groups?",
+      "shared_expenses": {
+        "title": "Shared Expenses",
+        "description": "Track expenses that multiple people contribute to, perfect for shared living situations or group activities"
+      },
+      "split_bills": {
+        "title": "Automatic Bill Splitting",
+        "description": "Automatically calculate how much each member owes based on their share of group expenses"
+      },
+      "track_spending": {
+        "title": "Real-Time Tracking",
+        "description": "See group spending in real-time. Everyone stays updated on shared expenses instantly"
+      },
+      "notifications": {
+        "title": "Smart Notifications",
+        "description": "Get notified when new expenses are added or when payments are needed"
+      },
+      "secure": {
+        "title": "Secure & Private",
+        "description": "Your financial data is encrypted and only shared with group members you invite"
+      },
+      "insights": {
+        "title": "Group Insights",
+        "description": "Visualize group spending patterns with charts and analytics to make better decisions"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": {
+        "title": "Create a Group",
+        "description": "Give your group a name and optionally add a description. Examples: 'Family Budget', 'Vacation 2025', 'Apartment Rent'"
+      },
+      "step2": {
+        "title": "Invite Members",
+        "description": "Add group members by email. They'll receive an invitation to join and can accept or decline"
+      },
+      "step3": {
+        "title": "Add Shared Expenses",
+        "description": "Any member can add expenses to the group. Tag transactions as group expenses when adding them"
+      },
+      "step4": {
+        "title": "Track & Settle Up",
+        "description": "See who owes what in real-time. Use the balance summary to settle up fairly among all members"
+      }
+    },
+    "useCases": {
+      "title": "Perfect For",
+      "family": {
+        "title": "Family Budgets",
+        "description": "Manage household expenses together. Track groceries, utilities, and shared family costs in one place"
+      },
+      "roommates": {
+        "title": "Roommate Expenses",
+        "description": "Split rent, utilities, and shared supplies fairly. No more awkward conversations about who owes what"
+      },
+      "trips": {
+        "title": "Group Trips",
+        "description": "Planning a vacation? Track all travel expenses and split costs evenly or by custom amounts"
+      },
+      "projects": {
+        "title": "Team Projects",
+        "description": "Manage project budgets with your team. Track expenses and keep everyone accountable"
+      }
+    },
+    "benefits": {
+      "title": "Benefits of Using Groups",
+      "benefit1": "No more manual calculations or spreadsheets",
+      "benefit2": "Everyone sees the same information in real-time",
+      "benefit3": "Fair and transparent expense splitting",
+      "benefit4": "Historical records of all group transactions",
+      "benefit5": "Easy to add new members or remove old ones"
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "description": "Create your first group today and start managing shared expenses the smart way",
+      "button": "Create a Group Now"
+    }
+  },
+  "whatsNew": {
+    "title": "What's New",
+    "subtitle": "The latest releases from your financial app Monity",
+    "empty_title": "We don't have any updates for you yet",
+    "empty_description": "When there's news, we'll post it here. Follow your favorite features and updates to stay updated on them too."
   }
 }

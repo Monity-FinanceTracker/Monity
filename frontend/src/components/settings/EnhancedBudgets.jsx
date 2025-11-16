@@ -117,12 +117,9 @@ const EnhancedBudgets = () => {
     }
 
     return (
-        <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">{t('budgets.title')}</h1>
-                    <p className="text-gray-400">{t('budgets.subtitle')}</p>
-                </div>
+        <div className="flex-1 p-6">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-white">{t('budgets.title')}</h1>
                 <div className="flex items-center gap-4">
                     {isLimited && (
                         <Link
@@ -134,10 +131,9 @@ const EnhancedBudgets = () => {
                     )}
                     <button
                         onClick={() => setShowAddForm(true)}
-                        className={`mt-4 sm:mt-0 bg-[#56a69f] text-white px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors flex items-center gap-2 font-medium ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#56a69f] !text-[#1F1E1D] px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors font-medium ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={isLimited}
                     >
-                        <span className="text-lg">+</span>
                         {t('budgets.add_new')}
                     </button>
                 </div>
@@ -183,7 +179,9 @@ const EnhancedBudgets = () => {
                     <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
-                                <span className="text-red-500 text-xl">🚨</span>
+                                <svg className="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fillRule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" clipRule="evenodd" />
+                                </svg>
                             </div>
                             <div>
                                 <h3 className="text-white font-medium">{t('budgets.exceeded')}</h3>
