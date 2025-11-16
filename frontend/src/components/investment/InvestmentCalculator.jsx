@@ -156,7 +156,13 @@ const InvestmentCalculator = () => {
                     {/* Input Form */}
                     <div className="lg:col-span-1">
                         <div className="bg-[#1F1E1D] rounded-xl p-6 border border-[#262626]">
-                            <h2 className="text-xl font-semibold text-white mb-6">
+                            <h2 
+                                className="font-semibold text-white mb-6"
+                                style={{
+                                    fontSize: 'clamp(0.875rem, 5vw, 1.25rem)',
+                                    maxWidth: '100%'
+                                }}
+                            >
                                 {t('investmentCalculator.inputParameters')}
                             </h2>
                             
