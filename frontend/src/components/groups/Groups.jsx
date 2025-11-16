@@ -85,7 +85,7 @@ const Groups = () => {
                     )}
                     <Link
                         to="/groups/create"
-                        className={`bg-[#56a69f] text-[#1F1E1D] font-bold px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#56a69f] !text-[#1F1E1D] font-medium px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={(e) => isLimited && e.preventDefault()}
                     >
                         {t('groups.create')}
@@ -110,7 +110,7 @@ const Groups = () => {
                                     className="block"
                                 >
                                     <div className="flex items-start justify-between">
-                                        <div>
+                                        <div className="text-left">
                                             <h2 className="text-xl font-semibold text-white mb-1">{group.name}</h2>
                                             <p className="text-gray-400 text-sm">{t('groups.click_to_view')}</p>
                                         </div>

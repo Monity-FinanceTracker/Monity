@@ -110,9 +110,6 @@ const InvestmentCalculator = () => {
                                 <h1 className="text-3xl font-bold text-white">
                                     {t('investmentCalculator.title')}
                                 </h1>
-                                <p className="text-gray-400 mt-1">
-                                    {t('investmentCalculator.subtitle')}
-                                </p>
                             </div>
                         </div>
                         
@@ -326,7 +323,7 @@ const InvestmentCalculator = () => {
                                     className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                                         loading || limitReached
                                             ? 'bg-[#262626] text-gray-400 cursor-not-allowed'
-                                            : 'bg-green-500 text-white hover:bg-green-600'
+                                            : 'bg-[#56a69f] !text-[#1F1E1D] hover:bg-[#4A8F88]'
                                     }`}
                                 >
                                     {loading ? (

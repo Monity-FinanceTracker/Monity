@@ -25,7 +25,7 @@ function GoogleOAuthButton({ onError }) {
             type="button"
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full bg-[#1F1E1C] hover:bg-[#252421] text-white py-3.5 rounded-xl font-semibold border border-gray-700 hover:border-gray-500 focus:ring-2 focus:ring-[#1F1E1C]/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+            className="w-full bg-[#1F1E1C] hover:bg-[#252421] text-white py-3.5 rounded-xl font-semibold border border-[#9C9A92] hover:border-[#9C9A92] focus:ring-2 focus:ring-[#1F1E1C]/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
         >
             <div className="flex items-center justify-center">
                 {loading ? (
