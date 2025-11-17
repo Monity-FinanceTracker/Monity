@@ -47,8 +47,8 @@ const EmptyStateBase = ({
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     {actions.map((action, index) => {
                         const baseClasses = "px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center";
-                        const primaryClasses = "bg-[#56a69f] text-[#1F1E1D] hover:bg-[#4a8f88] hover:scale-105";
-                        const secondaryClasses = "bg-[#1F1E1D] text-white hover:bg-[#262626] border border-[#262626]";
+                        const primaryClasses = "bg-[#FAF9F5] hover:bg-[#e8e7e3] hover:scale-105";
+                        const secondaryClasses = "bg-[#56a69f] hover:bg-[#4a8f88] border border-[#262626]";
 
                         const Component = action.href ? Link : 'button';
                         const linkProps = action.href ? { to: action.href } : { onClick: action.onClick };
@@ -58,6 +58,7 @@ const EmptyStateBase = ({
                                 key={index}
                                 {...linkProps}
                                 className={`${baseClasses} ${action.primary ? primaryClasses : secondaryClasses}`}
+                                style={{ color: '#30302E' }}
                             >
                                 {action.icon && <span>{action.icon}</span>}
                                 {action.label}
@@ -76,20 +77,17 @@ export const EmptyTransactions = () => {
     
     return (
         <EmptyStateBase
-            icon={<svg className="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>}
             title={t('emptyStates.transactions.title')}
             description={t('emptyStates.transactions.description')}
             actions={[
                 {
                     label: t('emptyStates.transactions.add_expense'),
                     href: '/add-expense',
-                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>,
                     primary: true
                 },
                 {
                     label: t('emptyStates.transactions.add_income'),
-                    href: '/add-income',
-                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>
+                    href: '/add-income'
                 }
             ]}
         />

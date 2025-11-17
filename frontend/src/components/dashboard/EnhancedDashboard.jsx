@@ -105,13 +105,17 @@ const EnhancedDashboard = () => {
                                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                         transaction.typeId === 1
                                             ? 'bg-[#FAF9F5]/20'
-                                            : 'bg-[#56a69f]/20'
+                                            : transaction.typeId === 2
+                                            ? 'bg-[#56a69f]/20'
+                                            : 'bg-blue-500/20'
                                     }`}
                                 >
                                     {transaction.typeId === 1 ? (
                                         <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
-                                    ) : (
+                                    ) : transaction.typeId === 2 ? (
                                         <ArrowDown className="w-5 h-5 text-[#56a69f]" />
+                                    ) : (
+                                        <ArrowDown className="w-5 h-5 text-blue-500" />
                                     )}
                                 </div>
                                 <div className="flex flex-col items-start text-left">

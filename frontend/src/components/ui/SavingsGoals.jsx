@@ -294,7 +294,7 @@ const SavingsGoals = () => {
                                     <h4 className="text-xl font-bold text-white">{goal.goal_name}</h4>
                                     <CloseButton onClick={() => handleDeleteGoal(goal.id)} />
                                 </div>
-                                <p className="text-sm text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
+                                <p className="text-sm text-gray-400 mb-4 text-left">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
                                 
                                 <div className="w-full bg-[#262626] rounded-full h-4 mb-2">
                                     <div className="bg-[#56a69f] h-4 rounded-full transition-all duration-300" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>

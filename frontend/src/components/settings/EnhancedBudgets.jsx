@@ -149,9 +149,9 @@ const EnhancedBudgets = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                                 </svg>
                             </div>
-                            <div>
-                                <h3 className="text-white font-medium">{t('budgets.total_budget')}</h3>
-                                <p className="text-gray-400 text-sm">{t('budgets.all_periods')}</p>
+                            <div className="text-left">
+                                <h3 className="text-white font-medium text-left">{t('budgets.total_budget')}</h3>
+                                <p className="text-gray-400 text-sm text-left">{t('budgets.all_periods')}</p>
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-white">
@@ -166,9 +166,9 @@ const EnhancedBudgets = () => {
                                     <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                 </svg>
                             </div>
-                            <div>
-                                <h3 className="text-white font-medium">{t('budgets.at_risk')}</h3>
-                                <p className="text-gray-400 text-sm">{t('budgets.over_80_percent')}</p>
+                            <div className="text-left">
+                                <h3 className="text-white font-medium text-left">{t('budgets.at_risk')}</h3>
+                                <p className="text-gray-400 text-sm text-left">{t('budgets.over_80_percent')}</p>
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-yellow-500">
@@ -183,9 +183,9 @@ const EnhancedBudgets = () => {
                                     <path fillRule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" clipRule="evenodd" />
                                 </svg>
                             </div>
-                            <div>
-                                <h3 className="text-white font-medium">{t('budgets.exceeded')}</h3>
-                                <p className="text-gray-400 text-sm">{t('budgets.over_budget')}</p>
+                            <div className="text-left">
+                                <h3 className="text-white font-medium text-left">{t('budgets.exceeded')}</h3>
+                                <p className="text-gray-400 text-sm text-left">{t('budgets.over_budget')}</p>
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-red-500">
@@ -217,9 +217,9 @@ const EnhancedBudgets = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                             </svg>
                                         </div>
-                                        <div>
-                                            <h3 className="text-white font-semibold text-lg">{budget.name}</h3>
-                                            <div className="flex items-center gap-3 text-sm text-gray-400">
+                                        <div className="text-left">
+                                            <h3 className="text-white font-semibold text-lg text-left">{budget.name}</h3>
+                                            <div className="flex items-center gap-3 text-sm text-gray-400 text-left">
                                                 <span>{getCategoryName(budget.categoryId)}</span>
                                                 <span>•</span>
                                                 <span className="capitalize">{budget.period}</span>

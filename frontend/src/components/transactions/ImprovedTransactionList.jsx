@@ -361,7 +361,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         ) : transaction.typeId === 2 ? (
                             <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                         ) : (
-                            <Icon name="PiggyBank" size="sm" className="text-blue-400" />
+                            <ArrowDown className="w-5 h-5 text-blue-500" />
                         )}
                     </div>
                     
@@ -688,9 +688,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                         className="w-full text-left px-4 py-4 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
                                     >
                                         <div className="w-10 h-10 rounded-full bg-[#56a69f]/20 flex items-center justify-center flex-shrink-0">
-                                            <svg className="w-5 h-5 text-[#56a69f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                            </svg>
+                                            <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                                         </div>
                                         <div className="flex-1">
                                             <div className="font-medium text-base">Add Income</div>
@@ -703,9 +701,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                         className="w-full text-left px-4 py-4 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
                                     >
                                         <div className="w-10 h-10 rounded-full bg-[#FAF9F5]/20 flex items-center justify-center flex-shrink-0">
-                                            <svg className="w-5 h-5 text-[#FAF9F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                            </svg>
+                                            <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
                                         </div>
                                         <div className="flex-1">
                                             <div className="font-medium text-base">Add Expense</div>
@@ -721,25 +717,22 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
                 {filteredAndSortedTransactions.length === 0 ? (
                     <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 sm:p-12 text-center w-full max-w-full min-w-0">
-                        <div className="mb-4">
-                            <Icon name="BarChart3" size="xxl" className="mx-auto text-blue-400" />
-                        </div>
                         <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
                         <p className="text-gray-400 mb-6 text-sm sm:text-base">{t('transactions.no_transactions_desc')}</p>
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                             <Link
                                 to="/add-expense"
-                                className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                                className="bg-[#FAF9F5] px-6 py-3 rounded-lg font-medium hover:bg-[#e8e7e3] transition-colors flex items-center justify-center gap-2"
+                                style={{ color: '#30302E' }}
                             >
-                                <Icon name="CreditCard" size="md" />
-                                <span className="text-sm sm:text-base">{t('transactions.add_expense')}</span>
+                                <span className="text-sm sm:text-base" style={{ color: '#30302E' }}>{t('transactions.add_expense')}</span>
                             </Link>
                             <Link
                                 to="/add-income"
-                                className="bg-[#56a69f] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#4a8f88] transition-colors flex items-center justify-center gap-2"
+                                className="bg-[#56a69f] px-6 py-3 rounded-lg font-medium hover:bg-[#4a8f88] transition-colors flex items-center justify-center gap-2"
+                                style={{ color: '#30302E' }}
                             >
-                                <Icon name="TrendingUp" size="md" />
-                                <span className="text-sm sm:text-base">{t('transactions.add_income')}</span>
+                                <span className="text-sm sm:text-base" style={{ color: '#30302E' }}>{t('transactions.add_income')}</span>
                             </Link>
                         </div>
                     </div>
