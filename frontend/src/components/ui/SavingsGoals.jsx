@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import api from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { formatSimpleCurrency } from '../../utils/currency';
 const SavingsGoals = () => {
     const { t } = useTranslation();
     const { subscriptionTier } = useAuth();
+    const location = useLocation();
     
     // Add CSS to fix date input styling
     useEffect(() => {
@@ -68,6 +70,13 @@ const SavingsGoals = () => {
     useEffect(() => {
         fetchGoalsAndBalance();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Open modal automatically if navigated from BalanceCard
+    useEffect(() => {
+        if (location.state?.openModal && !isLimited) {
+            setIsModalOpen(true);
+        }
+    }, [location.state, isLimited]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -239,7 +248,7 @@ const SavingsGoals = () => {
                         
                         <div className="space-y-2">
                             <label htmlFor="current_amount" className="block text-gray-300 text-sm font-medium mb-2">
-                                {t('savings_goals.initial_saved_amount')} <span className="text-gray-400 text-xs">(Optional)</span>
+                                {t('savings_goals.initial_saved_amount')} <span className="text-[#C2C0B6] text-xs">(Optional)</span>
                             </label>
                             <input
                                 type="number"
@@ -281,7 +290,7 @@ const SavingsGoals = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                         </svg>
                     </div>
-                    <p className="text-gray-400 text-lg mb-2">{t('savings_goals.no_goals_yet')}</p>
+                    <p className="text-[#C2C0B6] text-lg mb-2">{t('savings_goals.no_goals_yet')}</p>
                     <p className="text-gray-500">{t('savings_goals.no_goals_yet_description')}</p>
                 </div>
             ) : (
@@ -294,9 +303,9 @@ const SavingsGoals = () => {
                                     <h4 className="text-xl font-bold text-white">{goal.goal_name}</h4>
                                     <CloseButton onClick={() => handleDeleteGoal(goal.id)} />
                                 </div>
-                                <p className="text-sm text-gray-400 mb-4">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
+                                <p className="text-sm text-[#C2C0B6] mb-4 text-left">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
                                 
-                                <div className="w-full bg-[#262626] rounded-full h-4 mb-2">
+                                <div className="w-full bg-[#232323] rounded-full h-4 mb-2">
                                     <div className="bg-[#56a69f] h-4 rounded-full transition-all duration-300" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>
                                 </div>
                                 <div className="flex justify-between text-sm font-medium text-white">

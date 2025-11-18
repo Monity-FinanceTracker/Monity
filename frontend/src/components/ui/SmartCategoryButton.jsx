@@ -30,7 +30,7 @@ const SmartCategoryButton = ({ suggestion, onAccept, isVisible }) => {
                         <span className="text-white font-medium">{suggestion.category}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-[#C2C0B6]">
                             {Math.round(suggestion.confidence * 100)}% • {getConfidenceText(suggestion.confidence)}
                         </span>
                     </div>

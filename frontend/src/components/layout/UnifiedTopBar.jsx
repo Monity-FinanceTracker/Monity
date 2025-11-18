@@ -144,7 +144,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                         <div className="text-gray-300 text-xs">
                                             {user?.user_metadata?.name || 'User'}
                                         </div>
-                                        <div className="text-gray-400 text-xs">
+                                        <div className="text-[#C2C0B6] text-xs">
                                             {user?.email}
                                         </div>
                                     </div>
@@ -163,7 +163,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             {user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
                                         </p>
                                         <div className="flex items-center gap-2">
-                                            <p className="text-xs text-gray-400 leading-none">
+                                            <p className="text-xs text-[#C2C0B6] leading-none">
                                                 {user?.email}
                                             </p>
                                         </div>
@@ -181,7 +181,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             backgroundColor: 'transparent',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(86, 166, 159, 0.2)'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
@@ -204,7 +204,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#152520'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(86, 166, 159, 0.2)'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     >
                                         <Icon name="LogOut" size="sm" className="text-white" />
