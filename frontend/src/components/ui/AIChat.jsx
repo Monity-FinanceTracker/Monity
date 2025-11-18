@@ -198,7 +198,7 @@ const AIChat = ({ isOpen, onClose }) => {
                         <div>
                             <h2 className="text-xl font-bold text-white">{t('aiChat.title')}</h2>
                             {usage && (
-                                <p className="text-sm text-gray-400">
+                                <p className="text-sm text-[#C2C0B6]">
                                     {isPremium ? (
                                         <span className="text-[#56a69f]">{t('aiChat.unlimited_messages')}</span>
                                     ) : (
@@ -214,7 +214,7 @@ const AIChat = ({ isOpen, onClose }) => {
                         {messages.length > 0 && (
                             <button
                                 onClick={handleClearHistory}
-                                className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-red-400"
+                                className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-[#C2C0B6] hover:text-red-400"
                                 title={t('aiChat.clear_history_title')}
                             >
                                 <FiTrash2 size={18} />
@@ -222,7 +222,7 @@ const AIChat = ({ isOpen, onClose }) => {
                         )}
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-white"
+                            className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-[#C2C0B6] hover:text-white"
                         >
                             <FiX size={24} />
                         </button>
@@ -241,7 +241,7 @@ const AIChat = ({ isOpen, onClose }) => {
                             >
                                 {t('aiChat.welcome_title')}
                             </h3>
-                            <p className="text-gray-400 mb-6 max-w-md">
+                            <p className="text-[#C2C0B6] mb-6 max-w-md">
                                 {t('aiChat.welcome_description')}
                             </p>
 
@@ -279,7 +279,7 @@ const AIChat = ({ isOpen, onClose }) => {
                             {loading && (
                                 <div className="flex justify-start">
                                     <div className="bg-gray-800 rounded-2xl px-4 py-3">
-                                        <div className="flex items-center gap-2 text-gray-400">
+                                        <div className="flex items-center gap-2 text-[#C2C0B6]">
                                             <FiLoader className="animate-spin" />
                                             <span>{t('aiChat.thinking')}</span>
                                         </div>

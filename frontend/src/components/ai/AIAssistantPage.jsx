@@ -237,7 +237,7 @@ const AIAssistantPage = () => {
                         {loading && (
                             <div className="flex justify-start">
                                 <div className="bg-[#262624] rounded-2xl px-4 py-3">
-                                    <div className="flex items-center gap-2 text-gray-400">
+                                    <div className="flex items-center gap-2 text-[#C2C0B6]">
                                         <FiLoader className="animate-spin" />
                                         <span>{t('ai.thinking')}</span>
                                     </div>

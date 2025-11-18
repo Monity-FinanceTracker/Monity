@@ -151,7 +151,7 @@ const EnhancedBudgets = () => {
                             </div>
                             <div className="text-left">
                                 <h3 className="text-white font-medium text-left">{t('budgets.total_budget')}</h3>
-                                <p className="text-gray-400 text-sm text-left">{t('budgets.all_periods')}</p>
+                                <p className="text-[#C2C0B6] text-sm text-left">{t('budgets.all_periods')}</p>
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-white">
@@ -168,7 +168,7 @@ const EnhancedBudgets = () => {
                             </div>
                             <div className="text-left">
                                 <h3 className="text-white font-medium text-left">{t('budgets.at_risk')}</h3>
-                                <p className="text-gray-400 text-sm text-left">{t('budgets.over_80_percent')}</p>
+                                <p className="text-[#C2C0B6] text-sm text-left">{t('budgets.over_80_percent')}</p>
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-yellow-500">
@@ -185,7 +185,7 @@ const EnhancedBudgets = () => {
                             </div>
                             <div className="text-left">
                                 <h3 className="text-white font-medium text-left">{t('budgets.exceeded')}</h3>
-                                <p className="text-gray-400 text-sm text-left">{t('budgets.over_budget')}</p>
+                                <p className="text-[#C2C0B6] text-sm text-left">{t('budgets.over_budget')}</p>
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-red-500">
@@ -219,7 +219,7 @@ const EnhancedBudgets = () => {
                                         </div>
                                         <div className="text-left">
                                             <h3 className="text-white font-semibold text-lg text-left">{budget.name}</h3>
-                                            <div className="flex items-center gap-3 text-sm text-gray-400 text-left">
+                                            <div className="flex items-center gap-3 text-sm text-[#C2C0B6] text-left">
                                                 <span>{getCategoryName(budget.categoryId)}</span>
                                                 <span>•</span>
                                                 <span className="capitalize">{budget.period}</span>
@@ -230,7 +230,7 @@ const EnhancedBudgets = () => {
                                     <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => setEditingBudget(budget)}
-                                            className="p-2 text-gray-400 hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
+                                            className="p-2 text-[#C2C0B6] hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
                                             title={t('budgets.edit')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,7 +239,7 @@ const EnhancedBudgets = () => {
                                         </button>
                                         <button
                                             onClick={() => handleDeleteBudget(budget.id)}
-                                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                            className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                             title={t('budgets.delete')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@ const EnhancedBudgets = () => {
                                 {/* Progress Section */}
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center text-sm">
-                                        <span className="text-gray-400">
+                                        <span className="text-[#C2C0B6]">
                                             R$ {spent.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {t('budgets.of')} R$ {parseFloat(budget.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
                                         <span className={`font-medium ${
@@ -274,7 +274,7 @@ const EnhancedBudgets = () => {
                                         <span className={`${remaining > 0 ? 'text-[#56a69f]' : 'text-red-400'}`}>
                                             R$ {remaining.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {remaining > 0 ? t('budgets.remaining') : t('budgets.over_budget')}
                                         </span>
-                                        <span className="text-gray-400">
+                                        <span className="text-[#C2C0B6]">
                                             {budget.period === 'monthly' ? '30 days' : budget.period}
                                         </span>
                                     </div>
@@ -328,18 +328,18 @@ const EnhancedBudgets = () => {
                                         <button
                                             type="button"
                                             onClick={() => setNewBudget(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
-                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                         >
-                                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                            <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => setNewBudget(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
-                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                         >
-                                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                            <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                         </button>
                                     </div>
                                 </div>
@@ -442,18 +442,18 @@ const EnhancedBudgets = () => {
                                         <button
                                             type="button"
                                             onClick={() => setEditingBudget(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
-                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                         >
-                                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                            <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => setEditingBudget(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
-                                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                         >
-                                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                            <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                         </button>
                                     </div>
                                 </div>

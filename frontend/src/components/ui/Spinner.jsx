@@ -36,7 +36,7 @@ const Spinner = ({
         aria-label="Loading"
       />
       {message && (
-        <p className="text-gray-400 text-sm mt-3 text-center">
+        <p className="text-[#C2C0B6] text-sm mt-3 text-center">
           {message}
         </p>
       )}

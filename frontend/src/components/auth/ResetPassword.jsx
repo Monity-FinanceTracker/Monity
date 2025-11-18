@@ -121,7 +121,7 @@ function ResetPassword() {
                                 {t('resetPassword.success_title')}
                             </h2>
                             <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full"></div>
-                            <p className="text-lg text-gray-400">
+                            <p className="text-lg text-[#C2C0B6]">
                                 {t('resetPassword.success_subtitle')}
                             </p>
                             <p className="text-sm text-gray-500">
@@ -161,7 +161,7 @@ function ResetPassword() {
                 {/* Monity Logo */}
                 <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
                     <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
-                    <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
+                    <p className="text-[#C2C0B6] mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
                 </div>
 
                 {/* Reset Password Card */}
@@ -169,7 +169,7 @@ function ResetPassword() {
                     <div className="text-center mb-6">
                         <h2 className="text-2xl font-bold text-white mb-2">{t('resetPassword.title')}</h2>
                         <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full mb-4"></div>
-                        <p className="text-gray-400 text-sm">{t('resetPassword.subtitle')}</p>
+                        <p className="text-[#C2C0B6] text-sm">{t('resetPassword.subtitle')}</p>
                     </div>
 
                     {/* Error Message */}
@@ -211,7 +211,7 @@ function ResetPassword() {
                                 />
                                 <div
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#C2C0B6] hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                 >
                                     {showPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -276,7 +276,7 @@ function ResetPassword() {
                                 />
                                 <div
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#C2C0B6] hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                 >
                                     {showConfirmPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">

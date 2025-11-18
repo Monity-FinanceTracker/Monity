@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button, CloseButton } from '../ui';
 import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
-import { FaMoneyBillWave, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
 import { categoryIconOptions } from '../../utils/iconMappingData';
 
 /**
@@ -174,13 +173,10 @@ const AddTransaction = ({ type = 'expense' }) => {
             <div className="max-w-2xl mx-auto">
                 {/* Header Section */}
                 <div className="text-center mb-8">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${currentConfig.gradient} rounded-2xl mb-4 shadow-lg`}>
-                        <Icon className="text-white text-2xl" />
-                    </div>
                     <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
                         {t(`${currentConfig.translationKey}.title`)}
                     </h1>
-                    <p className="text-gray-400 text-lg">
+                    <p className="text-[#C2C0B6] text-lg">
                         {t(`${currentConfig.translationKey}.subtitle`)}
                     </p>
                 </div>
@@ -209,33 +205,51 @@ const AddTransaction = ({ type = 'expense' }) => {
                         .animate-fadeIn {
                             animation: fadeIn 0.3s ease-out;
                         }
+                        .no-hover-button {
+                            pointer-events: auto;
+                        }
+                        .no-hover-button:hover {
+                            background-color: inherit !important;
+                            background: inherit !important;
+                            opacity: 1 !important;
+                            transform: none !important;
+                            filter: none !important;
+                            color: inherit !important;
+                        }
+                        .no-hover-button:hover * {
+                            color: inherit !important;
+                        }
+                        .no-hover-button:active {
+                            background-color: inherit !important;
+                            background: inherit !important;
+                            transform: none !important;
+                            color: inherit !important;
+                        }
+                        .no-hover-button:focus {
+                            outline: none !important;
+                            ring: none !important;
+                            box-shadow: none !important;
+                        }
                     `}</style>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Description Input */}
                         <div className="space-y-2">
-                            <label className="block text-white font-medium text-sm uppercase tracking-wide">
-                                {t(`${currentConfig.translationKey}.description_label`)}
-                            </label>
-                            <div className="relative">
-                                <FaStickyNote className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
-                                <input
-                                    className={`w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500`}
-                                    placeholder={t(`${currentConfig.translationKey}.description`)}
-                                    value={transaction.description}
-                                    onChange={e => setTransaction(prev => ({ ...prev, description: e.target.value }))}
-                                    required
-                                />
-                            </div>
+                            <input
+                                className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 placeholder-[#C2C0B6]"
+                                placeholder={t(`${currentConfig.translationKey}.description`)}
+                                value={transaction.description}
+                                onChange={e => setTransaction(prev => ({ ...prev, description: e.target.value }))}
+                                required
+                            />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="relative">
-                                <FaMoneyBillWave className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     type="number"
                                     step="0.01"
-                                    className={`w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]`}
+                                    className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 pr-12 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 placeholder-[#C2C0B6] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                     placeholder={t(`${currentConfig.translationKey}.amount`)}
                                     value={transaction.amount}
                                     onChange={e => setTransaction(prev => ({ ...prev, amount: e.target.value }))}
@@ -246,26 +260,25 @@ const AddTransaction = ({ type = 'expense' }) => {
                                     <button
                                         type="button"
                                         onClick={() => setTransaction(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
-                                        className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                        className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                         style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                     >
-                                        <FaChevronUp className="w-3 h-3 text-white stroke-2" />
+                                        <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setTransaction(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
-                                        className="w-4 h-3 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                        className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                         style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                     >
-                                        <FaChevronDown className="w-3 h-3 text-white stroke-2" />
+                                        <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                     </button>
                                 </div>
                             </div>
                             <div className="relative">
-                                <FaCalendarAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-white" />
                                 <input
                                     type="date"
-                                    className={`w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 pl-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4`}
+                                    className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
                                     value={transaction.date}
                                     onChange={e => setTransaction(prev => ({ ...prev, date: e.target.value }))}
                                     required
@@ -274,9 +287,8 @@ const AddTransaction = ({ type = 'expense' }) => {
                         </div>
                         
                         <div className="relative">
-                            <FaListUl className="absolute top-1/2 left-4 -translate-y-1/2 text-white z-10" />
                             <select
-                                className={`w-full bg-[#1F1E1D] border ${showCategoryError ? 'border-red-500' : 'border-[#262626]'} text-white rounded-xl p-4 pl-12 pr-12 ${currentConfig.focusRing} focus:border-transparent transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium`}
+                                className={`w-full bg-[#30302E] border ${showCategoryError ? 'border-red-500' : 'border-[#30302E]'} text-[#C2C0B6] rounded-xl p-4 pr-12 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium`}
                                 style={{
                                     fontFamily: "'DM Sans', sans-serif",
                                     fontSize: '14px',
@@ -290,8 +302,8 @@ const AddTransaction = ({ type = 'expense' }) => {
                             >
                                 <option 
                                     value="" 
-                                    className="bg-[#1F1E1D] text-white font-medium"
-                                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#1F1E1D', color: 'white' }}
+                                    className="bg-[#30302E] text-[#C2C0B6] font-medium"
+                                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#30302E', color: '#C2C0B6' }}
                                 >
                                     {filteredCategories.length === 0 
                                         ? t('addTransaction.no_categories_available')
@@ -302,15 +314,15 @@ const AddTransaction = ({ type = 'expense' }) => {
                                     <option 
                                         key={category.id} 
                                         value={category.name} 
-                                        className="bg-[#1F1E1D] text-white font-medium"
-                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#1F1E1D', color: 'white' }}
+                                        className="bg-[#30302E] text-[#C2C0B6] font-medium"
+                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#30302E', color: '#C2C0B6' }}
                                     >
                                         {category.name}
                                     </option>
                                 ))}
                             </select>
                             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-[#C2C0B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
@@ -354,6 +366,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                             loading={loading}
                             disabled={loading}
                             leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
+                            className="no-hover-button"
                             style={{ justifyContent: 'center' }}
                         >
                             {loading 
@@ -418,7 +431,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                     </select>
                                     <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                                         <svg 
-                                            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} 
+                                            className={`w-5 h-5 text-[#C2C0B6] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} 
                                             fill="none" 
                                             stroke="currentColor" 
                                             viewBox="0 0 24 24"
@@ -444,7 +457,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                                 className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${
                                                     newCategory.icon === iconOption.name 
                                                         ? 'border-[#56a69f] bg-[#56a69f]/20 text-[#56a69f]' 
-                                                        : 'border-[#262626] hover:border-[#56a69f]/50 text-gray-400 hover:text-white'
+                                                        : 'border-[#262626] hover:border-[#56a69f]/50 text-[#C2C0B6] hover:text-white'
                                                 }`}
                                                 title={iconOption.label}
                                             >

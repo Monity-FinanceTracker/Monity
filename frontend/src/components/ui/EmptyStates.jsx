@@ -38,7 +38,7 @@ const EmptyStateBase = ({
             <h3 className="text-xl font-bold text-white mb-2">
                 {title}
             </h3>
-            <p className="text-gray-400 mb-6 max-w-md mx-auto">
+            <p className="text-[#C2C0B6] mb-6 max-w-md mx-auto">
                 {description}
             </p>
 
@@ -289,7 +289,7 @@ export const LoadingState = ({ message }) => {
             <div className="flex justify-center">
                 <div className="w-12 h-12 rounded-full border-4 border-[#262626] border-t-[#56a69f] animate-spin"></div>
             </div>
-            <p className="text-center text-gray-400">
+            <p className="text-center text-[#C2C0B6]">
                 {message || t('loadingStates.generic')}
             </p>
         </div>

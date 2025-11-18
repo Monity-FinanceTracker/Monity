@@ -77,7 +77,7 @@ const SavingsOverviewCard = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                         </svg>
                     </div>
-                    <p className="text-gray-400 mb-6 text-lg">
+                    <p className="text-[#C2C0B6] mb-6 text-lg">
                         {t('savings_goals.no_goals_yet')}
                     </p>
                     <Link 
@@ -93,88 +93,57 @@ const SavingsOverviewCard = () => {
 
     return (
         <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
-            <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-white">
-                            {t('savings_goals.title')}
-                        </h3>
-                <div className="w-8 h-8 bg-[#56a69f] rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="w-5 h-5 text-white font-bold" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
+            {/* Title */}
+            <div className="mb-6">
+                <h3 className="text-2xl font-bold text-[#56a69f] text-left">
+                    {t('savings_goals.title')}
+                </h3>
+            </div>
+
+            {/* Current vs Target Amount */}
+            <div className="mb-6">
+                <div className="flex justify-between items-baseline mb-3">
+                    <div>
+                        <span className="text-sm text-[#C2C0B6] block mb-1">
+                            {t('savings_goals.current_amount')}
+                        </span>
+                        <span className="text-3xl font-bold text-white">
+                            ${savingsData.totalAllocated.toLocaleString()}
+                        </span>
+                    </div>
+                    <div className="text-right">
+                        <span className="text-sm text-[#C2C0B6] block mb-1">
+                            {t('savings_goals.target_amount')}
+                        </span>
+                        <span className="text-3xl font-bold text-[#56a69f]">
+                            ${savingsData.totalTargets.toLocaleString()}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            {/* Total allocated amount */}
-            <div className="mb-4 text-center">
-                <div className="mb-2">
-                            <span className="text-2xl font-bold text-white block">
-                                ${savingsData.totalAllocated.toLocaleString()}
-                            </span>
-                            <span className="text-xs text-gray-400">
-                                {t('savings_goals.allocated')}
-                            </span>
-                </div>
-                <div className="text-xs text-gray-300">
-                    {t('savings_goals.target')}: ${savingsData.totalTargets.toLocaleString()}
-                </div>
-            </div>
-
-            {/* Overall progress bar */}
-            <div className="mb-4">
-                <div className="flex justify-between text-xs text-gray-300 mb-2">
+            {/* Single Progress Bar */}
+            <div className="mb-6">
+                <div className="flex justify-between text-sm text-[#C2C0B6] mb-2">
                     <span>{t('savings_goals.overall_progress')}</span>
-                    <span className="font-medium">{savingsData.progressPercentage.toFixed(1)}%</span>
+                    <span className="font-bold text-[#56a69f]">{savingsData.progressPercentage.toFixed(1)}%</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-3">
+                <div className="w-full bg-[#232323] rounded-full h-4">
                     <div 
-                        className="bg-[#56a69f] h-3 rounded-full transition-all duration-300" 
+                        className="bg-[#56a69f] h-4 rounded-full transition-all duration-500 ease-out" 
                         style={{ width: `${Math.min(savingsData.progressPercentage, 100)}%` }}
                     ></div>
                 </div>
             </div>
 
-            {/* Top 3 goals preview */}
-            {savingsData.goals.length > 0 && (
-                <div className="space-y-3 mb-4">
-                    {savingsData.goals.map((goal) => (
-                        <div key={goal.id} className="flex items-center justify-between">
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {goal.goal_name}
-                                </p>
-                                <div className="flex items-center space-x-2">
-                                    <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                                        <div 
-                                            className="bg-[#56a69f] h-1.5 rounded-full" 
-                                            style={{ width: `${goal.progress}%` }}
-                                        ></div>
-                                    </div>
-                                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {goal.progress.toFixed(0)}%
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="ml-3 text-right">
-                                <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                    ${goal.current_amount.toLocaleString()}
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">
-                                    /${goal.target_amount.toLocaleString()}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-
             {/* Footer with link to full savings page */}
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
+            <div className="pt-4 border-t border-[#262626] text-center">
                 <Link 
                     to="/savings-goals" 
-                    className="inline-flex items-center justify-center text-sm text-[#56a69f] hover:text-[#01a87a] transition-colors font-medium"
+                    className="inline-flex items-center justify-center text-sm text-[#56a69f] hover:text-[#4a8f88] transition-colors font-medium"
                 >
                     <span className="mr-2">
-                        {savingsData.totalGoals > 3 
+                        {savingsData.totalGoals > 1 
                             ? t('savings_goals.view_all_goals', { count: savingsData.totalGoals })
                             : t('savings_goals.manage_goals')
                         }

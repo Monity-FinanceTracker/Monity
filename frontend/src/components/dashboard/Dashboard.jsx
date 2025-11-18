@@ -14,7 +14,7 @@ function ModernCard({ children, title, subtitle, accent, isLoading = false, acti
             <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 text-left">
                     <h3 className={`text-xl font-bold ${accent || 'text-white'} mb-1`}>{title}</h3>
-                    {subtitle && <p className="text-gray-400 text-sm">{subtitle}</p>}
+                    {subtitle && <p className="text-[#C2C0B6] text-sm">{subtitle}</p>}
                 </div>
                 {action && (
                     <div className="flex items-center">
@@ -58,7 +58,7 @@ function Dashboard() {
                     >
                         {greeting}
                     </h1>
-                    <p className="text-gray-400 text-lg text-left">
+                    <p className="text-[#C2C0B6] text-lg text-left">
                         {t('dashboard.welcome_subtitle')}
                     </p>
                 </div>

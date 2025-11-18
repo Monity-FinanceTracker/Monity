@@ -205,7 +205,7 @@ const EnhancedSettings = () => {
                             <div className="flex items-center justify-between py-3 border-b border-[#262626]">
                                 <div className="flex-1">
                                     <h4 className="text-white text-sm font-medium">{t('settings.full_name')}</h4>
-                                    <p className="text-gray-400 text-xs mt-0.5">{t('settings.enter_name')}</p>
+                                    <p className="text-[#C2C0B6] text-xs mt-0.5">{t('settings.enter_name')}</p>
                                 </div>
                                 <input
                                     type="text"
@@ -220,7 +220,7 @@ const EnhancedSettings = () => {
                             <div className="flex items-center justify-between py-3 border-b border-[#262626]">
                                 <div className="flex-1">
                                     <h4 className="text-white text-sm font-medium">{t('settings.email')}</h4>
-                                    <p className="text-gray-400 text-xs mt-0.5">{t('settings.email_readonly')}</p>
+                                    <p className="text-[#C2C0B6] text-xs mt-0.5">{t('settings.email_readonly')}</p>
                                 </div>
                                 <div className="w-48 bg-[#1A1A1A] border border-[#262626] text-gray-500 text-sm rounded-lg px-3 py-1.5 cursor-not-allowed truncate">
                                     {profileData.email}
@@ -317,7 +317,7 @@ const EnhancedSettings = () => {
                             <div className="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 className="text-xl font-semibold text-white">{t('subscription.current_plan')}</h3>
-                                    <p className="text-gray-400">{t('subscription.manage_plan')}</p>
+                                    <p className="text-[#C2C0B6]">{t('subscription.manage_plan')}</p>
                                 </div>
                                 <div className="text-right">
                                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
@@ -392,7 +392,7 @@ const EnhancedSettings = () => {
                         <div className="flex items-center justify-between py-3 border-b border-[#262626]">
                             <div className="flex-1">
                                 <h4 className="text-white text-sm font-medium">{t('settings.language')}</h4>
-                                <p className="text-gray-400 text-xs mt-0.5">{t('settings.language_desc')}</p>
+                                <p className="text-[#C2C0B6] text-xs mt-0.5">{t('settings.language_desc')}</p>
                             </div>
                             <LanguageSwitcher />
                         </div>
@@ -401,7 +401,7 @@ const EnhancedSettings = () => {
                         <div className="flex items-center justify-between py-3 border-b border-[#262626]">
                             <div className="flex-1">
                                 <h4 className="text-white text-sm font-medium">{t('settings.notifications')}</h4>
-                                <p className="text-gray-400 text-xs mt-0.5">{t('settings.notifications_desc')}</p>
+                                <p className="text-[#C2C0B6] text-xs mt-0.5">{t('settings.notifications_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -421,7 +421,7 @@ const EnhancedSettings = () => {
                         <div className="flex items-center justify-between py-3 border-b border-[#262626]">
                             <div className="flex-1">
                                 <h4 className="text-white text-sm font-medium">{t('settings.email_updates')}</h4>
-                                <p className="text-gray-400 text-xs mt-0.5">{t('settings.email_updates_desc')}</p>
+                                <p className="text-[#C2C0B6] text-xs mt-0.5">{t('settings.email_updates_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -441,7 +441,7 @@ const EnhancedSettings = () => {
                         <div className="flex items-center justify-between py-3 border-b border-[#262626]">
                             <div className="flex-1">
                                 <h4 className="text-white text-sm font-medium">Dark Mode</h4>
-                                <p className="text-gray-400 text-xs mt-0.5">Always enabled for optimal experience</p>
+                                <p className="text-[#C2C0B6] text-xs mt-0.5">Always enabled for optimal experience</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -462,7 +462,7 @@ const EnhancedSettings = () => {
                         {/* Export Data */}
                         <div className="py-3 border-b border-[#262626] flex flex-col items-start gap-2">
                             <h4 className="text-white text-sm font-medium">{t('settings.export_data')}</h4>
-                            <p className="text-gray-400 text-xs">{t('settings.export_data_desc')}</p>
+                            <p className="text-[#C2C0B6] text-xs">{t('settings.export_data_desc')}</p>
                             <button className="text-white hover:text-[#56a69f] text-sm transition-colors self-start py-1.5">
                                 {t('settings.export_button')}
                             </button>
@@ -471,7 +471,7 @@ const EnhancedSettings = () => {
                         {/* Danger Zone */}
                         <div className="py-3 border-b border-red-900/30 flex flex-col items-start gap-2">
                             <h4 className="text-red-400 text-sm font-medium">{t('settings.delete_account')}</h4>
-                            <p className="text-gray-400 text-xs">{t('settings.delete_account_desc')}</p>
+                            <p className="text-[#C2C0B6] text-xs">{t('settings.delete_account_desc')}</p>
                             <button className="text-red-400 hover:text-red-300 text-sm transition-colors self-start py-1.5">
                                 {t('settings.delete_button')}
                             </button>

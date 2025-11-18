@@ -89,7 +89,7 @@ const FinancialHealth = () => {
         <div className="flex-1 p-6">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-white">{t('financialHealth.title')}</h1>
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-[#C2C0B6]">
                     {t('financialHealth.last_updated')}: {new Date(healthData.lastUpdated).toLocaleDateString()}
                 </div>
             </div>
@@ -121,7 +121,7 @@ const FinancialHealth = () => {
                             ></div>
                         </div>
                         
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-[#C2C0B6] text-sm">
                             {t('financialHealth.based_on_period', { period: healthData.period })}
                         </p>
                     </div>
@@ -132,25 +132,25 @@ const FinancialHealth = () => {
                             <div className="text-2xl font-bold text-[#56a69f]">
                                 {healthData.metrics.savingsRate}%
                             </div>
-                            <div className="text-sm text-gray-400">{t('financialHealth.savings_rate')}</div>
+                            <div className="text-sm text-[#C2C0B6]">{t('financialHealth.savings_rate')}</div>
                         </div>
                         <div className="bg-[#1F1E1D] p-4 rounded-xl border border-[#262626]">
                             <div className="text-2xl font-bold text-[#36A2EB]">
                                 {healthData.metrics.expenseRatio}%
                             </div>
-                            <div className="text-sm text-gray-400">{t('financialHealth.expense_ratio')}</div>
+                            <div className="text-sm text-[#C2C0B6]">{t('financialHealth.expense_ratio')}</div>
                         </div>
                         <div className="bg-[#1F1E1D] p-4 rounded-xl border border-[#262626]">
                             <div className="text-2xl font-bold text-[#FFCE56]">
                                 {formatCurrency(healthData.metrics.totalSavings)}
                             </div>
-                            <div className="text-sm text-gray-400">{t('financialHealth.total_savings')}</div>
+                            <div className="text-sm text-[#C2C0B6]">{t('financialHealth.total_savings')}</div>
                         </div>
                         <div className="bg-[#1F1E1D] p-4 rounded-xl border border-[#262626]">
                             <div className="text-2xl font-bold text-[#FF6384]">
                                 {healthData.metrics.transactionCount}
                             </div>
-                            <div className="text-sm text-gray-400">{t('financialHealth.transactions')}</div>
+                            <div className="text-sm text-[#C2C0B6]">{t('financialHealth.transactions')}</div>
                         </div>
                     </div>
                 </div>
@@ -166,7 +166,7 @@ const FinancialHealth = () => {
                     <div className="text-3xl font-bold text-[#56a69f] mb-2">
                         {formatCurrency(healthData.metrics.totalIncome)}
                     </div>
-                    <p className="text-gray-400 text-sm">{t('financialHealth.total_income_period', { period: healthData.period })}</p>
+                    <p className="text-[#C2C0B6] text-sm">{t('financialHealth.total_income_period', { period: healthData.period })}</p>
                 </div>
 
                 <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
@@ -177,7 +177,7 @@ const FinancialHealth = () => {
                     <div className="text-3xl font-bold text-red-400 mb-2">
                         {formatCurrency(healthData.metrics.totalExpenses)}
                     </div>
-                    <p className="text-gray-400 text-sm">{t('financialHealth.total_expenses_period', { period: healthData.period })}</p>
+                    <p className="text-[#C2C0B6] text-sm">{t('financialHealth.total_expenses_period', { period: healthData.period })}</p>
                 </div>
 
                 <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
@@ -188,7 +188,7 @@ const FinancialHealth = () => {
                     <div className={`text-3xl font-bold mb-2 ${healthData.metrics.totalSavings >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {formatCurrency(healthData.metrics.totalSavings)}
                     </div>
-                    <p className="text-gray-400 text-sm">{t('financialHealth.net_savings_period', { period: healthData.period })}</p>
+                    <p className="text-[#C2C0B6] text-sm">{t('financialHealth.net_savings_period', { period: healthData.period })}</p>
                 </div>
             </div>
 

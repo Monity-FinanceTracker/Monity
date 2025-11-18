@@ -12,6 +12,7 @@ import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
 import { TransactionSkeleton, Dropdown } from '../ui';
+import { useCategories } from '../../hooks/useQueries';
 
 /**
  * Calcula tamanho da fonte baseado no comprimento do valor
@@ -91,6 +92,19 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         gcTime: 5 * 60 * 1000, // 5 minutes
     });
 
+    // Fetch categories
+    const { data: categoriesData = [] } = useCategories();
+
+    // Prepare category options for dropdown
+    const categoryOptions = useMemo(() => {
+        const options = [{ value: '', label: t('transactions.all_categories') }];
+        const uniqueCategories = [...new Set(categoriesData.map(cat => cat.name))];
+        uniqueCategories.forEach(cat => {
+            options.push({ value: cat, label: cat });
+        });
+        return options;
+    }, [categoriesData, t]);
+
     // Update local state when query data changes
     useEffect(() => {
         setTransactions(transactionsData);
@@ -131,7 +145,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         // Category filter
         if (categoryFilter) {
             filtered = filtered.filter(transaction =>
-                transaction.category?.toLowerCase().includes(categoryFilter.toLowerCase())
+                transaction.category === categoryFilter
             );
         }
 
@@ -367,7 +381,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     
                     <div className="flex-1 min-w-0 text-left">
                         <h4 className="text-white font-medium text-sm sm:text-base truncate text-left">{transaction.description}</h4>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-400 text-left">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm text-[#C2C0B6] text-left">
                             <span className="truncate">{transaction.category}</span>
                             <span className="hidden sm:inline">•</span>
                             <span>{formatDate(transaction.date)}</span>
@@ -384,7 +398,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     
                     <button
                         onClick={() => handleDelete(transaction.id)}
-                        className="text-gray-400 hover:text-red-400 transition-colors p-1"
+                        className="text-[#C2C0B6] hover:text-red-400 transition-colors p-1"
                         title={t('transactions.delete')}
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -472,31 +486,31 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className="text-lg sm:text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
-                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
+                        <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className={`${getResponsiveFontSize(totals.income)} font-bold text-[#56a69f] whitespace-nowrap overflow-hidden`}>
                             R$ {totals.income.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
-                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_income')}</div>
+                        <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_income')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className={`${getResponsiveFontSize(totals.expenses)} font-bold text-[#FAF9F5] whitespace-nowrap overflow-hidden`}>
                             {formatSimpleCurrency(totals.expenses, true)}
                         </div>
-                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
+                        <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className={`${getResponsiveFontSize(totalSavings)} font-bold whitespace-nowrap overflow-hidden ${totalSavings >= 0 ? 'text-[#A69F8E]' : 'text-orange-400'}`}>
                             {totalSavings >= 0 ? 'R$ ' : '-R$ '}{Math.abs(totalSavings).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
-                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_savings')}</div>
+                        <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_savings')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className={`${getResponsiveFontSize(balance)} font-bold whitespace-nowrap overflow-hidden ${balance >= 0 ? 'text-[#56a69f]' : 'text-red-400'}`}>
                             {balance >= 0 ? 'R$ ' : '-R$ '}{Math.abs(balance).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
-                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.net_balance')}</div>
+                        <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.net_balance')}</div>
                     </div>
                 </div>
             </div>
@@ -511,9 +525,9 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                 placeholder={t('transactions.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-12 bg-[#262626] border border-[#262626] rounded-xl px-4 pl-10 text-white placeholder-gray-400 text-base font-medium focus:outline-none focus:border-[#56a69f] min-w-0 max-w-full"
+                            className="w-full h-12 bg-[#30302E] border-0 rounded-xl px-4 pl-10 text-[#C2C0B6] placeholder-[#C2C0B6] text-base font-medium focus:outline-none min-w-0 max-w-full"
                             />
-                            <svg className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-[#C2C0B6] absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                     </div>
@@ -558,50 +572,56 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     <div className="mt-4 pt-4 border-t border-[#262626]">
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-gray-400 text-sm mb-2">{t('transactions.filter_category')}</label>
-                                <input
-                                    type="text"
+                                <label className="block text-[#C2C0B6] text-sm mb-2">{t('transactions.filter_category')}</label>
+                                <Dropdown
                                     value={categoryFilter}
-                                    onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
+                                    onChange={setCategoryFilter}
+                                    options={categoryOptions}
                                     placeholder={t('transactions.any_category')}
+                                    className="w-full"
                                 />
                             </div>
                             
                             <div>
-                                <label className="block text-gray-400 text-sm mb-2">{t('transactions.date_range')}</label>
+                                <label className="block text-[#C2C0B6] text-sm mb-2">{t('transactions.date_range')}</label>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    <input
-                                        type="date"
-                                        value={dateRange.start}
-                                        onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
-                                    />
-                                    <input
-                                        type="date"
-                                        value={dateRange.end}
-                                        onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
-                                    />
+                                    <div>
+                                        <label className="block text-[#C2C0B6] text-xs mb-1">Initial Date</label>
+                                        <input
+                                            type="date"
+                                            value={dateRange.start}
+                                            onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                                            className="w-full bg-[#30302E] border-0 rounded-lg px-3 py-2 text-[#C2C0B6] focus:outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[#C2C0B6] text-xs mb-1">Final Date</label>
+                                        <input
+                                            type="date"
+                                            value={dateRange.end}
+                                            onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                                            className="w-full bg-[#30302E] border-0 rounded-lg px-3 py-2 text-[#C2C0B6] focus:outline-none"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             
                             <div>
-                                <label className="block text-gray-400 text-sm mb-2">{t('transactions.amount_range')}</label>
+                                <label className="block text-[#C2C0B6] text-sm mb-2">{t('transactions.amount_range')}</label>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     <input
                                         type="number"
                                         placeholder={t('transactions.min_amount')}
                                         value={amountRange.min}
                                         onChange={(e) => setAmountRange(prev => ({ ...prev, min: e.target.value }))}
-                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
+                                        className="w-full bg-[#30302E] border-0 rounded-lg px-3 py-2 text-[#C2C0B6] placeholder-[#C2C0B6] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     />
                                     <input
                                         type="number"
                                         placeholder={t('transactions.max_amount')}
                                         value={amountRange.max}
                                         onChange={(e) => setAmountRange(prev => ({ ...prev, max: e.target.value }))}
-                                        className="w-full bg-[#262626] border border-[#262626] rounded-lg px-3 py-2 text-white"
+                                        className="w-full bg-[#30302E] border-0 rounded-lg px-3 py-2 text-[#C2C0B6] placeholder-[#C2C0B6] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     />
                                 </div>
                             </div>
@@ -716,7 +736,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 {filteredAndSortedTransactions.length === 0 ? (
                     <div className="p-6 sm:p-12 text-center w-full max-w-full min-w-0">
                         <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
-                        <p className="text-gray-400 mb-6 text-sm sm:text-base">{t('transactions.no_transactions_desc')}</p>
+                        <p className="text-[#C2C0B6] mb-6 text-sm sm:text-base">{t('transactions.no_transactions_desc')}</p>
                         <div className="flex flex-col sm:flex-row gap-2 justify-center">
                             <Link
                                 to="/add-income"

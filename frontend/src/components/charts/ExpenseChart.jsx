@@ -40,13 +40,25 @@ function ExpenseChart() {
     }, []);
 
     if(loading){
-        return <Spinner message={t('expenseChart.loading')} />
+        return (
+            <div className="flex items-center justify-center py-12">
+                <Spinner message={t('expenseChart.loading')} />
+            </div>
+        )
     }
     if(error){
-        return <p>{t('expenseChart.error', { error })}</p>
+        return (
+            <div className="text-left">
+                <p className="text-red-400">{t('expenseChart.error', { error })}</p>
+            </div>
+        )
     }
     if(!expenses.length){
-        return <p>{t('expenseChart.noExpenses')}</p>
+        return (
+            <div className="text-left">
+                <p className="text-[#C2C0B6]">{t('expenseChart.noExpenses')}</p>
+            </div>
+        )
     }
 
     // Calculate totals by category
@@ -100,15 +112,17 @@ function ExpenseChart() {
                 position: 'bottom',
                 align: 'center',
                 labels: {
-                    color: '#fff',
+                    color: '#C2C0B6',
                     font: { size: 14 },
                     padding: 12,
                 }
             },
             tooltip: {
-                backgroundColor: '#fff',
-                titleColor: '#23263a',
-                bodyColor: '#23263a',
+                backgroundColor: 'rgba(31, 30, 29, 0.95)',
+                titleColor: '#FAF9F5',
+                bodyColor: '#C2C0B6',
+                borderColor: '#262626',
+                borderWidth: 1,
             }
         },
         cutout: '65%',

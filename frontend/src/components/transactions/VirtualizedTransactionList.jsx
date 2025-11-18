@@ -151,7 +151,7 @@ const VirtualizedTransactionList = React.memo(({
                 case 1: return 'text-[#FAF9F5]'; // Expense
                 case 2: return 'text-[#56a69f]'; // Income
                 case 3: return 'text-blue-400'; // Savings
-                default: return 'text-gray-400';
+                default: return 'text-[#C2C0B6]';
             }
         };
 
@@ -173,7 +173,7 @@ const VirtualizedTransactionList = React.memo(({
                     </svg>
                 );
                 default: return (
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-[#C2C0B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 );
@@ -189,7 +189,7 @@ const VirtualizedTransactionList = React.memo(({
                             <p className="text-white font-medium truncate">
                                 {transaction.description}
                             </p>
-                            <div className="flex items-center space-x-4 text-sm text-gray-400">
+                            <div className="flex items-center space-x-4 text-sm text-[#C2C0B6]">
                                 <span>{transaction.category}</span>
                                 <span>{formatDate(transaction.date)}</span>
                             </div>
@@ -288,7 +288,7 @@ const VirtualizedTransactionList = React.memo(({
             </div>
             
             {/* Stats display */}
-            <div className="flex justify-between items-center text-sm text-gray-400">
+            <div className="flex justify-between items-center text-sm text-[#C2C0B6]">
                 <span>
                     {transactions.length} of {totalItems} {t('transactions.items')}
                     {searchQuery && ` • ${t('transactions.filtered')}`}
@@ -328,7 +328,7 @@ const VirtualizedTransactionList = React.memo(({
         <div className="bg-gray-900 rounded-xl p-6">
             <h2 className="text-2xl font-bold text-white mb-6">
                 {t('transactions.title')} 
-                <span className="text-sm font-normal text-gray-400 ml-2">
+                <span className="text-sm font-normal text-[#C2C0B6] ml-2">
                     ({totalItems} {t('transactions.total')})
                 </span>
             </h2>
@@ -337,7 +337,7 @@ const VirtualizedTransactionList = React.memo(({
 
             {transactions.length === 0 && !isLoading ? (
                 <div className="text-center py-12">
-                    <p className="text-gray-400 text-lg">
+                    <p className="text-[#C2C0B6] text-lg">
                         {searchQuery ? t('transactions.no_results') : t('transactions.no_transactions')}
                     </p>
                 </div>

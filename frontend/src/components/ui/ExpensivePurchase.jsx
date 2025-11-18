@@ -113,7 +113,7 @@ const ExpensivePurchase = React.memo(() => {
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
-                                <p className="text-sm text-gray-400">{expense.category}</p>
+                                <p className="text-sm text-[#C2C0B6]">{expense.category}</p>
                             </div>
                             <p className="text-[#FAF9F5] font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
                         </div>
