@@ -107,13 +107,17 @@ HASH_SALT=your-hash-salt
 FRONTEND_URL=https://your-frontend-domain.com
 ```
 
-**Frontend (`frontend/.env`):**
+**Frontend (`frontend/.env.production`):**
 ```env
 # Public configuration only
+# ⚠️ NUNCA commite este arquivo! Use variáveis de ambiente do sistema de deploy.
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 VITE_API_URL=https://your-backend-domain.com
+VITE_STRIPE_PRICE_PREMIUM_MONTHLY=price_your_stripe_price_id
 ```
+
+**Nota**: O arquivo `.env.production.example` está versionado e serve como template. O arquivo real `.env.production` deve estar no `.gitignore` e nunca ser commitado.
 
 ### Generating Secure Keys
 
@@ -175,6 +179,32 @@ console.log('Raw data:', data[0].description); // Should be encrypted
 2. **Within 1 hour**: Change encryption keys
 3. **Within 24 hours**: Force password resets for affected users
 4. **Within 72 hours**: Notify users if required by law
+
+### Exposed Secrets Remediation
+
+**⚠️ IMPORTANTE: Se um segredo foi exposto no histórico do Git:**
+
+1. **Remover do rastreamento do Git**:
+   ```bash
+   git rm --cached frontend/.env.production
+   ```
+
+2. **Rotacionar a chave exposta imediatamente**:
+   - Acesse o painel do Supabase
+   - Gere uma nova chave anônima (anon key)
+   - Atualize todas as variáveis de ambiente em produção
+   - Revogue a chave antiga
+
+3. **Verificar histórico do Git**:
+   - O segredo ainda estará visível no histórico de commits
+   - Considere usar `git filter-branch` ou `BFG Repo-Cleaner` para remover do histórico (cuidado: pode quebrar workflows de outros desenvolvedores)
+   - Alternativa: aceitar que o histórico contém o segredo, mas garantir que está rotacionado
+
+4. **Prevenir futuros incidentes**:
+   - Use `.env.example` para documentar variáveis necessárias
+   - Configure pre-commit hooks com GitGuardian ou similar
+   - Nunca commite arquivos `.env*` (exceto `.env.example`)
+   - Use variáveis de ambiente do sistema de deploy (Vercel, AWS, etc.)
 
 ### Monitoring Alerts
 Set up alerts for:
