@@ -489,7 +489,6 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     }
 
     return (
-<<<<<<< HEAD
         <div className="flex-1 p-4 sm:p-6">
             <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-5xl min-w-0 mx-auto">
                 {/* Page Title */}
@@ -502,18 +501,8 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
                         <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                             <div className="text-lg sm:text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
-                            <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
+                            <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
                         </div>
-=======
-        <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
-            {/* Header with stats - Responsive for different screen sizes */}
-            <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626] w-full max-w-full min-w-0 flex-shrink-0">
-                <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
-                    <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className="text-lg sm:text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
-                        <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
-                    </div>
->>>>>>> 5ec8c99fb36b75bb55565bdef51f56257d014252
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className={`${getResponsiveFontSize(totals.income)} font-bold text-[#56a69f] whitespace-nowrap overflow-hidden`}>
                             R$ {totals.income.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

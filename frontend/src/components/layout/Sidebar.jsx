@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import {
   House,
   ArrowLeftRight,
@@ -21,6 +22,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
   const { t } = useTranslation();
   const { isAdmin, subscriptionTier } = useAuth();
   const premiumUser = subscriptionTier === 'premium';
+  const [isHovering, setIsHovering] = useState(false);
 
   // Estilos de transição consistentes para os NavLinks
   const navLinkTransition = {
@@ -60,13 +62,17 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 title="Toggle Menu"
               >
                 <div className="w-5 h-5 flex-shrink-0">
-                  <Menu 
+                  {/* Ícone de dois painéis quando collapsed */}
+                  <svg 
                     className="w-5 h-5" 
-                    style={{ 
-                      color: 'white', 
-                      stroke: 'white'
-                    }} 
-                  />
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="white" 
+                    strokeWidth="1.5"
+                  >
+                    <rect x="2" y="4" width="8" height="16" rx="1" strokeLinecap="round" />
+                    <rect x="12" y="4" width="10" height="16" rx="1" strokeLinecap="round" />
+                  </svg>
                 </div>
               </button>
             ) : (
@@ -77,6 +83,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 {/* Menu Toggle - alinhado exatamente com os ícones da navegação */}
                 <button
                   onClick={() => setIsCollapsed(!isCollapsed)}
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
                   className="flex items-center px-1.5 py-1.5 rounded-lg group hover:bg-[#262626]"
                   style={{ 
                     border: 'none',
@@ -90,14 +98,36 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   }}
                   title="Toggle Menu"
                 >
-                  <div className="w-5 h-5 flex-shrink-0">
-                    <Menu 
-                      className="w-5 h-5" 
-                      style={{ 
-                        color: 'white', 
-                        stroke: 'white'
-                      }} 
-                    />
+                  <div className="w-5 h-6 flex-shrink-0 flex items-center">
+                    {isHovering ? (
+                      /* Ícone de seta com barra quando hover e expandido */
+                      <svg 
+                        className="w-5 h-6" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="white" 
+                        strokeWidth="1"
+                      >
+                        {/* Barra vertical à esquerda */}
+                        <line x1="5" y1="4" x2="5" y2="20" strokeWidth="1" strokeLinecap="round" />
+                        {/* Seta apontando para a esquerda - mais longa e fina, altura ajustada para texto */}
+                        <path d="M8 12L19 12M8 12L11 7M8 12L11 17" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    ) : (
+                      /* Ícone de dois painéis quando expandido sem hover */
+                      <div className="w-5 h-5 flex items-center justify-center">
+                        <svg 
+                          className="w-5 h-5" 
+                          viewBox="0 0 24 24" 
+                          fill="none" 
+                          stroke="white" 
+                          strokeWidth="1.5"
+                        >
+                          <rect x="2" y="4" width="8" height="16" rx="1" strokeLinecap="round" />
+                          <rect x="12" y="4" width="10" height="16" rx="1" strokeLinecap="round" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
                 </button>
                 {/* Monity Text - aparece apenas quando não está collapsed */}

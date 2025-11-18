@@ -46,15 +46,15 @@ function Dashboard() {
 
     // Get dynamic greeting based on time of day and user name
     const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user');
-    const greeting = getDynamicGreeting(userName);
+    const greeting = getDynamicGreeting(userName, t);
 
     return (
         <Container size="default" padding="default">
             <div className="space-y-8">
                 {/* Welcome Section */}
-                <div>
+                <div className="text-left">
                     <h1 
-                        className="text-3xl font-bold text-white mb-2 text-balance font-stratford"
+                        className="text-3xl font-bold text-white mb-2 text-left font-stratford"
                     >
                         {greeting}
                     </h1>
