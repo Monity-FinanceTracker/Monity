@@ -15,7 +15,7 @@ import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
  */
 const EnhancedDashboard = () => {
     const { t } = useTranslation();
-    const { user, subscriptionTier } = useAuth();
+    const { user } = useAuth();
     const [dashboardData, setDashboardData] = useState({
         recentTransactions: [],
         upcomingBills: [],
@@ -56,6 +56,7 @@ const EnhancedDashboard = () => {
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex-1 text-left">
                             <h3 className={`text-2xl font-bold ${accent || 'text-white'}`}>{title}</h3>
+                            {subtitle && <p className="text-[#C2C0B6] text-sm mt-1">{subtitle}</p>}
                         </div>
                         {action && (
                             <div className="flex items-center">
