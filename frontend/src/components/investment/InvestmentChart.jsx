@@ -28,7 +28,7 @@ const InvestmentChart = ({ data }) => {
 
     if (!data || data.length === 0) {
         return (
-            <div className="flex items-center justify-center h-64 text-gray-400">
+            <div className="flex items-center justify-center h-64 text-[#C2C0B6]">
                 {t('investmentCalculator.noDataToDisplay')}
             </div>
         );

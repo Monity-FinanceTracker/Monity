@@ -116,7 +116,7 @@ function EmailConfirmation() {
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-400 text-center mb-6">
+                    <p className="text-[#C2C0B6] text-center mb-6">
                         {t('emailConfirmation.description') || 'Enviamos um link de confirmação para'}
                     </p>
                     <p className="text-[#56a69f] text-center font-semibold mb-8 break-all">
@@ -203,7 +203,7 @@ function EmailConfirmation() {
                         {/* Back to Login */}
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full text-gray-400 hover:text-[#56a69f] py-2 transition-colors duration-200"
+                            className="w-full text-[#C2C0B6] hover:text-[#56a69f] py-2 transition-colors duration-200"
                         >
                             {t('emailConfirmation.backToLogin') || 'Voltar para Login'}
                         </button>
@@ -211,7 +211,7 @@ function EmailConfirmation() {
 
                     {/* Info */}
                     <div className="mt-6 p-4 bg-[#262626]/50 rounded-lg border border-[#262626]">
-                        <p className="text-gray-400 text-sm text-center">
+                        <p className="text-[#C2C0B6] text-sm text-center">
                             💡 {t('emailConfirmation.tip') || 'Não esqueça de verificar a pasta de spam'}
                         </p>
                     </div>

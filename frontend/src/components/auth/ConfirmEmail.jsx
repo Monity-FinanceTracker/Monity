@@ -63,7 +63,7 @@ const ConfirmEmail = () => {
                         {t('confirmEmail.title')}
                     </h2>
                     <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full my-4"></div>
-                    <p className="mt-4 text-gray-400">
+                    <p className="mt-4 text-[#C2C0B6]">
                         {t('confirmEmail.subtitle')}
                     </p>
                     {email && (
@@ -92,7 +92,7 @@ const ConfirmEmail = () => {
 
                 {/* Resend email section */}
                 <div className="text-center space-y-4">
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-[#C2C0B6]">
                         {t('confirmEmail.didnt_receive')}
                     </p>
 

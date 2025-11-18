@@ -69,7 +69,7 @@ function AddCategory() {
                         <FaTag className="text-white text-2xl" />
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('addCategory.title')}</h1>
-                    <p className="text-gray-400 text-lg">Organize your finances with custom categories</p>
+                    <p className="text-[#C2C0B6] text-lg">Organize your finances with custom categories</p>
                 </div>
 
                 {/* Add Category Form */}
@@ -111,7 +111,7 @@ function AddCategory() {
                                         placeholder="e.g., Groceries, Salary, etc."
                                         required
                                     />
-                                    <FaTag className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    <FaTag className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#C2C0B6]" />
                                 </div>
                             </div>
                             <div className="space-y-2">
@@ -157,7 +157,7 @@ function AddCategory() {
                                     )}
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                         <svg 
-                                            className="w-4 h-4 text-gray-400" 
+                                            className="w-4 h-4 text-[#C2C0B6]" 
                                             fill="none" 
                                             stroke="currentColor" 
                                             viewBox="0 0 24 24"
@@ -193,7 +193,7 @@ function AddCategory() {
                             <div className="w-16 h-16 bg-gray-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <FaTag className="text-gray-500 text-2xl" />
                             </div>
-                            <p className="text-gray-400 text-lg">No categories yet</p>
+                            <p className="text-[#C2C0B6] text-lg">No categories yet</p>
                             <p className="text-gray-500 text-sm">Create your first category above</p>
                         </div>
                     ) : (
@@ -213,14 +213,14 @@ function AddCategory() {
                                             </div>
                                             <div>
                                                 <span className="text-white font-medium text-lg">{category.name}</span>
-                                                <p className="text-gray-400 text-sm">
+                                                <p className="text-[#C2C0B6] text-sm">
                                                     {category.typeId === 1 ? 'Expense Category' : 'Income Category'}
                                                 </p>
                                             </div>
                                         </div>
                                         <button
                                             onClick={() => handleDelete(category.id)}
-                                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                            className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                             title="Delete category"
                                         >
                                             <FaTrash className="w-4 h-4" />

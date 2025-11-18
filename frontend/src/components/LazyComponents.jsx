@@ -6,7 +6,7 @@ export const LazyEnhancedDashboard = withLazyLoading(
   () => import('./dashboard/EnhancedDashboard'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando dashboard...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando dashboard...</span>
   </div>
 );
 
@@ -14,7 +14,7 @@ export const LazyImprovedTransactionList = withLazyLoading(
   () => import('./transactions/ImprovedTransactionList'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando transações...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando transações...</span>
   </div>
 );
 
@@ -22,7 +22,7 @@ export const LazyEnhancedSettings = withLazyLoading(
   () => import('./settings/EnhancedSettings'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando configurações...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando configurações...</span>
   </div>
 );
 
@@ -30,7 +30,7 @@ export const LazyEnhancedBudgets = withLazyLoading(
   () => import('./settings/EnhancedBudgets'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando orçamentos...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando orçamentos...</span>
   </div>
 );
 
@@ -38,7 +38,7 @@ export const LazyGroups = withLazyLoading(
   () => import('./groups/Groups'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando grupos...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando grupos...</span>
   </div>
 );
 
@@ -46,7 +46,7 @@ export const LazyAdminDashboard = withLazyLoading(
   () => import('./dashboard/AdminDashboard'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando painel admin...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando painel admin...</span>
   </div>
 );
 
@@ -54,7 +54,7 @@ export const LazyFinancialHealth = withLazyLoading(
   () => import('./dashboard/FinancialHealth'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando saúde financeira...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando saúde financeira...</span>
   </div>
 );
 
@@ -62,7 +62,7 @@ export const LazyPerformanceDashboard = withLazyLoading(
   () => import('./dashboard/PerformanceDashboard'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando métricas de performance...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando métricas de performance...</span>
   </div>
 );
 
@@ -71,7 +71,7 @@ export const LazyExpenseChart = withLazyLoading(
   () => import('./charts/ExpenseChart'),
   <div className="flex items-center justify-center h-48">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando gráfico...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando gráfico...</span>
   </div>
 );
 
@@ -79,7 +79,7 @@ export const LazyBalanceChart = withLazyLoading(
   () => import('./charts/BalanceChart'),
   <div className="flex items-center justify-center h-48">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando gráfico...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando gráfico...</span>
   </div>
 );
 
@@ -88,7 +88,7 @@ export const LazyCreateGroup = withLazyLoading(
   () => import('./groups/CreateGroup'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando formulário...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando formulário...</span>
   </div>
 );
 
@@ -96,6 +96,6 @@ export const LazyGroupPage = withLazyLoading(
   () => import('./groups/GroupPage'),
   <div className="flex items-center justify-center h-64">
     <Spinner />
-    <span className="ml-3 text-gray-400">Carregando página do grupo...</span>
+    <span className="ml-3 text-[#C2C0B6]">Carregando página do grupo...</span>
   </div>
 );
