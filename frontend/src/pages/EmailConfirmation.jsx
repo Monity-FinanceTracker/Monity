@@ -48,12 +48,7 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao reenviar email');
             }
-<<<<<<< HEAD
-        } catch (error) {
-            console.error('Erro ao reenviar email:', error);
-=======
         } catch {
->>>>>>> 79efe9737d21939882130b3d2f04f697737c7b11
             setError('Erro ao reenviar email. Tente novamente.');
         } finally {
             setLoading(false);
@@ -78,12 +73,7 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao verificar confirmação');
             }
-<<<<<<< HEAD
-        } catch (error) {
-            console.error('Erro ao verificar confirmação:', error);
-=======
         } catch {
->>>>>>> 79efe9737d21939882130b3d2f04f697737c7b11
             setError('Erro ao verificar confirmação. Tente novamente.');
         } finally {
             setChecking(false);
