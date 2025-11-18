@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/useAuth';
 import { get } from '../../utils/api';
 import { formatCurrency, getAmountColor } from '../../utils/currency';
+import { getDynamicGreeting } from '../../utils/greetings';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
 import { ArrowUp, ArrowDown } from 'lucide-react';
@@ -14,7 +15,7 @@ import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
  */
 const EnhancedDashboard = () => {
     const { t } = useTranslation();
-    const { user, subscriptionTier } = useAuth();
+    const { user } = useAuth();
     const [dashboardData, setDashboardData] = useState({
         recentTransactions: [],
         upcomingBills: [],
@@ -58,8 +59,8 @@ const EnhancedDashboard = () => {
                 <div className="p-6">
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex-1 text-left">
-                            <h3 className={`text-xl font-bold ${accent || 'text-white'} mb-1`}>{title}</h3>
-                            {subtitle && <p className="text-gray-400 text-sm">{subtitle}</p>}
+                            <h3 className={`text-2xl font-bold ${accent || 'text-white'}`}>{title}</h3>
+                            {subtitle && <p className="text-[#C2C0B6] text-sm mt-1">{subtitle}</p>}
                         </div>
                         {action && (
                             <div className="flex items-center">
@@ -87,7 +88,7 @@ const EnhancedDashboard = () => {
         <EnhancedCard
             title={t('dashboard.recent_transactions')}
             subtitle={t('dashboard.last_3_transactions')}
-            accent="text-white"
+            accent="text-[#56a69f]"
             action={
                 <Link
                     to="/transactions"
@@ -115,20 +116,24 @@ const EnhancedDashboard = () => {
                                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                         transaction.typeId === 1
                                             ? 'bg-[#FAF9F5]/20'
-                                            : 'bg-[#56a69f]/20'
+                                            : transaction.typeId === 2
+                                            ? 'bg-[#56a69f]/20'
+                                            : 'bg-blue-500/20'
                                     }`}
                                 >
                                     {transaction.typeId === 1 ? (
                                         <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
-                                    ) : (
+                                    ) : transaction.typeId === 2 ? (
                                         <ArrowDown className="w-5 h-5 text-[#56a69f]" />
+                                    ) : (
+                                        <ArrowDown className="w-5 h-5 text-blue-500" />
                                     )}
                                 </div>
                                 <div className="flex flex-col items-start text-left">
                                     <p className="text-white font-medium text-left">
                                         {transaction.description}
                                     </p>
-                                    <p className="text-gray-400 text-sm text-left">
+                                    <p className="text-[#C2C0B6] text-sm text-left">
                                         {transaction.category}
                                     </p>
                                 </div>
@@ -137,18 +142,15 @@ const EnhancedDashboard = () => {
                                 <p className={`font-bold ${getAmountColor(transaction.typeId)}`}>
                                     {formatCurrency(transaction.amount || 0, transaction.typeId)}
                                 </p>
-                                <p className="text-gray-400 text-xs">
+                                <p className="text-[#C2C0B6] text-xs">
                                     {new Date(transaction.date).toLocaleDateString()}
                                 </p>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="text-left py-8">
-                        <p className="text-gray-400">{t('dashboard.no_recent_transactions')}</p>
-                        <Link to="/add-expense" className="text-[#56a69f] hover:text-[#4a8f88] text-sm font-medium mt-2 inline-block">
-                            {t('dashboard.add_first_transaction')}
-                        </Link>
+                    <div className="text-left">
+                        <p className="text-[#C2C0B6]">{t('dashboard.no_recent_transactions')}</p>
                     </div>
                 )}
             </div>
@@ -160,15 +162,21 @@ const EnhancedDashboard = () => {
         return <DashboardSkeleton />;
     }
 
+    // Get dynamic greeting based on time of day and user name
+    const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user');
+    const greeting = getDynamicGreeting(userName);
+
     return (
         <div className="space-y-8">
             {/* Welcome Section */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2 text-balance">
-                        {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}!
+                    <h1 
+                        className="text-3xl font-bold text-white mb-2 text-balance font-stratford"
+                    >
+                        {greeting}
                     </h1>
-                    <p className="text-gray-400 text-lg text-left">
+                    <p className="text-[#C2C0B6] text-lg text-left">
                         {t('dashboard.welcome_subtitle')}
                     </p>
                 </div>
@@ -197,7 +205,6 @@ const EnhancedDashboard = () => {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <EnhancedCard 
                     title={t('dashboardPage.balance_per_month_title')} 
-                    subtitle={t('dashboard.balance_chart_desc')}
                     accent="text-[#56a69f]"
                     isLoading={isLoading}
                     className="xl:col-span-1"
@@ -207,35 +214,12 @@ const EnhancedDashboard = () => {
 
                 <EnhancedCard 
                     title={t('dashboardPage.expense_chart_title')} 
-                    accent="text-[#FAF9F5]"
+                    accent="text-[#56a69f]"
                     isLoading={isLoading}
                 >
                     <LazyExpenseChart selectedRange="all_time" />
                 </EnhancedCard>
             </div>
-
-            {/* AI Suggestions Card (Premium Feature) */}
-            {subscriptionTier === 'premium' && (
-                <EnhancedCard
-                    title={t('dashboard.ai_insights')}
-                    subtitle={t('dashboard.ai_insights_desc')}
-                    accent="text-yellow-400"
-                >
-                    <div className="bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/20 rounded-lg p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                                <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 className="text-yellow-400 font-medium text-sm">{t('dashboard.smart_categorization_active')}</h4>
-                                <p className="text-gray-300 text-xs">{t('dashboard.ai_categorization_desc')}</p>
-                            </div>
-                        </div>
-                    </div>
-                </EnhancedCard>
-            )}
         </div>
     );
 };
