@@ -42,6 +42,10 @@ module.exports = (controllers, middleware) => {
         middleware.auth.authenticate,
         (req, res, next) => authController.initializeAccount(req, res, next)
     );
+<<<<<<< HEAD
+=======
+
+>>>>>>> 79efe9737d21939882130b3d2f04f697737c7b11
     // Rotas protegidas
     router.get('/profile', middleware.auth.authenticate, (req, res, next) => authController.getProfile(req, res, next));
     router.get('/financial-health', middleware.auth.authenticate, (req, res, next) => authController.getFinancialHealth(req, res, next));

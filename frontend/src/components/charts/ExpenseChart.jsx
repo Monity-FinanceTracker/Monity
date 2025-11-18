@@ -9,16 +9,25 @@ import {
 } from 'chart.js';
 import { get } from '../../utils/api';
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/useAuth";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function ExpenseChart() {
     const { t } = useTranslation();
+    const { user } = useAuth();
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!user) {
+            setExpenses([]);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
         const fetchExpenses = async () => {
             setLoading(true);
             setError(null);
@@ -37,7 +46,11 @@ function ExpenseChart() {
         };
         
         fetchExpenses();
-    }, []);
+    }, [user]);
+
+    if (!user) {
+        return <p className="text-center text-gray-400">{t('expenseChart.loginToView', 'Faça login para ver seus gastos por categoria.')}</p>;
+    }
 
     if(loading){
         return <Spinner message={t('expenseChart.loading')} />

@@ -40,9 +40,14 @@ function Signup() {
 
         try {
             const result = await signup(name, email, password);
+<<<<<<< HEAD
             
             if (!result.success) {
                 // Mostrar erro retornado pelo backend
+=======
+
+            if (!result.success) {
+>>>>>>> 79efe9737d21939882130b3d2f04f697737c7b11
                 setError(result.error || t('signupPage.failed'));
                 setLoading(false);
                 return;
@@ -58,6 +63,10 @@ function Signup() {
 
             // Se confirmação não é necessária, direcionar para dashboard
             navigate('/', { replace: true });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 79efe9737d21939882130b3d2f04f697737c7b11
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
@@ -285,7 +294,9 @@ function Signup() {
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
-                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
+                                    className={`w-full bg-[#262624] border ${
+                                        confirmPassword && !passwordsMatch ? 'border-red-400' : 'border-[#9C9A92]'
+                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
