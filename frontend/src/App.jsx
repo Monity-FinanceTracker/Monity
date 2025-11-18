@@ -37,6 +37,7 @@ const CashFlowCalendar = lazy(() => import('./components/cashFlow/CashFlowCalend
 const AIAssistantPage = lazy(() => import('./components/ai/AIAssistantPage'));
 const InvestmentCalculator = lazy(() => import('./components/investment/InvestmentCalculator'));
 const GroupsInfo = lazy(() => import('./components/groups/GroupsInfo'));
+const WhatsNewPage = lazy(() => import('./components/whatsNew/WhatsNewPage'));
 
 // Import lazy components with optimized loading
 import {
@@ -119,7 +120,9 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { preloadCriticalComponents } = useLazyComponentPreloader();
   const { user, loading } = useAuth();
+  const location = useLocation();
   const isUnauthenticated = !user && !loading;
+  const isWhatsNewPage = location.pathname === '/whats-new';
 
   // Preload critical components after layout is mounted
   useEffect(() => {
@@ -130,8 +133,24 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
     return () => clearTimeout(timer);
   }, [preloadCriticalComponents]);
 
+  // Prevent body scrolling when on WhatsNew page
+  useEffect(() => {
+    if (isWhatsNewPage) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isWhatsNewPage]);
+
   return (
-    <div className="flex min-h-screen bg-[#262624] font-sans">
+    <div className={`flex bg-[#262624] font-sans ${isWhatsNewPage ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#56a69f] text-[#1F1E1D] p-2 z-50 rounded">
         Skip to main content
       </a>
@@ -146,7 +165,7 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
       </div>
       
       {/* Main content area */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 sidebar-transition ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-72'} relative`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 sidebar-transition ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-72'} relative ${isWhatsNewPage ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
         {/* Top navigation bar */}
         <div className={isUnauthenticated ? 'pointer-events-none opacity-60' : ''}>
           <UnifiedTopBar 
@@ -156,8 +175,15 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
         </div>
 
         {/* Main content */}
-        <main id="main-content" className="flex-1 p-4 sm:p-6 content-container overflow-x-hidden relative">
-          {children}
+        <main
+          id="main-content"
+          className={`flex-1 px-4 sm:px-6 pt-4 sm:pt-6 pb-1 sm:pb-2 content-container overflow-x-hidden relative ${
+            isWhatsNewPage ? 'overflow-hidden min-h-0' : ''
+          }`}
+        >
+          <div className={isUnauthenticated ? 'pointer-events-none opacity-60' : ''}>
+            {children}
+          </div>
           {isUnauthenticated && <BlockingAuthModal />}
         </main>
       </div>
@@ -219,6 +245,7 @@ const App = React.memo(() => {
         <Route path="/financial-health" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ViewOnlyRoute>} />
         <Route path="/ai-assistant" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><AIAssistantPage /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/investment-calculator" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><InvestmentCalculator /></Suspense></MainLayout></ViewOnlyRoute>} />
+        <Route path="/whats-new" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><WhatsNewPage /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroups /></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups/info" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><GroupsInfo /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyCreateGroup /></MainLayout></ProtectedRoute>} />

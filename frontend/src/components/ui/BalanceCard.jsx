@@ -4,6 +4,7 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import Spinner from "./Spinner";
 import { useTranslation } from "react-i18next";
 import { useBalance } from "../../hooks/useQueries";
+import { useAuth } from "../../context/useAuth";
 
 const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     const { t } = useTranslation();

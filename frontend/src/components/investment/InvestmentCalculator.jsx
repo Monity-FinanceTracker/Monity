@@ -160,7 +160,7 @@ const InvestmentCalculator = () => {
                             <form onSubmit={handleCalculate} className="space-y-5">
                                 {/* Initial Investment */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 text-left">
                                         {t('investmentCalculator.initialInvestment')}
                                     </label>
                                     <div className="relative">
@@ -174,12 +174,31 @@ const InvestmentCalculator = () => {
                                             step="0.01"
                                             required
                                         />
+                                        {/* Custom spinner arrows */}
+                                        <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                                            <button
+                                                type="button"
+                                                onClick={() => setInitialInvestment(((parseFloat(initialInvestment) || 0) + 0.01).toFixed(2))}
+                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                            >
+                                                <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setInitialInvestment(Math.max(0, ((parseFloat(initialInvestment) || 0) - 0.01).toFixed(2)))}
+                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                            >
+                                                <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Contribution Amount */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 text-left">
                                         {t('investmentCalculator.contributionAmount')}
                                     </label>
                                     <div className="relative">
@@ -193,12 +212,31 @@ const InvestmentCalculator = () => {
                                             step="0.01"
                                             required
                                         />
+                                        {/* Custom spinner arrows */}
+                                        <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                                            <button
+                                                type="button"
+                                                onClick={() => setContributionAmount(((parseFloat(contributionAmount) || 0) + 0.01).toFixed(2))}
+                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                            >
+                                                <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setContributionAmount(Math.max(0, ((parseFloat(contributionAmount) || 0) - 0.01).toFixed(2)))}
+                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                            >
+                                                <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Contribution Frequency */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 text-left">
                                         {t('investmentCalculator.contributionFrequency')}
                                     </label>
                                     <Dropdown
@@ -217,7 +255,7 @@ const InvestmentCalculator = () => {
 
                                 {/* Annual Interest Rate */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 text-left">
                                         {t('investmentCalculator.annualInterestRate')}
                                     </label>
                                     <div className="relative">
@@ -255,7 +293,7 @@ const InvestmentCalculator = () => {
 
                                 {/* Goal Date */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 text-left">
                                         {t('investmentCalculator.goalDate')}
                                     </label>
                                     <div className="relative">
@@ -274,7 +312,7 @@ const InvestmentCalculator = () => {
 
                                 {/* View Type */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 text-left">
                                         {t('investmentCalculator.chartView')}
                                     </label>
                                     <select

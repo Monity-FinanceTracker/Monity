@@ -510,7 +510,7 @@ const EnhancedSettings = () => {
                 >
                     
                     {/* Left Sidebar */}
-                    <div className="w-full md:w-64 bg-[#0F0F0F] border-r border-[#262626] overflow-y-auto">
+                    <div className="w-full md:w-64 bg-[#1F1E1D] border-r border-[#262626] overflow-y-auto">
                         {/* Header with Close Button */}
                         <div className="p-4 border-b border-[#262626] flex items-center">
                             <CloseButton onClick={() => navigate(-1)} />
@@ -540,7 +540,7 @@ const EnhancedSettings = () => {
                     </div>
 
                     {/* Right Content Area */}
-                    <div className="flex-1 overflow-y-auto">
+                    <div className="flex-1 overflow-y-auto bg-[#262624]">
                         <div className="p-6">
                             {/* Category Title */}
                             <h3 className="text-2xl font-bold text-white mb-6 capitalize">

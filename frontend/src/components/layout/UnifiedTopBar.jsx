@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { Bell } from 'lucide-react';
@@ -12,9 +12,11 @@ import { Icon } from '../../utils/iconMapping.jsx';
 const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
     const { user, logout, subscriptionTier } = useAuth();
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const userMenuRef = useRef(null);
+    const isWhatsNewPage = location.pathname === '/whats-new';
 
     // Close dropdowns when clicking outside
     useEffect(() => {
@@ -67,7 +69,28 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                     )}
 
                     {/* Notifications */}
-                    <Bell className="w-4 h-4 text-white hover:text-gray-300 transition-colors cursor-pointer" strokeWidth={2.6} />
+                    <div className="relative group">
+                        <button
+                            onClick={() => navigate('/whats-new')}
+                            className="bg-transparent border-none p-0 m-0 cursor-pointer outline-none focus:outline-none"
+                            style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
+                            aria-label={t('whatsNew.title')}
+                        >
+                            <Bell 
+                                className={`w-4 h-4 transition-colors ${isWhatsNewPage ? 'text-white' : 'text-gray-400 hover:text-white'}`} 
+                                strokeWidth={2.6}
+                                fill={isWhatsNewPage ? 'white' : 'none'}
+                            />
+                        </button>
+                        {/* Hover Tooltip */}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+                            <div className="text-white text-sm">
+                                {t('whatsNew.title')}
+                            </div>
+                            {/* Tooltip arrow */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-l-transparent border-r-transparent border-b-[#262626]"></div>
+                        </div>
+                    </div>
 
                     {/* PRO Badge - Only for premium users */}
                     {subscriptionTier === 'premium' && (
