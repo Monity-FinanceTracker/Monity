@@ -44,7 +44,7 @@ git push origin feature/groups-enhancements --force
 
 ## ✅ Verificação
 
-Após o force push, verifique o seguinte:
+Após o force push, verifique:
 
 1. O GitGuardian deve parar de detectar o secret no PR
 2. O histórico não contém mais o arquivo:
