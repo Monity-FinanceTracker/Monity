@@ -47,8 +47,8 @@ const EmptyStateBase = ({
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     {actions.map((action, index) => {
                         const baseClasses = "px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 justify-center";
-                        const primaryClasses = "bg-[#01C38D] text-[#232323] hover:bg-[#01A071] hover:scale-105";
-                        const secondaryClasses = "bg-[#171717] text-white hover:bg-[#262626] border border-[#262626]";
+                        const primaryClasses = "bg-[#56a69f] text-[#1F1E1D] hover:bg-[#4a8f88] hover:scale-105";
+                        const secondaryClasses = "bg-[#1F1E1D] text-white hover:bg-[#262626] border border-[#262626]";
 
                         const Component = action.href ? Link : 'button';
                         const linkProps = action.href ? { to: action.href } : { onClick: action.onClick };
@@ -170,7 +170,6 @@ export const EmptyGroups = () => {
     
     return (
         <EmptyStateBase
-            icon={<Icon name="Users" size="xxl" className="text-orange-400" />}
             title={t('emptyStates.groups.title')}
             description={t('emptyStates.groups.description')}
             actions={[
@@ -182,7 +181,7 @@ export const EmptyGroups = () => {
                 },
                 {
                     label: t('emptyStates.groups.learn_more'),
-                    onClick: () => {/* Show groups tutorial */},
+                    href: '/groups/info',
                     icon: <BookOpen className="w-4 h-4" />
                 }
             ]}
@@ -195,7 +194,6 @@ export const EmptyBudgets = () => {
     
     return (
         <EmptyStateBase
-            icon={<Icon name="Target" size="xxl" className="text-purple-400" />}
             title={t('emptyStates.budgets.title')}
             description={t('emptyStates.budgets.description')}
         />
@@ -291,7 +289,7 @@ export const LoadingState = ({ message }) => {
     return (
         <div className="animate-pulse space-y-4 p-6">
             <div className="flex justify-center">
-                <div className="w-12 h-12 rounded-full border-4 border-[#262626] border-t-[#01C38D] animate-spin"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-[#262626] border-t-[#56a69f] animate-spin"></div>
             </div>
             <p className="text-center text-gray-400">
                 {message || t('loadingStates.generic')}

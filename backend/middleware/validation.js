@@ -1,14 +1,10 @@
 const Joi = require('joi');
 const xss = require('xss');
 const { logger } = require('../utils');
-<<<<<<< HEAD
-const { emailValidationService } = require('../services');
-=======
 const EmailValidationService = require('../services/emailValidationService');
 
 // Create instance to avoid circular dependency issues
 const emailValidationService = new EmailValidationService();
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
 
 const xssOptions = {
     whiteList: {}, // No HTML tags allowed
@@ -93,13 +89,6 @@ const validateEmailDeep = async (req, res, next) => {
     } catch (error) {
         logger.error('Error in email validation middleware', {
             error: error.message,
-<<<<<<< HEAD
-            email
-        });
-
-        // Em caso de erro, permitir mas logar (fail-safe)
-        next();
-=======
             stack: error.stack,
             email
         });
@@ -111,7 +100,6 @@ const validateEmailDeep = async (req, res, next) => {
             error: 'Erro ao validar email. Por favor, tente novamente.',
             details: 'Erro temporário no sistema de validação'
         });
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
     }
 };
 

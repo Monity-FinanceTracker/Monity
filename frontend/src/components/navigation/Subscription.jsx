@@ -98,20 +98,20 @@ const Subscription = () => {
 
   if (subscriptionTier === null) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="min-h-screen bg-[#262624] flex items-center justify-center">
         <div className="text-gray-400">{t('subscription.loading')}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] py-12 px-4">
+    <div className="min-h-screen bg-[#262624] py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-[#01C38D]/10 border border-[#01C38D]/20 rounded-full px-4 py-2 mb-4">
-            <FiStar className="text-[#01C38D]" />
-            <span className="text-[#01C38D] text-sm font-medium">
+          <div className="inline-flex items-center gap-2 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-full px-4 py-2 mb-4">
+            <FiStar className="text-[#56a69f]" />
+            <span className="text-[#56a69f] text-sm font-medium">
               {subscriptionTier === 'premium' ? t('subscription.premium_member') : t('subscription.upgrade_available')}
             </span>
           </div>
@@ -136,9 +136,9 @@ const Subscription = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-[#171717] border border-[#262626] rounded-2xl p-6 hover:border-[#01C38D]/30 transition-all duration-300"
+              className="bg-[#1F1E1D] border border-[#262626] rounded-2xl p-6 hover:border-[#56a69f]/30 transition-all duration-300"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-[#01C38D]/20 to-[#01a87a]/20 rounded-xl flex items-center justify-center text-[#01C38D] mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#56a69f]/20 to-[#01a87a]/20 rounded-xl flex items-center justify-center text-[#56a69f] mb-4">
                 {feature.icon}
               </div>
 
@@ -157,7 +157,7 @@ const Subscription = () => {
                 </div>
                 <div className="text-right">
                   <div className="text-gray-500 mb-1">{t('subscription.features.premium')}</div>
-                  <div className="text-[#01C38D] font-medium">{feature.premium}</div>
+                  <div className="text-[#56a69f] font-medium">{feature.premium}</div>
                 </div>
               </div>
             </div>
@@ -167,7 +167,7 @@ const Subscription = () => {
         {/* CTA Section */}
         {subscriptionTier === 'free' && (
           <div className="max-w-2xl mx-auto">
-            <div className="bg-gradient-to-br from-[#01C38D]/10 to-[#01a87a]/10 border border-[#01C38D]/20 rounded-2xl p-8 text-center">
+            <div className="bg-gradient-to-br from-[#56a69f]/10 to-[#01a87a]/10 border border-[#56a69f]/20 rounded-2xl p-8 text-center">
               <h2 className="text-2xl font-bold text-white mb-3">
                 {t('subscription.cta.ready_to_upgrade')}
               </h2>
@@ -194,7 +194,7 @@ const Subscription = () => {
               <button
                 onClick={handleUpgrade}
                 disabled={isUpgrading}
-                className="bg-gradient-to-r from-[#01C38D] to-[#01a87a] text-white font-semibold px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-[#01C38D]/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto inline-flex items-center justify-center gap-2 text-lg"
+                className="bg-gradient-to-r from-[#56a69f] to-[#01a87a] text-white font-semibold px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-[#56a69f]/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto inline-flex items-center justify-center gap-2 text-lg"
               >
                 {isUpgrading ? (
                   <>
@@ -219,7 +219,7 @@ const Subscription = () => {
         {/* FAQ or Additional Info */}
         <div className="max-w-2xl mx-auto mt-12 text-center">
           <p className="text-gray-500 text-sm">
-            {t('subscription.support.have_questions')} <a href={`mailto:${t('subscription.support.email')}`} className="text-[#01C38D] hover:underline">{t('subscription.support.email')}</a>
+            {t('subscription.support.have_questions')} <a href={`mailto:${t('subscription.support.email')}`} className="text-[#56a69f] hover:underline">{t('subscription.support.email')}</a>
           </p>
         </div>
       </div>

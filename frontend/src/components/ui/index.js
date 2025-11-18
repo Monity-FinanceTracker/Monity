@@ -19,3 +19,5 @@ export { default as FormField, Input, Textarea, Select, FormGroup, FormActions, 
 export { default as Dropdown } from './Dropdown';
 export { default as AIChat } from './AIChat';
 export { default as CloseButton } from './CloseButton';
+export { default as AuthOverlay } from './AuthOverlay';
+export { default as BlockingAuthModal } from './BlockingAuthModal';

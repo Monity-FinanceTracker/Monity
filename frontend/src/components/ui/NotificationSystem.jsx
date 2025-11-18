@@ -136,8 +136,8 @@ const NotificationCard = ({ notification, onClose }) => {
         switch (notification.type) {
             case 'success':
                 return {
-                    icon: <CheckCircle className="w-5 h-5 text-[#01C38D]" />,
-                    iconBg: 'bg-[#01C38D]/10'
+                    icon: <CheckCircle className="w-5 h-5 text-[#56a69f]" />,
+                    iconBg: 'bg-[#56a69f]/10'
                 };
             case 'error':
                 return {
@@ -163,7 +163,7 @@ const NotificationCard = ({ notification, onClose }) => {
         <div className={`transform transition-all duration-300 ${
             isVisible && !isLeaving ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         }`}>
-            <div className="bg-[#171717] border border-[#262626] rounded-lg p-4 shadow-lg">
+            <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg p-4 shadow-lg">
                 <div className="flex items-start gap-3">
                     {/* Icon */}
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${styles.iconBg} flex-shrink-0`}>
@@ -190,7 +190,7 @@ const NotificationCard = ({ notification, onClose }) => {
                                         onClick={action.onClick}
                                         className={`px-3 py-1 text-xs rounded font-medium transition-colors ${
                                             action.primary
-                                                ? 'bg-[#01C38D] text-white hover:bg-[#01a87a]'
+                                                ? 'bg-[#56a69f] text-white hover:bg-[#4A8F88]'
                                                 : 'bg-[#262626] text-white hover:bg-[#262626] border border-[#262626]'
                                         }`}
                                     >
@@ -209,7 +209,7 @@ const NotificationCard = ({ notification, onClose }) => {
                 {!notification.persistent && (
                     <div className="mt-3 h-1 bg-[#262626] rounded-full overflow-hidden">
                         <div 
-                            className="h-full bg-[#01C38D] rounded-full"
+                            className="h-full bg-[#56a69f] rounded-full"
                             style={{
                                 animation: `shrink ${notification.duration}ms linear forwards`
                             }}

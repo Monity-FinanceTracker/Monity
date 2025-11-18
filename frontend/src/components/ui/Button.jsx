@@ -23,29 +23,29 @@ const Button = memo(({
   fullWidth = false,
   ...props 
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#01C38D]/30 disabled:opacity-50 disabled:cursor-not-allowed select-none';
+  const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-monity-accent/30 disabled:opacity-50 disabled:cursor-not-allowed select-none';
   
   // NEW DESIGN SYSTEM - Following button-styling.mdc rules
   const variants = {
     // Default: White text, no background, no border (use this 90% of the time)
-    default: 'text-white hover:text-[#01C38D]',
+    default: 'text-monity-textPrimary hover:text-monity-accent',
     
     // Action: For primary actions like submit, save, confirm
-    action: 'bg-[#01C38D] text-white hover:bg-[#00b37e]',
+    action: 'bg-monity-accent text-monity-textPrimary hover:bg-monity-accentHover',
     
     // Danger: Red text, no background (for delete, remove)
-    danger: 'text-red-400 hover:text-red-300',
+    danger: 'text-monity-error hover:text-red-300',
     
     // Danger Action: Red background (for critical destructive actions)
     dangerAction: 'bg-red-600 text-white hover:bg-red-700',
     
     // Legacy support (maps old variants to new system)
-    primary: 'bg-[#01C38D] text-white hover:bg-[#00b37e]',  // maps to 'action'
-    secondary: 'text-white hover:text-[#01C38D]',           // maps to 'default'
-    ghost: 'text-white hover:text-[#01C38D]',               // maps to 'default'
-    minimal: 'text-white hover:text-[#01C38D]',             // maps to 'default'
-    success: 'bg-[#01C38D] text-white hover:bg-[#00b37e]',  // maps to 'action'
-    outline: 'text-white hover:text-[#01C38D]'              // maps to 'default' (NO BORDERS!)
+    primary: 'bg-monity-accent text-monity-textPrimary hover:bg-monity-accentHover',  // maps to 'action'
+    secondary: 'text-monity-textPrimary hover:text-monity-accent',           // maps to 'default'
+    ghost: 'text-monity-textPrimary hover:text-monity-accent',               // maps to 'default'
+    minimal: 'text-monity-textPrimary hover:text-monity-accent',             // maps to 'default'
+    success: 'bg-monity-accent text-monity-textPrimary hover:bg-monity-accentHover',  // maps to 'action'
+    outline: 'text-monity-textPrimary hover:text-monity-accent'              // maps to 'default' (NO BORDERS!)
   };
   
   const sizes = {
