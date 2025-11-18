@@ -201,10 +201,52 @@ console.log('Raw data:', data[0].description); // Should be encrypted
    - Alternativa: aceitar que o histórico contém o segredo, mas garantir que está rotacionado
 
 4. **Prevenir futuros incidentes**:
-   - Use `.env.example` para documentar variáveis necessárias
-   - Configure pre-commit hooks com GitGuardian ou similar
-   - Nunca commite arquivos `.env*` (exceto `.env.example`)
-   - Use variáveis de ambiente do sistema de deploy (Vercel, AWS, etc.)
+   - ✅ Use `.env.example` para documentar variáveis necessárias (já implementado)
+   - ✅ Configure `.gitignore` para ignorar arquivos `.env*` (já implementado)
+   - ⚠️ Configure pre-commit hooks com GitGuardian CLI para detectar secrets antes de commitar
+   - ⚠️ Use variáveis de ambiente do sistema de deploy (Vercel, AWS, GitHub Secrets, etc.)
+   - ⚠️ Nunca commite arquivos `.env*` (exceto `.env.example`)
+   - ⚠️ Revise PRs antes de fazer merge para verificar se há secrets expostos
+
+### Secret Detection & Prevention
+
+**Configurar GitGuardian CLI (Recomendado):**
+
+```bash
+# Instalar GitGuardian CLI
+pip install ggshield
+
+# Configurar pre-commit hook
+ggshield install
+
+# Testar antes de commitar
+ggshield scan pre-commit
+
+# Scan de um arquivo específico
+ggshield secret scan path frontend/.env.production
+```
+
+**Alternativa: Pre-commit hook manual**
+
+Crie `.git/hooks/pre-commit`:
+
+```bash
+#!/bin/sh
+# Verificar se arquivos .env estão sendo commitados
+if git diff --cached --name-only | grep -E '\.env$|\.env\.(local|production|development)$'; then
+    echo "❌ ERRO: Arquivos .env não devem ser commitados!"
+    echo "Use .env.example como template."
+    exit 1
+fi
+```
+
+**Boas Práticas:**
+- ✅ Sempre use `.env.example` como template
+- ✅ Configure variáveis de ambiente no sistema de deploy (não em arquivos)
+- ✅ Revise PRs antes de fazer merge
+- ✅ Use GitGuardian ou similar para scan automático
+- ❌ Nunca commite arquivos com secrets
+- ❌ Nunca compartilhe secrets em issues, PRs ou mensagens
 
 ### Monitoring Alerts
 Set up alerts for:
@@ -212,6 +254,7 @@ Set up alerts for:
 - Rate limit violations
 - Unusual API usage patterns
 - Database connection anomalies
+- Secrets detected in code (via GitGuardian)
 
 ## 📋 Compliance Considerations
 
