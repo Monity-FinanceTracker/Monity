@@ -702,7 +702,11 @@
     "success": "Success",
     "error": "Error",
     "warning": "Warning",
-    "info": "Information"
+    "info": "Information",
+    "whats_new": "What's New",
+    "whats_new_tooltip": "See the latest updates and news from Monity",
+    "all": "All",
+    "no_new_updates": "No new updates"
   },
   "emptyStates": {
     "transactions": {
@@ -1321,5 +1325,11 @@
       "description": "Create your first group today and start managing shared expenses the smart way",
       "button": "Create a Group Now"
     }
+  },
+  "whatsNew": {
+    "title": "What's New",
+    "subtitle": "The latest releases from your financial app Monity",
+    "empty_title": "We don't have any updates for you yet",
+    "empty_description": "When there's news, we'll post it here. Follow your favorite features and updates to stay updated on them too."
   }
 }
