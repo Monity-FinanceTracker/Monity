@@ -6,57 +6,57 @@
 // Morning Greetings (5:00 - 11:59)
 const morningGreetings = [
     { sentiment: 'Joyful', greeting: 'Good morning, {name}! It\'s a great day!' },
-    { sentiment: 'Calm', greeting: 'Peaceful morning to you, {name}.' },
-    { sentiment: 'Hopeful', greeting: 'New day, new chances, {name}. Hello!' },
+    { sentiment: 'Calm', greeting: 'Peaceful morning to you, {name}' },
+    { sentiment: 'Hopeful', greeting: 'New day, new chances, {name}. Hello' },
     { sentiment: 'Curious', greeting: 'What\'s up today, {name}? Good morning!' },
-    { sentiment: 'Warm', greeting: 'Sending morning cheer, {name}!' },
+    { sentiment: 'Warm', greeting: 'Sending morning cheer, {name}' },
     { sentiment: 'Formal', greeting: 'Good morning, {name}. Be productive.' },
-    { sentiment: 'Relaxed', greeting: 'Slow morning, happy start, {name}.' },
-    { sentiment: 'Energetic', greeting: 'Rise and shine, {name}! Let\'s go!' },
-    { sentiment: 'Thoughtful', greeting: 'Be wise this morning, {name}.' },
+    { sentiment: 'Relaxed', greeting: 'Slow morning, happy start, {name}' },
+    { sentiment: 'Energetic', greeting: 'Rise and shine, {name}. Let\'s go' },
+    { sentiment: 'Thoughtful', greeting: 'Be wise this morning, {name}' },
     { sentiment: 'Playful', greeting: 'Hey, {name}! Wakey, wakey!' }
 ];
 
 // Afternoon Greetings (12:00 - 17:59)
 const afternoonGreetings = [
     { sentiment: 'Joyful', greeting: 'Happy afternoon, {name}! Woohoo!' },
-    { sentiment: 'Calm', greeting: 'Afternoon peace be with you, {name}.' },
-    { sentiment: 'Hopeful', greeting: 'Finish strong, {name}! Good afternoon.' },
+    { sentiment: 'Calm', greeting: 'Afternoon peace be with you, {name}' },
+    { sentiment: 'Hopeful', greeting: 'Finish strong, {name}! Good afternoon' },
     { sentiment: 'Curious', greeting: 'How\'s the day going, {name}?' },
-    { sentiment: 'Warm', greeting: 'Warm afternoon hello, {name}!' },
-    { sentiment: 'Formal', greeting: 'Salutations this afternoon, {name}.' },
-    { sentiment: 'Relaxed', greeting: 'Chill time, {name}. Afternoon bliss.' },
-    { sentiment: 'Energetic', greeting: 'Power through, {name}! You got this!' },
-    { sentiment: 'Thoughtful', greeting: 'Remember your goal, {name}. Hello.' },
-    { sentiment: 'Playful', greeting: 'Time for a snack, {name}! Hi!' }
+    { sentiment: 'Warm', greeting: 'Warm afternoon hello, {name}' },
+    { sentiment: 'Formal', greeting: 'Salutations this afternoon, {name}' },
+    { sentiment: 'Relaxed', greeting: 'Chill time, {name} Afternoon bliss' },
+    { sentiment: 'Energetic', greeting: 'Power through, {name}. You got this' },
+    { sentiment: 'Thoughtful', greeting: 'Remember your goal, {name}. Hello' },
+    { sentiment: 'Playful', greeting: 'Time for a snack, {name}. Hi' }
 ];
 
 // Night Greetings (18:00 - 23:59)
 const nightGreetings = [
-    { sentiment: 'Joyful', greeting: 'Dream big, {name}! Good night!' },
-    { sentiment: 'Calm', greeting: 'Peaceful slumber tonight, {name}.' },
-    { sentiment: 'Hopeful', greeting: 'Rest up for tomorrow, {name}!' },
+    { sentiment: 'Joyful', greeting: 'Dream big, {name}. Good night!' },
+    { sentiment: 'Calm', greeting: 'Peaceful slumber tonight, {name}' },
+    { sentiment: 'Hopeful', greeting: 'Rest up for tomorrow, {name}' },
     { sentiment: 'Curious', greeting: 'What did you achieve today, {name}?' },
-    { sentiment: 'Warm', greeting: 'Cozy night thoughts, {name}.' },
-    { sentiment: 'Formal', greeting: 'Wishing you a good rest, {name}.' },
-    { sentiment: 'Relaxed', greeting: 'Unwind time, {name}. Good night.' },
-    { sentiment: 'Energetic', greeting: 'Recharge quickly, {name}! See ya!' },
-    { sentiment: 'Thoughtful', greeting: 'Reflect on your day, {name}.' },
+    { sentiment: 'Warm', greeting: 'Cozy night thoughts, {name}' },
+    { sentiment: 'Formal', greeting: 'Wishing you a good rest, {name}' },
+    { sentiment: 'Relaxed', greeting: 'Unwind time, {name}. Good night' },
+    { sentiment: 'Energetic', greeting: 'Recharge quickly, {name}. See ya' },
+    { sentiment: 'Thoughtful', greeting: 'Reflect on your day, {name}' },
     { sentiment: 'Playful', greeting: 'Don\'t let the bed bugs bite, {name}!' }
 ];
 
 // Dawn / Late Night Greetings (00:00 - 04:59)
 const dawnGreetings = [
-    { sentiment: 'Joyful', greeting: 'Night owl greetings, {name}!' },
-    { sentiment: 'Calm', greeting: 'Quiet hours peace, {name}.' },
-    { sentiment: 'Hopeful', greeting: 'New dawn is coming, {name}. Hello.' },
+    { sentiment: 'Joyful', greeting: 'Night owl greetings, {name}' },
+    { sentiment: 'Calm', greeting: 'Quiet hours peace, {name}' },
+    { sentiment: 'Hopeful', greeting: 'New dawn is coming, {name}' },
     { sentiment: 'Curious', greeting: 'Still awake, {name}? What\'s up?' },
-    { sentiment: 'Warm', greeting: 'Thinking of you, late night, {name}.' },
-    { sentiment: 'Formal', greeting: 'Salutations at the turn, {name}.' },
-    { sentiment: 'Relaxed', greeting: 'Enjoy the deep silence, {name}.' },
-    { sentiment: 'Energetic', greeting: 'Late-night focus mode, {name}!' },
-    { sentiment: 'Thoughtful', greeting: 'Clarity in the dark, {name}.' },
-    { sentiment: 'Playful', greeting: 'Secret midnight hello, {name}!' }
+    { sentiment: 'Warm', greeting: 'Thinking of you, late night, {name}' },
+    { sentiment: 'Formal', greeting: 'Salutations at the turn, {name}' },
+    { sentiment: 'Relaxed', greeting: 'Enjoy the deep silence, {name}' },
+    { sentiment: 'Energetic', greeting: 'Late-night focus mode, {name}' },
+    { sentiment: 'Thoughtful', greeting: 'Clarity in the dark, {name}' },
+    { sentiment: 'Playful', greeting: 'Secret midnight hello, {name}' }
 ];
 
 /**
