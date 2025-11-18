@@ -1,4 +1,5 @@
 import { get } from "./api";
+import { supabase } from "./supabase";
 
 let subscriptionCache = null;
 let cacheTimestamp = null;
@@ -21,6 +22,21 @@ export const clearSubscriptionCache = () => {
 export const checkSubscription = async (options = {}) => {
   const { force = false } = options;
   const now = Date.now();
+
+  // If there is no authenticated Supabase session, skip API call entirely
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      subscriptionCache = "free";
+      cacheTimestamp = now;
+      return "free";
+    }
+  } catch (sessionError) {
+    console.warn("Failed to read Supabase session for subscription check:", sessionError);
+    subscriptionCache = "free";
+    cacheTimestamp = now;
+    return "free";
+  }
   
   // Note: Development mode override removed to allow premium testing
   // Uncomment the block below if you need to force free tier in development

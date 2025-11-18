@@ -25,11 +25,12 @@ const AddTransaction = ({ type = 'expense' }) => {
             icon: FaArrowTrendDown,
             colorClass: 'red',
             gradient: 'from-red-500 to-red-600',
-            bgColor: 'bg-white/20',
-            iconColor: 'text-white',
+            bgColor: 'bg-red-500/20',
+            iconColor: 'text-red-500',
             textColor: 'text-red-400',
             focusRing: 'focus:ring-red-500',
-            buttonVariant: 'danger',
+            // Use solid red background for the main call-to-action
+            buttonVariant: 'dangerAction',
             translationKey: 'addExpense'
         },
         income: {
@@ -41,7 +42,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             iconColor: 'text-[#56a69f]',
             textColor: 'text-green-400',
             focusRing: 'focus:ring-green-500',
-            buttonVariant: 'success',
+            buttonVariant: 'successAction',
             translationKey: 'addIncome'
         }
     };
@@ -180,10 +181,10 @@ const AddTransaction = ({ type = 'expense' }) => {
                     <div className={`inline-flex items-center justify-center w-16 h-16 ${currentConfig.bgColor} rounded-full mb-4 shadow-lg`}>
                         <Icon className={`${currentConfig.iconColor} text-2xl`} />
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                    <h1 className="text-2xl md:text-3xl font-semibold text-white mb-1">
                         {t(`${currentConfig.translationKey}.title`)}
                     </h1>
-                    <p className="text-gray-400 text-lg">
+                    <p className="text-gray-400 text-sm md:text-base">
                         {t(`${currentConfig.translationKey}.subtitle`)}
                     </p>
                 </div>
@@ -339,24 +340,24 @@ const AddTransaction = ({ type = 'expense' }) => {
 
                         {/* Error Alert - No Categories */}
                         {showCategoryError && (
-                            <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-4 animate-fadeIn">
+                            <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-3 animate-fadeIn text-sm">
                                 <div className="flex items-start gap-3">
-                                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                         </svg>
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="text-red-400 font-semibold mb-1">
+                                        <h3 className="text-red-400 font-semibold mb-1 text-sm">
                                             {t('addTransaction.no_category_alert_title')}
                                         </h3>
-                                        <p className="text-red-300 text-sm mb-3">
+                                        <p className="text-red-300 text-xs mb-2">
                                             {t('addTransaction.no_category_alert_message')}
                                         </p>
                                         <button
                                             type="button"
                                             onClick={() => setShowAddCategoryModal(true)}
-                                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors font-medium text-sm flex items-center gap-2"
+                                            className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors font-medium text-xs flex items-center gap-2"
                                         >
                                             <FaPlus className="text-xs" />
                                             {t('addTransaction.create_category_now')}
@@ -367,21 +368,23 @@ const AddTransaction = ({ type = 'expense' }) => {
                         )}
 
                         {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            variant={currentConfig.buttonVariant}
-                            size="lg"
-                            fullWidth
-                            loading={loading}
-                            disabled={loading}
-                            leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
-                            style={{ justifyContent: 'center' }}
-                        >
-                            {loading 
-                                ? t(`${currentConfig.translationKey}.adding`) 
-                                : t(`${currentConfig.translationKey}.add_${type}`)
-                            }
-                        </Button>
+                        <div className="pt-2">
+                            <Button
+                                type="submit"
+                                variant={currentConfig.buttonVariant}
+                                size="md"
+                                fullWidth
+                                loading={loading}
+                                disabled={loading}
+                                leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
+                                style={{ justifyContent: 'center' }}
+                            >
+                                {loading
+                                    ? t(`${currentConfig.translationKey}.adding`) 
+                                    : t(`${currentConfig.translationKey}.add_${type}`)
+                                }
+                            </Button>
+                        </div>
                     </form>
                 </div>
             </div>
