@@ -426,54 +426,69 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
 
     if (loading) {
         return (
-            <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
-                {/* Header skeleton - Mobile responsive */}
-                <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626]">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                        {Array.from({ length: 4 }).map((_, index) => (
-                            <div key={index} className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg">
-                                <div className="h-6 sm:h-8 bg-[#262626]/50 rounded animate-pulse mb-2"></div>
-                                <div className="h-3 sm:h-4 bg-[#262626]/30 rounded animate-pulse"></div>
-                            </div>
-                        ))}
+            <div className="flex-1 p-4 sm:p-6">
+                <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-5xl min-w-0 mx-auto">
+                    {/* Page Title */}
+                    <div className="mb-8 text-left">
+                        <h1 className="text-3xl font-bold text-white">{t('transactions.title')}</h1>
                     </div>
+                    
+                    {/* Header skeleton - Mobile responsive */}
+                    <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626]">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                            {Array.from({ length: 4 }).map((_, index) => (
+                                <div key={index} className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg">
+                                    <div className="h-6 sm:h-8 bg-[#262626]/50 rounded animate-pulse mb-2"></div>
+                                    <div className="h-3 sm:h-4 bg-[#262626]/30 rounded animate-pulse"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    {/* Search and filters skeleton - Mobile responsive */}
+                    <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626]">
+                        <div className="space-y-4">
+                            <div className="h-12 bg-[#262626]/50 rounded-lg animate-pulse"></div>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <div className="flex-1 h-10 bg-[#262626]/50 rounded-lg animate-pulse"></div>
+                                <div className="h-10 w-12 bg-[#262626]/50 rounded-lg animate-pulse"></div>
+                                <div className="h-10 w-20 bg-[#262626]/50 rounded-lg animate-pulse"></div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    {/* Transactions skeleton */}
+                    <TransactionSkeleton count={8} />
                 </div>
-                
-                {/* Search and filters skeleton - Mobile responsive */}
-                <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626]">
-                    <div className="space-y-4">
-                        <div className="h-12 bg-[#262626]/50 rounded-lg animate-pulse"></div>
-                        <div className="flex flex-col sm:flex-row gap-2">
-                            <div className="flex-1 h-10 bg-[#262626]/50 rounded-lg animate-pulse"></div>
-                            <div className="h-10 w-12 bg-[#262626]/50 rounded-lg animate-pulse"></div>
-                            <div className="h-10 w-20 bg-[#262626]/50 rounded-lg animate-pulse"></div>
-                    </div>
-                    </div>
-                </div>
-                
-                {/* Transactions skeleton */}
-                <TransactionSkeleton count={8} />
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-                <p className="text-red-400">{t('transactions.error')}: {error}</p>
+            <div className="flex-1 p-4 sm:p-6">
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 max-w-5xl mx-auto">
+                    <p className="text-red-400">{t('transactions.error')}: {error}</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
-            {/* Header with stats - Responsive for different screen sizes */}
-            <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626] w-full max-w-full min-w-0 flex-shrink-0">
-                <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
-                    <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className="text-lg sm:text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
-                        <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
-                    </div>
+        <div className="flex-1 p-4 sm:p-6">
+            <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-5xl min-w-0 mx-auto">
+                {/* Page Title */}
+                <div className="mb-8 text-left">
+                    <h1 className="text-3xl font-bold text-white">{t('transactions.title')}</h1>
+                </div>
+                
+                {/* Header with stats - Responsive for different screen sizes */}
+                <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626] w-full max-w-full min-w-0 flex-shrink-0">
+                    <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
+                        <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
+                            <div className="text-lg sm:text-2xl font-bold text-white">{filteredAndSortedTransactions.length}</div>
+                            <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_transactions')}</div>
+                        </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
                         <div className={`${getResponsiveFontSize(totals.income)} font-bold text-[#56a69f] whitespace-nowrap overflow-hidden`}>
                             R$ {totals.income.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -497,6 +512,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             {balance >= 0 ? 'R$ ' : '-R$ '}{Math.abs(balance).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.net_balance')}</div>
+                    </div>
                     </div>
                 </div>
             </div>

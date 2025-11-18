@@ -201,14 +201,10 @@ export function AuthProvider({ children }) {
   const checkEmailVerification = async (emailParam) => {
     const targetEmail = emailParam || user?.email;
 
-<<<<<<< HEAD
     if (!targetEmail) {
       return { success: false, error: 'Email não disponível', verified: false };
     }
 
-=======
-  const checkEmailVerification = async (email) => {
->>>>>>> 79efe9737d21939882130b3d2f04f697737c7b11
     try {
       const response = await API.get('/auth/check-verification', {
         params: { email: targetEmail },
