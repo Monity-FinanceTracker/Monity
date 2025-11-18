@@ -17,12 +17,15 @@ import {
   MessageCircle,
   Calculator
 } from "lucide-react";
+import sidebarIcon from "../../../Sidebar-Icon.png";
+import sidebarArrow from "../../../sidebarArrow.png";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
   const { t } = useTranslation();
   const { isAdmin, subscriptionTier } = useAuth();
   const premiumUser = subscriptionTier === 'premium';
   const [isHovering, setIsHovering] = useState(false);
+  const [isCollapsedHovering, setIsCollapsedHovering] = useState(false);
 
   // Estilos de transição consistentes para os NavLinks
   const navLinkTransition = {
@@ -48,11 +51,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               /* Botão centralizado quando collapsed */
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="flex items-center px-2 py-1.5 rounded-lg group hover:bg-[#262626]"
+                onMouseEnter={() => setIsCollapsedHovering(true)}
+                onMouseLeave={() => setIsCollapsedHovering(false)}
+                className="flex items-center px-2 py-1.5 rounded-lg group"
                 style={{ 
                   border: 'none',
                   outline: 'none',
-                  background: 'transparent',
+                  background: isCollapsedHovering ? '#141414' : 'transparent',
                   margin: 0,
                   display: 'flex',
                   alignItems: 'center',
@@ -61,18 +66,14 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 }}
                 title="Toggle Menu"
               >
-                <div className="w-5 h-5 flex-shrink-0">
+                <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
                   {/* Ícone de dois painéis quando collapsed */}
-                  <svg 
-                    className="w-5 h-5" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="white" 
-                    strokeWidth="1.5"
-                  >
-                    <rect x="2" y="4" width="8" height="16" rx="1" strokeLinecap="round" />
-                    <rect x="12" y="4" width="10" height="16" rx="1" strokeLinecap="round" />
-                  </svg>
+                  <img 
+                    src={sidebarIcon} 
+                    alt="Toggle sidebar" 
+                    className="h-8 w-auto object-contain"
+                    style={{ transform: 'scale(2.3)' }}
+                  />
                 </div>
               </button>
             ) : (
@@ -85,11 +86,11 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   onClick={() => setIsCollapsed(!isCollapsed)}
                   onMouseEnter={() => setIsHovering(true)}
                   onMouseLeave={() => setIsHovering(false)}
-                  className="flex items-center px-1.5 py-1.5 rounded-lg group hover:bg-[#262626]"
+                  className="flex items-center px-1.5 py-1.5 rounded-lg group"
                   style={{ 
                     border: 'none',
                     outline: 'none',
-                    background: 'transparent',
+                    background: isHovering ? '#141414' : 'transparent',
                     margin: 0,
                     display: 'flex',
                     alignItems: 'center',
@@ -101,31 +102,21 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <div className="w-5 h-6 flex-shrink-0 flex items-center">
                     {isHovering ? (
                       /* Ícone de seta com barra quando hover e expandido */
-                      <svg 
-                        className="w-5 h-6" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="white" 
-                        strokeWidth="1"
-                      >
-                        {/* Barra vertical à esquerda */}
-                        <line x1="5" y1="4" x2="5" y2="20" strokeWidth="1" strokeLinecap="round" />
-                        {/* Seta apontando para a esquerda - mais longa e fina, altura ajustada para texto */}
-                        <path d="M8 12L19 12M8 12L11 7M8 12L11 17" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <img 
+                        src={sidebarArrow} 
+                        alt="Collapse sidebar" 
+                        className="h-8 w-auto object-contain"
+                        style={{ transform: 'scale(1.7)' }}
+                      />
                     ) : (
                       /* Ícone de dois painéis quando expandido sem hover */
                       <div className="w-5 h-5 flex items-center justify-center">
-                        <svg 
-                          className="w-5 h-5" 
-                          viewBox="0 0 24 24" 
-                          fill="none" 
-                          stroke="white" 
-                          strokeWidth="1.5"
-                        >
-                          <rect x="2" y="4" width="8" height="16" rx="1" strokeLinecap="round" />
-                          <rect x="12" y="4" width="10" height="16" rx="1" strokeLinecap="round" />
-                        </svg>
+                        <img 
+                          src={sidebarIcon} 
+                          alt="Toggle sidebar" 
+                          className="h-8 w-auto object-contain"
+                          style={{ transform: 'scale(2.3)' }}
+                        />
                       </div>
                     )}
                   </div>
