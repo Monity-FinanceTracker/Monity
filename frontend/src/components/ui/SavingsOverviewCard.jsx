@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../../utils/api';
+import { useAuth } from '../../context/useAuth';
 
 const SavingsOverviewCard = () => {
     const { t } = useTranslation();
+    const { user } = useAuth();
     const [savingsData, setSavingsData] = useState({
         totalAllocated: 0,
         totalTargets: 0,
@@ -16,21 +18,26 @@ const SavingsOverviewCard = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchSavingsOverview();
-    }, []);
-
-    const fetchSavingsOverview = async () => {
-        try {
-            setLoading(true);
-            const response = await api.get('/balance/savings-overview');
-            setSavingsData(response.data);
-        } catch (error) {
-            console.error('Error fetching savings overview:', error);
-            setError('Failed to load savings data');
-        } finally {
+        if (!user) {
             setLoading(false);
+            return;
         }
-    };
+
+        const fetchSavingsOverview = async () => {
+            try {
+                setLoading(true);
+                const response = await api.get('/balance/savings-overview');
+                setSavingsData(response.data);
+            } catch (error) {
+                console.error('Error fetching savings overview:', error);
+                setError('Failed to load savings data');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSavingsOverview();
+    }, [user]);
 
     if (loading) {
         return (
@@ -42,6 +49,18 @@ const SavingsOverviewCard = () => {
                         <div className="h-4 bg-gray-700 rounded"></div>
                         <div className="h-4 bg-gray-700 rounded w-3/4"></div>
                     </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6">
+                <div className="text-center py-4">
+                    <p className="text-gray-400">
+                        {t('savings_goals.login_to_view', 'Faça login para ver o resumo das suas metas de poupança.')}
+                    </p>
                 </div>
             </div>
         );
