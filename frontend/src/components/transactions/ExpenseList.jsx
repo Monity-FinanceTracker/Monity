@@ -67,16 +67,16 @@ function ListExpenses() {
     const reversedExpenses = [...filtered].reverse();
     if (!filtered.length) {
         return (
-            <div className="bg-[#171717] border-1 p-4 rounded-xl shadow-lg shadow-red-400 ring-2 ring-red-400/50">
+            <div className="bg-[#1F1E1D] border-1 p-4 rounded-xl shadow-lg shadow-[#FAF9F5]/20 ring-2 ring-[#FAF9F5]/50">
                 <div className='flex flex-col md:flex-row items-center justify-between gap-6 mb-4'>
-                    <h3 className="text-lg font-bold text-[#FF6384]">{t('expenseList.total_expenses')}: <span className="text-white">{formatSimpleCurrency(sum, true)}</span></h3>
+                    <h3 className="text-lg font-bold text-[#FAF9F5]">{t('expenseList.total_expenses')}: <span className="text-white">{formatSimpleCurrency(sum, true)}</span></h3>
                     <div className="flex gap-2">
-                        <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_category')} />
-                        <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#171717] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_date')} />
+                        <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#1F1E1D] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FAF9F5] focus:border-[#FAF9F5] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_category')} />
+                        <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#1F1E1D] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FAF9F5] focus:border-[#FAF9F5] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.placeholder_date')} />
                     </div>
                     <Link
                         to="/add-expense"
-                        className="inline-block text-white hover:text-[#23263a] bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-red-300 shadow-lg shadow-red-500/50 dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-0 focus:shadow-none transition-colors">
+                        className="inline-block text-white hover:text-[#23263a] bg-gradient-to-r from-[#FAF9F5] via-[#FAF9F5] to-[#FAF9F5] hover:bg-[#FAF9F5]/80 shadow-lg shadow-[#FAF9F5]/50 dark:shadow-[#FAF9F5]/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-0 focus:shadow-none transition-colors">
                         {t('expenseList.add_expense')}
                     </Link>
                 </div>
@@ -92,26 +92,26 @@ function ListExpenses() {
     }
 
     return (
-        <div className="bg-[#171717] p-4 rounded-xl shadow-lg ring-2 ring-red-400/50">
+        <div className="bg-[#1F1E1D] p-4 rounded-xl shadow-lg ring-2 ring-[#FAF9F5]/50">
             {/* Header */}
             <div className='flex flex-col md:flex-row items-center justify-between gap-4 mb-4'>
-                <h3 className="text-lg font-bold text-white">{t('expenseList.total_expenses')}: <span className="text-[#FF6384]">{formatSimpleCurrency(sum, true)}</span></h3>
+                <h3 className="text-lg font-bold text-white">{t('expenseList.total_expenses')}: <span className="text-[#FAF9F5]">{formatSimpleCurrency(sum, true)}</span></h3>
                 <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                    <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_category')} />
-                    <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#232323] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FF6384] focus:border-[#FF6384] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_date')} />
+                    <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-[#1F1E1D] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FAF9F5] focus:border-[#FAF9F5] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_category')} />
+                    <input type="text" value={date} onChange={(e) => setDate(e.target.value)} className="bg-[#1F1E1D] border border-[#262626] text-white text-sm rounded-lg focus:ring-[#FAF9F5] focus:border-[#FAF9F5] block w-full p-2.5 placeholder-gray-400" placeholder={t('expenseList.filter_date')} />
                 </div>
                 <Link
                     to="/add-expense"
-                    className="w-full md:w-auto text-center text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
+                    className="w-full md:w-auto text-center text-white bg-gradient-to-r from-[#FAF9F5] to-[#FAF9F5] hover:from-[#FAF9F5]/90 hover:to-[#FAF9F5]/90 shadow-lg shadow-[#FAF9F5]/50 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
                     {t('expenseList.add_expense')}
                 </Link>
             </div>
 
             {/* Desktop Table */}
             <div className="hidden md:block">
-                <table className="w-full text-left bg-[#171717] text-white rounded-lg overflow-hidden">
+                <table className="w-full text-left bg-[#1F1E1D] text-white rounded-lg overflow-hidden">
                     <thead>
-                        <tr className="bg-[#171717] text-[#FF6384]">
+                        <tr className="bg-[#1F1E1D] text-[#FAF9F5]">
                             <th className="py-3 px-4">{t('expenseList.date')}</th>
                             <th className="py-3 px-4">{t('expenseList.category')}</th>
                             <th className="py-3 px-4">{t('expenseList.description')}</th>
@@ -125,7 +125,7 @@ function ListExpenses() {
                                 <td className="py-3 px-4">{formatDate(expense.date)}</td>
                                 <td className="py-3 px-4">{expense.category}</td>
                                 <td className="py-3 px-4">{expense.description}</td>
-                                <td className="text-red-400 py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
+                                <td className="text-[#FAF9F5] py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
                                 <td className="py-3 px-4 text-center">
                                     <button 
                                         className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors inline-flex items-center justify-center" 
@@ -146,13 +146,13 @@ function ListExpenses() {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
                 {reversedExpenses.map((expense) => (
-                    <div key={expense.id} className="bg-[#171717] p-4 rounded-lg border border-[#262626]">
+                    <div key={expense.id} className="bg-[#1F1E1D] p-4 rounded-lg border border-[#262626]">
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
                                 <p className="text-sm text-gray-400">{expense.category}</p>
                             </div>
-                            <p className="text-red-400 font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
+                            <p className="text-[#FAF9F5] font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{formatDate(expense.date)}</p>

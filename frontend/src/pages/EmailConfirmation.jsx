@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-<<<<<<< HEAD
-import { useAuth } from '../context/useAuth';
-=======
 import { useAuth } from '../context/AuthContext';
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 
@@ -43,13 +39,8 @@ function EmailConfirmation() {
         setMessage('');
 
         try {
-<<<<<<< HEAD
-            const result = await resendConfirmationEmail();
-            
-=======
             const result = await resendConfirmationEmail(email);
 
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
             if (result.success) {
                 setMessage('Email de confirmação enviado com sucesso! Verifique sua caixa de entrada.');
                 setCanResend(false);
@@ -57,12 +48,8 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao reenviar email');
             }
-<<<<<<< HEAD
         } catch (error) {
             console.error('Erro ao reenviar email:', error);
-=======
-        } catch {
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
             setError('Erro ao reenviar email. Tente novamente.');
         } finally {
             setLoading(false);
@@ -75,12 +62,8 @@ function EmailConfirmation() {
         setMessage('');
 
         try {
-            const result = await checkEmailVerification();
-<<<<<<< HEAD
-            
-=======
+            const result = await checkEmailVerification(email);
 
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
             if (result.success && result.verified) {
                 setMessage('Email confirmado com sucesso! Redirecionando...');
                 setTimeout(() => {
@@ -91,12 +74,8 @@ function EmailConfirmation() {
             } else {
                 setError(result.error || 'Erro ao verificar confirmação');
             }
-<<<<<<< HEAD
         } catch (error) {
             console.error('Erro ao verificar confirmação:', error);
-=======
-        } catch {
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
             setError('Erro ao verificar confirmação. Tente novamente.');
         } finally {
             setChecking(false);
@@ -104,12 +83,12 @@ function EmailConfirmation() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
             {/* Animated Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#56a69f]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
             {/* Content */}
@@ -120,11 +99,11 @@ function EmailConfirmation() {
                 </div>
 
                 {/* Card */}
-                <div className="bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
+                <div className="bg-[#1F1E1D] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
                     {/* Mail Icon */}
                     <div className="flex justify-center mb-6">
-                        <div className="w-20 h-20 bg-[#01C38D]/10 rounded-full flex items-center justify-center animate-bounce-slow">
-                            <svg className="w-10 h-10 text-[#01C38D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="w-20 h-20 bg-[#56a69f]/10 rounded-full flex items-center justify-center animate-bounce-slow">
+                            <svg className="w-10 h-10 text-[#56a69f]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
@@ -135,14 +114,14 @@ function EmailConfirmation() {
                         <h2 className="text-3xl font-bold text-white mb-2">
                             {t('emailConfirmation.title') || 'Verifique seu Email'}
                         </h2>
-                        <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
+                        <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full"></div>
                     </div>
 
                     {/* Description */}
                     <p className="text-gray-400 text-center mb-6">
                         {t('emailConfirmation.description') || 'Enviamos um link de confirmação para'}
                     </p>
-                    <p className="text-[#01C38D] text-center font-semibold mb-8 break-all">
+                    <p className="text-[#56a69f] text-center font-semibold mb-8 break-all">
                         {email}
                     </p>
 
@@ -176,7 +155,7 @@ function EmailConfirmation() {
                         <button
                             onClick={handleCheckVerification}
                             disabled={checking}
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3.5 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                            className="w-full bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 text-white py-3.5 rounded-xl font-semibold hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 focus:ring-4 focus:ring-[#56a69f]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                         >
                             {checking ? (
                                 <div className="flex items-center justify-center">
@@ -200,7 +179,7 @@ function EmailConfirmation() {
                         <button
                             onClick={handleResendEmail}
                             disabled={loading || !canResend}
-                            className="w-full bg-[#262626] hover:bg-[#2a2a2a] text-white py-3.5 rounded-xl font-semibold border-2 border-[#262626] hover:border-[#01C38D]/30 focus:ring-4 focus:ring-gray-700/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full bg-[#262626] hover:bg-[#2a2a2a] text-white py-3.5 rounded-xl font-semibold border-2 border-[#262626] hover:border-[#56a69f]/30 focus:ring-4 focus:ring-gray-700/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center">
@@ -226,7 +205,7 @@ function EmailConfirmation() {
                         {/* Back to Login */}
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full text-gray-400 hover:text-[#01C38D] py-2 transition-colors duration-200"
+                            className="w-full text-gray-400 hover:text-[#56a69f] py-2 transition-colors duration-200"
                         >
                             {t('emailConfirmation.backToLogin') || 'Voltar para Login'}
                         </button>

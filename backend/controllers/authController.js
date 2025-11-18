@@ -40,26 +40,7 @@ class AuthController {
             }
 
             if (data.user) {
-<<<<<<< HEAD
                 logger.info('User registered successfully', { 
-                    userId: data.user.id,
-                    email: data.user.email 
-                });
-
-                // Criar categorias padrão de forma assíncrona
-                this.userModel.createDefaultCategories(data.user.id)
-                    .catch(err => logger.error('Failed to create default categories', { 
-                        userId: data.user.id, 
-                        error: err.message 
-                    }));
-            }
-
-            res.status(201).json({ 
-                user: data.user, 
-                session: data.session,
-                message: 'Conta criada com sucesso!' 
-=======
-                logger.info('User registered successfully', {
                     userId: data.user.id,
                     email: data.user.email,
                     emailConfirmed: data.user.email_confirmed_at !== null
@@ -101,7 +82,6 @@ class AuthController {
                 session: data.session,
                 requiresEmailConfirmation: false,
                 message: 'Conta criada com sucesso!'
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
             });
 
         } catch (error) {
@@ -514,11 +494,7 @@ class AuthController {
                 type: 'signup',
                 email: email,
                 options: {
-<<<<<<< HEAD
-                    emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/verify`
-=======
                     emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?type=email`
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
                 }
             });
 
@@ -641,8 +617,6 @@ class AuthController {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Inicializa a conta do usuário após confirmação de email
      * Cria categorias padrão e retorna perfil do usuário
      */
@@ -707,7 +681,6 @@ class AuthController {
     }
 
     /**
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
      * Middleware para verificar se o email do usuário está confirmado
      * Pode ser usado em rotas que exigem email confirmado
      */

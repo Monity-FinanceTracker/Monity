@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
-<<<<<<< HEAD
-import { useAuth } from '../context/useAuth';
-=======
 import { useAuth } from '../context/AuthContext';
 import API from '../utils/api';
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 
 function AuthCallback() {
@@ -19,7 +15,6 @@ function AuthCallback() {
     useEffect(() => {
         const handleCallback = async () => {
             try {
-                // Verificar se há erro nos parâmetros
                 const errorParam = searchParams.get('error');
                 if (errorParam) {
                     setError(errorParam);
@@ -27,7 +22,6 @@ function AuthCallback() {
                     return;
                 }
 
-                // Obter a sessão do hash da URL (Supabase OAuth)
                 const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
                 if (sessionError) {
@@ -35,39 +29,23 @@ function AuthCallback() {
                 }
 
                 if (session) {
-<<<<<<< HEAD
-                    // Refresh subscription para o novo usuário
-                    await refreshSubscription();
-                    
-                    // Redirecionar para dashboard
-                    navigate('/', { replace: true });
-                } else {
-                    setError('Não foi possível completar o login com Google');
-=======
-                    // Inicializar conta (criar categorias padrão se necessário)
                     try {
                         await API.post('/auth/initialize');
                     } catch (initError) {
-                        // Se erro ao inicializar, logar mas não bloquear
                         console.error('Failed to initialize account:', initError);
                     }
 
-                    // Refresh subscription para o novo usuário
                     await refreshSubscription();
 
-                    // Verificar se veio de confirmação de email (type=signup) ou OAuth
                     const type = searchParams.get('type');
 
                     if (type === 'signup' || type === 'email') {
-                        // Redirecionar para página de email confirmado (mostra sucesso)
                         navigate('/email-confirmed', { replace: true });
                     } else {
-                        // OAuth ou outro tipo de login - ir direto para dashboard
                         navigate('/', { replace: true });
                     }
                 } else {
                     setError('Não foi possível completar o login');
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
                     setProcessing(false);
                 }
             } catch (err) {
@@ -81,42 +59,32 @@ function AuthCallback() {
     }, [searchParams, navigate, refreshSubscription]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
-            {/* Animated Background */}
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
 
-            {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
-                {/* Logo */}
                 <div className="mb-8 flex flex-col items-center justify-center">
                     <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
                 </div>
 
-                {/* Card */}
-                <div className="bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626]">
+                <div className="bg-[#1F1E1D] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626]">
                     {processing ? (
                         <div className="text-center">
-                            {/* Loading Spinner */}
                             <div className="flex justify-center mb-6">
-                                <svg className="animate-spin h-12 w-12 text-[#01C38D]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin h-12 w-12 text-[#56a69f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             </div>
-                            
+
                             <h2 className="text-2xl font-bold text-white mb-2">Processando Login</h2>
-<<<<<<< HEAD
-                            <p className="text-gray-400">Aguarde enquanto completamos seu login com Google...</p>
-=======
                             <p className="text-gray-400">Aguarde enquanto completamos seu login...</p>
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
                         </div>
                     ) : error ? (
                         <div className="text-center">
-                            {/* Error Icon */}
                             <div className="flex justify-center mb-6">
                                 <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
                                     <svg className="w-8 h-8 text-red-400" fill="currentColor" viewBox="0 0 20 20">
@@ -124,13 +92,13 @@ function AuthCallback() {
                                     </svg>
                                 </div>
                             </div>
-                            
+
                             <h2 className="text-2xl font-bold text-white mb-2">Erro no Login</h2>
                             <p className="text-red-400 mb-6">{error}</p>
-                            
+
                             <button
                                 onClick={() => navigate('/login')}
-                                className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 transition-all duration-300"
+                                className="w-full bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 text-white py-3 rounded-xl font-semibold hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 transition-all duration-300"
                             >
                                 Voltar para Login
                             </button>
@@ -143,4 +111,3 @@ function AuthCallback() {
 }
 
 export default AuthCallback;
-

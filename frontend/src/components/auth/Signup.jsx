@@ -17,7 +17,7 @@ function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [focusedField, setFocusedField] = useState('');
+    const [, setFocusedField] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
 
@@ -39,29 +39,25 @@ function Signup() {
         }
 
         try {
-<<<<<<< HEAD
             const result = await signup(name, email, password);
             
             if (!result.success) {
-                // Mostrar erro do backend (ex: "Emails temporários não são permitidos")
+                // Mostrar erro retornado pelo backend
                 setError(result.error || t('signupPage.failed'));
                 setLoading(false);
                 return;
             }
-            
-            // Redirecionar para tela de confirmação de email
-            navigate('/email-confirmation', { 
-                state: { email: email },
-                replace: true 
-            });
-=======
-            const { error } = await signup(name, email, password);
-            if (error) {
-                throw new Error(error);
+
+            if (result.requiresEmailConfirmation) {
+                navigate('/email-confirmation', { 
+                    state: { email },
+                    replace: true 
+                });
+                return;
             }
-            // Redirect to email confirmation page
-            navigate('/confirm-email', { state: { email } });
->>>>>>> 429196b016bd09c16635c353a0eb531e2033f047
+
+            // Se confirmação não é necessária, direcionar para dashboard
+            navigate('/', { replace: true });
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
@@ -100,28 +96,30 @@ function Signup() {
     const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
-            </div>
-
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
             {/* Content */}
             <div className="relative z-10 w-full max-w-md mx-auto">
-                {/* Monity Logo with Animation */}
-                <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
-                    <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
-                    <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
+                {/* Monity Logo with Custom Slogan */}
+                <div className="mt-6 mb-4 flex flex-col items-center justify-center transform animate-fade-in-up">
+                    <img
+                        src={monityLogo}
+                        alt="Monity Logo"
+                        className="w-24 h-24 md:w-55 md:h-55 object-contain"
+                    />
+                    <p
+                        className="mt-4 text-xl md:text-2xl font-medium text-center px-6"
+                        style={{ fontFamily: `'Stratford', var(--font-sans)`, color: '#F5F0E6' }}
+                    >
+                        {t('loginPage.slogan')}
+                    </p>
                 </div>
 
                 {/* Signup Card with Enhanced Design */}
-                <div className="bg-[#171717] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
+                <div className="p-5 rounded-2xl transform animate-fade-in-up delay-200">
                     {/* Premium Badge */}
                     {premium && (
-                        <div className="mb-4 p-3 bg-gradient-to-r from-[#01C38D]/10 to-[#01a87a]/10 border border-[#01C38D]/30 rounded-xl">
-                            <div className="flex items-center justify-center gap-2 text-[#01C38D]">
+                        <div className="mb-4 p-3 bg-gradient-to-r from-[#56a69f]/10 to-[#01a87a]/10 border border-[#56a69f]/30 rounded-xl">
+                            <div className="flex items-center justify-center gap-2 text-[#56a69f]">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
@@ -130,14 +128,9 @@ function Signup() {
                         </div>
                     )}
 
-                    <div className="text-center mb-6">
-                        <h2 className="text-2xl font-bold text-white mb-2">{t('signupPage.create_account')}</h2>
-                        <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
-                    </div>
-
                     {/* Error Message with Better Styling */}
                     {error && (
-                        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center backdrop-blur-sm animate-shake">
+                        <div className="mb-3 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-center backdrop-blur-sm animate-shake">
                             <div className="flex items-center justify-center text-sm">
                                 <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -147,10 +140,10 @@ function Signup() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-3">
                         {/* Enhanced Name Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="name" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="name" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.name')}
                             </label>
                             <div className="relative">
@@ -166,9 +159,7 @@ function Signup() {
                                     onChange={(e) => setName(e.target.value)}
                                     onFocus={() => setFocusedField('name')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'name' ? 'border-[#01C38D]' : 'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="Your full name"
                                     required
                                 />
@@ -183,8 +174,8 @@ function Signup() {
                         </div>
 
                         {/* Enhanced Email Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="email" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.email')}
                             </label>
                             <div className="relative">
@@ -200,9 +191,7 @@ function Signup() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     onFocus={() => setFocusedField('email')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'email' ? 'border-[#01C38D]' : 'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-4 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="your@email.com"
                                     required
                                 />
@@ -217,8 +206,8 @@ function Signup() {
                         </div>
 
                         {/* Enhanced Password Input with Strength Indicator */}
-                        <div className="space-y-2">
-                            <label htmlFor="password" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="password" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.password')}
                             </label>
                             <div className="relative">
@@ -234,15 +223,13 @@ function Signup() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     onFocus={() => setFocusedField('password')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'password' ? 'border-[#01C38D]' : 'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
                                 <div
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                     title={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? (
@@ -281,8 +268,8 @@ function Signup() {
                         </div>
 
                         {/* Enhanced Confirm Password Input */}
-                        <div className="space-y-2">
-                            <label htmlFor="confirmPassword" className="block text-gray-300 font-medium text-sm">
+                        <div className="space-y-1.5">
+                            <label htmlFor="confirmPassword" className="block text-white font-medium text-sm text-left">
                                 {t('signupPage.confirm_password')}
                             </label>
                             <div className="relative">
@@ -298,17 +285,13 @@ function Signup() {
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'confirmPassword' ? 'border-[#01C38D]' : 
-                                        confirmPassword && !passwordsMatch ? 'border-red-400' :
-                                        'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
                                 />
                                 <div
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                     title={showConfirmPassword ? "Hide password" : "Show password"}
                                 >
                                     {showConfirmPassword ? (
@@ -346,7 +329,7 @@ function Signup() {
                         {/* Enhanced Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg mt-6"
+                            className="w-full bg-[#56A69f] text-white py-2.5 rounded-xl font-semibold hover:bg-[#4A8F88] focus:ring-4 focus:ring-[#56A69f]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.01] active:scale-[0.99] shadow-lg mt-4"
                             disabled={loading || !passwordsMatch || passwordStrength.score < 2}
                         >
                             {loading ? (
@@ -358,23 +341,18 @@ function Signup() {
                                     {t('signupPage.creating')}
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center">
-                                    <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                                    </svg>
-                                    {t('signupPage.signup')}
-                                </div>
+                                'Continuar'
                             )}
                         </button>
                     </form>
 
                     {/* OAuth Divider */}
-                    <div className="relative my-6">
+                    <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-700"></div>
+                            <div className="w-full border-t border-[#9C9A92]"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-[#171717] text-gray-400">{t('common.or') || 'ou'}</span>
+                            <span className="px-2 bg-[#262624] text-gray-400">{t('common.or') || 'ou'}</span>
                         </div>
                     </div>
 
@@ -382,10 +360,10 @@ function Signup() {
                     <GoogleOAuthButton onError={(err) => setError(err)} />
 
                     {/* Enhanced Login Link */}
-                    <div className="mt-6 text-center">
+                    <div className="mt-4 text-center">
                         <Link 
                             to="/login" 
-                            className="inline-flex items-center justify-center text-[#01C38D] hover:text-[#01C38D]/80 font-semibold transition-colors duration-200 group"
+                            className="inline-flex items-center justify-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 group"
                         >
                             {t('signupPage.login')}
                             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -401,7 +379,7 @@ function Signup() {
                         href="/privacy" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Privacy Policy
                     </a>
@@ -410,7 +388,7 @@ function Signup() {
                         href="/terms" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#01C38D] transition-colors duration-200"
+                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Terms of Service
                     </a>

@@ -101,18 +101,18 @@ function ResetPassword() {
     // Success state
     if (success) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
+            <div className="min-h-screen flex items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
                 {/* Animated Background */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
                 </div>
 
                 <div className="relative z-10 w-full max-w-md">
-                    <div className="bg-[#171717] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626]">
+                    <div className="bg-[#1F1E1D] backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-[#262626]">
                         <div className="text-center">
-                            <div className="mx-auto h-20 w-20 bg-[#01C38D]/10 rounded-full flex items-center justify-center border border-[#01C38D]/30 animate-bounce mb-6">
-                                <FaCheckCircle className="h-10 w-10 text-[#01C38D]" />
+                            <div className="mx-auto h-20 w-20 bg-[#56a69f]/10 rounded-full flex items-center justify-center border border-[#56a69f]/30 animate-bounce mb-6">
+                                <FaCheckCircle className="h-10 w-10 text-[#56a69f]" />
                             </div>
                         </div>
 
@@ -120,7 +120,7 @@ function ResetPassword() {
                             <h2 className="text-3xl font-bold text-white">
                                 {t('resetPassword.success_title')}
                             </h2>
-                            <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full"></div>
+                            <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full"></div>
                             <p className="text-lg text-gray-400">
                                 {t('resetPassword.success_subtitle')}
                             </p>
@@ -129,7 +129,7 @@ function ResetPassword() {
                             </p>
                         </div>
 
-                        <div className="bg-[#01C38D]/5 border border-[#01C38D]/20 rounded-xl p-4 mb-6">
+                        <div className="bg-[#56a69f]/5 border border-[#56a69f]/20 rounded-xl p-4 mb-6">
                             <p className="text-sm text-gray-300 text-center">
                                 {t('resetPassword.can_login')}
                             </p>
@@ -137,7 +137,7 @@ function ResetPassword() {
 
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                            className="w-full bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 text-white py-3 rounded-xl font-semibold hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 focus:ring-4 focus:ring-[#56a69f]/25 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                         >
                             {t('resetPassword.go_to_login')}
                         </button>
@@ -148,12 +148,12 @@ function ResetPassword() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] p-4 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#01C38D]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#01C38D]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#01C38D]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#56a69f]/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#56a69f]/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#56a69f]/2 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
             {/* Content */}
@@ -165,10 +165,10 @@ function ResetPassword() {
                 </div>
 
                 {/* Reset Password Card */}
-                <div className="bg-[#171717] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
+                <div className="bg-[#1F1E1D] backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-[#262626] transform animate-fade-in-up delay-200">
                     <div className="text-center mb-6">
                         <h2 className="text-2xl font-bold text-white mb-2">{t('resetPassword.title')}</h2>
-                        <div className="w-12 h-1 bg-gradient-to-r from-[#01C38D] to-[#01C38D]/50 mx-auto rounded-full mb-4"></div>
+                        <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full mb-4"></div>
                         <p className="text-gray-400 text-sm">{t('resetPassword.subtitle')}</p>
                     </div>
 
@@ -204,14 +204,14 @@ function ResetPassword() {
                                     onFocus={() => setFocusedField('password')}
                                     onBlur={() => setFocusedField('')}
                                     className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'password' ? 'border-[#01C38D]' : 'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                        focusedField === 'password' ? 'border-[#56a69f]' : 'border-gray-300'
+                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#56a69f] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
                                 <div
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                 >
                                     {showPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -267,16 +267,16 @@ function ResetPassword() {
                                     onFocus={() => setFocusedField('confirmPassword')}
                                     onBlur={() => setFocusedField('')}
                                     className={`w-full bg-[#E8F0FE] border-2 ${
-                                        focusedField === 'confirmPassword' ? 'border-[#01C38D]' :
+                                        focusedField === 'confirmPassword' ? 'border-[#56a69f]' :
                                         confirmPassword && !passwordsMatch ? 'border-red-400' :
                                         'border-gray-300'
-                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    } text-gray-900 rounded-xl pl-10 pr-12 py-2.5 focus:ring-0 focus:border-[#56a69f] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
                                 <div
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#01C38D] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                 >
                                     {showConfirmPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -313,7 +313,7 @@ function ResetPassword() {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-[#01C38D] to-[#01C38D]/80 text-white py-3 rounded-xl font-semibold hover:from-[#01C38D]/90 hover:to-[#01C38D]/70 focus:ring-4 focus:ring-[#01C38D]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg mt-6"
+                            className="w-full bg-gradient-to-r from-[#56a69f] to-[#56a69f]/80 text-white py-3 rounded-xl font-semibold hover:from-[#56a69f]/90 hover:to-[#56a69f]/70 focus:ring-4 focus:ring-[#56a69f]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg mt-6"
                             disabled={loading || !passwordsMatch || passwordStrength.score < 2}
                         >
                             {loading ? (

@@ -85,7 +85,7 @@ const Groups = () => {
                     )}
                     <Link
                         to="/groups/create"
-                        className={`bg-[#01C38D] text-[#232323] font-bold px-6 py-3 rounded-lg hover:bg-[#00b37e] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#56a69f] !text-[#1F1E1D] font-medium px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={(e) => isLimited && e.preventDefault()}
                     >
                         {t('groups.create')}
@@ -96,7 +96,7 @@ const Groups = () => {
             {/* Group Invitations */}
             <GroupInvitations />
 
-            <div className="bg-[#171717] rounded-lg border border-[#262626] overflow-hidden">
+            <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] overflow-hidden">
                 {loading ? (
                     <LoadingState message={t('groups.loading')} />
                 ) : groups.length === 0 ? (
@@ -104,20 +104,20 @@ const Groups = () => {
                 ) : (
                     <div className="divide-y divide-[#262626]">
                         {groups.map(group => (
-                            <div key={group.id} className="p-6 hover:bg-[#171717] transition-colors duration-200">
+                            <div key={group.id} className="p-6 hover:bg-[#1F1E1D] transition-colors duration-200">
                                 <Link 
                                     to={`/groups/${group.id}`} 
                                     className="block"
                                 >
                                     <div className="flex items-start justify-between">
-                                        <div>
+                                        <div className="text-left">
                                             <h2 className="text-xl font-semibold text-white mb-1">{group.name}</h2>
                                             <p className="text-gray-400 text-sm">{t('groups.click_to_view')}</p>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             {group.totalSpent > 0 && (
                                                 <div className="text-right">
-                                                    <div className="text-[#01C38D] font-bold text-lg">
+                                                    <div className="text-[#56a69f] font-bold text-lg">
                                                         R$ {group.totalSpent.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                                     </div>
                                                     <div className="text-gray-400 text-xs">
@@ -125,8 +125,8 @@ const Groups = () => {
                                                     </div>
                                                 </div>
                                             )}
-                                            <div className="w-8 h-8 bg-[#01C38D] rounded-full flex items-center justify-center">
-                                                <span className="text-[#232323] font-bold text-sm">
+                                            <div className="w-8 h-8 bg-[#56a69f] rounded-full flex items-center justify-center">
+                                                <span className="text-[#1F1E1D] font-bold text-sm">
                                                     {group.memberCount || 0}
                                                 </span>
                                             </div>

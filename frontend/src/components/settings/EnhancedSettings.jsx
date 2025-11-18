@@ -7,6 +7,7 @@ import { useNotifications } from '../ui/notificationContext';
 import { supabase } from '../../utils/supabase';
 import LanguageSwitcher from '../navigation/LanguageSwitcher';
 import CloseButton from '../ui/CloseButton';
+import { FiSliders, FiUser } from 'react-icons/fi';
 
 /**
  * Enhanced Settings Component with modern UI and comprehensive functionality
@@ -180,7 +181,7 @@ const EnhancedSettings = () => {
         { 
             id: 'preferences', 
             label: t('settings.preferences'), 
-            icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> 
+            icon: <FiSliders className="w-5 h-5" />
         },
         { 
             id: 'subscription', 
@@ -190,7 +191,7 @@ const EnhancedSettings = () => {
         { 
             id: 'account', 
             label: t('settings.account'), 
-            icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg> 
+            icon: <FiUser className="w-5 h-5" />
         }
     ];
 
@@ -210,7 +211,7 @@ const EnhancedSettings = () => {
                                     type="text"
                                     value={profileData.name}
                                     onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-48 bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-48 bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                                     placeholder="Your name"
                                 />
                             </div>
@@ -232,7 +233,7 @@ const EnhancedSettings = () => {
                                 <textarea
                                     value={profileData.bio}
                                     onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg p-3 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg p-3 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                                     rows="3"
                                     placeholder={t('settings.enter_bio')}
                                 />
@@ -241,7 +242,7 @@ const EnhancedSettings = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="bg-[#01C38D] text-white px-6 py-2 text-sm rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50 mt-4"
+                                className="bg-[#56a69f] text-white px-6 py-2 text-sm rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 mt-4"
                             >
                                 {loading ? t('settings.updating') : t('settings.update_profile')}
                             </button>
@@ -262,7 +263,7 @@ const EnhancedSettings = () => {
                                     type="password"
                                     value={passwordData.currentPassword}
                                     onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -277,7 +278,7 @@ const EnhancedSettings = () => {
                                     type="password"
                                     value={passwordData.newPassword}
                                     onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -292,7 +293,7 @@ const EnhancedSettings = () => {
                                     type="password"
                                     value={passwordData.confirmPassword}
                                     onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#01C38D] focus:border-transparent transition-all"
+                                    className="w-full bg-[#262626] border border-[#333333] text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -301,7 +302,7 @@ const EnhancedSettings = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="bg-[#01C38D] text-white px-6 py-2 text-sm rounded-lg hover:bg-[#00b37e] transition-colors disabled:opacity-50 mt-4"
+                                className="bg-[#56a69f] text-white px-6 py-2 text-sm rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 mt-4"
                             >
                                 {loading ? t('settings.updating') : t('settings.change_password')}
                             </button>
@@ -348,26 +349,26 @@ const EnhancedSettings = () => {
                                     <h4 className="text-white font-medium mb-3">{t('subscription.upgrade_benefits')}</h4>
                                     <ul className="space-y-2 text-gray-300 mb-6">
                                         <li className="flex items-center gap-2">
-                                            <span className="text-[#01C38D]">✓</span>
+                                            <span className="text-[#56a69f]">✓</span>
                                             {t('subscription.unlimited_transactions')}
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="text-[#01C38D]">✓</span>
+                                            <span className="text-[#56a69f]">✓</span>
                                             {t('subscription.advanced_analytics')}
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="text-[#01C38D]">✓</span>
+                                            <span className="text-[#56a69f]">✓</span>
                                             {t('subscription.export_data')}
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="text-[#01C38D]">✓</span>
+                                            <span className="text-[#56a69f]">✓</span>
                                             {t('subscription.priority_support')}
                                         </li>
                                     </ul>
                                     <button
                                         onClick={handleUpgrade}
                                         disabled={isUpgrading}
-                                        className="bg-gradient-to-r from-[#01C38D] to-[#00b37e] text-white px-6 py-3 rounded-lg hover:from-[#00b37e] hover:to-[#01C38D] transition-all disabled:opacity-50 font-medium"
+                                        className="bg-gradient-to-r from-[#56a69f] to-[#00b37e] text-white px-6 py-3 rounded-lg hover:from-[#00b37e] hover:to-[#56a69f] transition-all disabled:opacity-50 font-medium"
                                     >
                                         {isUpgrading ? t('subscription.upgrading') : t('subscription.upgrade_now')}
                                     </button>
@@ -412,7 +413,7 @@ const EnhancedSettings = () => {
                                     }}
                                     className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
+                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#56a69f]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#56a69f]"></div>
                             </label>
                         </div>
                         
@@ -432,7 +433,7 @@ const EnhancedSettings = () => {
                                     }}
                                     className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
+                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#56a69f]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#56a69f]"></div>
                             </label>
                         </div>
                         
@@ -449,7 +450,7 @@ const EnhancedSettings = () => {
                                     onChange={(e) => setPreferences(prev => ({ ...prev, darkMode: e.target.checked }))}
                                     className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#01C38D]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#01C38D]"></div>
+                                <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#56a69f]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#56a69f]"></div>
                             </label>
                         </div>
                     </div>
@@ -458,26 +459,20 @@ const EnhancedSettings = () => {
             case 'account':
                 return (
                     <div className="space-y-4">
-                        {/* Account Info */}
-                        <div className="py-3 border-b border-[#262626]">
-                            <h4 className="text-white text-sm font-medium mb-1">Account ID</h4>
-                            <p className="text-gray-400 text-xs font-mono">{user?.id?.substring(0, 20)}...</p>
-                        </div>
-
                         {/* Export Data */}
-                        <div className="py-3 border-b border-[#262626]">
-                            <h4 className="text-white text-sm font-medium mb-1">{t('settings.export_data')}</h4>
-                            <p className="text-gray-400 text-xs mb-3">{t('settings.export_data_desc')}</p>
-                            <button className="text-white hover:text-[#01C38D] px-4 py-1.5 text-sm rounded-lg transition-colors">
+                        <div className="py-3 border-b border-[#262626] flex flex-col items-start gap-2">
+                            <h4 className="text-white text-sm font-medium">{t('settings.export_data')}</h4>
+                            <p className="text-gray-400 text-xs">{t('settings.export_data_desc')}</p>
+                            <button className="text-white hover:text-[#56a69f] text-sm transition-colors self-start py-1.5">
                                 {t('settings.export_button')}
                             </button>
                         </div>
                         
                         {/* Danger Zone */}
-                        <div className="py-3 border-b border-red-900/30">
-                            <h4 className="text-red-400 text-sm font-medium mb-1">{t('settings.delete_account')}</h4>
-                            <p className="text-gray-400 text-xs mb-3">{t('settings.delete_account_desc')}</p>
-                            <button className="text-red-400 hover:text-red-300 px-4 py-1.5 text-sm rounded-lg transition-colors">
+                        <div className="py-3 border-b border-red-900/30 flex flex-col items-start gap-2">
+                            <h4 className="text-red-400 text-sm font-medium">{t('settings.delete_account')}</h4>
+                            <p className="text-gray-400 text-xs">{t('settings.delete_account_desc')}</p>
+                            <button className="text-red-400 hover:text-red-300 text-sm transition-colors self-start py-1.5">
                                 {t('settings.delete_button')}
                             </button>
                         </div>
@@ -486,7 +481,8 @@ const EnhancedSettings = () => {
                         <div className="py-3">
                             <button 
                                 onClick={logout}
-                                className="text-white hover:text-[#01C38D] px-4 py-2 text-sm rounded-lg transition-colors w-full"
+                                type="button"
+                                className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg border border-[#333333] text-white bg-[#1F1E1D] hover:bg-red-600/80 hover:border-red-500/60 transition-colors"
                             >
                                 Logout
                             </button>
@@ -527,12 +523,12 @@ const EnhancedSettings = () => {
                                     key={category.id}
                                     onClick={() => setActiveTab(category.id)}
                                     style={{
-                                        backgroundColor: activeTab === category.id ? '#01C38D' : '#1A1A1A',
+                                        backgroundColor: activeTab === category.id ? '#56a69f' : '#1A1A1A',
                                         color: activeTab === category.id ? '#FFFFFF' : '#9CA3AF'
                                     }}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                                         activeTab === category.id
-                                            ? 'shadow-lg shadow-[#01C38D]/20'
+                                            ? 'shadow-lg shadow-[#56a69f]/20'
                                             : 'hover:!bg-[#262626] hover:!text-white'
                                     }`}
                                 >
