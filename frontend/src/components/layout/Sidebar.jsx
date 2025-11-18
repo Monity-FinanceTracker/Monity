@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -15,7 +15,13 @@ import {
   Menu,
   CalendarDays,
   MessageCircle,
-  Calculator
+  Calculator,
+  Search,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  List,
+  DollarSign,
+  X
 } from "lucide-react";
 import sidebarIcon from "../../../Sidebar-Icon.png";
 import sidebarArrow from "../../../sidebarArrow.png";
@@ -23,9 +29,11 @@ import sidebarArrow from "../../../sidebarArrow.png";
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
   const { t } = useTranslation();
   const { isAdmin, subscriptionTier } = useAuth();
+  const navigate = useNavigate();
   const premiumUser = subscriptionTier === 'premium';
   const [isHovering, setIsHovering] = useState(false);
   const [isCollapsedHovering, setIsCollapsedHovering] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Estilos de transição consistentes para os NavLinks
   const navLinkTransition = {
@@ -424,6 +432,160 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
           className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-300 ease-in-out"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
+      )}
+
+      {/* Search Modal */}
+      {isSearchOpen && (
+        <div 
+          className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out"
+          onClick={() => setIsSearchOpen(false)}
+        >
+          <div 
+            className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-2xl mx-4 relative transition-all duration-300 ease-in-out transform scale-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Botão X no canto superior direito */}
+            <button
+              onClick={() => setIsSearchOpen(false)}
+              className="absolute top-4 right-4 z-10 p-2 hover:bg-[#262626] rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-400" />
+            </button>
+
+            {/* Header com campo de busca */}
+            <div className="flex items-center gap-3 p-4 pr-16 border-b border-[#262626]">
+              <Search className="w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder={t('topbar.quick_search') || 'Pesquisa rápida...'}
+                autoFocus
+                className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-sm"
+              />
+            </div>
+
+            {/* Lista de ações rápidas */}
+            <div className="max-h-96 overflow-y-auto">
+              <div className="p-2">
+                {/* Add Expense */}
+                <button
+                  onClick={() => {
+                    navigate('/add-expense');
+                    setIsSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
+                  style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                  <ArrowDownCircle className="w-5 h-5 text-red-500" />
+                  <div>
+                    <div className="text-white text-sm font-medium">Adicionar Despesa</div>
+                    <div className="text-gray-400 text-xs">Registrar nova despesa</div>
+                  </div>
+                </button>
+
+                {/* Add Income */}
+                <button
+                  onClick={() => {
+                    navigate('/add-income');
+                    setIsSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
+                  style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                  <ArrowUpCircle className="w-5 h-5 text-green-400" />
+                  <div>
+                    <div className="text-white text-sm font-medium">Adicionar Receita</div>
+                    <div className="text-gray-400 text-xs">Registrar nova receita</div>
+                  </div>
+                </button>
+
+                {/* View Transactions */}
+                <button
+                  onClick={() => {
+                    navigate('/transactions');
+                    setIsSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
+                  style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                  <List className="w-5 h-5 text-blue-400" />
+                  <div>
+                    <div className="text-white text-sm font-medium">Ver Transações</div>
+                    <div className="text-gray-400 text-xs">Histórico de transações</div>
+                  </div>
+                </button>
+
+                {/* Budgets */}
+                <button
+                  onClick={() => {
+                    navigate('/budgets');
+                    setIsSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
+                  style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                  <DollarSign className="w-5 h-5 text-purple-400" />
+                  <div>
+                    <div className="text-white text-sm font-medium">Orçamentos</div>
+                    <div className="text-gray-400 text-xs">Gerenciar orçamentos</div>
+                  </div>
+                </button>
+
+                {/* Groups */}
+                <button
+                  onClick={() => {
+                    navigate('/groups');
+                    setIsSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
+                  style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                  <Users className="w-5 h-5 text-orange-400" />
+                  <div>
+                    <div className="text-white text-sm font-medium">Grupos</div>
+                    <div className="text-gray-400 text-xs">Ver e gerenciar grupos</div>
+                  </div>
+                </button>
+
+                {/* Categories */}
+                <button
+                  onClick={() => {
+                    navigate('/categories');
+                    setIsSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
+                  style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                  <Tag className="w-5 h-5 text-yellow-400" />
+                  <div>
+                    <div className="text-white text-sm font-medium">Categorias</div>
+                    <div className="text-gray-400 text-xs">Gerenciar categorias</div>
+                  </div>
+                </button>
+
+                {/* Settings */}
+                <button
+                  onClick={() => {
+                    navigate('/settings');
+                    setIsSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#262626] transition-colors text-left"
+                  style={{ background: 'transparent', border: 'none', outline: 'none' }}
+                >
+                  <Settings className="w-5 h-5 text-gray-400" />
+                  <div>
+                    <div className="text-white text-sm font-medium">Configurações</div>
+                    <div className="text-gray-400 text-xs">Preferências e perfil</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Footer dica */}
+            <div className="px-4 py-3 border-t border-[#262626] text-xs text-gray-400">
+              Pressione <kbd className="px-2 py-1 bg-[#262626] rounded">ESC</kbd> para fechar
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

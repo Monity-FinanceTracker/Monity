@@ -26,6 +26,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             colorClass: 'red',
             gradient: 'from-red-500 to-red-600',
             bgColor: 'bg-red-500/20',
+            iconColor: 'text-red-500',
             textColor: 'text-red-400',
             focusRing: 'focus:ring-red-500',
             // Use solid red background for the main call-to-action

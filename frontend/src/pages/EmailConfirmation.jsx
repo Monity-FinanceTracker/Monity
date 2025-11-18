@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 

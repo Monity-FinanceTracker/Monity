@@ -4,11 +4,13 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import Spinner from "./Spinner";
 import { useTranslation } from "react-i18next";
 import { useBalance } from "../../hooks/useQueries";
+import { useAuth } from "../../context/useAuth";
 
 const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange);
+    const { user } = useAuth();
+    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange, { enabled: !!user });
 
     // Calcula o tamanho da fonte baseado no comprimento do texto
     const fontSize = useMemo(() => {
@@ -34,6 +36,14 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     const handleAddSavingsGoal = () => {
         navigate('/savings-goals', { state: { openModal: true } });
     };
+
+    if (!user) {
+        return (
+            <p className="text-gray-400 text-lg mb-4">
+                {t('balanceCard.loginToView', 'Faça login para ver seu saldo.')}
+            </p>
+        );
+    }
 
     if (loading) {
         return <Spinner message={t('balanceCard.loading')} size="md" center={false} />;
