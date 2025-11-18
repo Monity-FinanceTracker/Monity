@@ -108,6 +108,8 @@ const EnhancedDashboard = () => {
                                             ? 'bg-[#FAF9F5]/20'
                                             : transaction.typeId === 2
                                             ? 'bg-[#56a69f]/20'
+                                            : transaction.typeId === 3
+                                            ? 'bg-[#A69F8E]/20'
                                             : 'bg-blue-500/20'
                                     }`}
                                 >
@@ -115,15 +117,17 @@ const EnhancedDashboard = () => {
                                         <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
                                     ) : transaction.typeId === 2 ? (
                                         <ArrowDown className="w-5 h-5 text-[#56a69f]" />
+                                    ) : transaction.typeId === 3 ? (
+                                        <ArrowDown className="w-5 h-5 text-[#A69F8E]" />
                                     ) : (
                                         <ArrowDown className="w-5 h-5 text-blue-500" />
                                     )}
                                 </div>
                                 <div className="flex flex-col items-start text-left">
-                                    <p className="text-white font-medium text-left">
+                                    <p className={`font-medium text-left ${transaction.typeId === 3 ? 'text-[#A69F8E]' : 'text-white'}`}>
                                         {transaction.description}
                                     </p>
-                                    <p className="text-gray-400 text-sm text-left">
+                                    <p className={`text-sm text-left ${transaction.typeId === 3 ? 'text-[#A69F8E]/70' : 'text-gray-400'}`}>
                                         {transaction.category}
                                     </p>
                                 </div>

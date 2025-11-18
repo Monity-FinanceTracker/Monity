@@ -341,7 +341,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
                             isSelected 
                                 ? 'bg-[#56a69f] border-[#56a69f]' 
-                                : 'border-[#262626] hover:border-[#56a69f] bg-transparent'
+                                : 'border-gray-400 hover:border-[#56a69f] bg-transparent'
                         }`}>
                             {isSelected && (
                                 <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -651,7 +651,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                 <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center ${
                                     selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0
                                         ? 'bg-[#56a69f] border-[#56a69f]' 
-                                        : 'border-[#262626] hover:border-[#56a69f] bg-transparent'
+                                        : 'border-gray-400 hover:border-[#56a69f] bg-transparent'
                                 }`}>
                                     {selectedTransactions.size === filteredAndSortedTransactions.length && filteredAndSortedTransactions.length > 0 && (
                                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
