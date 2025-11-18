@@ -112,7 +112,7 @@ const Groups = () => {
                                     <div className="flex items-start justify-between">
                                         <div className="text-left">
                                             <h2 className="text-xl font-semibold text-white mb-1">{group.name}</h2>
-                                            <p className="text-[#C2C0B6] text-sm">{t('groups.click_to_view')}</p>
+                                            <p className="text-gray-400 text-sm">{t('groups.click_to_view')}</p>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             {group.totalSpent > 0 && (
@@ -120,7 +120,7 @@ const Groups = () => {
                                                     <div className="text-[#56a69f] font-bold text-lg">
                                                         R$ {group.totalSpent.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                                     </div>
-                                                    <div className="text-[#C2C0B6] text-xs">
+                                                    <div className="text-gray-400 text-xs">
                                                         {group.expenseCount} {t('groups.expenses_count')}
                                                     </div>
                                                 </div>

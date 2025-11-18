@@ -99,7 +99,7 @@ const Subscription = () => {
   if (subscriptionTier === null) {
     return (
       <div className="min-h-screen bg-[#262624] flex items-center justify-center">
-        <div className="text-[#C2C0B6]">{t('subscription.loading')}</div>
+        <div className="text-gray-400">{t('subscription.loading')}</div>
       </div>
     );
   }
@@ -123,7 +123,7 @@ const Subscription = () => {
             }
           </h1>
 
-          <p className="text-xl text-[#C2C0B6] max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             {subscriptionTier === 'premium'
               ? t('subscription.premium_subtitle')
               : t('subscription.upgrade_subtitle')
@@ -146,14 +146,14 @@ const Subscription = () => {
                 {feature.title}
               </h3>
 
-              <p className="text-[#C2C0B6] text-sm mb-4">
+              <p className="text-gray-400 text-sm mb-4">
                 {feature.description}
               </p>
 
               <div className="flex items-center justify-between text-sm pt-4 border-t border-[#262626]">
                 <div>
                   <div className="text-gray-500 mb-1">{t('subscription.features.free')}</div>
-                  <div className="text-[#C2C0B6]">{feature.free}</div>
+                  <div className="text-gray-400">{feature.free}</div>
                 </div>
                 <div className="text-right">
                   <div className="text-gray-500 mb-1">{t('subscription.features.premium')}</div>
@@ -178,7 +178,7 @@ const Subscription = () => {
               <div className="flex items-center justify-center gap-4 mb-8">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-white">R$9.90</div>
-                  <div className="text-[#C2C0B6] text-sm">{t('subscription.cta.price_per_month')}</div>
+                  <div className="text-gray-400 text-sm">{t('subscription.cta.price_per_month')}</div>
                 </div>
               </div>
 

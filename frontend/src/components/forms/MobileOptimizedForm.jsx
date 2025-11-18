@@ -242,7 +242,7 @@ const MobileOptimizedForm = ({
 
                 {/* Help Text */}
                 {field.helpText && !hasError && (
-                    <p className="text-[#C2C0B6] text-sm">{field.helpText}</p>
+                    <p className="text-gray-400 text-sm">{field.helpText}</p>
                 )}
 
                 {/* Error Message */}
@@ -260,7 +260,7 @@ const MobileOptimizedForm = ({
         <form onSubmit={handleSubmit} className="space-y-6">
             {/* Progress Indicator */}
             <div className="mb-6">
-                <div className="flex justify-between text-sm text-[#C2C0B6] mb-2">
+                <div className="flex justify-between text-sm text-gray-400 mb-2">
                     <span>{t('form.progress')}</span>
                     <span>{Object.keys(touched).length}/{fields.length}</span>
                 </div>
@@ -290,7 +290,7 @@ const MobileOptimizedForm = ({
                         flex items-center justify-center gap-3
                         ${isValid && !isLoading
                             ? 'bg-[#56a69f] text-[#1F1E1D] hover:bg-[#4a8f88] hover:scale-[1.02] shadow-lg hover:shadow-xl'
-                            : 'bg-[#242532] text-[#C2C0B6] cursor-not-allowed'
+                            : 'bg-[#242532] text-gray-400 cursor-not-allowed'
                         }
                     `}
                 >
@@ -328,7 +328,7 @@ const MobileOptimizedForm = ({
 
             {/* Keyboard Shortcuts Help */}
             <div className="pt-4 border-t border-[#242532]">
-                <details className="text-[#C2C0B6]">
+                <details className="text-gray-400">
                     <summary className="text-sm cursor-pointer hover:text-white transition-colors">
                         {t('form.keyboard_shortcuts')}
                     </summary>

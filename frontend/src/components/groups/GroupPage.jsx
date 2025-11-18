@@ -176,7 +176,7 @@ const GroupPage = () => {
 
     if (loading) return (
         <div className="flex-1 p-6">
-            <div className="text-center text-[#C2C0B6] mt-8">{t('groups.loading_details')}</div>
+            <div className="text-center text-gray-400 mt-8">{t('groups.loading_details')}</div>
         </div>
     );
     
@@ -188,7 +188,7 @@ const GroupPage = () => {
     
     if (!group) return (
         <div className="flex-1 p-6">
-            <div className="text-center text-[#C2C0B6] mt-8">{t('groups.not_found')}</div>
+            <div className="text-center text-gray-400 mt-8">{t('groups.not_found')}</div>
         </div>
     );
 
@@ -236,7 +236,7 @@ const GroupPage = () => {
                             {showUserSearch && (
                                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar">
                                     {searchLoading ? (
-                                        <div className="p-3 text-[#C2C0B6] text-center">{t('groups.searching')}</div>
+                                        <div className="p-3 text-gray-400 text-center">{t('groups.searching')}</div>
                                     ) : userSearchResults.length > 0 ? (
                                         userSearchResults.map(user => (
                                             <button
@@ -246,12 +246,12 @@ const GroupPage = () => {
                                                 className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0"
                                             >
                                                 <div className="text-white">{user.name}</div>
-                                                <div className="text-[#C2C0B6] text-sm">{user.email}</div>
+                                                <div className="text-gray-400 text-sm">{user.email}</div>
                                             </button>
                                         ))
                                     ) : newMemberEmail.length >= 2 ? (
                                         <div className="p-3">
-                                            <div className="text-[#C2C0B6] text-sm mb-2">{t('groups.no_users_found')}</div>
+                                            <div className="text-gray-400 text-sm mb-2">{t('groups.no_users_found')}</div>
                                             <button
                                                 onClick={() => handleSendInvitation(newMemberEmail)}
                                                 disabled={inviteLoading}
@@ -273,7 +273,7 @@ const GroupPage = () => {
                     
                     <div className="space-y-4 mb-6 max-h-80 overflow-y-auto custom-scrollbar">
                         {group.group_expenses.length === 0 ? (
-                            <p className="text-[#C2C0B6] text-center py-8">{t('groups.no_expenses')}</p>
+                            <p className="text-gray-400 text-center py-8">{t('groups.no_expenses')}</p>
                         ) : (
                             group.group_expenses.map(expense => (
                                 <div key={expense.id} className="p-4 bg-[#1F1E1D] rounded-lg">
@@ -281,7 +281,7 @@ const GroupPage = () => {
                                         <span className="text-white font-medium">{expense.description}</span>
                                         <span className="text-[#56a69f] font-bold">R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
-                                    <div className="text-sm text-[#C2C0B6] mb-3">{t('groups.paid_by')} {expense.profiles.name}</div>
+                                    <div className="text-sm text-gray-400 mb-3">{t('groups.paid_by')} {expense.profiles.name}</div>
                                     <div className="space-y-1">
                                         {expense.expense_shares.map(share => (
                                             <div key={share.id} className="flex justify-between items-center text-sm">
@@ -296,7 +296,7 @@ const GroupPage = () => {
                                                         {t('groups.settle')}
                                                     </button>
                                                 ) : (
-                                                    <span className="text-[#C2C0B6] text-xs">{t('groups.pending')}</span>
+                                                    <span className="text-gray-400 text-xs">{t('groups.pending')}</span>
                                                 )}
                                             </div>
                                         ))}

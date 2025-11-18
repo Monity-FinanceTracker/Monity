@@ -35,7 +35,7 @@ const Card = memo(({
             )}
                     <div>
                       {title && <h3 className="text-sm font-medium text-white">{title}</h3>}
-                      {subtitle && <p className="text-[#C2C0B6] text-xs mt-1">{subtitle}</p>}
+                      {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
                     </div>
           </div>
           {headerAction && headerAction}

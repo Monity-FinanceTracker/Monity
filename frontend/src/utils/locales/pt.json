@@ -184,7 +184,6 @@
     "withdraw": "Retirar",
     "allocated": "Alocado",
     "target": "Meta",
-    "current_amount": "Valor Atual",
     "overall_progress": "Progresso Geral",
     "create_first_goal": "Crie Sua Primeira Meta",
     "view_all_goals": "Ver Todas as {{count}} Metas",
@@ -203,7 +202,6 @@
     "error": "Erro",
     "filter_category": "Filtrar por categoria",
     "any_category": "Qualquer categoria",
-    "all_categories": "Todas as Categorias",
     "date_range": "Intervalo de datas",
     "amount_range": "Intervalo de valores",
     "min_amount": "Valor mínimo",
@@ -534,12 +532,9 @@
   "balanceChart": {
     "loading": "Carregando gráfico de saldo...",
     "error": "Erro: {{error}}",
-    "tryAgain": "Por favor, tente novamente mais tarde",
-    "noData": "Nenhum dado de saldo disponível ainda",
     "allTimeMessage": "Selecione \"Todo o Período\" para ver o gráfico de saldo mensal.",
     "monthlyBalance": "Saldo Mensal",
-    "title": "Visão Geral do Saldo Mensal",
-    "balance": "Saldo"
+    "title": "Visão Geral do Saldo Mensal"
   },
   "dateRangeFilter": {
     "label": "Filtrar por período",
@@ -1346,55 +1341,5 @@
     "subtitle": "As últimas atualizações do seu aplicativo financeiro Monity",
     "empty_title": "Ainda não temos atualizações para você",
     "empty_description": "Quando houver novidades, publicaremos aqui. Siga seus recursos e atualizações favoritos para se manter atualizado também."
-  },
-  "greetings": {
-    "morning": {
-      "joyful": "Continue assim, {{name}}! Bom dia",
-      "calm": "Continue assim, {{name}}! Bom dia",
-      "hopeful": "Continue assim, {{name}}! Bom dia",
-      "curious": "Continue assim, {{name}}! Bom dia",
-      "warm": "Continue assim, {{name}}! Bom dia",
-      "formal": "Continue assim, {{name}}! Bom dia",
-      "relaxed": "Continue assim, {{name}}! Bom dia",
-      "energetic": "Continue assim, {{name}}! Bom dia",
-      "thoughtful": "Continue assim, {{name}}! Bom dia",
-      "playful": "Continue assim, {{name}}! Bom dia"
-    },
-    "afternoon": {
-      "joyful": "Continue assim, {{name}}! Boa tarde",
-      "calm": "Continue assim, {{name}}! Boa tarde",
-      "hopeful": "Continue assim, {{name}}! Boa tarde",
-      "curious": "Continue assim, {{name}}! Boa tarde",
-      "warm": "Continue assim, {{name}}! Boa tarde",
-      "formal": "Continue assim, {{name}}! Boa tarde",
-      "relaxed": "Continue assim, {{name}}! Boa tarde",
-      "energetic": "Continue assim, {{name}}! Boa tarde",
-      "thoughtful": "Continue assim, {{name}}! Boa tarde",
-      "playful": "Continue assim, {{name}}! Boa tarde"
-    },
-    "night": {
-      "joyful": "Continue assim, {{name}}! Boa noite",
-      "calm": "Continue assim, {{name}}! Boa noite",
-      "hopeful": "Continue assim, {{name}}! Boa noite",
-      "curious": "Continue assim, {{name}}! Boa noite",
-      "warm": "Continue assim, {{name}}! Boa noite",
-      "formal": "Continue assim, {{name}}! Boa noite",
-      "relaxed": "Continue assim, {{name}}! Boa noite",
-      "energetic": "Continue assim, {{name}}! Boa noite",
-      "thoughtful": "Continue assim, {{name}}! Boa noite",
-      "playful": "Continue assim, {{name}}! Boa noite"
-    },
-    "dawn": {
-      "joyful": "Continue assim, {{name}}! Boa madrugada",
-      "calm": "Continue assim, {{name}}! Boa madrugada",
-      "hopeful": "Continue assim, {{name}}! Boa madrugada",
-      "curious": "Continue assim, {{name}}! Boa madrugada",
-      "warm": "Continue assim, {{name}}! Boa madrugada",
-      "formal": "Continue assim, {{name}}! Boa madrugada",
-      "relaxed": "Continue assim, {{name}}! Boa madrugada",
-      "energetic": "Continue assim, {{name}}! Boa madrugada",
-      "thoughtful": "Continue assim, {{name}}! Boa madrugada",
-      "playful": "Continue assim, {{name}}! Boa madrugada"
-    }
   }
 } 

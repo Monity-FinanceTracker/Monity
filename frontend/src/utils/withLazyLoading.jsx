@@ -19,7 +19,7 @@ const LazyErrorBoundary = ({ children, fallback }) => {
     return (
       fallback || (
         <div className="flex items-center justify-center h-64">
-          <div className="text-center text-[#C2C0B6]">
+          <div className="text-center text-gray-400">
             <div className="text-lg font-semibold mb-2">Erro ao carregar componente</div>
             <button
               onClick={() => window.location.reload()}
@@ -49,7 +49,7 @@ const withLazyLoading = (importFunc, fallback = null) => {
               resolve({
                 default: () => (
                   <div className="flex items-center justify-center h-64">
-                    <div className="text-center text-[#C2C0B6]">
+                    <div className="text-center text-gray-400">
                       <div className="text-lg font-semibold mb-2">Erro ao carregar componente</div>
                       <button
                         onClick={() => window.location.reload()}

@@ -106,9 +106,9 @@ const EnhancedCategories = () => {
                                         placeholder={t('categories.search_placeholder')}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full h-12 bg-[#30302E] border-0 text-[#C2C0B6] placeholder-[#C2C0B6] rounded-xl pl-10 pr-4 text-base font-medium focus:outline-none transition-all"
+                                        className="w-full h-12 bg-[#1F1E1D] border border-[#262626] text-white rounded-xl pl-10 pr-4 text-base font-medium focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
                                     />
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#C2C0B6]" />
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 </div>
                             </div>
                             <div className="sm:w-64">
@@ -131,7 +131,7 @@ const EnhancedCategories = () => {
                     <div className="bg-[#171717] rounded-lg border border-[#262626] p-12 text-center">
                         <Search className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                         <h3 className="text-white text-lg font-medium mb-2">{t('categories.no_results')}</h3>
-                        <p className="text-[#C2C0B6]">{t('categories.no_results_desc')}</p>
+                        <p className="text-gray-400">{t('categories.no_results_desc')}</p>
                     </div>
                 ) : (
                     <EmptyCategories />
@@ -165,13 +165,13 @@ const EnhancedCategories = () => {
                                     </div>
                                     <button
                                         onClick={() => handleDeleteCategory(category.id)}
-                                        className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                         title={t('categories.delete')}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
-                                <div className="text-[#C2C0B6] text-sm">
+                                <div className="text-gray-400 text-sm">
                                     {t('categories.transaction_count', { count: category.transactionCount || 0 })}
                                 </div>
                             </div>

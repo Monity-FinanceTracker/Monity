@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -8,16 +8,15 @@ import {
     Title,
     Tooltip,
     Legend,
-} from "chart.js";
+  } from "chart.js";
 import Spinner from '../ui/Spinner';
 import { get } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '../../utils/currency';
 import { useAuth } from '../../context/useAuth';
-
+  
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function BalanceChart({ selectedRange }) {
+function BalanceChart({ selectedRange }){
     const { t } = useTranslation();
     const { user } = useAuth();
     const [history, setHistory] = useState([]);
@@ -35,7 +34,7 @@ function BalanceChart({ selectedRange }) {
         if (selectedRange === 'current_month') {
             setLoading(false);
             return;
-        }
+        };
 
         const fetchChartData = async () => {
             setLoading(true);
@@ -94,36 +93,13 @@ function BalanceChart({ selectedRange }) {
     }
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center py-12">
-                <Spinner message={t('balanceChart.loading')} />
-            </div>
-        );
+        return <Spinner message={t('balanceChart.loading')} />
     }
-    
     if (error) {
-        return (
-            <div className="text-center py-12">
-                <p className="text-red-400 mb-2">{t('balanceChart.error', { error })}</p>
-                <p className="text-[#C2C0B6] text-sm">{t('balanceChart.tryAgain')}</p>
-            </div>
-        );
+        return <p className="text-red-500">{t('balanceChart.error', { error })}</p>
     }
-    
     if (selectedRange === 'current_month') {
-        return (
-            <div className="text-center py-12">
-                <p className="text-[#C2C0B6]">{t('balanceChart.allTimeMessage')}</p>
-            </div>
-        );
-    }
-
-    if (!history || history.length === 0) {
-        return (
-            <div className="text-left">
-                <p className="text-[#C2C0B6]">{t('balanceChart.noData')}</p>
-            </div>
-        );
+        return <p className="text-center text-gray-400">{t('balanceChart.allTimeMessage')}</p>;
     }
     
     // Sort history by month
@@ -133,28 +109,12 @@ function BalanceChart({ selectedRange }) {
         return (aYear - bYear) || (aMonth - bMonth);
     });
 
-    // Format labels with abbreviated month names for better readability
     const labels = sortedHistory.map(item => {
         const [year, month] = item.month.split('/');
-        const date = new Date(year, month - 1, 1);
-        const monthName = date.toLocaleString('default', { month: 'short' });
+        const monthName = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
         return `${monthName} ${year}`;
     });
-    
     const balances = sortedHistory.map(item => parseFloat(item.balance));
-
-    // Create dynamic colors based on balance value (positive = green, negative = red)
-    const backgroundColors = balances.map(balance => 
-        balance >= 0 
-            ? 'rgba(86, 166, 159, 0.8)'  // Primary green with opacity
-            : 'rgba(250, 249, 245, 0.8)' // Cream with opacity
-    );
-
-    const borderColors = balances.map(balance => 
-        balance >= 0 
-            ? 'rgba(86, 166, 159, 1)'    // Primary green solid
-            : 'rgba(250, 249, 245, 1)'   // Cream solid
-    );
 
     const data = {
         labels: labels,
@@ -162,105 +122,39 @@ function BalanceChart({ selectedRange }) {
             {
                 label: t('balanceChart.monthlyBalance'),
                 data: balances,
-                backgroundColor: backgroundColors,
-                borderColor: borderColors,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
-                borderRadius: 8,
-                borderSkipped: false,
-                // Make bars thinner
-                barPercentage: 0.5,
-                categoryPercentage: 0.6,
+                borderRadius: 4,
+
             },
         ],
     };
 
     const options = {
         responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
+        maintainAspectRatio: true,
         plugins: {
-            legend: {
-                display: false, // Hide legend for cleaner look
+            legend: { 
+                position: 'top',
+                align: 'start'
             },
-            title: {
-                display: false, // Title is handled by the card header
+            title: { 
+                display: true, 
+                text: t('balanceChart.title'),
+                align: 'start'
             },
-            tooltip: {
-                enabled: true,
-                backgroundColor: 'rgba(31, 30, 29, 0.95)',
-                titleColor: '#FAF9F5',
-                bodyColor: '#C2C0B6',
-                borderColor: '#262626',
-                borderWidth: 1,
-                padding: 12,
-                cornerRadius: 8,
-                displayColors: false,
-                callbacks: {
-                    title: (context) => {
-                        return context[0].label;
-                    },
-                    label: (context) => {
-                        const value = context.parsed.y;
-                        return `${t('balanceChart.balance')}: ${formatCurrency(Math.abs(value), value >= 0 ? 1 : 2)}`;
-                    }
-                }
-            }
         },
-        scales: {
-            x: {
-                grid: {
-                    display: false,
-                    drawBorder: false,
-                },
-                ticks: {
-                    color: '#C2C0B6',
-                    font: {
-                        size: 11,
-                        family: "'Inter', sans-serif",
-                    },
-                    maxRotation: 0,
-                    minRotation: 0,
-                }
-            },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.05)',
-                    drawBorder: false,
-                },
-                ticks: {
-                    color: '#C2C0B6',
-                    font: {
-                        size: 11,
-                        family: "'Inter', sans-serif",
-                    },
-                    callback: function(value) {
-                        // Format large numbers with K suffix
-                        if (Math.abs(value) >= 1000) {
-                            return (value / 1000).toFixed(1) + 'K';
-                        }
-                        return value.toFixed(0);
-                    }
-                },
-                border: {
-                    display: false,
-                }
-            }
-        },
-        animation: {
-            duration: 750,
-            easing: 'easeInOutQuart',
+        layout: {
+            padding: 0
         }
     };
 
     return (
-        <div className="w-full h-[300px] sm:h-[350px] lg:h-[400px]">
-            <Bar options={options} data={data} />
+        <div className="w-full">
+            <Bar options={options} data={data}/>
         </div>
-    );
+    )        
 } 
 
-export default BalanceChart;
+export default BalanceChart

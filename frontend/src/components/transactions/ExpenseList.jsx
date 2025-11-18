@@ -128,7 +128,7 @@ function ListExpenses() {
                                 <td className="text-[#FAF9F5] py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
                                 <td className="py-3 px-4 text-center">
                                     <button 
-                                        className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors inline-flex items-center justify-center" 
+                                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors inline-flex items-center justify-center" 
                                         onClick={() => handleDelete(expense.id)}
                                         title="Delete expense"
                                     >
@@ -150,14 +150,14 @@ function ListExpenses() {
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
-                                <p className="text-sm text-[#C2C0B6]">{expense.category}</p>
+                                <p className="text-sm text-gray-400">{expense.category}</p>
                             </div>
                             <p className="text-[#FAF9F5] font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{formatDate(expense.date)}</p>
                             <button 
-                                className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors" 
+                                className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors" 
                                 onClick={() => handleDelete(expense.id)}
                                 title="Delete expense"
                             >

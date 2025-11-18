@@ -29,7 +29,7 @@ class ErrorBoundary extends React.Component {
           <div className="max-w-md w-full bg-[#1a1a1a] rounded-lg p-6 text-center">
             <div className="text-6xl mb-4">😵</div>
             <h1 className="text-xl font-bold mb-2">Oops! Something went wrong</h1>
-            <p className="text-[#C2C0B6] mb-4">
+            <p className="text-gray-400 mb-4">
               The app encountered an unexpected error. Please refresh the page or check your environment configuration.
             </p>
             

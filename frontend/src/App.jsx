@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from './context/useAuth';
 
 // Keep only critical components as regular imports for faster initial loading
 import {

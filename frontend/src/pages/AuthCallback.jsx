@@ -81,7 +81,7 @@ function AuthCallback() {
                             </div>
 
                             <h2 className="text-2xl font-bold text-white mb-2">Processando Login</h2>
-                            <p className="text-[#C2C0B6]">Aguarde enquanto completamos seu login...</p>
+                            <p className="text-gray-400">Aguarde enquanto completamos seu login...</p>
                         </div>
                     ) : error ? (
                         <div className="text-center">

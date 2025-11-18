@@ -42,7 +42,7 @@ const GroupSpendingCard = ({ group }) => {
     };
 
     const getSpendingLevel = (totalSpent) => {
-        if (totalSpent === 0) return { level: 'none', color: 'text-[#C2C0B6]' };
+        if (totalSpent === 0) return { level: 'none', color: 'text-gray-400' };
         if (totalSpent < 100) return { level: 'low', color: 'text-green-400' };
         if (totalSpent < 500) return { level: 'medium', color: 'text-yellow-400' };
         if (totalSpent < 1000) return { level: 'high', color: 'text-orange-400' };
@@ -59,7 +59,7 @@ const GroupSpendingCard = ({ group }) => {
                         <span className={`text-2xl font-bold ${spendingLevel.color}`}>
                             {formatCurrency(group.totalSpent)}
                         </span>
-                        <span className="text-sm text-[#C2C0B6]">
+                        <span className="text-sm text-gray-400">
                             {t('groups.total_spent')}
                         </span>
                     </div>
@@ -70,23 +70,23 @@ const GroupSpendingCard = ({ group }) => {
             <div className="grid grid-cols-3 gap-4 text-sm">
                 <div className="text-center">
                     <div className="text-white font-semibold">{group.expenseCount || 0}</div>
-                    <div className="text-[#C2C0B6] text-xs">{t('groups.expenses')}</div>
+                    <div className="text-gray-400 text-xs">{t('groups.expenses')}</div>
                 </div>
                 <div className="text-center">
                     <div className="text-white font-semibold">{group.memberCount || 0}</div>
-                    <div className="text-[#C2C0B6] text-xs">{t('groups.members')}</div>
+                    <div className="text-gray-400 text-xs">{t('groups.members')}</div>
                 </div>
                 <div className="text-center">
                     <div className="text-white font-semibold">
                         {formatCurrency(group.avgSpentPerMember)}
                     </div>
-                    <div className="text-[#C2C0B6] text-xs">{t('groups.per_member')}</div>
+                    <div className="text-gray-400 text-xs">{t('groups.per_member')}</div>
                 </div>
             </div>
 
             <div className="mt-3 pt-3 border-t border-[#595e66]">
                 <div className="flex items-center justify-between text-xs">
-                    <span className="text-[#C2C0B6]">{t('groups.last_activity')}</span>
+                    <span className="text-gray-400">{t('groups.last_activity')}</span>
                     <span className="text-gray-300">{formatDate(group.lastActivity)}</span>
                 </div>
             </div>
@@ -94,7 +94,7 @@ const GroupSpendingCard = ({ group }) => {
             {/* Spending Progress Bar */}
             {group.totalSpent > 0 && (
                 <div className="mt-3">
-                    <div className="flex justify-between text-xs text-[#C2C0B6] mb-1">
+                    <div className="flex justify-between text-xs text-gray-400 mb-1">
                         <span>{t('groups.spending_level')}</span>
                         <span className={spendingLevel.color}>
                             {t(`groups.${spendingLevel.level}_spending`)}

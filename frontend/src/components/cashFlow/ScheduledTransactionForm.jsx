@@ -159,7 +159,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                 className={`p-3 rounded-lg border-2 transition-all ${
                   formData.typeId === 2
                     ? 'border-[#56a69f] bg-[#56a69f]/10 text-[#56a69f]'
-                    : 'border-[#262626] text-[#C2C0B6] hover:border-[#404040]'
+                    : 'border-[#262626] text-gray-400 hover:border-[#404040]'
                 }`}
               >
                 {t('cashFlow.form.income')}
@@ -170,7 +170,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                 className={`p-3 rounded-lg border-2 transition-all ${
                   formData.typeId === 1
                     ? 'border-red-500 bg-red-500/10 text-red-400'
-                    : 'border-[#262626] text-[#C2C0B6] hover:border-[#404040]'
+                    : 'border-[#262626] text-gray-400 hover:border-[#404040]'
                 }`}
               >
                 {t('cashFlow.form.expense')}
@@ -199,7 +199,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               {t('cashFlow.form.amount')} *
             </label>
             <div className="relative">
-              <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C2C0B6]" />
+              <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="number"
                 name="amount"
@@ -219,7 +219,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               {t('cashFlow.form.category')} *
             </label>
             <div className="relative">
-              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C2C0B6]" />
+              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <select
                 name="category"
                 value={formData.category}
@@ -280,7 +280,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               {t('cashFlow.form.scheduled_date')} *
             </label>
             <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C2C0B6]" />
+              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="date"
                 name="scheduled_date"

@@ -110,6 +110,7 @@ const CashFlowCalendar = () => {
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-2xl font-bold text-white">{t('cashFlow.title')}</h1>
+            <p className="text-sm text-gray-400">{t('cashFlow.subtitle')}</p>
           </div>
         </div>
         <button
@@ -150,7 +151,7 @@ const CashFlowCalendar = () => {
           {/* Week Days Header */}
           <div className="grid grid-cols-7 gap-2 mb-2">
             {weekDays.map((day) => (
-              <div key={day} className="text-center text-sm font-semibold text-[#C2C0B6] py-2">
+              <div key={day} className="text-center text-sm font-semibold text-gray-400 py-2">
                 {day}
               </div>
             ))}
@@ -177,26 +178,26 @@ const CashFlowCalendar = () => {
                 >
                   <div className={`
                     text-xs font-semibold mb-1 w-6 h-6 flex items-center justify-center rounded-full
-                    ${isToday ? 'bg-[#56a69f] text-white' : 'text-[#C2C0B6]'}
+                    ${isToday ? 'bg-[#56a69f] text-white' : 'text-gray-400'}
                   `}>
                     {day.format('D')}
                   </div>
 
                   {dayData && (
                     <div className="space-y-1">
-                      <div className={`text-xs font-bold ${dayData.isNegative ? 'text-[#FAF9F5]' : 'text-[#56A69f]'}`}>
+                      <div className={`text-xs font-bold ${dayData.isNegative ? 'text-red-400' : 'text-green-400'}`}>
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
                           currency: 'BRL',
                         }).format(dayData.balance)}
                       </div>
                       {dayData.income > 0 && (
-                        <div className="text-xs text-[#56A69f]">
+                        <div className="text-xs text-green-300">
                           +{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.income)}
                         </div>
                       )}
                       {dayData.expenses > 0 && (
-                        <div className="text-xs text-[#FAF9F5]">
+                        <div className="text-xs text-red-300">
                           -{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.expenses)}
                         </div>
                       )}

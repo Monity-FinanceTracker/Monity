@@ -1,7 +1,8 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import CloseButton from "../ui/CloseButton";
 import {
   House,
   ArrowLeftRight,
@@ -10,29 +11,25 @@ import {
   PieChart,
   Settings,
   TrendingUp,
+  Wallet,
   Sparkles,
   Tag,
   Menu,
+  Search,
   CalendarDays,
   MessageCircle,
-  Calculator,
-  Search,
-  ArrowDownCircle,
   ArrowUpCircle,
+  ArrowDownCircle,
   List,
   DollarSign,
-  X
+  Calculator
 } from "lucide-react";
-import sidebarIcon from "../../../Sidebar-Icon.png";
-import sidebarArrow from "../../../sidebarArrow.png";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
   const { t } = useTranslation();
-  const { isAdmin, subscriptionTier } = useAuth();
   const navigate = useNavigate();
+  const { isAdmin, subscriptionTier } = useAuth();
   const premiumUser = subscriptionTier === 'premium';
-  const [isHovering, setIsHovering] = useState(false);
-  const [isCollapsedHovering, setIsCollapsedHovering] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Estilos de transição consistentes para os NavLinks
@@ -42,10 +39,21 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
 
   const navLinkTextTransition = {};
 
+  // Fechar modal com ESC
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape' && isSearchOpen) {
+        setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isSearchOpen]);
+
   return (
     <>
       <aside 
-        className={`fixed top-0 left-0 h-screen ${isCollapsed ? 'bg-[#262624]' : 'bg-[#1F1E1D]'} border-r-[0.1px] border-[#4A4A4A] z-40 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-72'} overflow-hidden`} 
+        className={`fixed top-0 left-0 h-screen bg-[#1F1E1D] border-r border-[#262626] z-40 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${isCollapsed ? 'w-16' : 'w-72'} overflow-hidden`} 
         style={{ 
           transform: 'translateZ(0)',
           backfaceVisibility: 'hidden',
@@ -54,18 +62,16 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
       >
         <div className="flex flex-col h-full min-h-0">
           {/* Header */}
-          <div className={`flex items-center h-[73px] flex-shrink-0 ${isCollapsed ? 'justify-center' : ''}`}>
+          <div className={`flex items-center h-[73px] border-b border-[#262626] flex-shrink-0 ${isCollapsed ? 'justify-center' : ''}`}>
             {isCollapsed ? (
               /* Botão centralizado quando collapsed */
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                onMouseEnter={() => setIsCollapsedHovering(true)}
-                onMouseLeave={() => setIsCollapsedHovering(false)}
-                className="flex items-center px-2 py-1.5 rounded-lg group"
+                className="flex items-center px-2 py-1.5 rounded-lg group hover:bg-[#262626]"
                 style={{ 
                   border: 'none',
                   outline: 'none',
-                  background: isCollapsedHovering ? '#141414' : 'transparent',
+                  background: 'transparent',
                   margin: 0,
                   display: 'flex',
                   alignItems: 'center',
@@ -74,13 +80,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 }}
                 title="Toggle Menu"
               >
-                <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
-                  {/* Ícone de dois painéis quando collapsed */}
-                  <img 
-                    src={sidebarIcon} 
-                    alt="Toggle sidebar" 
-                    className="h-8 w-auto object-contain"
-                    style={{ transform: 'scale(2.3)' }}
+                <div className="w-5 h-5 flex-shrink-0">
+                  <Menu 
+                    className="w-5 h-5" 
+                    style={{ 
+                      color: 'white', 
+                      stroke: 'white'
+                    }} 
                   />
                 </div>
               </button>
@@ -92,13 +98,11 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 {/* Menu Toggle - alinhado exatamente com os ícones da navegação */}
                 <button
                   onClick={() => setIsCollapsed(!isCollapsed)}
-                  onMouseEnter={() => setIsHovering(true)}
-                  onMouseLeave={() => setIsHovering(false)}
-                  className="flex items-center px-1.5 py-1.5 rounded-lg group"
+                  className="flex items-center px-1.5 py-1.5 rounded-lg group hover:bg-[#262626]"
                   style={{ 
                     border: 'none',
                     outline: 'none',
-                    background: isHovering ? '#141414' : 'transparent',
+                    background: 'transparent',
                     margin: 0,
                     display: 'flex',
                     alignItems: 'center',
@@ -107,35 +111,43 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   }}
                   title="Toggle Menu"
                 >
-                  <div className="w-5 h-6 flex-shrink-0 flex items-center">
-                    {isHovering ? (
-                      /* Ícone de seta com barra quando hover e expandido */
-                      <img 
-                        src={sidebarArrow} 
-                        alt="Collapse sidebar" 
-                        className="h-8 w-auto object-contain"
-                        style={{ transform: 'scale(1.7)' }}
-                      />
-                    ) : (
-                      /* Ícone de dois painéis quando expandido sem hover */
-                      <div className="w-5 h-5 flex items-center justify-center">
-                        <img 
-                          src={sidebarIcon} 
-                          alt="Toggle sidebar" 
-                          className="h-8 w-auto object-contain"
-                          style={{ transform: 'scale(2.3)' }}
-                        />
-                      </div>
-                    )}
+                  <div className="w-5 h-5 flex-shrink-0">
+                    <Menu 
+                      className="w-5 h-5" 
+                      style={{ 
+                        color: 'white', 
+                        stroke: 'white'
+                      }} 
+                    />
                   </div>
                 </button>
                 {/* Monity Text - aparece apenas quando não está collapsed */}
                 <span 
-                  className="text-white text-2xl whitespace-nowrap font-stratford"
-                  style={{ marginTop: '2px' }}
+                  className="text-white text-2xl whitespace-nowrap"
+                  style={{ 
+                    fontFamily: 'Stratford, sans-serif'
+                  }}
                 >
                   Monity
                 </span>
+              </div>
+            )}
+            
+            {!isCollapsed && (
+              <div className="flex items-center flex-1 justify-end pr-4">
+                {/* Ícone de Pesquisa - alinhado à direita */}
+                <button
+                  onClick={() => setIsSearchOpen(true)}
+                  className="flex items-center justify-center p-2 transition-colors rounded-lg hover:bg-[#262626]"
+                  style={{ 
+                    background: 'transparent', 
+                    border: 'none',
+                    outline: 'none'
+                  }}
+                  title="Pesquisa Rápida"
+                >
+                  <Search className="w-5 h-5 text-gray-400 hover:text-white" />
+                </button>
               </div>
             )}
           </div>
@@ -334,7 +346,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>{t('sidebar.investment_calculator')}</span>
               </NavLink>
 
-            {/* Premium/Subscription Section - Only show for non-premium users */}
+            {/* Premium/Subscription Section */}
             {!premiumUser && (
               <div className="mt-6">
                 <NavLink
@@ -372,15 +384,52 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               </div>
             )}
 
+            {premiumUser && (
+              <div className="mt-6">
+                <NavLink
+                  to="/subscription"
+                  className={({ isActive }) =>
+                    `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden transform-gpu ${isActive
+                      ? 'border'
+                      : 'border hover:border-[#4A8F88]/20'
+                    }`
+                  }
+                  style={({ isActive }) => ({ 
+                    transform: 'translateZ(0)',
+                    backfaceVisibility: 'hidden',
+                    WebkitFontSmoothing: 'antialiased',
+                    transition: 'background-color 200ms ease, color 200ms ease, border-color 200ms ease',
+                    color: '#4A8F88',
+                    backgroundColor: isActive ? 'rgba(74, 143, 136, 0.1)' : 'transparent',
+                    borderColor: isActive ? 'rgba(74, 143, 136, 0.2)' : 'rgba(74, 143, 136, 0.1)'
+                  })}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(74, 143, 136, 0.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = e.currentTarget.classList.contains('active') ? 'rgba(74, 143, 136, 0.1)' : 'transparent'}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  title={isCollapsed ? t('sidebar.premium') : ''}
+                >
+                  <div className="w-5 h-5 flex-shrink-0">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <span 
+                    className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`}
+                    style={navLinkTextTransition}
+                  >
+                    {t('sidebar.premium')}
+                  </span>
+                </NavLink>
+              </div>
+            )}
+
             </nav>
           </div>
           
           {/* Fade effect at bottom */}
-          <div className={`absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t ${isCollapsed ? 'from-[#262624]' : 'from-[#1F1E1D]'} to-transparent pointer-events-none z-10`}></div>
+          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#1F1E1D] to-transparent pointer-events-none z-10"></div>
         </div>
 
           {/* Admin and Settings at bottom */}
-          <div className={`py-4 flex-shrink-0 ${isCollapsed ? 'bg-[#262624]' : 'bg-[#1F1E1D]'} relative z-20 ${isCollapsed ? 'px-0' : 'px-[18px]'}`}>
+          <div className={`border-t border-[#262626] py-4 flex-shrink-0 bg-[#1F1E1D] relative z-20 ${isCollapsed ? 'px-0' : 'px-[18px]'}`}>
             <div className={`space-y-2 ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
               {/* Admin Dashboard First */}
               {isAdmin && (
@@ -445,12 +494,10 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
             onClick={(e) => e.stopPropagation()}
           >
             {/* Botão X no canto superior direito */}
-            <button
+            <CloseButton 
               onClick={() => setIsSearchOpen(false)}
-              className="absolute top-4 right-4 z-10 p-2 hover:bg-[#262626] rounded-lg transition-colors"
-            >
-              <X className="w-5 h-5 text-gray-400" />
-            </button>
+              className="absolute top-4 right-4 z-10"
+            />
 
             {/* Header com campo de busca */}
             <div className="flex items-center gap-3 p-4 pr-16 border-b border-[#262626]">

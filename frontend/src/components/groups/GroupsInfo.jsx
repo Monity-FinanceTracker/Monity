@@ -138,7 +138,7 @@ const GroupsInfo = () => {
                                 <h3 className="text-xl font-bold text-white mb-2">
                                     {feature.title}
                                 </h3>
-                                <p className="text-[#C2C0B6]">
+                                <p className="text-gray-400">
                                     {feature.description}
                                 </p>
                             </div>
@@ -168,7 +168,7 @@ const GroupsInfo = () => {
                                     <h3 className="text-xl font-bold text-white mb-2">
                                         {step.title}
                                     </h3>
-                                    <p className="text-[#C2C0B6]">
+                                    <p className="text-gray-400">
                                         {step.description}
                                     </p>
                                 </div>
@@ -193,7 +193,7 @@ const GroupsInfo = () => {
                                 <h3 className="text-xl font-bold text-white mb-2">
                                     {useCase.title}
                                 </h3>
-                                <p className="text-[#C2C0B6]">
+                                <p className="text-gray-400">
                                     {useCase.description}
                                 </p>
                             </div>

@@ -148,15 +148,9 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const resendConfirmationEmail = async (emailParam) => {
-    const targetEmail = emailParam || user?.email;
-
-    if (!targetEmail) {
-      return { success: false, error: 'Email não disponível' };
-    }
-
+  const resendConfirmationEmail = async (email) => {
     try {
-      const response = await API.post('/auth/resend-confirmation', { email: targetEmail });
+      const response = await API.post('/auth/resend-confirmation', { email });
       return { success: true, data: response.data };
     } catch (error) {
       const errorMessage = error.response?.data?.error ||
@@ -198,16 +192,17 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const checkEmailVerification = async (emailParam) => {
-    const targetEmail = emailParam || user?.email;
+  const logout = async () => {
+    clearSubscriptionCache();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    setUser(null);
+  };
 
-    if (!targetEmail) {
-      return { success: false, error: 'Email não disponível', verified: false };
-    }
-
+  const checkEmailVerification = async (email) => {
     try {
       const response = await API.get('/auth/check-verification', {
-        params: { email: targetEmail },
+        params: { email },
       });
       return {
         success: true,
@@ -221,13 +216,6 @@ export function AuthProvider({ children }) {
         'Erro ao verificar email';
       return { success: false, error: errorMessage, verified: false };
     }
-  };
-
-  const logout = async () => {
-    clearSubscriptionCache();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    setUser(null);
   };
 
   const value = {

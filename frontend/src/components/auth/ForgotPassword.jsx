@@ -88,7 +88,7 @@ function ForgotPassword() {
                                 {t('forgotPassword.check_email')}
                             </h2>
                             <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full mb-4"></div>
-                            <p className="text-[#C2C0B6] mb-2">
+                            <p className="text-gray-400 mb-2">
                                 {t('forgotPassword.instructions_sent')}
                             </p>
                             <p className="text-[#56a69f] font-semibold">
@@ -117,7 +117,7 @@ function ForgotPassword() {
 
                         {/* Resend Button */}
                         <div className="text-center mb-6">
-                            <p className="text-sm text-[#C2C0B6] mb-3">
+                            <p className="text-sm text-gray-400 mb-3">
                                 {t('forgotPassword.didnt_receive')}
                             </p>
                             <button
@@ -134,7 +134,7 @@ function ForgotPassword() {
                         <div className="text-center">
                             <Link
                                 to="/login"
-                                className="inline-flex items-center justify-center text-[#C2C0B6] hover:text-white font-medium transition-colors duration-200"
+                                className="inline-flex items-center justify-center text-gray-400 hover:text-white font-medium transition-colors duration-200"
                             >
                                 <FaArrowLeft className="h-4 w-4 mr-2" />
                                 {t('forgotPassword.back_to_login')}
@@ -160,7 +160,7 @@ function ForgotPassword() {
                 {/* Monity Logo */}
                 <div className="mb-8 flex flex-col items-center justify-center transform animate-fade-in-up">
                     <img src={monityLogo} alt="Monity Logo" className="w-auto scale-[0.6] -mb-5" />
-                    <p className="text-[#C2C0B6] mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
+                    <p className="text-gray-400 mt-4 text-lg font-medium text-center">{t('loginPage.slogan')}</p>
                 </div>
 
                 {/* Forgot Password Card */}
@@ -168,7 +168,7 @@ function ForgotPassword() {
                     <div className="text-center mb-6">
                         <h2 className="text-2xl font-bold text-white mb-2">{t('forgotPassword.title')}</h2>
                         <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full mb-4"></div>
-                        <p className="text-[#C2C0B6] text-sm">{t('forgotPassword.subtitle')}</p>
+                        <p className="text-gray-400 text-sm">{t('forgotPassword.subtitle')}</p>
                     </div>
 
                     {/* Error Message */}

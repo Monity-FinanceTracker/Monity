@@ -39,7 +39,7 @@ const GroupInvitations = () => {
     if (loading) {
         return (
             <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
-                <div className="text-center text-[#C2C0B6]">{t('groups.loading')}</div>
+                <div className="text-center text-gray-400">{t('groups.loading')}</div>
             </div>
         );
     }
@@ -60,7 +60,7 @@ const GroupInvitations = () => {
                             <h3 className="text-white font-medium">
                                 {invitation.groups?.name || t('groups.unknown_group')}
                             </h3>
-                            <p className="text-[#C2C0B6] text-sm">
+                            <p className="text-gray-400 text-sm">
                                 {t('groups.invited_by')} {invitation.profiles?.name || t('groups.unknown_user')}
                             </p>
                         </div>
