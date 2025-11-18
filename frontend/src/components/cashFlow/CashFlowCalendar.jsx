@@ -184,19 +184,19 @@ const CashFlowCalendar = () => {
 
                   {dayData && (
                     <div className="space-y-1">
-                      <div className={`text-xs font-bold ${dayData.isNegative ? 'text-red-400' : 'text-green-400'}`}>
+                      <div className={`text-xs font-bold ${dayData.isNegative ? 'text-[#FAF9F5]' : 'text-[#56A69f]'}`}>
                         {new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
                           currency: 'BRL',
                         }).format(dayData.balance)}
                       </div>
                       {dayData.income > 0 && (
-                        <div className="text-xs text-green-300">
+                        <div className="text-xs text-[#56A69f]">
                           +{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.income)}
                         </div>
                       )}
                       {dayData.expenses > 0 && (
-                        <div className="text-xs text-red-300">
+                        <div className="text-xs text-[#FAF9F5]">
                           -{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.expenses)}
                         </div>
                       )}

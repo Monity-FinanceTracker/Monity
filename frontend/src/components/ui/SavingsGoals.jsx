@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import api from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { formatSimpleCurrency } from '../../utils/currency';
 const SavingsGoals = () => {
     const { t } = useTranslation();
     const { subscriptionTier } = useAuth();
+    const location = useLocation();
     
     // Add CSS to fix date input styling
     useEffect(() => {
@@ -68,6 +70,13 @@ const SavingsGoals = () => {
     useEffect(() => {
         fetchGoalsAndBalance();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Open modal automatically if navigated from BalanceCard
+    useEffect(() => {
+        if (location.state?.openModal && !isLimited) {
+            setIsModalOpen(true);
+        }
+    }, [location.state, isLimited]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

@@ -5,8 +5,9 @@ import { getCategories, addTransaction, post } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Button, CloseButton } from '../ui';
-import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown, FaArrowLeft } from 'react-icons/fa6';
+import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { FaMoneyBillWave, FaCalendarAlt, FaListUl, FaStickyNote } from 'react-icons/fa';
+import { categoryIconOptions } from '../../utils/iconMappingData';
 
 /**
  * Componente unificado para adicionar receitas e despesas
@@ -25,8 +26,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             icon: FaArrowTrendDown,
             colorClass: 'red',
             gradient: 'from-red-500 to-red-600',
-            bgColor: 'bg-white/20',
-            iconColor: 'text-white',
+            bgColor: 'bg-red-500/20',
             textColor: 'text-red-400',
             focusRing: 'focus:ring-red-500',
             buttonVariant: 'danger',
@@ -37,8 +37,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             icon: FaArrowTrendUp,
             colorClass: 'green',
             gradient: 'from-green-500 to-green-600',
-            bgColor: 'bg-[#56a69f]/20',
-            iconColor: 'text-[#56a69f]',
+            bgColor: 'bg-green-500/20',
             textColor: 'text-green-400',
             focusRing: 'focus:ring-green-500',
             buttonVariant: 'success',
@@ -62,11 +61,21 @@ const AddTransaction = ({ type = 'expense' }) => {
     const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
     const [newCategory, setNewCategory] = useState({
         name: '',
-        typeId: currentConfig.typeId
+        typeId: currentConfig.typeId,
+        color: '#56a69f',
+        icon: 'Package'
     });
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [showCategoryError, setShowCategoryError] = useState(false);
     const [shakeForm, setShakeForm] = useState(false);
+
+    const colorOptions = [
+        '#56a69f', '#EF4444', '#3B82F6', '#F59E0B', 
+        '#8B5CF6', '#EC4899', '#10B981', '#F97316',
+        '#6366F1', '#84CC16', '#06B6D4', '#EAB308'
+    ];
+
+    const iconOptions = categoryIconOptions;
 
     // Set default date after component mounts to avoid hydration issues
     useEffect(() => {
@@ -139,7 +148,9 @@ const AddTransaction = ({ type = 'expense' }) => {
             setCategories(prev => [...prev, data]);
             setNewCategory({ 
                 name: '', 
-                typeId: currentConfig.typeId
+                typeId: currentConfig.typeId, 
+                color: '#56a69f', 
+                icon: 'Package' 
             });
             setShowAddCategoryModal(false);
             setShowCategoryError(false);
@@ -161,24 +172,10 @@ const AddTransaction = ({ type = 'expense' }) => {
     return (
         <div className="min-h-screen bg-[#262624] p-4 md:p-6">
             <div className="max-w-2xl mx-auto">
-                {/* Back Button */}
-                <div className="mb-4">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="p-2 hover:bg-[#1F1E1D] rounded-lg transition-colors group flex items-center gap-2"
-                        aria-label="Back"
-                    >
-                        <FaArrowLeft className="w-4 h-4 text-gray-400 group-hover:text-[#56a69f] transition-colors" />
-                        <span className="text-gray-400 group-hover:text-[#56a69f] transition-colors text-sm">
-                            {t('common.back')}
-                        </span>
-                    </button>
-                </div>
-
                 {/* Header Section */}
                 <div className="text-center mb-8">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 ${currentConfig.bgColor} rounded-full mb-4 shadow-lg`}>
-                        <Icon className={`${currentConfig.iconColor} text-2xl`} />
+                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${currentConfig.gradient} rounded-2xl mb-4 shadow-lg`}>
+                        <Icon className="text-white text-2xl" />
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
                         {t(`${currentConfig.translationKey}.title`)}
@@ -294,16 +291,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                 <option 
                                     value="" 
                                     className="bg-[#1F1E1D] text-white font-medium"
-                                    style={{ 
-                                        fontFamily: "'DM Sans', sans-serif", 
-                                        fontSize: '14px', 
-                                        fontWeight: '500', 
-                                        backgroundColor: '#1F1E1D', 
-                                        color: 'white',
-                                        minWidth: '250px',
-                                        width: 'max-content',
-                                        padding: '8px 12px'
-                                    }}
+                                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#1F1E1D', color: 'white' }}
                                 >
                                     {filteredCategories.length === 0 
                                         ? t('addTransaction.no_categories_available')
@@ -315,16 +303,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                         key={category.id} 
                                         value={category.name} 
                                         className="bg-[#1F1E1D] text-white font-medium"
-                                        style={{ 
-                                            fontFamily: "'DM Sans', sans-serif", 
-                                            fontSize: '14px', 
-                                            fontWeight: '500', 
-                                            backgroundColor: '#1F1E1D', 
-                                            color: 'white',
-                                            minWidth: '250px',
-                                            width: 'max-content',
-                                            padding: '8px 12px'
-                                        }}
+                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#1F1E1D', color: 'white' }}
                                     >
                                         {category.name}
                                     </option>
@@ -389,23 +368,9 @@ const AddTransaction = ({ type = 'expense' }) => {
             {/* Add Category Modal */}
             {showAddCategoryModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
-                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-lg sm:max-w-2xl max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
-                        <div className="flex items-center justify-between mb-6 relative">
-                            {/* Back Button */}
-                            <button
-                                onClick={() => setShowAddCategoryModal(false)}
-                                className="p-2 hover:bg-[#262626] rounded-lg transition-colors group"
-                                aria-label="Back"
-                            >
-                                <FaArrowLeft className="w-4 h-4 text-gray-400 group-hover:text-[#56a69f] transition-colors" />
-                            </button>
-                            
-                            {/* Centered Title */}
-                            <h2 className="text-xl font-bold text-white absolute left-1/2 transform -translate-x-1/2">
-                                {t('categories.add_new')}
-                            </h2>
-                            
-                            {/* Close Button */}
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 my-2 sm:my-4 overflow-y-auto custom-scrollbar">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-bold text-white">{t('categories.add_new')}</h2>
                             <CloseButton onClick={() => setShowAddCategoryModal(false)} />
                         </div>
 
@@ -418,7 +383,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                     type="text"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-2 sm:p-4 text-base sm:text-lg focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                                     placeholder={t('categories.name_placeholder')}
                                     required
                                 />
@@ -439,7 +404,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                         onBlur={() => {
                                             setTimeout(() => setIsDropdownOpen(false), 150);
                                         }}
-                                        className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-2 sm:p-4 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer text-base sm:text-lg"
+                                        className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer"
                                         style={{ 
                                             background: '#1F1E1D',
                                             color: 'white',
@@ -448,32 +413,8 @@ const AddTransaction = ({ type = 'expense' }) => {
                                             MozAppearance: 'none'
                                         }}
                                     >
-                                        <option 
-                                            value={1}
-                                            style={{
-                                                minWidth: '400px',
-                                                width: 'max-content',
-                                                padding: '12px 16px',
-                                                backgroundColor: '#1F1E1D',
-                                                color: 'white',
-                                                fontSize: '16px'
-                                            }}
-                                        >
-                                            {t('categories.expense')}
-                                        </option>
-                                        <option 
-                                            value={2}
-                                            style={{
-                                                minWidth: '400px',
-                                                width: 'max-content',
-                                                padding: '12px 16px',
-                                                backgroundColor: '#1F1E1D',
-                                                color: 'white',
-                                                fontSize: '16px'
-                                            }}
-                                        >
-                                            {t('categories.income')}
-                                        </option>
+                                        <option value={1}>{t('categories.expense')}</option>
+                                        <option value={2}>{t('categories.income')}</option>
                                     </select>
                                     <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                                         <svg 
@@ -488,18 +429,64 @@ const AddTransaction = ({ type = 'expense' }) => {
                                 </div>
                             </div>
 
+                            <div>
+                                <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('categories.icon')}
+                                </label>
+                                <div className="grid grid-cols-5 gap-1 sm:gap-2">
+                                    {iconOptions.map((iconOption) => {
+                                        const IconComponent = iconOption.icon;
+                                        return (
+                                            <button
+                                                key={iconOption.name}
+                                                type="button"
+                                                onClick={() => setNewCategory(prev => ({ ...prev, icon: iconOption.name }))}
+                                                className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${
+                                                    newCategory.icon === iconOption.name 
+                                                        ? 'border-[#56a69f] bg-[#56a69f]/20 text-[#56a69f]' 
+                                                        : 'border-[#262626] hover:border-[#56a69f]/50 text-gray-400 hover:text-white'
+                                                }`}
+                                                title={iconOption.label}
+                                            >
+                                                <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('categories.color')}
+                                </label>
+                                <div className="grid grid-cols-6 gap-1 sm:gap-2">
+                                    {colorOptions.map((color) => (
+                                        <button
+                                            key={color}
+                                            type="button"
+                                            onClick={() => setNewCategory(prev => ({ ...prev, color }))}
+                                            className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 transition-all ${
+                                                newCategory.color === color 
+                                                    ? 'border-white' 
+                                                    : 'border-transparent hover:border-gray-400'
+                                            }`}
+                                            style={{ backgroundColor: color }}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
 
                             <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4">
                                 <button
                                     type="button"
                                     onClick={() => setShowAddCategoryModal(false)}
-                                    className="flex-1 bg-gray-600 text-white py-3 sm:py-4 rounded-lg hover:bg-gray-700 transition-colors text-base sm:text-lg font-medium"
+                                    className="flex-1 bg-gray-600 text-white py-2 sm:py-3 rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
                                 >
                                     {t('categories.cancel')}
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-[#56a69f] text-white py-3 sm:py-4 rounded-lg hover:bg-[#4A8F88] transition-colors text-base sm:text-lg font-medium"
+                                    className="flex-1 bg-[#56a69f] text-white py-2 sm:py-3 rounded-lg hover:bg-[#00b37e] transition-colors text-sm sm:text-base"
                                 >
                                     {t('categories.add')}
                                 </button>

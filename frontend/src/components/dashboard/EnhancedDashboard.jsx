@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/useAuth';
 import { get } from '../../utils/api';
 import { formatCurrency, getAmountColor } from '../../utils/currency';
+import { getDynamicGreeting } from '../../utils/greetings';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
 import { ArrowUp, ArrowDown } from 'lucide-react';
@@ -51,8 +52,8 @@ const EnhancedDashboard = () => {
     const EnhancedCard = ({ children, title, subtitle, accent, isLoading = false, action, className = '' }) => {
         return (
             <div className={`bg-[#1F1E1D] border border-[#262626] rounded-xl hover:border-[#3a3a3a] transition-all duration-200 ${className}`}>
-                <div className="p-6">
-                    <div className="flex items-start justify-between mb-6">
+                <div className="px-6 py-4">
+                    <div className="flex items-start justify-between mb-4">
                         <div className="flex-1 text-left">
                             <h3 className={`text-xl font-bold ${accent || 'text-white'} mb-1`}>{title}</h3>
                             {subtitle && <p className="text-gray-400 text-sm">{subtitle}</p>}
@@ -154,13 +155,19 @@ const EnhancedDashboard = () => {
         return <DashboardSkeleton />;
     }
 
+    // Get dynamic greeting based on time of day and user name
+    const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user');
+    const greeting = getDynamicGreeting(userName);
+
     return (
         <div className="space-y-8">
             {/* Welcome Section */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2 text-balance">
-                        {t('dashboard.welcome_back')}, {user?.user_metadata?.name || t('dashboard.user')}!
+                    <h1 
+                        className="text-3xl font-bold text-white mb-2 text-balance font-stratford"
+                    >
+                        {greeting}
                     </h1>
                     <p className="text-gray-400 text-lg text-left">
                         {t('dashboard.welcome_subtitle')}

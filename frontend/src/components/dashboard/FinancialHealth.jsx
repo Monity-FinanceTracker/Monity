@@ -86,22 +86,16 @@ const FinancialHealth = () => {
     }
 
     return (
-        <div className="text-white p-4 md:p-0 space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">{t('financialHealth.title')}</h1>
-                    <p className="text-gray-400 mt-1">
-                        {t('financialHealth.subtitle')}
-                    </p>
-                </div>
+        <div className="flex-1 p-6">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-white">{t('financialHealth.title')}</h1>
                 <div className="text-sm text-gray-400">
                     {t('financialHealth.last_updated')}: {new Date(healthData.lastUpdated).toLocaleDateString()}
                 </div>
             </div>
 
             {/* Health Score Card */}
-            <div className="bg-[#1F1E1D] p-8 rounded-2xl border border-[#262626]">
+            <div className="bg-[#1F1E1D] p-8 rounded-2xl border border-[#262626] mb-6">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold">{t('financialHealth.health_score')}</h2>
                     <span className="text-sm bg-[#56a69f]/20 text-[#56a69f] px-3 py-1 rounded-full">
@@ -163,7 +157,7 @@ const FinancialHealth = () => {
             </div>
 
             {/* Detailed Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
                     <h3 className="text-lg font-semibold mb-4 flex items-center">
                         <Banknote className="w-5 h-5 mr-2" />
@@ -199,7 +193,7 @@ const FinancialHealth = () => {
             </div>
 
             {/* Recommendations */}
-            <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
+            <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626] mb-6">
                 <h2 className="text-xl font-semibold mb-6 flex items-center">
                     <Lightbulb className="w-5 h-5 mr-2" />
                     {t('financialHealth.personalized_recommendations')}

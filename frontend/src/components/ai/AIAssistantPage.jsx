@@ -173,17 +173,17 @@ const AIAssistantPage = () => {
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4" style={{ scrollBehavior: 'smooth' }}>
                 {!isInitialLoading && messages.length === 0 && showPrompts ? (
                     <div className="h-full flex items-center justify-center p-6">
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col items-center gap-4">
                             <img 
                                 src={MonityLogo} 
                                 alt="Monity Logo" 
                                 className="w-16 h-16"
                             />
                             <h3 
-                                className="text-4xl"
-                                style={{ fontFamily: 'Stratford, sans-serif', color: '#C2C0B6' }}
+                                className="text-4xl font-stratford text-center"
+                                style={{ color: '#C2C0B6' }}
                             >
-                                Olá! {user?.user_metadata?.name || user?.user_metadata?.full_name || 'Usuário'}
+                                How can I help you, {user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user')}?
                             </h3>
                         </div>
                     </div>

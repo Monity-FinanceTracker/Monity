@@ -354,14 +354,14 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                         transaction.typeId === 1 ? 'bg-[#FAF9F5]/20' :
                         transaction.typeId === 2 ? 'bg-[#56a69f]/20' :
-                        'bg-blue-500/20'
+                        'bg-[#A69F8E]/20'
                     }`}>
                         {transaction.typeId === 1 ? (
                             <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
                         ) : transaction.typeId === 2 ? (
                             <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                         ) : (
-                            <ArrowDown className="w-5 h-5 text-blue-500" />
+                            <ArrowDown className="w-5 h-5 text-[#A69F8E]" />
                         )}
                     </div>
                     
@@ -487,7 +487,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`${getResponsiveFontSize(totalSavings)} font-bold whitespace-nowrap overflow-hidden ${totalSavings >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+                        <div className={`${getResponsiveFontSize(totalSavings)} font-bold whitespace-nowrap overflow-hidden ${totalSavings >= 0 ? 'text-[#A69F8E]' : 'text-orange-400'}`}>
                             {totalSavings >= 0 ? 'R$ ' : '-R$ '}{Math.abs(totalSavings).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-gray-400 text-xs sm:text-sm">{t('transactions.total_savings')}</div>
@@ -681,32 +681,30 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         </button>
                         
                         {isAddNewDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#1F1E1D] border border-[#262626] rounded-lg shadow-lg z-50">
+                            <div className="absolute right-0 mt-2 w-56 sm:w-64 bg-[#1F1E1D] border border-[#262626] rounded-lg shadow-lg z-50">
                                 <div className="py-2">
                                     <button
                                         onClick={handleAddIncome}
-                                        className="w-full text-left px-4 py-4 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                        className="w-full text-left px-4 py-3 hover:bg-[#56a69f]/20 transition-colors flex items-center gap-3"
                                     >
-                                        <div className="w-10 h-10 rounded-full bg-[#56a69f]/20 flex items-center justify-center flex-shrink-0">
-                                            <ArrowDown className="w-5 h-5 text-[#56a69f]" />
+                                        <div className="w-8 h-8 rounded-full bg-[#56a69f] flex items-center justify-center flex-shrink-0">
+                                            <svg className="w-4 h-4 text-[#1F1E1D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
                                         </div>
-                                        <div className="flex-1">
-                                            <div className="font-medium text-base">Add Income</div>
-                                            <div className="text-sm text-gray-400">Record money received</div>
-                                        </div>
+                                        <span className="font-medium text-[#56a69f]">Income</span>
                                     </button>
                                     
                                     <button
                                         onClick={handleAddExpense}
-                                        className="w-full text-left px-4 py-4 text-white hover:bg-[#262626] transition-colors flex items-center gap-3"
+                                        className="w-full text-left px-4 py-3 hover:bg-[#FAF9F5]/20 transition-colors flex items-center gap-3"
                                     >
-                                        <div className="w-10 h-10 rounded-full bg-[#FAF9F5]/20 flex items-center justify-center flex-shrink-0">
-                                            <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
+                                        <div className="w-8 h-8 rounded-full bg-[#FAF9F5] flex items-center justify-center flex-shrink-0">
+                                            <svg className="w-4 h-4 text-[#1F1E1D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
                                         </div>
-                                        <div className="flex-1">
-                                            <div className="font-medium text-base">Add Expense</div>
-                                            <div className="text-sm text-gray-400">Record money spent</div>
-                                        </div>
+                                        <span className="font-medium text-[#FAF9F5]">Expense</span>
                                     </button>
                                 </div>
                             </div>
@@ -716,23 +714,31 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 )}
 
                 {filteredAndSortedTransactions.length === 0 ? (
-                    <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 sm:p-12 text-center w-full max-w-full min-w-0">
+                    <div className="p-6 sm:p-12 text-center w-full max-w-full min-w-0">
                         <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{t('transactions.no_transactions')}</h3>
                         <p className="text-gray-400 mb-6 text-sm sm:text-base">{t('transactions.no_transactions_desc')}</p>
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                            <Link
-                                to="/add-expense"
-                                className="bg-[#FAF9F5] px-6 py-3 rounded-lg font-medium hover:bg-[#e8e7e3] transition-colors flex items-center justify-center gap-2"
-                                style={{ color: '#30302E' }}
-                            >
-                                <span className="text-sm sm:text-base" style={{ color: '#30302E' }}>{t('transactions.add_expense')}</span>
-                            </Link>
+                        <div className="flex flex-col sm:flex-row gap-2 justify-center">
                             <Link
                                 to="/add-income"
-                                className="bg-[#56a69f] px-6 py-3 rounded-lg font-medium hover:bg-[#4a8f88] transition-colors flex items-center justify-center gap-2"
-                                style={{ color: '#30302E' }}
+                                className="px-3 py-2 rounded-lg font-medium hover:bg-[#56a69f]/20 transition-colors flex items-center justify-center gap-2"
                             >
-                                <span className="text-sm sm:text-base" style={{ color: '#30302E' }}>{t('transactions.add_income')}</span>
+                                <div className="w-8 h-8 rounded-full bg-[#56a69f] flex items-center justify-center flex-shrink-0">
+                                    <svg className="w-4 h-4 text-[#1F1E1D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </div>
+                                <span className="text-[#56a69f] text-sm sm:text-base">Income</span>
+                            </Link>
+                            <Link
+                                to="/add-expense"
+                                className="px-3 py-2 rounded-lg font-medium hover:bg-[#FAF9F5]/20 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-[#FAF9F5] flex items-center justify-center flex-shrink-0">
+                                    <svg className="w-4 h-4 text-[#1F1E1D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </div>
+                                <span className="text-[#FAF9F5] text-sm sm:text-base">Expense</span>
                             </Link>
                         </div>
                     </div>

@@ -236,7 +236,9 @@ const AIChat = ({ isOpen, onClose }) => {
                             <div className="w-16 h-16 bg-gradient-to-br from-[#56a69f] to-[#01a87a] rounded-full flex items-center justify-center mb-4">
                                 <FiMessageSquare className="text-white" size={32} />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">
+                            <h3 
+                                className="text-xl font-bold text-white mb-2 font-stratford"
+                            >
                                 {t('aiChat.welcome_title')}
                             </h3>
                             <p className="text-gray-400 mb-6 max-w-md">
