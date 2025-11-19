@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../ui/notificationContext';
 import { del } from '../../utils/api';
-import { useCategories, useAddCategory } from '../../hooks/useQueries';
+import { useCategories, useAddCategory, useTransactions } from '../../hooks/useQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../../lib/queryClient';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
-import { Plus, Search, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Search, Trash2, ArrowUp, ArrowDown, X } from 'lucide-react';
 import { Dropdown, CloseButton } from '../ui';
+import formatDate from '../../utils/formatDate';
+import { formatCurrency, getAmountColor } from '../../utils/currency';
 
 /**
  * Enhanced Categories Component with modern UI and improved functionality
@@ -17,13 +19,15 @@ const EnhancedCategories = () => {
     const { success, error: notifyError } = useNotifications();
     const queryClient = useQueryClient();
     
-    // Use React Query hook for categories - automatically refetches when invalidated
-    const { data: categories = [], isLoading: loading, error } = useCategories();
+    // Use React Query hook for categories with transaction counts
+    const { data: categories = [], isLoading: loading, error } = useCategories(null, true);
+    const { data: allTransactions = [] } = useTransactions();
     const addCategoryMutation = useAddCategory();
     
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState('all');
     const [showAddForm, setShowAddForm] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [newCategory, setNewCategory] = useState({
         name: '',
         typeId: 1
@@ -61,8 +65,9 @@ const EnhancedCategories = () => {
         
         try {
             await del(`/categories/${id}`);
-            // Invalidate categories query to refetch with updated data
+            // Invalidate all category queries to refetch with updated data
             queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
+            queryClient.invalidateQueries({ queryKey: [...queryKeys.categories.all, 'withCounts'] });
             success(t('categories.delete_success'));
         } catch (error) {
             notifyError(error.response?.data?.message || t('categories.delete_error'));
@@ -79,6 +84,14 @@ const EnhancedCategories = () => {
         const type = categoryTypes.find(t => t.id === typeId);
         return type ? type.label : '';
     };
+
+    // Get transactions for selected category
+    const categoryTransactions = useMemo(() => {
+        if (!selectedCategory) return [];
+        return allTransactions.filter(transaction => 
+            transaction.category === selectedCategory.name
+        ).sort((a, b) => new Date(b.date) - new Date(a.date));
+    }, [selectedCategory, allTransactions]);
 
     return (
         <div className="flex-1 p-6">
@@ -141,13 +154,14 @@ const EnhancedCategories = () => {
                     {filteredCategories.map((category) => {
                         const isExpense = category.typeId === 1;
                         const ArrowIcon = isExpense ? ArrowUp : ArrowDown;
-                        const iconColor = isExpense ? '#FAF9F5' : '#56A69f';
-                        const bgClass = isExpense ? 'bg-[#FAF9F5]/20' : 'bg-[#56A69f]/20';
+                        const iconColor = isExpense ? '#D97757' : '#56A69f';
+                        const bgClass = isExpense ? 'bg-[#D97757]/20' : 'bg-[#56A69f]/20';
                         
                         return (
                             <div
                                 key={category.id}
-                                className="bg-[#171717] rounded-lg border border-[#262626] p-4 hover:border-[#56A69f]/30 transition-all group"
+                                className="bg-[#171717] rounded-lg border border-[#262626] p-4 hover:border-[#3a3a3a] transition-all duration-200 group cursor-pointer"
+                                onClick={() => setSelectedCategory(category)}
                             >
                                 <div className="flex items-start justify-between mb-3">
                                     <div className="flex items-center gap-3">
@@ -158,20 +172,20 @@ const EnhancedCategories = () => {
                                         </div>
                                         <div className="text-left">
                                             <h3 className="text-white font-medium">{category.name}</h3>
-                                            <span className="text-xs px-2 py-1 rounded-full bg-[#242532] text-gray-300">
-                                                {getTypeLabel(category.typeId)}
-                                            </span>
                                         </div>
                                     </div>
                                     <button
-                                        onClick={() => handleDeleteCategory(category.id)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteCategory(category.id);
+                                        }}
                                         className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                         title={t('categories.delete')}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
-                                <div className="text-[#C2C0B6] text-sm">
+                                <div className="text-[#C2C0B6] text-sm text-left">
                                     {t('categories.transaction_count', { count: category.transactionCount || 0 })}
                                 </div>
                             </div>
@@ -180,6 +194,70 @@ const EnhancedCategories = () => {
                 </div>
             )}
                 </>
+            )}
+
+            {/* Category Transactions Modal */}
+            {selectedCategory && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-4xl max-h-[90vh] flex flex-col">
+                        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#262626]">
+                            <div className="text-left">
+                                <h2 className="text-xl font-bold text-white">{selectedCategory.name}</h2>
+                                <p className="text-[#C2C0B6] text-sm mt-1 text-left">
+                                    {t('categories.transaction_count', { count: categoryTransactions.length })}
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setSelectedCategory(null)}
+                                className="p-2 text-[#C2C0B6] hover:text-white hover:bg-[#262626] rounded-lg transition-colors"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
+                            {categoryTransactions.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <p className="text-[#C2C0B6]">{t('categories.no_transactions')}</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {categoryTransactions.map((transaction) => {
+                                        const isExpense = transaction.typeId === 1;
+                                        const ArrowIcon = isExpense ? ArrowUp : ArrowDown;
+                                        const iconColor = isExpense ? '#D97757' : '#56A69f';
+                                        const bgClass = isExpense ? 'bg-[#D97757]/20' : 'bg-[#56A69f]/20';
+                                        
+                                        return (
+                                            <div
+                                                key={transaction.id}
+                                                className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-4 hover:border-[#3a3a3a] transition-all duration-200"
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${bgClass}`}>
+                                                            <ArrowIcon className="w-5 h-5" style={{ color: iconColor }} />
+                                                        </div>
+                                                        <div className="flex-1 min-w-0 text-left">
+                                                            <h4 className="text-white font-medium truncate text-left">{transaction.description}</h4>
+                                                            <div className="flex items-center gap-2 text-sm text-[#C2C0B6] mt-1 text-left">
+                                                                <span>{formatDate(transaction.date)}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex-shrink-0 ml-4">
+                                                        <span className={`font-bold ${getAmountColor(transaction.typeId)}`}>
+                                                            {formatCurrency(transaction.amount, transaction.typeId)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Add Category Modal */}

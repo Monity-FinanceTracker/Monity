@@ -383,8 +383,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                             fullWidth
                             loading={loading}
                             disabled={loading}
-                            leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
-                            className="no-hover-button"
+                            leftIcon={!loading ? <FaPlus className="text-lg text-[#30302E]" /> : null}
                             style={{ justifyContent: 'center' }}
                         >
                             {loading 

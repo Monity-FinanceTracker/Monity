@@ -366,12 +366,12 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                     </div>
                     
                     <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        transaction.typeId === 1 ? 'bg-[#FAF9F5]/20' :
+                        transaction.typeId === 1 ? 'bg-[#D97757]/20' :
                         transaction.typeId === 2 ? 'bg-[#56a69f]/20' :
                         'bg-[#A69F8E]/20'
                     }`}>
                         {transaction.typeId === 1 ? (
-                            <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
+                            <ArrowUp className="w-5 h-5 text-[#D97757]" />
                         ) : transaction.typeId === 2 ? (
                             <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                         ) : (
@@ -495,7 +495,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_income')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`${getResponsiveFontSize(totals.expenses)} font-bold text-[#FAF9F5] whitespace-nowrap overflow-hidden`}>
+                        <div className={`${getResponsiveFontSize(totals.expenses)} font-bold text-[#D97757] whitespace-nowrap overflow-hidden`}>
                             {formatSimpleCurrency(totals.expenses, true)}
                         </div>
                         <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_expenses')}</div>
@@ -507,7 +507,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.total_savings')}</div>
                     </div>
                     <div className="text-center p-3 sm:p-4 bg-[#1a1a1a] rounded-lg flex-1 min-w-[120px]">
-                        <div className={`${getResponsiveFontSize(balance)} font-bold whitespace-nowrap overflow-hidden ${balance >= 0 ? 'text-[#56a69f]' : 'text-red-400'}`}>
+                        <div className={`${getResponsiveFontSize(balance)} font-bold whitespace-nowrap overflow-hidden ${balance >= 0 ? 'text-[#4A8F88]' : 'text-[#CD6040]'}`}>
                             {balance >= 0 ? 'R$ ' : '-R$ '}{Math.abs(balance).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                         <div className="text-[#C2C0B6] text-xs sm:text-sm">{t('transactions.net_balance')}</div>
@@ -717,14 +717,14 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                                     
                                     <button
                                         onClick={handleAddExpense}
-                                        className="w-full text-left px-4 py-3 hover:bg-[#FAF9F5]/20 transition-colors flex items-center gap-3"
+                                        className="w-full text-left px-4 py-3 hover:bg-[#D97757]/20 transition-colors flex items-center gap-3"
                                     >
-                                        <div className="w-8 h-8 rounded-full bg-[#FAF9F5] flex items-center justify-center flex-shrink-0">
+                                        <div className="w-8 h-8 rounded-full bg-[#D97757] flex items-center justify-center flex-shrink-0">
                                             <svg className="w-4 h-4 text-[#1F1E1D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                             </svg>
                                         </div>
-                                        <span className="font-medium text-[#FAF9F5]">Expense</span>
+                                        <span className="font-medium text-[#D97757]">Expense</span>
                                     </button>
                                 </div>
                             </div>
@@ -751,14 +751,14 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             </Link>
                             <Link
                                 to="/add-expense"
-                                className="px-3 py-2 rounded-lg font-medium hover:bg-[#FAF9F5]/20 transition-colors flex items-center justify-center gap-2"
+                                className="px-3 py-2 rounded-lg font-medium hover:bg-[#D97757]/20 transition-colors flex items-center justify-center gap-2"
                             >
-                                <div className="w-8 h-8 rounded-full bg-[#FAF9F5] flex items-center justify-center flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-[#D97757] flex items-center justify-center flex-shrink-0">
                                     <svg className="w-4 h-4 text-[#1F1E1D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
                                 </div>
-                                <span className="text-[#FAF9F5] text-sm sm:text-base">Expense</span>
+                                <span className="text-[#D97757] text-sm sm:text-base">Expense</span>
                             </Link>
                         </div>
                     </div>

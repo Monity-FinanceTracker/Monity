@@ -148,7 +148,7 @@ const VirtualizedTransactionList = React.memo(({
 
         const _getTypeColor = (typeId) => {
             switch (typeId) {
-                case 1: return 'text-[#FAF9F5]'; // Expense
+                case 1: return 'text-[#D97757]'; // Expense
                 case 2: return 'text-[#56a69f]'; // Income
                 case 3: return 'text-blue-400'; // Savings
                 default: return 'text-[#C2C0B6]';
@@ -157,8 +157,8 @@ const VirtualizedTransactionList = React.memo(({
 
         const getTypeIcon = (typeId) => {
             switch (typeId) {
-                case 1: return ( // Expense - setinha para cima branca
-                    <svg className="w-5 h-5 text-[#FAF9F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                case 1: return ( // Expense - setinha para cima laranja
+                    <svg className="w-5 h-5 text-[#D97757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                     </svg>
                 );

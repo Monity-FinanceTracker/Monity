@@ -59,7 +59,7 @@ const EnhancedDashboard = () => {
                 <div className="p-6">
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex-1 text-left">
-                            <h3 className={`text-2xl font-bold ${accent || 'text-white'}`}>{title}</h3>
+                            <h3 className="text-2xl font-bold text-[#C2C0B6]">{title}</h3>
                             {subtitle && <p className="text-[#C2C0B6] text-sm mt-1">{subtitle}</p>}
                         </div>
                         {action && (
@@ -115,14 +115,14 @@ const EnhancedDashboard = () => {
                                 <div
                                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                         transaction.typeId === 1
-                                            ? 'bg-[#FAF9F5]/20'
+                                            ? 'bg-[#D97757]/20'
                                             : transaction.typeId === 2
                                             ? 'bg-[#56a69f]/20'
                                             : 'bg-blue-500/20'
                                     }`}
                                 >
                                     {transaction.typeId === 1 ? (
-                                        <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
+                                        <ArrowUp className="w-5 h-5 text-[#D97757]" />
                                     ) : transaction.typeId === 2 ? (
                                         <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                                     ) : (
