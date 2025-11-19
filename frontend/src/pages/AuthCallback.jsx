@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import API from '../utils/api';
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 

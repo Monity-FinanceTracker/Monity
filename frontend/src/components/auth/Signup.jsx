@@ -48,16 +48,15 @@ function Signup() {
             }
 
             if (result.requiresEmailConfirmation) {
-                navigate('/email-confirmation', {
+                navigate('/email-confirmation', { 
                     state: { email },
-                    replace: true
+                    replace: true 
                 });
                 return;
             }
 
-            // Se não requer confirmação, direcionar para dashboard
+            // Se confirmação não é necessária, direcionar para dashboard
             navigate('/', { replace: true });
-
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
