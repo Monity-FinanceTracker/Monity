@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import {
   House,
   ArrowLeftRight,
@@ -21,11 +22,15 @@ import {
   Calculator,
   BarChart3
 } from "lucide-react";
+import sidebarIcon from "../../assets/Sidebar-Icon.png";
+import sidebarArrow from "../../assets/sidebarArrow.png";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
   const { t } = useTranslation();
   const { isAdmin, subscriptionTier } = useAuth();
   const premiumUser = subscriptionTier === 'premium';
+  const [isHovering, setIsHovering] = useState(false);
+  const [isCollapsedHovering, setIsCollapsedHovering] = useState(false);
 
   // Estilos de transição consistentes para os NavLinks
   const navLinkTransition = {
@@ -51,11 +56,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
               /* Botão centralizado quando collapsed */
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="flex items-center px-2 py-1.5 rounded-lg group hover:bg-[#262626]"
+                onMouseEnter={() => setIsCollapsedHovering(true)}
+                onMouseLeave={() => setIsCollapsedHovering(false)}
+                className="flex items-center px-2 py-1.5 rounded-lg group"
                 style={{ 
                   border: 'none',
                   outline: 'none',
-                  background: 'transparent',
+                  background: isCollapsedHovering ? '#141414' : 'transparent',
                   margin: 0,
                   display: 'flex',
                   alignItems: 'center',
@@ -64,13 +71,17 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 }}
                 title="Toggle Menu"
               >
-                <div className="w-5 h-5 flex-shrink-0">
-                  <Menu 
-                    className="w-5 h-5" 
+                <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
+                  {/* Ícone de dois painéis quando collapsed */}
+                  <img 
+                    src={sidebarIcon} 
+                    alt="Toggle sidebar" 
+                    className="h-8 w-auto object-contain"
                     style={{ 
-                      color: 'white', 
-                      stroke: 'white'
-                    }} 
+                      transform: 'scale(2.3)',
+                      filter: isCollapsedHovering ? 'brightness(0) invert(1)' : 'brightness(0) invert(1) opacity(0.78)',
+                      transition: 'filter 200ms ease'
+                    }}
                   />
                 </div>
               </button>
@@ -82,11 +93,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 {/* Menu Toggle - alinhado exatamente com os ícones da navegação */}
                 <button
                   onClick={() => setIsCollapsed(!isCollapsed)}
-                  className="flex items-center px-1.5 py-1.5 rounded-lg group hover:bg-[#262626]"
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
+                  className="flex items-center px-1.5 py-1.5 rounded-lg group"
                   style={{ 
                     border: 'none',
                     outline: 'none',
-                    background: 'transparent',
+                    background: isHovering ? '#141414' : 'transparent',
                     margin: 0,
                     display: 'flex',
                     alignItems: 'center',
@@ -95,14 +108,34 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   }}
                   title="Toggle Menu"
                 >
-                  <div className="w-5 h-5 flex-shrink-0">
-                    <Menu 
-                      className="w-5 h-5" 
-                      style={{ 
-                        color: 'white', 
-                        stroke: 'white'
-                      }} 
-                    />
+                  <div className="w-5 h-6 flex-shrink-0 flex items-center">
+                    {isHovering ? (
+                      /* Ícone de seta com barra quando hover e expandido */
+                      <img 
+                        src={sidebarArrow} 
+                        alt="Collapse sidebar" 
+                        className="h-8 w-auto object-contain"
+                        style={{ 
+                          transform: 'scale(1.7)',
+                          filter: 'brightness(0) invert(1)',
+                          transition: 'filter 200ms ease'
+                        }}
+                      />
+                    ) : (
+                      /* Ícone de dois painéis quando expandido sem hover */
+                      <div className="w-5 h-5 flex items-center justify-center">
+                        <img 
+                          src={sidebarIcon} 
+                          alt="Toggle sidebar" 
+                          className="h-8 w-auto object-contain"
+                          style={{ 
+                            transform: 'scale(2.3)',
+                            filter: 'brightness(0) invert(1) opacity(0.78)',
+                            transition: 'filter 200ms ease'
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </button>
                 {/* Monity Text - aparece apenas quando não está collapsed */}
