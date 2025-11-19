@@ -163,18 +163,18 @@ function Budget() {
                         <button
                             type="button"
                             onClick={() => setAmount(((parseFloat(amount) || 0) + 0.01).toFixed(2))}
-                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                         >
-                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                            <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                         </button>
                         <button
                             type="button"
                             onClick={() => setAmount(Math.max(0, (parseFloat(amount) || 0) - 0.01).toFixed(2))}
-                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                         >
-                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                            <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                         </button>
                     </div>
                 </div>
@@ -205,13 +205,13 @@ function Budget() {
                         <li key={budget.id} className="flex justify-between items-center p-3 bg-[#1F1E1D] rounded-lg">
                             <div>
                                 <span className="font-bold">{budget.categories.name}</span>
-                                <span className="text-sm text-gray-400 block">{new Date(budget.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                                <span className="text-sm text-[#C2C0B6] block">{new Date(budget.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
                             </div>
                             <div className="flex items-center gap-4">
                                <span className="font-bold text-[#56a69f]">R$ {parseFloat(budget.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                 <button 
                                     onClick={() => handleDeleteBudget(budget.id)} 
-                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                    className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                     title="Delete budget"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -357,18 +357,18 @@ function RecurringTransactions() {
                         <button
                             type="button"
                             onClick={() => setForm({...form, amount: ((parseFloat(form.amount) || 0) + 0.01).toFixed(2)})}
-                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                         >
-                            <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                            <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                         </button>
                         <button
                             type="button"
                             onClick={() => setForm({...form, amount: Math.max(0, (parseFloat(form.amount) || 0) - 0.01).toFixed(2)})}
-                            className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                             style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                         >
-                            <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                            <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                         </button>
                     </div>
                 </div>

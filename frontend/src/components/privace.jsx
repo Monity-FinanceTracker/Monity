@@ -65,7 +65,7 @@ const Privace = () => {
             {/* Contact Section */}
             <div className="mt-8 pt-6 border-t border-[#262626]">
               <div className="text-center">
-                <p className="text-gray-400 text-sm mb-4">
+                <p className="text-[#C2C0B6] text-sm mb-4">
                   Dúvidas sobre nossa política de privacidade?
                 </p>
                 <div className="inline-flex items-center px-4 py-2 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">

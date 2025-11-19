@@ -64,7 +64,7 @@ const EmailConfirmed = () => {
                     <h2 className="text-2xl font-bold text-white">
                         {t('emailConfirmed.checking_title')}
                     </h2>
-                    <p className="text-gray-400">
+                    <p className="text-[#C2C0B6]">
                         {t('emailConfirmed.checking_subtitle')}
                     </p>
                 </div>
@@ -93,7 +93,7 @@ const EmailConfirmed = () => {
                             {t('emailConfirmed.error_title')}
                         </h2>
                         <div className="w-12 h-1 bg-gradient-to-r from-red-400 to-red-400/50 mx-auto rounded-full"></div>
-                        <p className="text-gray-400">
+                        <p className="text-[#C2C0B6]">
                             {t('emailConfirmed.error_subtitle')}
                         </p>
                     </div>
@@ -138,7 +138,7 @@ const EmailConfirmed = () => {
                         {t('emailConfirmed.success_title')}
                     </h2>
                     <div className="w-12 h-1 bg-gradient-to-r from-[#56a69f] to-[#56a69f]/50 mx-auto rounded-full"></div>
-                    <p className="text-lg text-gray-400">
+                    <p className="text-lg text-[#C2C0B6]">
                         {t('emailConfirmed.success_subtitle')}
                     </p>
                     <p className="text-sm text-gray-500">

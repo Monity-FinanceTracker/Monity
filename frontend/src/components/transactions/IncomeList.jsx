@@ -138,7 +138,7 @@ function ListIncomes() {
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <p className="font-bold text-white text-lg">{income.description}</p>
-                                <p className="text-sm text-gray-400">{income.category}</p>
+                                <p className="text-sm text-[#C2C0B6]">{income.category}</p>
                             </div>
                             <p className="text-[#56a69f] font-bold text-lg">R$ {income.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                         </div>

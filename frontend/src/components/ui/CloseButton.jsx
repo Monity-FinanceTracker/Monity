@@ -28,7 +28,7 @@ export default function CloseButton({ onClick, className = '', size = 'md' }) {
       title="Fechar"
       aria-label="Fechar"
     >
-      <X className={`${sizeClasses[size]} text-gray-400 hover:text-white`} />
+      <X className={`${sizeClasses[size]} text-[#C2C0B6] hover:text-white`} />
     </button>
   );
 }

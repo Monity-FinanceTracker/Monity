@@ -77,7 +77,7 @@ const ScheduledTransactionList = ({ onUpdate }) => {
   if (loading) {
     return (
       <div className="bg-[#1F1E1D] rounded-xl border border-[#262626] p-6">
-        <div className="text-center text-gray-400">{t('common.loading')}</div>
+        <div className="text-center text-[#C2C0B6]">{t('common.loading')}</div>
       </div>
     );
   }
@@ -87,12 +87,12 @@ const ScheduledTransactionList = ({ onUpdate }) => {
       <div className="bg-[#1F1E1D] rounded-xl border border-[#262626]">
         <div className="p-6 border-b border-[#262626]">
           <h2 className="text-lg font-bold text-white">{t('cashFlow.scheduled_list_title')}</h2>
-          <p className="text-sm text-gray-400 mt-1">{t('cashFlow.scheduled_list_subtitle')}</p>
+          <p className="text-sm text-[#C2C0B6] mt-1">{t('cashFlow.scheduled_list_subtitle')}</p>
         </div>
 
         <div className="divide-y divide-[#262626]">
           {scheduledTransactions.length === 0 ? (
-            <div className="p-8 text-center text-gray-400">
+            <div className="p-8 text-center text-[#C2C0B6]">
               {t('cashFlow.no_scheduled')}
             </div>
           ) : (
@@ -119,7 +119,7 @@ const ScheduledTransactionList = ({ onUpdate }) => {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-4 text-sm text-gray-400">
+                    <div className="flex items-center gap-4 text-sm text-[#C2C0B6]">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         <span>{moment(transaction.next_execution_date).format('DD/MM/YYYY')}</span>
@@ -139,14 +139,14 @@ const ScheduledTransactionList = ({ onUpdate }) => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleEdit(transaction)}
-                      className="p-2 text-gray-400 hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
+                      className="p-2 text-[#C2C0B6] hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
                       title={t('common.edit')}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(transaction.id)}
-                      className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                      className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                       title={t('common.delete')}
                     >
                       <Trash2 className="w-4 h-4" />

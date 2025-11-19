@@ -61,7 +61,7 @@ class ErrorBoundary extends React.Component {
                     <h3 className="text-lg font-semibold text-white mb-2">
                         Component failed to load
                     </h3>
-                    <p className="text-gray-400 mb-4">
+                    <p className="text-[#C2C0B6] mb-4">
                         There was an error loading this component.
                     </p>
                     <button 
