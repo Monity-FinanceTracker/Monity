@@ -566,7 +566,7 @@
     "loading_details": "Loading...",
     "fetch_fail": "Failed to fetch group details.",
     "not_found": "Group not found.",
-    "back": "Back to Groups",
+    "back": "Back",
     "members": "Members",
     "add_member": "Add a Member",
     "invite_member": "Invite Member",
