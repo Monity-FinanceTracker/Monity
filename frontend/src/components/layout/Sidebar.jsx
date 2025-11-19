@@ -22,7 +22,8 @@ import {
   ArrowDownCircle,
   List,
   DollarSign,
-  Calculator
+  Calculator,
+  BarChart3
 } from "lucide-react";
 
 export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isCollapsed, setIsCollapsed }) {
@@ -433,26 +434,45 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
             <div className={`space-y-2 ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
               {/* Admin Dashboard First */}
               {isAdmin && (
-                <NavLink
-                  to="/admin"
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden ${isActive
-                      ? 'bg-[#000000] text-[#FAF9F5]'
-                      : 'text-[#C2C0B6] hover:text-[#FAF9F5] hover:bg-[#141413]'
-                    }`
-                  }
-                  style={navLinkTransition}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  title={isCollapsed ? t('sidebar.admin_dashboard') : ''}
-                >
-                  <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center [&>span]:text-current">
-                    <span className="material-symbols-outlined text-base">eye_tracking</span>
-                  </div>
-                  <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>{t('sidebar.admin_dashboard')}</span>
-                </NavLink>
+                <>
+                  <NavLink
+                    to="/admin"
+                    end
+                    className={({ isActive }) =>
+                      `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden ${isActive
+                        ? 'bg-[#000000] text-[#FAF9F5]'
+                        : 'text-[#C2C0B6] hover:text-[#FAF9F5] hover:bg-[#141413]'
+                      }`
+                    }
+                    style={navLinkTransition}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    title={isCollapsed ? t('sidebar.admin_dashboard') : ''}
+                  >
+                    <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center [&>span]:text-current">
+                      <span className="material-symbols-outlined text-base">eye_tracking</span>
+                    </div>
+                    <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>{t('sidebar.admin_dashboard')}</span>
+                  </NavLink>
+                  <NavLink
+                    to="/admin/analytics"
+                    className={({ isActive }) =>
+                      `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden ${isActive
+                        ? 'bg-[#000000] text-[#FAF9F5]'
+                        : 'text-[#C2C0B6] hover:text-[#FAF9F5] hover:bg-[#141413]'
+                      }`
+                    }
+                    style={navLinkTransition}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    title={isCollapsed ? 'Analytics' : ''}
+                  >
+                    <div className="w-5 h-5 flex-shrink-0 [&>svg]:stroke-current">
+                      <BarChart3 className="w-5 h-5" stroke="currentColor" />
+                    </div>
+                    <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>Analytics</span>
+                  </NavLink>
+                </>
               )}
-              
+
               <NavLink
                 to="/settings"
                 className={({ isActive }) =>

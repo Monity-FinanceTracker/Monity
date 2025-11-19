@@ -15,6 +15,7 @@ const BillingController = require("./billingController");
 const CashFlowController = require("./cashFlowController");
 const AIChatController = require("./aiChatController");
 const InvestmentCalculatorController = require("./investmentCalculatorController");
+const AnalyticsController = require("./analyticsController");
 const { scheduledTransactionService } = require("../services");
 
 const initializeControllers = (supabase) => {
@@ -38,6 +39,7 @@ const initializeControllers = (supabase) => {
     cashFlowController: new CashFlowController(supabase, scheduledTransactionService),
     aiChatController: new AIChatController(supabase),
     investmentCalculatorController: new InvestmentCalculatorController(supabase),
+    analyticsController: new AnalyticsController(supabase),
   };
 };
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
@@ -16,17 +17,30 @@ function Login() {
     const [, setPasswordFocused] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
+    const { track } = useAnalytics();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
-        
+
         try {
             await login(email, password);
+
+            // Track successful login
+            track('user_logged_in', {
+                method: 'email'
+            });
+
             navigate('/');
         } catch (err) {
             setError(err.message || t('loginPage.invalid_credentials'));
+
+            // Track failed login
+            track('auth_failed', {
+                method: 'email',
+                reason: 'invalid_credentials'
+            });
         } finally {
             setLoading(false);
         }

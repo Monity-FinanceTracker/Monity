@@ -15,11 +15,24 @@ const authenticate = async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
         }
 
-        req.user = user;
+        // Fetch user profile to get role and subscription_tier from profiles table
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role, subscription_tier')
+            .eq('id', user.id)
+            .single();
+
+        // Enrich user object with profile data
+        req.user = {
+            ...user,
+            role: profile?.role || user.user_metadata?.role || 'user',
+            is_admin: profile?.role === 'admin' || user.user_metadata?.role === 'admin',
+            subscription_tier: profile?.subscription_tier || user.user_metadata?.subscription_tier || 'free'
+        };
         req.token = token;
-        
-        // Note: The logic for creating a role-specific Supabase client 
-        // will be handled differently in the new architecture. 
+
+        // Note: The logic for creating a role-specific Supabase client
+        // will be handled differently in the new architecture.
         // For now, we attach the main client.
         req.supabase = supabase;
 
@@ -64,7 +77,8 @@ const requireRole = (requiredRole) => {
             return res.status(401).json({ success: false, message: 'Authentication is required.' });
         }
 
-        const userRole = req.user.user_metadata?.role || 'user';
+        // Check enriched role (from profiles table) first, then fallback to user_metadata
+        const userRole = req.user.role || req.user.user_metadata?.role || 'user';
 
         if (userRole !== requiredRole) {
             return res.status(403).json({ success: false, message: 'Forbidden: You do not have the required permissions.' });

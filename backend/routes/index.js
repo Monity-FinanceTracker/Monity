@@ -20,6 +20,7 @@ const userRoutes = require("./users");
 const billingRoutes = require("./billing");
 const cashFlowRoutes = require("./cashFlow");
 const investmentCalculatorRoutes = require("./investmentCalculator");
+const analyticsRoutes = require("./analytics");
 
 module.exports = (controllers, middleware) => {
   // Version 1 of the API
@@ -114,6 +115,14 @@ module.exports = (controllers, middleware) => {
     middleware.auth.authenticate,
     middleware.auth.requireRole("admin"),
     adminRoutes(controllers)
+  );
+
+  // Analytics routes - admin only
+  v1Router.use(
+    "/analytics",
+    middleware.auth.authenticate,
+    middleware.auth.requireRole("admin"),
+    analyticsRoutes(controllers)
   );
 
   return v1Router;
