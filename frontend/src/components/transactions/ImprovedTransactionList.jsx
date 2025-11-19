@@ -480,7 +480,11 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     }
 
     return (
-        <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
+        <div className="flex-1 p-6">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold text-white">{t('transactionsPage.title')}</h1>
+            </div>
+            <div className="flex flex-col space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
             {/* Header with stats - Responsive for different screen sizes */}
             <div className="bg-[#1F1E1D] rounded-xl p-4 sm:p-6 border border-[#262626] w-full max-w-full min-w-0 flex-shrink-0">
                 <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-full min-w-0">
@@ -772,6 +776,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         />
                     ))
                 )}
+            </div>
             </div>
         </div>
     );

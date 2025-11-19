@@ -26,6 +26,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             colorClass: 'red',
             gradient: 'from-red-500 to-red-600',
             bgColor: 'bg-red-500/20',
+            iconColor: 'text-red-500',
             textColor: 'text-red-400',
             focusRing: 'focus:ring-red-500',
             // Use solid red background for the main call-to-action
@@ -191,13 +192,16 @@ const AddTransaction = ({ type = 'expense' }) => {
                 <div className="max-w-2xl mx-auto">
                     {/* Header Section */}
                     <div className="text-center mb-8 mt-8">
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                        {t(`${currentConfig.translationKey}.title`)}
-                    </h1>
-                    <p className="text-[#C2C0B6] text-lg">
-                        {t(`${currentConfig.translationKey}.subtitle`)}
-                    </p>
-                </div>
+                        <div className={`inline-flex items-center justify-center w-16 h-16 ${currentConfig.bgColor} rounded-full mb-4 shadow-lg`}>
+                            <Icon className={`${currentConfig.iconColor} text-2xl`} />
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                            {t(`${currentConfig.translationKey}.title`)}
+                        </h1>
+                        <p className="text-[#C2C0B6] text-lg">
+                            {t(`${currentConfig.translationKey}.subtitle`)}
+                        </p>
+                    </div>
 
                 {/* Add Transaction Form */}
                 <div className={`bg-[#1F1E1D] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all ${shakeForm ? 'animate-shake' : ''}`}>
@@ -376,23 +380,25 @@ const AddTransaction = ({ type = 'expense' }) => {
                         )}
 
                         {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            variant={currentConfig.buttonVariant}
-                            size="lg"
-                            fullWidth
-                            loading={loading}
-                            disabled={loading}
-                            leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
-                            className="no-hover-button"
-                            style={{ justifyContent: 'center' }}
-                        >
-                            {loading 
-                                ? t(`${currentConfig.translationKey}.adding`) 
-                                : t(`${currentConfig.translationKey}.add_${type}`)
-                            }
-                        </Button>
+                        <div className="pt-2">
+                            <Button
+                                type="submit"
+                                variant={currentConfig.buttonVariant}
+                                size="md"
+                                fullWidth
+                                loading={loading}
+                                disabled={loading}
+                                leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
+                                style={{ justifyContent: 'center' }}
+                            >
+                                {loading
+                                    ? t(`${currentConfig.translationKey}.adding`) 
+                                    : t(`${currentConfig.translationKey}.add_${type}`)
+                                }
+                            </Button>
+                        </div>
                     </form>
+                </div>
                 </div>
             </div>
 
@@ -526,7 +532,6 @@ const AddTransaction = ({ type = 'expense' }) => {
                     </div>
                 </div>
             )}
-            </div>
         </div>
     );
 };
