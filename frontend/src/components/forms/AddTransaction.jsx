@@ -399,6 +399,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                         </div>
                     </form>
                 </div>
+                </div>
             </div>
 
             {/* Add Category Modal */}
@@ -531,7 +532,6 @@ const AddTransaction = ({ type = 'expense' }) => {
                     </div>
                 </div>
             )}
-            </div>
         </div>
     );
 };
