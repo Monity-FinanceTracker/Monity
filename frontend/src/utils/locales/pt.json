@@ -560,6 +560,7 @@
     "totalExpenses": "Total de despesas: R${{total}}"
   },
   "transactionsPage": {
+    "title": "Transações",
     "expenses": "Despesas",
     "incomes": "Receitas"
   },

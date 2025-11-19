@@ -544,6 +544,7 @@
     "totalExpenses": "Total expenses: ${{total}}"
   },
   "transactionsPage": {
+    "title": "Transactions",
     "expenses": "Expenses",
     "incomes": "Incomes"
   },
