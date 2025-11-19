@@ -68,18 +68,6 @@ const SavingsOverviewCard = () => {
 
     if (error) {
         return (
-            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6">
-                <div className="text-center py-4">
-                    <p className="text-gray-400">
-                        {t('savings_goals.login_to_view', 'Faça login para ver o resumo das suas metas de poupança.')}
-                    </p>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
             <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
                 <div className="text-center py-4">
                     <p className="text-red-400">{error}</p>

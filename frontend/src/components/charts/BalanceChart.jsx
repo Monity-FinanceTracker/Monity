@@ -12,10 +12,8 @@ import {
 import Spinner from '../ui/Spinner';
 import { get } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../context/useAuth';
 import { formatCurrency } from '../../utils/currency';
 import { useAuth } from '../../context/useAuth';
-
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 

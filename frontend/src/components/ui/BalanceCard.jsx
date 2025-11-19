@@ -32,7 +32,6 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
             </p>
         );
     }
-
     const handleAddIncome = () => {
         navigate('/add-income');
     };
