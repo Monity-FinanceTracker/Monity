@@ -1,74 +1,21 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { getGroups } from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../utils/supabase';
+import { useGroups } from '../../hooks/useQueries';
 import GroupInvitations from './GroupInvitations';
 import GroupSpendingCard from './GroupSpendingCard';
 import { EmptyGroups, LoadingState } from '../ui/EmptyStates';
 
 const Groups = () => {
     const { t } = useTranslation();
-    const [groups, setGroups] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const { user, subscriptionTier } = useAuth();
+    const { subscriptionTier } = useAuth();
+    const { data: groups = [], isLoading: loading } = useGroups();
 
-    const fetchGroups = useCallback(async () => {
-        try {
-            if (user) {
-                const fetchedGroups = await getGroups();
-                setGroups(fetchedGroups || []);
-            }
-        } catch (error) {
-            console.error('Error fetching groups:', error);
-        } finally {
-            setLoading(false);
-        }
-    }, [user]);
-
-    useEffect(() => {
-        fetchGroups();
-    }, [fetchGroups]);
-
-    // Set up real-time subscriptions
-    useEffect(() => {
-        if (user) {
-            // Subscribe to group changes for groups the user is a member of
-            const groupsSubscription = supabase
-                .channel('groups-changes')
-                .on(
-                    'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'groups'
-                    },
-                    () => {
-                        fetchGroups(); // Refresh groups when any group changes
-                    }
-                )
-                .on(
-                    'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'group_members'
-                    },
-                    () => {
-                        fetchGroups(); // Refresh when memberships change
-                    }
-                )
-                .subscribe();
-
-            return () => {
-                supabase.removeChannel(groupsSubscription);
-            };
-        }
-    }, [user, fetchGroups]);
-
-    const isLimited = subscriptionTier === 'free' && groups.length >= 2;
+    const isLimited = useMemo(
+        () => subscriptionTier === 'free' && groups.length >= 2,
+        [subscriptionTier, groups.length]
+    );
 
     return (
         <div className="flex-1 p-6">
