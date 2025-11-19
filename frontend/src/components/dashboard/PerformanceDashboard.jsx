@@ -72,7 +72,7 @@ const PerformanceDashboard = React.memo(() => {
             <div className="space-y-3">
                 {Object.entries(metrics).map(([key, value]) => (
                     <div key={key} className="flex justify-between items-center">
-                        <span className="text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                        <span className="text-[#C2C0B6] capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
                         <span className={`font-mono ${getMetricColor(key, value)}`}>
                             {formatMetricValue(key, value)}
                         </span>
@@ -220,7 +220,7 @@ const PerformanceDashboard = React.memo(() => {
                                     {alert.message}
                                 </p>
                                 {alert.action && (
-                                    <p className="text-sm text-gray-400 mt-1">
+                                    <p className="text-sm text-[#C2C0B6] mt-1">
                                         Action: {alert.action}
                                     </p>
                                 )}
@@ -292,19 +292,19 @@ const PerformanceDashboard = React.memo(() => {
                             <p className="text-2xl font-bold text-blue-400">
                                 {Math.round(performanceData.health.uptime / 3600)}h
                             </p>
-                            <p className="text-gray-400">{t('performanceDashboard.uptime')}</p>
+                            <p className="text-[#C2C0B6]">{t('performanceDashboard.uptime')}</p>
                         </div>
                         <div className="text-center">
                             <p className="text-2xl font-bold text-green-400">
                                 {performanceData.health.memory?.used || 0}MB
                             </p>
-                            <p className="text-gray-400">{t('performanceDashboard.memory_usage')}</p>
+                            <p className="text-[#C2C0B6]">{t('performanceDashboard.memory_usage')}</p>
                         </div>
                         <div className="text-center">
                             <p className="text-2xl font-bold text-purple-400">
                                 {performanceData.health.cacheService?.redis?.connected ? t('performanceDashboard.connected') : t('performanceDashboard.memory_only')}
                             </p>
-                            <p className="text-gray-400">{t('performanceDashboard.cache_status')}</p>
+                            <p className="text-[#C2C0B6]">{t('performanceDashboard.cache_status')}</p>
                         </div>
                     </div>
                 </div>

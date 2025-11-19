@@ -15,7 +15,7 @@ const AuthOverlay = ({ onClose }) => {
           <h3 className="text-2xl font-bold text-white mb-2">
             Login Necessário
           </h3>
-          <p className="text-gray-400">
+          <p className="text-[#C2C0B6]">
             Você precisa fazer login para realizar esta ação.
           </p>
         </div>
@@ -38,7 +38,7 @@ const AuthOverlay = ({ onClose }) => {
         {onClose && (
           <button
             onClick={onClose}
-            className="mt-4 text-gray-400 hover:text-white text-sm transition-colors"
+            className="mt-4 text-[#C2C0B6] hover:text-white text-sm transition-colors"
           >
             Continuar visualizando
           </button>

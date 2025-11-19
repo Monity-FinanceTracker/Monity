@@ -64,16 +64,15 @@ function Signup() {
             });
 
             if (result.requiresEmailConfirmation) {
-                navigate('/email-confirmation', {
+                navigate('/email-confirmation', { 
                     state: { email },
-                    replace: true
+                    replace: true 
                 });
                 return;
             }
 
-            // Se não requer confirmação, direcionar para dashboard
+            // Se confirmação não é necessária, direcionar para dashboard
             navigate('/', { replace: true });
-
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
@@ -252,7 +251,7 @@ function Signup() {
                                 />
                                 <div
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#C2C0B6] hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                     title={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? (
@@ -316,7 +315,7 @@ function Signup() {
                                 />
                                 <div
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#C2C0B6] hover:text-[#56a69f] transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95"
                                     title={showConfirmPassword ? "Hide password" : "Show password"}
                                 >
                                     {showConfirmPassword ? (
@@ -377,7 +376,7 @@ function Signup() {
                             <div className="w-full border-t border-[#9C9A92]"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-[#262624] text-gray-400">{t('common.or') || 'ou'}</span>
+                            <span className="px-2 bg-[#262624] text-[#C2C0B6]">{t('common.or') || 'ou'}</span>
                         </div>
                     </div>
 
@@ -404,7 +403,7 @@ function Signup() {
                         href="/privacy" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
+                        className="text-sm text-[#C2C0B6] hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Privacy Policy
                     </a>
@@ -413,7 +412,7 @@ function Signup() {
                         href="/terms" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-[#56a69f] transition-colors duration-200"
+                        className="text-sm text-[#C2C0B6] hover:text-[#56a69f] transition-colors duration-200"
                     >
                         Terms of Service
                     </a>

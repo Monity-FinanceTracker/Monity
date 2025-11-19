@@ -5,7 +5,7 @@
 /**
  * Formata um valor monetário com tratamento adequado de sinal
  * @param {number} amount - O valor a ser formatado
- * @param {number} typeId - Tipo de transação (1 para despesa, 2 para receita)
+ * @param {number} typeId - Tipo de transação (1 para despesa, 2 para receita, 3 para savings)
  * @param {boolean} showSign - Se deve mostrar o sinal + ou - (padrão: true)
  * @returns {string} String de moeda formatada
  */
@@ -18,6 +18,7 @@ export const formatCurrency = (amount, typeId, showSign = true) => {
     
     // Para despesas (typeId === 1), o valor deve ser negativo
     // Para receitas (typeId === 2), o valor deve ser positivo
+    // Para savings (typeId === 3), o valor deve ser positivo
     const isExpense = typeId === 1;
     
     // Determina o sinal a ser exibido
@@ -69,9 +70,12 @@ export const formatSimpleCurrency = (amount, showSign = false) => {
 
 /**
  * Gets the appropriate color class for a transaction amount
- * @param {number} typeId - Transaction type (1 for expense, 2 for income)
+ * @param {number} typeId - Transaction type (1 for expense, 2 for income, 3 for savings)
  * @returns {string} CSS class for the amount color
  */
 export const getAmountColor = (typeId) => {
-    return typeId === 1 ? 'text-[#FAF9F5]' : 'text-[#56a69f]';
+    if (typeId === 1) return 'text-[#FAF9F5]';
+    if (typeId === 2) return 'text-[#56a69f]';
+    if (typeId === 3) return 'text-[#A69F8E]';
+    return 'text-[#56a69f]'; // default
 };
