@@ -107,13 +107,17 @@ HASH_SALT=your-hash-salt
 FRONTEND_URL=https://your-frontend-domain.com
 ```
 
-**Frontend (`frontend/.env`):**
+**Frontend (`frontend/.env.production`):**
 ```env
 # Public configuration only
+# ⚠️ NUNCA commite este arquivo! Use variáveis de ambiente do sistema de deploy.
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 VITE_API_URL=https://your-backend-domain.com
+VITE_STRIPE_PRICE_PREMIUM_MONTHLY=price_your_stripe_price_id
 ```
+
+**Nota**: O arquivo `.env.production.example` está versionado e serve como template. O arquivo real `.env.production` deve estar no `.gitignore` e nunca ser commitado.
 
 ### Generating Secure Keys
 
@@ -176,12 +180,81 @@ console.log('Raw data:', data[0].description); // Should be encrypted
 3. **Within 24 hours**: Force password resets for affected users
 4. **Within 72 hours**: Notify users if required by law
 
+### Exposed Secrets Remediation
+
+**⚠️ IMPORTANTE: Se um segredo foi exposto no histórico do Git:**
+
+1. **Remover do rastreamento do Git**:
+   ```bash
+   git rm --cached frontend/.env.production
+   ```
+
+2. **Rotacionar a chave exposta imediatamente**:
+   - Acesse o painel do Supabase
+   - Gere uma nova chave anônima (anon key)
+   - Atualize todas as variáveis de ambiente em produção
+   - Revogue a chave antiga
+
+3. **Verificar histórico do Git**:
+   - O segredo ainda estará visível no histórico de commits
+   - Considere usar `git filter-branch` ou `BFG Repo-Cleaner` para remover do histórico (cuidado: pode quebrar workflows de outros desenvolvedores)
+   - Alternativa: aceitar que o histórico contém o segredo, mas garantir que está rotacionado
+
+4. **Prevenir futuros incidentes**:
+   - ✅ Use `.env.example` para documentar variáveis necessárias (já implementado)
+   - ✅ Configure `.gitignore` para ignorar arquivos `.env*` (já implementado)
+   - ⚠️ Configure pre-commit hooks com GitGuardian CLI para detectar secrets antes de commitar
+   - ⚠️ Use variáveis de ambiente do sistema de deploy (Vercel, AWS, GitHub Secrets, etc.)
+   - ⚠️ Nunca commite arquivos `.env*` (exceto `.env.example`)
+   - ⚠️ Revise PRs antes de fazer merge para verificar se há secrets expostos
+
+### Secret Detection & Prevention
+
+**Configurar GitGuardian CLI (Recomendado):**
+
+```bash
+# Instalar GitGuardian CLI
+pip install ggshield
+
+# Configurar pre-commit hook
+ggshield install
+
+# Testar antes de commitar
+ggshield scan pre-commit
+
+# Scan de um arquivo específico
+ggshield secret scan path frontend/.env.production
+```
+
+**Alternativa: Pre-commit hook manual**
+
+Crie `.git/hooks/pre-commit`:
+
+```bash
+#!/bin/sh
+# Verificar se arquivos .env estão sendo commitados
+if git diff --cached --name-only | grep -E '\.env$|\.env\.(local|production|development)$'; then
+    echo "❌ ERRO: Arquivos .env não devem ser commitados!"
+    echo "Use .env.example como template."
+    exit 1
+fi
+```
+
+**Boas Práticas:**
+- ✅ Sempre use `.env.example` como template
+- ✅ Configure variáveis de ambiente no sistema de deploy (não em arquivos)
+- ✅ Revise PRs antes de fazer merge
+- ✅ Use GitGuardian ou similar para scan automático
+- ❌ Nunca commite arquivos com secrets
+- ❌ Nunca compartilhe secrets em issues, PRs ou mensagens
+
 ### Monitoring Alerts
 Set up alerts for:
 - Multiple failed login attempts from same IP
 - Rate limit violations
 - Unusual API usage patterns
 - Database connection anomalies
+- Secrets detected in code (via GitGuardian)
 
 ## 📋 Compliance Considerations
 

@@ -1,7 +1,10 @@
 const Joi = require('joi');
 const xss = require('xss');
 const { logger } = require('../utils');
-const { emailValidationService } = require('../services');
+const EmailValidationService = require('../services/emailValidationService');
+
+// Create instance to avoid circular dependency issues
+const emailValidationService = new EmailValidationService();
 
 const xssOptions = {
     whiteList: {}, // No HTML tags allowed

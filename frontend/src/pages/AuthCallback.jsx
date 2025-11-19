@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import API from '../utils/api';
 import monityLogo from '../assets/Logo-Escrito-Branca.png';
 
@@ -81,7 +81,7 @@ function AuthCallback() {
                             </div>
 
                             <h2 className="text-2xl font-bold text-white mb-2">Processando Login</h2>
-                            <p className="text-gray-400">Aguarde enquanto completamos seu login...</p>
+                            <p className="text-[#C2C0B6]">Aguarde enquanto completamos seu login...</p>
                         </div>
                     ) : error ? (
                         <div className="text-center">
