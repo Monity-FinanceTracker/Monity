@@ -7,13 +7,13 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/useAuth";
 import { getDynamicGreeting } from "../../utils/greetings";
 
-function ModernCard({ children, title, subtitle, accent, isLoading = false, action }) {
+function ModernCard({ children, title, subtitle, isLoading = false, action }) {
     return (
         <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl px-6 py-4 hover:border-[#3a3a3a] transition-all duration-200">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 text-left">
-                    <h3 className={`text-xl font-bold ${accent || 'text-white'} mb-1`}>{title}</h3>
+                    <h3 className="text-xl font-bold text-[#C2C0B6] mb-1">{title}</h3>
                     {subtitle && <p className="text-[#C2C0B6] text-sm">{subtitle}</p>}
                 </div>
                 {action && (
@@ -79,7 +79,7 @@ function Dashboard() {
                 <ModernCard 
                     title={t('dashboardPage.expense_chart_title')} 
                     subtitle="Monthly spending breakdown"
-                    accent="text-[#FAF9F5]"
+                    accent="text-[#D97757]"
                 >
                     <LazyExpenseChart selectedRange="all_time" />
                 </ModernCard>
@@ -161,7 +161,7 @@ function Dashboard() {
                             </Link>
                             <Link 
                                 to="/add-expense" 
-                                className="flex items-center gap-3 px-4 py-3 text-[#FAF9F5] hover:bg-[#1F1E1D] transition-colors border-t border-[#262626]/50"
+                                className="flex items-center gap-3 px-4 py-3 text-[#D97757] hover:bg-[#1F1E1D] transition-colors border-t border-[#262626]/50"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

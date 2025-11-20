@@ -816,6 +816,7 @@
     "no_results": "Nenhum resultado encontrado",
     "no_results_desc": "Tente ajustar sua pesquisa ou filtros",
     "transaction_count": "{{count}} transações",
+    "no_transactions": "Nenhuma transação encontrada para esta categoria",
     "fetch_error": "Falha ao carregar categorias",
     "add_success": "Categoria adicionada com sucesso",
     "add_error": "Falha ao adicionar categoria",

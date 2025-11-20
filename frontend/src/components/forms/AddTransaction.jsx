@@ -396,27 +396,24 @@ const AddTransaction = ({ type = 'expense' }) => {
                         )}
 
                         {/* Submit Button */}
-                        <div className="pt-2">
-                            <Button
-                                type="submit"
-                                variant={currentConfig.buttonVariant}
-                                size="md"
-                                fullWidth
-                                loading={loading}
-                                disabled={loading}
-                                leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
-                                style={{ justifyContent: 'center' }}
-                            >
-                                {loading
-                                    ? t(`${currentConfig.translationKey}.adding`) 
-                                    : t(`${currentConfig.translationKey}.add_${type}`)
-                                }
-                            </Button>
-                        </div>
+                        <Button
+                            type="submit"
+                            variant={currentConfig.buttonVariant}
+                            size="lg"
+                            fullWidth
+                            loading={loading}
+                            disabled={loading}
+                            leftIcon={!loading ? <FaPlus className="text-lg text-[#30302E]" /> : null}
+                            style={{ justifyContent: 'center' }}
+                        >
+                            {loading 
+                                ? t(`${currentConfig.translationKey}.adding`) 
+                                : t(`${currentConfig.translationKey}.add_${type}`)
+                            }
+                        </Button>
                     </form>
                 </div>
                 </div>
-            </div>
 
             {/* Add Category Modal */}
             {showAddCategoryModal && (
@@ -549,8 +546,8 @@ const AddTransaction = ({ type = 'expense' }) => {
                 </div>
             )}
         </div>
+        </div>
     );
 };
-
 export default AddTransaction;
 
