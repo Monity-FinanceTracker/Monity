@@ -21,9 +21,8 @@ function Transactions() {
             </label>
             <span className={`text-white ml-3 font-semibold ${!choice ? 'text-[#56a69f]' : 'text-[#C2C0B6]'}`}>{t('transactionsPage.incomes')}</span>
             </div>
-                <div className="p-0 md:p-6">
-                    {choice ? <ListExpenses /> : <ListIncomes />}
-                </div>
+            <div className="p-0 md:p-6">
+                {choice ? <ListExpenses /> : <ListIncomes />}
             </div>
         </div>
     )

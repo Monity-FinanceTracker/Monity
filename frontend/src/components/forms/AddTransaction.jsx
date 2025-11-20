@@ -394,7 +394,6 @@ const AddTransaction = ({ type = 'expense' }) => {
                     </form>
                 </div>
                 </div>
-            </div>
 
             {/* Add Category Modal */}
             {showAddCategoryModal && (

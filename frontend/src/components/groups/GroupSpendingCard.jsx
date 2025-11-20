@@ -44,13 +44,8 @@ const getSpendingLevel = (totalSpent) => {
     return { level: 'very_high', color: 'text-red-400' };
 };
 
-    const getSpendingLevel = (totalSpent) => {
-        if (totalSpent === 0) return { level: 'none', color: 'text-[#C2C0B6]' };
-        if (totalSpent < 100) return { level: 'low', color: 'text-green-400' };
-        if (totalSpent < 500) return { level: 'medium', color: 'text-yellow-400' };
-        if (totalSpent < 1000) return { level: 'high', color: 'text-orange-400' };
-        return { level: 'very_high', color: 'text-red-400' };
-    };
+const GroupSpendingCard = ({ group }) => {
+    const { t } = useTranslation();
 
     const spendingLevel = useMemo(() => getSpendingLevel(group.totalSpent), [group.totalSpent]);
     const activityColor = useMemo(() => getActivityColor(group.lastActivity), [group.lastActivity]);
@@ -94,7 +89,7 @@ const getSpendingLevel = (totalSpent) => {
             <div className="mt-3 pt-3 border-t border-[#595e66]">
                 <div className="flex items-center justify-between text-xs">
                     <span className="text-[#C2C0B6]">{t('groups.last_activity')}</span>
-                    <span className="text-gray-300">{formatDate(group.lastActivity)}</span>
+                    <span className="text-gray-300">{formattedDate}</span>
                 </div>
             </div>
 
@@ -123,8 +118,6 @@ const getSpendingLevel = (totalSpent) => {
             )}
         </div>
     );
-});
-
-GroupSpendingCard.displayName = 'GroupSpendingCard';
+};
 
 export default GroupSpendingCard; 
