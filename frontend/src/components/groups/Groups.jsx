@@ -64,10 +64,10 @@ const Groups = () => {
         <div className="flex-1 p-6">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-white">{t('groups.title')}</h1>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-shrink-0">
                     {!loading && groups.length > 0 && (
-                        <div className="flex items-center gap-2">
-                            <div className="w-40 [&_button]:h-10 [&_button]:text-sm [&_button]:rounded-lg [&_button]:px-3">
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                            <div className="w-40 [&_button]:h-10 [&_button]:text-sm [&_button]:rounded-lg [&_button]:px-3 [&_button]:whitespace-nowrap">
                                 <Dropdown
                                     value={sortBy}
                                     onChange={setSortBy}
@@ -120,7 +120,7 @@ const Groups = () => {
                     <EmptyGroups />
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
                     {sortedGroups.map(group => (
                         <GroupCard key={group.id} group={group} />
                     ))}
