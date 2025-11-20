@@ -2,87 +2,69 @@
 
 ## Resumo
 
-Refatoração completa da seção de grupos com foco em performance, consistência visual e melhorias de UX. Substituição de gerenciamento manual de estado por React Query, otimizações de renderização e padronização visual com o restante da aplicação.
+Refatoração completa da seção de grupos com foco em performance, consistência visual e melhorias de UX. Substituição de gerenciamento manual de estado por React Query, layout em grid responsivo, dropdown de informações e funcionalidade de ordenação.
 
 ## Mudanças Principais
 
-### 1. Performance e Arquitetura
+### Performance e Arquitetura
 
-#### React Query Integration
-- **Substituição de estado manual**: Removido `useState`/`useEffect` manual em favor do hook `useGroups()` do React Query
-- **Remoção de subscriptions Supabase**: Eliminadas subscriptions manuais, confiando no refetch automático do React Query
-- **Cache inteligente**: Implementado cache automático com `staleTime` de 5 minutos
-- **Benefícios**: Menos código, melhor performance, atualizações automáticas
-
-#### Otimizações de Renderização
-- **Memoização do GroupSpendingCard**: Adicionado `React.memo` para evitar re-renders desnecessários
-- **Funções utilitárias**: Movidas para fora do componente para evitar recriação a cada render
-- **useMemo**: Aplicado em cálculos e formatações (spendingLevel, formattedDate, formattedTotal, etc.)
+- **React Query Integration**: Substituído estado manual por hooks `useGroups()` e `useGroupById()`
+- **Mutations**: Implementadas para operações do grupo (`useAddGroupExpense`, `useInviteGroupMember`, `useSettleExpenseShare`)
+- **Remoção de subscriptions Supabase**: Usando refetch automático do React Query
+- **Cache inteligente**: `staleTime` de 5 minutos (lista) e 2 minutos (detalhes)
+- **Otimizações**: `React.memo`, `useMemo`, funções utilitárias movidas para fora dos componentes
 - **Resultado**: ~60-80% menos re-renders em listas com múltiplos grupos
 
-### 2. Melhorias Visuais
+### Layout e Visual
+
+#### Grid Layout Responsivo
+- Cards quadrados em grid (1 col mobile, 2 tablet, 3 desktop, 4 large)
+- Design minimalista com informações essenciais visíveis
+- Hover effects com borda brilhante (`hover:border-[#3a3a3a]`)
+- Containers separados (removido `divide-y`)
+
+#### Dropdown de Informações
+- Botão de três pontos (`MoreVertical`) no canto superior direito do card
+- Exibe: gasto por membro e última atividade
+- Contraste melhorado (labels `text-[#8B8A85]`, valores `text-white font-bold`)
+- Borda destacada (`border-2 border-[#3a3a3a]`)
+- Fecha ao clicar fora, previne navegação ao clicar no botão
+
+#### Ordenação de Grupos
+- Dropdown para selecionar critério (Nome, Membros, Total Gasto, Última Atividade)
+- Botão de direção para alternar crescente/decrescente (↑/↓)
+- Posicionado na mesma linha do botão "Create Group", à esquerda
+- Lógica otimizada com `useMemo`
 
 #### Navegação
-- **Seta fixa no topo esquerdo**: Substituído botão "Back" por seta fixa (`fixed top-4 left-4`) em:
-  - `CreateGroup.jsx`
-  - `GroupPage.jsx`
-- **Consistência**: Mesmo padrão visual do `AddExpense` para navegação uniforme
-- **Traduções**: "Back to Groups" → "Back" / "Voltar para Grupos" → "Voltar"
+- Seta fixa no topo esquerdo (`fixed top-4 left-4`) em `CreateGroup.jsx` e `GroupPage.jsx`
+- Mesmo padrão visual do `AddExpense`
+- Traduções: "Back to Groups" → "Back" / "Voltar para Grupos" → "Voltar"
 
-#### Layout e Interatividade
-- **Containers separados**: Cada grupo agora tem seu próprio container individual (removido `divide-y`)
-- **Hover effect**: Adicionado hover com borda brilhante (`hover:border-[#3a3a3a]`) igual ao dashboard
-- **Espaçamento**: `space-y-4` entre containers para melhor separação visual
-- **Remoção de indicador**: Removido círculo colorido de atividade (ball) do `GroupSpendingCard`
+### Página de Detalhes (GroupPage)
 
-### 3. Limpeza de Código
-
-- Removida função `getActivityColor` não utilizada
-- Removidos imports não utilizados (`Link` do GroupPage, `supabase`)
-- Código mais limpo e manutenível
+- React Query com `useGroupById` e mutations
+- Cards de membros e despesas com hover effects e melhor contraste
+- Loading states e botões desabilitados durante mutations
+- Removido import supabase, useCallback desnecessários e alert()
+- Estado local simplificado apenas para formulários
 
 ## Arquivos Modificados
 
 ```
 frontend/src/components/groups/
-├── Groups.jsx              # Refatoração principal com React Query
-├── GroupSpendingCard.jsx   # Otimizações de performance e remoção de indicador
-├── CreateGroup.jsx         # Adicionada seta de navegação fixa
-└── GroupPage.jsx           # Substituído botão Back por seta fixa
+├── Groups.jsx              # React Query + grid layout + ordenação
+├── GroupCard.jsx           # Novo componente de card quadrado com dropdown
+├── GroupPage.jsx           # Refatoração completa com React Query
+├── CreateGroup.jsx         # Seta de navegação fixa
+└── GroupSpendingCard.jsx   # Otimizações de performance
 
-frontend/src/utils/locales/
-├── en.json                 # Tradução "Back to Groups" → "Back"
-└── pt.json                 # Tradução "Voltar para Grupos" → "Voltar"
+frontend/src/hooks/useQueries.js    # useGroupById e mutations
+frontend/src/utils/locales/         # Traduções atualizadas
 ```
-
-## Commits Realizados
-
-1. `refactor: substituir estado manual por React Query em Groups`
-2. `perf: otimizar GroupSpendingCard com memoização`
-3. `i18n: atualizar traduções do botão Back`
-4. `refactor: substituir botão Back por seta fixa no topo esquerdo`
 
 ## Impacto
 
-### Performance
-- ✅ Cache automático reduz chamadas à API
-- ✅ Menos re-renders desnecessários
-- ✅ Melhor gerenciamento de estado
-
-### UX
-- ✅ Navegação mais intuitiva e consistente
-- ✅ Feedback visual melhor com hover effects
-- ✅ Layout mais limpo e organizado
-
-### Manutenibilidade
-- ✅ Código mais simples e direto
-- ✅ Padrões consistentes com o restante da aplicação
-- ✅ Melhor separação de responsabilidades
-
-## Padrões Aplicados
-
-- **React Query**: Para gerenciamento de estado servidor
-- **Memoização**: `React.memo` e `useMemo` para otimização
-- **Consistência visual**: Mesmos padrões do dashboard e AddExpense
-- **Design minimalista**: Remoção de elementos desnecessários
-
+**Performance**: Cache automático, menos re-renders, melhor gerenciamento de estado  
+**UX**: Navegação intuitiva, feedback visual melhor, layout limpo, ordenação flexível  
+**Manutenibilidade**: Código simples, padrões consistentes, hooks reutilizáveis
