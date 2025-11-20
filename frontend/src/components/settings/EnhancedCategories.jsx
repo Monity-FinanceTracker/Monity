@@ -80,11 +80,6 @@ const EnhancedCategories = () => {
         return matchesSearch && matchesType;
     });
 
-    const getTypeLabel = (typeId) => {
-        const type = categoryTypes.find(t => t.id === typeId);
-        return type ? type.label : '';
-    };
-
     // Get transactions for selected category
     const categoryTransactions = useMemo(() => {
         if (!selectedCategory) return [];

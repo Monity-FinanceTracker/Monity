@@ -53,7 +53,7 @@ const EnhancedDashboard = () => {
         fetchDashboardData();
     }, [user]);
     // Enhanced card wrapper with loading states
-    const EnhancedCard = ({ children, title, subtitle, accent, isLoading = false, action, className = '' }) => {
+    const EnhancedCard = ({ children, title, subtitle, isLoading = false, action, className = '' }) => {
         return (
             <div className={`bg-[#1F1E1D] border border-[#262626] rounded-xl hover:border-[#3a3a3a] transition-all duration-200 ${className}`}>
                 <div className="p-6">

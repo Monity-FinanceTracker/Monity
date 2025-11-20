@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/useAuth";
 import { getDynamicGreeting } from "../../utils/greetings";
 
-function ModernCard({ children, title, subtitle, accent, isLoading = false, action }) {
+function ModernCard({ children, title, subtitle, isLoading = false, action }) {
     return (
         <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl px-6 py-4 hover:border-[#3a3a3a] transition-all duration-200">
             {/* Header */}
