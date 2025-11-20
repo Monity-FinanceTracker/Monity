@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../../utils/api';
 import { Users, TrendingUp, UserPlus, Target, Clock, Brain, RefreshCw, Download } from 'lucide-react';
 import { Doughnut } from 'react-chartjs-2';
@@ -21,7 +20,6 @@ import InsightsCard from './InsightsCard';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function AnalyticsDashboard() {
-    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [insights, setInsights] = useState([]);
     const [insightsLoading, setInsightsLoading] = useState(true);
@@ -30,12 +28,7 @@ function AnalyticsDashboard() {
     const [error, setError] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-        fetchAnalytics();
-        fetchInsights();
-    }, [dateRange]);
-
-    const fetchAnalytics = async () => {
+    const fetchAnalytics = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
@@ -58,9 +51,9 @@ function AnalyticsDashboard() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [dateRange]);
 
-    const fetchInsights = async () => {
+    const fetchInsights = useCallback(async () => {
         try {
             setInsightsLoading(true);
 
@@ -82,7 +75,12 @@ function AnalyticsDashboard() {
         } finally {
             setInsightsLoading(false);
         }
-    };
+    }, [dateRange]);
+
+    useEffect(() => {
+        fetchAnalytics();
+        fetchInsights();
+    }, [fetchAnalytics, fetchInsights]);
 
     const handleRefresh = async () => {
         setRefreshing(true);
