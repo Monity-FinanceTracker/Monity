@@ -630,7 +630,17 @@
     "low_spending": "Baixa atividade",
     "medium_spending": "Atividade moderada",
     "high_spending": "Alta atividade",
-    "very_high_spending": "Muito ativo"
+    "very_high_spending": "Muito ativo",
+    "sort_by": "Ordenar por",
+    "sort_by_name": "Ordenar por Nome",
+    "sort_by_members": "Ordenar por Membros",
+    "sort_by_total": "Ordenar por Total Gasto",
+    "sort_by_activity": "Ordenar por Última Atividade",
+    "sort_ascending": "Crescente",
+    "sort_descending": "Decrescente",
+    "not_found_or_not_member": "Grupo não encontrado ou você não é membro deste grupo.",
+    "upgrade_to_add": "Fazer upgrade para adicionar mais",
+    "more_information": "Mais informações"
   },
   "notifications": {
     "success": "Sucesso",
