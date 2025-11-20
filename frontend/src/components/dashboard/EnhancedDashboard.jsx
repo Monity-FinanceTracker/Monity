@@ -164,7 +164,7 @@ const EnhancedDashboard = () => {
 
     // Get dynamic greeting based on time of day and user name
     const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user');
-    const greeting = getDynamicGreeting(userName);
+    const greeting = getDynamicGreeting(userName, t);
 
     return (
         <div className="space-y-8">

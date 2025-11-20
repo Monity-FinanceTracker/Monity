@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { usePageTracking } from './hooks/usePageTracking';
 import { useAuth } from './context/AuthContext';
 
 // Keep only critical components as regular imports for faster initial loading
@@ -27,6 +28,7 @@ import Terms from './components/terms';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
 import BlockingAuthModal from './components/ui/BlockingAuthModal';
+import AnalyticsConsentBanner from './components/ui/AnalyticsConsentBanner';
 
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
@@ -38,6 +40,7 @@ const AIAssistantPage = lazy(() => import('./components/ai/AIAssistantPage'));
 const InvestmentCalculator = lazy(() => import('./components/investment/InvestmentCalculator'));
 const GroupsInfo = lazy(() => import('./components/groups/GroupsInfo'));
 const WhatsNewPage = lazy(() => import('./components/whatsNew/WhatsNewPage'));
+const AnalyticsDashboard = lazy(() => import('./components/admin/AnalyticsDashboard'));
 
 // Import lazy components with optimized loading
 import {
@@ -195,6 +198,9 @@ const App = React.memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
+  // Track page views automatically
+  usePageTracking();
+
   // Component preloading is now handled in MainLayout
 
   useEffect(() => {
@@ -256,10 +262,15 @@ const App = React.memo(() => {
 
         {/* Admin route */}
         <Route path="/admin" element={<AdminRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyAdminDashboard /></MainLayout></AdminRoute>} />
+        <Route path="/admin/analytics" element={<AdminRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><AnalyticsDashboard /></Suspense></MainLayout></AdminRoute>} />
 
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      {/* Analytics Consent Banner */}
+      <AnalyticsConsentBanner />
+
       </NotificationProvider>
     </ErrorBoundary>
   );

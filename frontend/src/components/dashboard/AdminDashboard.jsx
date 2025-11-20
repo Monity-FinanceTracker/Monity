@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { get } from '../../utils/api';
 import { DashboardSkeleton } from '../ui/Skeleton';
+import { Link } from 'react-router-dom';
+import { BarChart3 } from 'lucide-react';
 
 function AdminDashboard() {
   const [analytics, setAnalytics] = useState(null);
@@ -137,11 +139,24 @@ function AdminDashboard() {
     <div className="text-white p-4 md:p-0 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl md:text-2xl font-bold">Admin Dashboard</h1>
+        <div className="flex items-center gap-4">
+          <Link
+            to="/admin/analytics"
+            className="flex items-center gap-2 px-4 py-2 bg-[#56a69f] hover:bg-[#4a8f88] text-white rounded-lg transition-colors"
+          >
+            <BarChart3 className="w-4 h-4" />
+            <span className="text-sm font-medium">View Analytics</span>
+          </Link>
+          <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span>Live Data</span>
+          </div>
         <div className="flex items-center space-x-2 text-sm text-[#C2C0B6]">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           <span>Live Data</span>
         </div>
       </div>
+    </div>
 
       {/* Alerts */}
       {(errorsPerf?.latencyMs?.p95 > 300) && (

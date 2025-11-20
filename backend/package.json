@@ -19,7 +19,6 @@
     "compression": "^1.8.1",
     "compromise": "^14.10.0",
     "cors": "^2.8.5",
-    "debug": "^4.4.3",
     "dotenv": "^16.6.1",
     "express": "^4.19.2",
     "express-rate-limit": "^8.0.1",
@@ -42,8 +41,9 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
+    "debug": "^4.4.3",
     "jest": "^29.7.0",
-    "nodemon": "^3.1.2",
+    "nodemon": "^3.1.11",
     "supertest": "^7.0.0"
   }
 }

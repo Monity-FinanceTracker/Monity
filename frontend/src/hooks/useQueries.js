@@ -51,11 +51,11 @@ export const useCategories = (typeId = null, includeCounts = false) => {
     },
     select: (data) => {
       if (!typeId) return data;
-      return data.filter(category => 
+      return data.filter(category =>
         category.typeId === typeId || category.typeId === 3
       );
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes for categories (rarely change)
+    staleTime: includeCounts ? 1 * 60 * 1000 : 10 * 60 * 1000, // Shorter cache for counts
   });
 };
 

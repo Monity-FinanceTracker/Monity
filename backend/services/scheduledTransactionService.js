@@ -1,12 +1,14 @@
 const cron = require('node-cron');
 const ScheduledTransaction = require('../models/ScheduledTransaction');
 const Transaction = require('../models/Transaction');
+const ScheduledTransactionExecution = require('../models/ScheduledTransactionExecution');
 const { logger } = require('../utils/logger');
 
 class ScheduledTransactionService {
     constructor() {
         this.isInitialized = false;
         this.cronJob = null;
+        this.isProcessing = false;
     }
 
     /**
@@ -42,6 +44,21 @@ class ScheduledTransactionService {
      * Execute all scheduled transactions that are due
      */
     async executeScheduledTransactions() {
+        // Prevent concurrent executions
+        if (this.isProcessing) {
+            logger.warn('[ScheduledTransactionService] Already processing scheduled transactions, skipping this run');
+            return {
+                success: false,
+                message: 'Processing already in progress',
+                processed: 0
+            };
+        }
+
+        this.isProcessing = true;
+        let processedCount = 0;
+        let skippedCount = 0;
+        let errorCount = 0;
+
         try {
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Start of day
@@ -52,8 +69,14 @@ class ScheduledTransactionService {
 
             for (const scheduledTxn of dueTransactions) {
                 try {
-                    await this.executeTransaction(scheduledTxn);
+                    const result = await this.executeTransaction(scheduledTxn);
+                    if (result.created) {
+                        processedCount++;
+                    } else {
+                        skippedCount++;
+                    }
                 } catch (error) {
+                    errorCount++;
                     logger.error(`[ScheduledTransactionService] Failed to execute transaction ${scheduledTxn.id}:`, {
                         error: error.message,
                         transactionId: scheduledTxn.id
@@ -62,11 +85,31 @@ class ScheduledTransactionService {
                 }
             }
 
-            logger.info('[ScheduledTransactionService] Completed scheduled transaction execution');
+            logger.info('[ScheduledTransactionService] Completed scheduled transaction execution', {
+                processed: processedCount,
+                skipped: skippedCount,
+                errors: errorCount
+            });
+
+            return {
+                success: true,
+                processed: processedCount,
+                skipped: skippedCount,
+                errors: errorCount
+            };
         } catch (error) {
             logger.error('[ScheduledTransactionService] Error during scheduled transaction execution:', {
                 error: error.message
             });
+            return {
+                success: false,
+                message: error.message,
+                processed: processedCount,
+                skipped: skippedCount,
+                errors: errorCount
+            };
+        } finally {
+            this.isProcessing = false;
         }
     }
 
@@ -74,14 +117,41 @@ class ScheduledTransactionService {
      * Execute a single scheduled transaction
      */
     async executeTransaction(scheduledTxn) {
+        const executionDate = scheduledTxn.next_execution_date;
+
+        // Check if this transaction has already been executed for this date
+        const existingExecution = await ScheduledTransactionExecution.getByScheduledTransactionAndDate(
+            scheduledTxn.id,
+            executionDate
+        );
+
+        if (existingExecution) {
+            logger.warn(`[ScheduledTransactionService] Skipping duplicate execution of scheduled transaction ${scheduledTxn.id} for date ${executionDate}`, {
+                scheduledTransactionId: scheduledTxn.id,
+                executionDate,
+                existingExecutionId: existingExecution.id
+            });
+            return {
+                created: false,
+                reason: 'duplicate',
+                existingExecution
+            };
+        }
+
         // Create the actual transaction
         const transactionData = {
             userId: scheduledTxn.userId,
             description: scheduledTxn.description,
             amount: parseFloat(scheduledTxn.amount),
             category: scheduledTxn.category,
-            date: scheduledTxn.next_execution_date,
+            date: executionDate,
             typeId: scheduledTxn.typeId,
+            // Add metadata to track the source
+            metadata: {
+                source: 'scheduled_transaction',
+                scheduled_transaction_id: scheduledTxn.id,
+                recurrence_pattern: scheduledTxn.recurrence_pattern
+            }
         };
 
         const createdTransaction = await Transaction.create(transactionData);
@@ -90,6 +160,29 @@ class ScheduledTransactionService {
             transactionId: createdTransaction.id,
             userId: scheduledTxn.userId
         });
+
+        // Record the execution to prevent duplicates
+        try {
+            await ScheduledTransactionExecution.create({
+                scheduled_transaction_id: scheduledTxn.id,
+                execution_date: executionDate,
+                transaction_id: createdTransaction.id
+            });
+
+            logger.info(`[ScheduledTransactionService] Recorded execution of scheduled transaction ${scheduledTxn.id}`, {
+                executionDate
+            });
+        } catch (error) {
+            // If we hit a duplicate execution error, it's okay - another process created it first
+            if (error.message === 'DUPLICATE_EXECUTION') {
+                logger.warn(`[ScheduledTransactionService] Race condition detected - execution record created by another process for ${scheduledTxn.id}`);
+            } else {
+                logger.error(`[ScheduledTransactionService] Failed to record execution for ${scheduledTxn.id}:`, {
+                    error: error.message
+                });
+                // Don't fail the whole execution if we can't record it
+            }
+        }
 
         // Update the scheduled transaction for next execution
         if (scheduledTxn.recurrence_pattern === 'once') {
@@ -117,7 +210,10 @@ class ScheduledTransactionService {
             }
         }
 
-        return createdTransaction;
+        return {
+            created: true,
+            transaction: createdTransaction
+        };
     }
 
     /**
