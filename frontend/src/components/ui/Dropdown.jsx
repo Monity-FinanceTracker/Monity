@@ -80,7 +80,7 @@ const Dropdown = ({
                     </div>
                 )}
                 
-                <span className="text-left">
+                <span className="text-left whitespace-nowrap overflow-hidden text-ellipsis">
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
                 
