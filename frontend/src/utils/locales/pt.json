@@ -640,7 +640,10 @@
     "sort_descending": "Decrescente",
     "not_found_or_not_member": "Grupo não encontrado ou você não é membro deste grupo.",
     "upgrade_to_add": "Fazer upgrade para adicionar mais",
-    "more_information": "Mais informações"
+    "more_information": "Mais informações",
+    "your_balance": "Seu saldo",
+    "you_are_owed": "Você deve receber",
+    "you_owe": "Você deve"
   },
   "notifications": {
     "success": "Sucesso",

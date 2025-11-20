@@ -2,7 +2,7 @@
 
 ## Resumo
 
-Refatoração completa da seção de grupos com foco em performance, consistência visual e melhorias de UX. Substituição de gerenciamento manual de estado por React Query, layout em grid responsivo, dropdown de informações e funcionalidade de ordenação.
+Refatoração completa da seção de grupos com foco em performance, consistência visual e melhorias de UX. Substituição de gerenciamento manual de estado por React Query, layout em grid responsivo, dropdown de informações, funcionalidade de ordenação e exibição de saldo do usuário.
 
 ## Mudanças Principais
 
@@ -18,14 +18,15 @@ Refatoração completa da seção de grupos com foco em performance, consistênc
 ### Layout e Visual
 
 #### Grid Layout Responsivo
-- Cards quadrados em grid (1 col mobile, 2 tablet, 3 desktop, 4 large)
+- Cards retangulares em grid (1 col mobile, 2 tablet, 3 desktop)
 - Design minimalista com informações essenciais visíveis
 - Hover effects com borda brilhante (`hover:border-[#3a3a3a]`)
 - Containers separados (removido `divide-y`)
 
 #### Dropdown de Informações
 - Botão de três pontos (`MoreVertical`) no canto superior direito do card
-- Exibe: gasto por membro e última atividade
+- Exibe: gasto por membro, saldo do usuário e última atividade
+- Saldo do usuário: verde se deve receber, vermelho se deve pagar
 - Contraste melhorado (labels `text-[#8B8A85]`, valores `text-white font-bold`)
 - Borda destacada (`border-2 border-[#3a3a3a]`)
 - Fecha ao clicar fora, previne navegação ao clicar no botão
@@ -41,6 +42,14 @@ Refatoração completa da seção de grupos com foco em performance, consistênc
 - Mesmo padrão visual do `AddExpense`
 - Traduções: "Back to Groups" → "Back" / "Voltar para Grupos" → "Voltar"
 
+### Funcionalidades Adicionais
+
+#### Saldo do Usuário no Grupo
+- Cálculo no backend: quanto o usuário pagou - quanto o usuário deve
+- Exibido no dropdown do card quando diferente de zero
+- Cores: verde (deve receber), vermelho (deve pagar)
+- Traduções: "Seu saldo", "Você deve receber", "Você deve"
+
 ### Página de Detalhes (GroupPage)
 
 - React Query com `useGroupById` e mutations
@@ -54,10 +63,13 @@ Refatoração completa da seção de grupos com foco em performance, consistênc
 ```
 frontend/src/components/groups/
 ├── Groups.jsx              # React Query + grid layout + ordenação
-├── GroupCard.jsx           # Novo componente de card quadrado com dropdown
+├── GroupCard.jsx           # Card retangular com dropdown e saldo
 ├── GroupPage.jsx           # Refatoração completa com React Query
 ├── CreateGroup.jsx         # Seta de navegação fixa
 └── GroupSpendingCard.jsx   # Otimizações de performance
+
+backend/models/
+└── Group.js                # Cálculo de saldo do usuário
 
 frontend/src/hooks/useQueries.js    # useGroupById e mutations
 frontend/src/utils/locales/         # Traduções atualizadas
@@ -66,5 +78,5 @@ frontend/src/utils/locales/         # Traduções atualizadas
 ## Impacto
 
 **Performance**: Cache automático, menos re-renders, melhor gerenciamento de estado  
-**UX**: Navegação intuitiva, feedback visual melhor, layout limpo, ordenação flexível  
+**UX**: Navegação intuitiva, feedback visual melhor, layout limpo, ordenação flexível, visibilidade de saldos  
 **Manutenibilidade**: Código simples, padrões consistentes, hooks reutilizáveis

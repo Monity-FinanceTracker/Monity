@@ -35,6 +35,7 @@ const GroupCard = React.memo(({ group }) => {
     const formattedTotal = useMemo(() => formatCurrency(group.totalSpent), [group.totalSpent]);
     const formattedPerMember = useMemo(() => formatCurrency(group.avgSpentPerMember), [group.avgSpentPerMember]);
     const formattedDate = useMemo(() => formatDate(group.lastActivity, t), [group.lastActivity, t]);
+    const formattedBalance = useMemo(() => formatCurrency(Math.abs(group.userBalance || 0)), [group.userBalance]);
 
     const buttonRef = useRef(null);
 
@@ -69,18 +70,16 @@ const GroupCard = React.memo(({ group }) => {
                 to={`/groups/${group.id}`}
                 className="block"
             >
-                <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg p-6 hover:border-[#3a3a3a] transition-all duration-200 aspect-square flex flex-col justify-between relative">
-                    <div>
-                        <div className="flex items-start justify-between mb-4">
-                            <h3 className="text-xl font-semibold text-white line-clamp-2 flex-1 pr-2">
-                                {group.name}
-                            </h3>
-                        </div>
+                <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg p-6 hover:border-[#3a3a3a] transition-all duration-200 flex flex-col h-full min-h-[200px] relative">
+                    <div className="mb-5">
+                        <h3 className="text-xl font-semibold text-white line-clamp-2">
+                            {group.name}
+                        </h3>
                     </div>
 
-                    <div className="space-y-4">
-                        <div>
-                            <div className="text-[#56a69f] font-bold text-2xl mb-1">
+                    <div className="flex-1 flex flex-col justify-between">
+                        <div className="flex-1 flex flex-col justify-center">
+                            <div className="text-[#56a69f] font-bold text-2xl mb-1.5">
                                 {formattedTotal}
                             </div>
                             <div className="text-[#C2C0B6] text-xs">
@@ -88,10 +87,10 @@ const GroupCard = React.memo(({ group }) => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between pt-3 border-t border-[#262626]">
+                        <div className="flex items-center justify-between pt-4 border-t border-[#262626]">
                             <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-[#56a69f] rounded-full flex items-center justify-center">
-                                    <span className="text-[#1F1E1D] font-bold text-sm">
+                                <div className="w-6 h-6 bg-[#56a69f]/20 rounded-full flex items-center justify-center">
+                                    <span className="text-[#56a69f] font-bold text-xs">
                                         {group.memberCount || 0}
                                     </span>
                                 </div>
@@ -134,6 +133,18 @@ const GroupCard = React.memo(({ group }) => {
                             <div className="text-white font-bold text-base">{formattedPerMember}</div>
                         </div>
                         
+                        {group.userBalance !== undefined && group.userBalance !== 0 && (
+                            <div className="pt-3 border-t border-[#262626]">
+                                <div className="text-[#8B8A85] text-xs mb-1.5 font-medium">{t('groups.your_balance')}</div>
+                                <div className={`font-bold text-base ${group.userBalance > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                    {group.userBalance > 0 ? '+' : ''}{formattedBalance}
+                                </div>
+                                <div className="text-[#8B8A85] text-xs mt-1">
+                                    {group.userBalance > 0 ? t('groups.you_are_owed') : t('groups.you_owe')}
+                                </div>
+                            </div>
+                        )}
+                        
                         <div className="pt-3 border-t border-[#262626]">
                             <div className="text-[#8B8A85] text-xs mb-1.5 font-medium">{t('groups.last_activity')}</div>
                             <div className="text-white font-bold text-base">{formattedDate}</div>
@@ -148,4 +159,3 @@ const GroupCard = React.memo(({ group }) => {
 GroupCard.displayName = 'GroupCard';
 
 export default GroupCard;
-

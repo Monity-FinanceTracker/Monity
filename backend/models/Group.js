@@ -201,13 +201,35 @@ class Group {
                     // Get total spending and expense count
                     const { data: expenses } = await supabaseAdmin
                         .from('group_expenses')
-                        .select('amount, created_at')
+                        .select('amount, created_at, paid_by')
                         .eq('group_id', group.id);
 
                     const totalSpent = expenses?.reduce((sum, expense) => 
                         sum + parseFloat(expense.amount || 0), 0) || 0;
                     
                     const expenseCount = expenses?.length || 0;
+
+                    // Calculate user balance: what user paid - what user owes
+                    let userPaid = 0;
+                    let userOwes = 0;
+                    
+                    // Calculate what user paid (expenses paid by user)
+                    const userExpenses = expenses?.filter(e => e.paid_by === userId) || [];
+                    userPaid = userExpenses.reduce((sum, expense) => 
+                        sum + parseFloat(expense.amount || 0), 0);
+
+                    // Calculate what user owes (unsettled shares)
+                    const { data: userShares } = await supabaseAdmin
+                        .from('expense_shares')
+                        .select('amount_owed, is_settled, group_expenses!inner(group_id)')
+                        .eq('user_id', userId)
+                        .eq('group_expenses.group_id', group.id)
+                        .eq('is_settled', false);
+
+                    userOwes = userShares?.reduce((sum, share) => 
+                        sum + parseFloat(share.amount_owed || 0), 0) || 0;
+
+                    const userBalance = userPaid - userOwes;
 
                     // Get unsettled amount
                     const { data: unsettledShares } = await supabaseAdmin
@@ -240,11 +262,13 @@ class Group {
                         avgSpentPerMember: avgSpentPerMember,
                         lastActivity: lastActivity,
                         unsettledAmount: unsettledAmount,
+                        userBalance: userBalance,
                         // Keep snake_case for backward compatibility
                         member_count: memberCountNum,
                         total_spent: totalSpent,
                         unsettled_amount: unsettledAmount,
-                        last_activity: lastActivity
+                        last_activity: lastActivity,
+                        user_balance: userBalance
                     };
                 } catch (error) {
                     console.error(`Error enriching group ${group.id}:`, error);
@@ -257,11 +281,13 @@ class Group {
                         avgSpentPerMember: 0,
                         lastActivity: group.created_at,
                         unsettledAmount: 0,
+                        userBalance: 0,
                         // Keep snake_case for backward compatibility
                         member_count: 0,
                         total_spent: 0,
                         unsettled_amount: 0,
-                        last_activity: group.created_at
+                        last_activity: group.created_at,
+                        user_balance: 0
                     };
                 }
             })
