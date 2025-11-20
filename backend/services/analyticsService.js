@@ -152,22 +152,48 @@ class AnalyticsService {
         this.eventQueue = [];
 
         try {
-            const { error } = await this.supabase
+            logger.info(`Attempting to flush ${eventsToInsert.length} analytics events`, {
+                sampleEvent: eventsToInsert[0],
+                tableName: 'analytics_events'
+            });
+
+            const { data, error } = await this.supabase
                 .from('analytics_events')
-                .insert(eventsToInsert);
+                .insert(eventsToInsert)
+                .select();
 
-            if (error) throw error;
+            if (error) {
+                logger.error('Failed to insert analytics events', {
+                    error: error.message,
+                    code: error.code,
+                    details: error.details,
+                    hint: error.hint,
+                    count: eventsToInsert.length,
+                    sampleEvent: eventsToInsert[0]
+                });
+                throw error;
+            }
 
-            logger.debug(`Flushed ${eventsToInsert.length} analytics events to database`);
+            logger.info(`Successfully flushed ${eventsToInsert.length} analytics events`, {
+                insertedCount: data?.length || 0
+            });
 
         } catch (error) {
-            logger.error('Failed to flush analytics events', {
+            logger.error('Exception while flushing analytics events', {
                 error: error.message,
+                stack: error.stack,
                 count: eventsToInsert.length
             });
 
-            // Re-queue events if flush failed
-            this.eventQueue.unshift(...eventsToInsert);
+            // Re-queue events if flush failed (but limit queue size to prevent memory issues)
+            if (this.eventQueue.length < 500) {
+                this.eventQueue.unshift(...eventsToInsert);
+            } else {
+                logger.warn('Analytics event queue is full, dropping events', {
+                    queueSize: this.eventQueue.length,
+                    droppedCount: eventsToInsert.length
+                });
+            }
             throw error;
         }
     }

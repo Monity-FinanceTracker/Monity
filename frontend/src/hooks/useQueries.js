@@ -37,20 +37,25 @@ export const useBalance = (selectedRange = 'all_time', options = {}) => {
 };
 
 // Categories Query
-export const useCategories = (typeId = null) => {
+export const useCategories = (typeId = null, includeCounts = false) => {
   return useQuery({
-    queryKey: typeId ? queryKeys.categories.byType(typeId) : queryKeys.categories.all,
+    queryKey: typeId
+      ? queryKeys.categories.byType(typeId)
+      : includeCounts
+        ? [...queryKeys.categories.all, 'withCounts']
+        : queryKeys.categories.all,
     queryFn: async () => {
-      const response = await get('/categories');
+      const endpoint = includeCounts ? '/categories?includeCounts=true' : '/categories';
+      const response = await get(endpoint);
       return response.data;
     },
     select: (data) => {
       if (!typeId) return data;
-      return data.filter(category => 
+      return data.filter(category =>
         category.typeId === typeId || category.typeId === 3
       );
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes for categories (rarely change)
+    staleTime: includeCounts ? 1 * 60 * 1000 : 10 * 60 * 1000, // Shorter cache for counts
   });
 };
 

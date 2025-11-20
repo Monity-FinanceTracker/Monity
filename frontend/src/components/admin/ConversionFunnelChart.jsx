@@ -75,7 +75,7 @@ function ConversionFunnelChart({ steps, loading = false }) {
                                             <p className="text-2xl font-bold text-[#56a69f]">
                                                 {step.count.toLocaleString()}
                                             </p>
-                                            {!isFirst && (
+                                            {!isFirst && steps[0].count > 0 && (
                                                 <span className="text-xs text-gray-400">
                                                     {((step.count / steps[0].count) * 100).toFixed(1)}% of total
                                                 </span>
@@ -113,7 +113,7 @@ function ConversionFunnelChart({ steps, loading = false }) {
                     <div>
                         <p className="text-xs text-gray-500 mb-1">Overall Conversion</p>
                         <p className="text-lg font-bold text-[#56a69f]">
-                            {steps.length > 0
+                            {steps.length > 0 && steps[0].count > 0
                                 ? ((steps[steps.length - 1].count / steps[0].count) * 100).toFixed(1)
                                 : 0}%
                         </p>
@@ -121,7 +121,7 @@ function ConversionFunnelChart({ steps, loading = false }) {
                     <div>
                         <p className="text-xs text-gray-500 mb-1">Total Drop-off</p>
                         <p className="text-lg font-bold text-red-400">
-                            {steps.length > 0
+                            {steps.length > 0 && steps[0].count > 0
                                 ? (((steps[0].count - steps[steps.length - 1].count) / steps[0].count) * 100).toFixed(1)
                                 : 0}%
                         </p>

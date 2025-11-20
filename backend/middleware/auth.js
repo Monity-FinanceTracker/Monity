@@ -76,6 +76,53 @@ const checkPremium = async (req, res, next) => {
     }
 };
 
+const optionalAuth = async (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    // If no token, continue without authentication
+    if (!token) {
+        req.user = null;
+        return next();
+    }
+
+    try {
+        const { data: { user }, error } = await supabase.auth.getUser(token);
+
+        if (error || !user) {
+            // Token is invalid, but we allow the request to continue
+            req.user = null;
+            return next();
+        }
+
+        // Fetch user profile to get role and subscription_tier
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role, subscription_tier')
+            .eq('id', user.id)
+            .single();
+
+        // Enrich user object with profile data
+        req.user = {
+            ...user,
+            role: profile?.role || user.user_metadata?.role || 'user',
+            is_admin: profile?.role === 'admin' || user.user_metadata?.role === 'admin',
+            subscription_tier: profile?.subscription_tier || user.user_metadata?.subscription_tier || 'free'
+        };
+        req.token = token;
+        req.supabase = supabase;
+
+        next();
+    } catch (err) {
+        // On error, continue without authentication
+        logger.warn('Optional authentication failed, continuing without auth', { 
+            error: err.message,
+            path: req.path 
+        });
+        req.user = null;
+        next();
+    }
+};
+
 const requireRole = (requiredRole) => {
     return (req, res, next) => {
         if (!req.user) {
@@ -96,6 +143,7 @@ const requireRole = (requiredRole) => {
 
 module.exports = {
     authenticate,
+    optionalAuth,
     checkPremium,
     requireRole
 };

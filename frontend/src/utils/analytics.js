@@ -18,6 +18,12 @@ class Analytics {
 
         // Start batch processing
         this.startBatchProcessing();
+        console.log('[Analytics] Analytics initialized', {
+            isEnabled: this.isEnabled,
+            sessionId: this.sessionId,
+            batchSize: this.batchSize,
+            flushInterval: this.flushInterval
+        });
 
         // Track session start
         this.startSession();
@@ -33,12 +39,14 @@ class Analytics {
     checkIfEnabled() {
         // Respect Do Not Track browser setting
         if (navigator.doNotTrack === '1' || window.doNotTrack === '1') {
+            console.log('[Analytics] Analytics disabled due to Do Not Track setting');
             return false;
         }
 
         // Check localStorage for user consent
         const consent = localStorage.getItem('analytics_consent');
         if (consent === 'false') {
+            console.log('[Analytics] Analytics disabled - user declined consent');
             return false;
         }
 
@@ -79,14 +87,19 @@ class Analytics {
      * Start a new session
      */
     async startSession() {
-        if (!this.isEnabled) return;
+        if (!this.isEnabled) {
+            console.log('[Analytics] Session start skipped - analytics disabled');
+            return;
+        }
 
+        console.log('[Analytics] Starting session', { sessionId: this.sessionId });
         try {
             await api.post('/analytics/session/start', {
                 sessionId: this.sessionId
             });
+            console.log('[Analytics] Session started successfully');
         } catch (error) {
-            console.error('Failed to start analytics session:', error);
+            console.error('[Analytics] Failed to start analytics session:', error);
         }
     }
 
@@ -163,7 +176,12 @@ class Analytics {
      * @returns {Promise<void>}
      */
     track(eventName, properties = {}) {
-        if (!this.isEnabled) return Promise.resolve();
+        if (!this.isEnabled) {
+            console.log('[Analytics] Track skipped - analytics disabled', { eventName });
+            return Promise.resolve();
+        }
+
+        console.log('[Analytics] Tracking event', { eventName, properties });
 
         const event = {
             sessionId: this.sessionId,
@@ -174,9 +192,15 @@ class Analytics {
 
         // Add to queue
         this.eventQueue.push(event);
+        console.log('[Analytics] Event added to queue', {
+            eventName,
+            queueSize: this.eventQueue.length,
+            batchSize: this.batchSize
+        });
 
         // Flush if batch size reached
         if (this.eventQueue.length >= this.batchSize) {
+            console.log('[Analytics] Batch size reached, flushing now');
             return this.flush();
         }
 
@@ -220,26 +244,44 @@ class Analytics {
      * @returns {Promise<void>}
      */
     async flush() {
-        if (this.eventQueue.length === 0) return;
+        if (this.eventQueue.length === 0) {
+            console.log('[Analytics] Flush called but queue is empty');
+            return;
+        }
 
         const eventsToSend = [...this.eventQueue];
         this.eventQueue = [];
 
+        console.log('[Analytics] Flushing events', {
+            count: eventsToSend.length,
+            events: eventsToSend.map(e => e.eventName)
+        });
+
         try {
             if (eventsToSend.length === 1) {
                 // Send single event
-                await api.post('/analytics/track', eventsToSend[0]);
+                console.log('[Analytics] Sending single event to /analytics/track');
+                const response = await api.post('/analytics/track', eventsToSend[0]);
+                console.log('[Analytics] Single event sent successfully', response);
             } else {
                 // Send batch
-                await api.post('/analytics/batch', {
+                console.log('[Analytics] Sending batch to /analytics/batch');
+                const response = await api.post('/analytics/batch', {
                     events: eventsToSend
                 });
+                console.log('[Analytics] Batch sent successfully', response);
             }
         } catch (error) {
-            console.error('Failed to send analytics events:', error);
+            console.error('[Analytics] Failed to send analytics events:', error);
+            console.error('[Analytics] Error details:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
             // Re-queue events if failed (but don't retry indefinitely)
             if (eventsToSend.length < 100) {
                 this.eventQueue.unshift(...eventsToSend);
+                console.log('[Analytics] Events re-queued for retry');
             }
         }
     }

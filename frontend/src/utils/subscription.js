@@ -17,25 +17,37 @@ export const clearSubscriptionCache = () => {
 /**
  * Checks the subscription status of the current user.
  *
+ * @param {Object} options - Options for the subscription check
+ * @param {boolean} options.force - Force a fresh fetch from API (bypass cache)
+ * @param {Object|null} options.user - Current user object (optional, avoids redundant getSession call)
  * @returns {Promise<string>} A promise that resolves with the user's subscription tier.
  */
 export const checkSubscription = async (options = {}) => {
-  const { force = false } = options;
+  const { force = false, user = null } = options;
   const now = Date.now();
 
-  // If there is no authenticated Supabase session, skip API call entirely
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
+  // If user parameter provided and is null, return free immediately (faster than getSession)
+  if (user === null && options.hasOwnProperty('user')) {
+    subscriptionCache = "free";
+    cacheTimestamp = now;
+    return "free";
+  }
+
+  // Only check session if user wasn't provided
+  if (!user) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        subscriptionCache = "free";
+        cacheTimestamp = now;
+        return "free";
+      }
+    } catch (sessionError) {
+      console.warn("Failed to read Supabase session for subscription check:", sessionError);
       subscriptionCache = "free";
       cacheTimestamp = now;
       return "free";
     }
-  } catch (sessionError) {
-    console.warn("Failed to read Supabase session for subscription check:", sessionError);
-    subscriptionCache = "free";
-    cacheTimestamp = now;
-    return "free";
   }
   
   // Note: Development mode override removed to allow premium testing

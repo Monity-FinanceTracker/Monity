@@ -18,7 +18,7 @@ const EnhancedCategories = () => {
     const queryClient = useQueryClient();
     
     // Use React Query hook for categories - automatically refetches when invalidated
-    const { data: categories = [], isLoading: loading, error } = useCategories();
+    const { data: categories = [], isLoading: loading, error } = useCategories(null, true);
     const addCategoryMutation = useAddCategory();
     
     const [searchQuery, setSearchQuery] = useState('');
@@ -171,7 +171,7 @@ const EnhancedCategories = () => {
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
-                                <div className="text-[#C2C0B6] text-sm">
+                                <div className="text-[#C2C0B6] text-center text-sm">
                                     {t('categories.transaction_count', { count: category.transactionCount || 0 })}
                                 </div>
                             </div>

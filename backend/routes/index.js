@@ -109,20 +109,15 @@ module.exports = (controllers, middleware) => {
     investmentCalculatorRoutes(controllers)
   );
 
+  // Analytics routes - mixed public/admin (auth handled per-route)
+  v1Router.use("/analytics", analyticsRoutes(controllers, middleware));
+
   // Admin routes with role check
   v1Router.use(
     "/admin",
     middleware.auth.authenticate,
     middleware.auth.requireRole("admin"),
     adminRoutes(controllers)
-  );
-
-  // Analytics routes - admin only
-  v1Router.use(
-    "/analytics",
-    middleware.auth.authenticate,
-    middleware.auth.requireRole("admin"),
-    analyticsRoutes(controllers)
   );
 
   return v1Router;

@@ -280,7 +280,7 @@ class AdminController {
             const topCategoriesData = Object.entries(categoryCounts)
                 .sort(([, a], [, b]) => b - a)
                 .slice(0, 9)
-                .map(([category, usage_count]) => ({ category, usage_count }));
+                .map(([category, usage_count]) => ({ name: category, count: usage_count }));
 
             // --- Growth Analytics ---
             const now = new Date();
@@ -399,7 +399,7 @@ class AdminController {
                 },
                 categories: {
                     total: categoriesData.length,
-                    topUsed: topCategoriesData,
+                    mostUsed: topCategoriesData,
                 },
                 growth: {
                     monthlyData: monthlyGrowth,
@@ -496,9 +496,67 @@ class AdminController {
                 return transactionDate >= twoWeeksAgo && transactionDate < weekAgo;
             }).length;
 
-            const weekOverWeekGrowth = previousWeekTransactions > 0 
+            const weekOverWeekGrowth = previousWeekTransactions > 0
                 ? ((currentWeekTransactions - previousWeekTransactions) / previousWeekTransactions * 100).toFixed(1)
                 : 0;
+
+            // Calculate monthly data for the last 12 months
+            const now = new Date();
+            const monthlyDataMap = {};
+            const monthlyTransactionMap = {};
+            const monthlyRevenueMap = {};
+
+            // Initialize last 12 months
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const monthKey = date.toISOString().slice(0, 7); // YYYY-MM
+                monthlyDataMap[monthKey] = 0;
+                monthlyTransactionMap[monthKey] = 0;
+                monthlyRevenueMap[monthKey] = 0;
+            }
+
+            // Fetch all users for monthly signup calculation
+            const { data: allAuthUsers } = await this.supabase.auth.admin.listUsers();
+
+            // Count new users by month
+            if (allAuthUsers && allAuthUsers.users) {
+                allAuthUsers.users.forEach(user => {
+                    const month = new Date(user.created_at).toISOString().slice(0, 7);
+                    if (monthlyDataMap.hasOwnProperty(month)) {
+                        monthlyDataMap[month]++;
+                    }
+                });
+            }
+
+            // Count all transactions (not just from the period) for monthly stats
+            const { data: allTransactions } = await this.supabase
+                .from('transactions')
+                .select('amount, date, typeId');
+
+            if (allTransactions) {
+                allTransactions.forEach(transaction => {
+                    if (transaction.date) {
+                        const month = transaction.date.slice(0, 7); // YYYY-MM
+                        if (monthlyTransactionMap.hasOwnProperty(month)) {
+                            monthlyTransactionMap[month]++;
+                            monthlyRevenueMap[month] += Math.abs(transaction.amount);
+                        }
+                    }
+                });
+            }
+
+            // Create monthlyData array with value property for chart
+            const monthlyData = Object.entries(monthlyDataMap)
+                .sort(([a], [b]) => new Date(a) - new Date(b))
+                .map(([month, value]) => ({ value }));
+
+            // Get current month data for monthlyGrowth
+            const currentMonth = now.toISOString().slice(0, 7);
+            const monthlyGrowth = {
+                users: monthlyDataMap[currentMonth] || 0,
+                transactions: monthlyTransactionMap[currentMonth] || 0,
+                revenue: monthlyRevenueMap[currentMonth] || 0
+            };
 
             res.json({
                 summary: {
@@ -510,6 +568,8 @@ class AdminController {
                     totalVolume: parseFloat(totalVolume.toFixed(2))
                 },
                 dailyTrends,
+                monthlyData,
+                monthlyGrowth,
                 periodData: {
                     currentWeekTransactions,
                     previousWeekTransactions,

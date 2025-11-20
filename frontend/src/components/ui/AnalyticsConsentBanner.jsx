@@ -64,13 +64,10 @@ function AnalyticsConsentBanner() {
                     {/* Content */}
                     <div className="flex-1">
                         <h3 className="text-lg font-semibold text-white mb-2">
-                            We value your privacy
+                            {t('analyticsConsent.title')}
                         </h3>
                         <p className="text-gray-300 text-sm leading-relaxed">
-                            We use analytics to improve your experience with Monity.
-                            This helps us understand how you use the app and make it better.
-                            We respect your privacy - your data stays with us and is never sold to third parties.
-                            You can change your preferences anytime in settings.
+                            {t('analyticsConsent.description')}
                         </p>
                     </div>
 
@@ -80,13 +77,13 @@ function AnalyticsConsentBanner() {
                             onClick={handleDecline}
                             className="px-4 py-2 rounded-lg border border-gray-500 text-gray-300 hover:bg-gray-700 transition-colors text-sm font-medium"
                         >
-                            Decline
+                            {t('analyticsConsent.decline')}
                         </button>
                         <button
                             onClick={handleAccept}
                             className="px-6 py-2 rounded-lg bg-[#01C38D] text-black hover:bg-[#01C38D]/90 transition-colors text-sm font-semibold"
                         >
-                            Accept
+                            {t('analyticsConsent.accept')}
                         </button>
                     </div>
                 </div>
@@ -98,13 +95,13 @@ function AnalyticsConsentBanner() {
                             href="/privacy"
                             className="text-[#01C38D] hover:underline text-sm"
                         >
-                            Learn more about our privacy policy
+                            {t('analyticsConsent.learnMore')}
                         </a>
                         <button
                             onClick={handleCustomize}
                             className="text-gray-400 hover:text-gray-300 text-sm"
                         >
-                            Customize preferences
+                            {t('analyticsConsent.customize')}
                         </button>
                     </div>
                 </div>

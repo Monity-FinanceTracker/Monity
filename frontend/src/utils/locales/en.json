@@ -1336,5 +1336,13 @@
     "subtitle": "The latest releases from your financial app Monity",
     "empty_title": "We don't have any updates for you yet",
     "empty_description": "When there's news, we'll post it here. Follow your favorite features and updates to stay updated on them too."
+  },
+  "analyticsConsent": {
+    "title": "We value your privacy",
+    "description": "We use analytics to improve your experience with Monity. This helps us understand how you use the app and make it better. We respect your privacy - your data stays with us and is never sold to third parties. You can change your preferences anytime in settings.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "learnMore": "Learn more about our privacy policy",
+    "customize": "Customize preferences"
   }
 }

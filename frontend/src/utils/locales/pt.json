@@ -1347,5 +1347,13 @@
     "subtitle": "As últimas atualizações do seu aplicativo financeiro Monity",
     "empty_title": "Ainda não temos atualizações para você",
     "empty_description": "Quando houver novidades, publicaremos aqui. Siga seus recursos e atualizações favoritos para se manter atualizado também."
+  },
+  "analyticsConsent": {
+    "title": "Valorizamos sua privacidade",
+    "description": "Usamos análises para melhorar sua experiência com o Monity. Isso nos ajuda a entender como você usa o aplicativo e torná-lo melhor. Respeitamos sua privacidade - seus dados ficam conosco e nunca são vendidos a terceiros. Você pode alterar suas preferências a qualquer momento nas configurações.",
+    "accept": "Aceitar",
+    "decline": "Recusar",
+    "learnMore": "Saiba mais sobre nossa política de privacidade",
+    "customize": "Personalizar preferências"
   }
 } 

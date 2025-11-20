@@ -27,6 +27,7 @@ export function usePageTracking() {
             hash: location.hash
         };
 
+        console.log('[PageTracking] Tracking page view', { pageName, pageProperties });
         page(pageName, pageProperties);
     }, [location, page]);
 }
