@@ -560,6 +560,7 @@
     "totalExpenses": "Total de despesas: R${{total}}"
   },
   "transactionsPage": {
+    "title": "Transações",
     "expenses": "Despesas",
     "incomes": "Receitas"
   },
@@ -581,7 +582,7 @@
     "loading_details": "Carregando...",
     "fetch_fail": "Falha ao buscar detalhes do grupo.",
     "not_found": "Grupo não encontrado.",
-    "back": "Voltar para Grupos",
+    "back": "Voltar",
     "members": "Membros",
     "add_member": "Adicionar Membro",
     "invite_member": "Convidar Membro",
