@@ -18,6 +18,7 @@ const formatDate = (dateString, t) => {
     const diffTime = now - date;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
+
     if (diffDays === 0) return t('groups.today');
     if (diffDays === 1) return t('groups.yesterday');
     if (diffDays < 7) return t('groups.days_ago', { count: diffDays });
@@ -30,7 +31,6 @@ const getActivityColor = (lastActivity) => {
     const date = new Date(lastActivity);
     const now = new Date();
     const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-
     if (diffDays <= 7) return 'bg-green-500';
     if (diffDays <= 30) return 'bg-yellow-500';
     return 'bg-red-500';
@@ -96,6 +96,33 @@ const GroupSpendingCard = React.memo(({ group }) => {
                             {formattedPerMember}
                         </div>
                         <div className="text-[#C2C0B6] text-xs">{t('groups.per_member')}</div>
+=======
+            <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                        <span className={`text-2xl font-bold ${spendingLevel.color}`}>
+                            {formattedTotal}
+                        </span>
+                        <span className="text-sm text-[#C2C0B6]">
+                            {t('groups.total_spent')}
+                        </span>
+                    </div>
+                </div>
+                <div className={`w-3 h-3 rounded-full ${activityColor}`}></div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 text-sm">
+                <div className="text-center">
+                    <div className="text-white font-semibold">{group.expenseCount || 0}</div>
+                    <div className="text-[#C2C0B6] text-xs">{t('groups.expenses')}</div>
+                </div>
+                <div className="text-center">
+                    <div className="text-white font-semibold">{group.memberCount || 0}</div>
+                    <div className="text-[#C2C0B6] text-xs">{t('groups.members')}</div>
+                </div>
+                <div className="text-center">
+                    <div className="text-white font-semibold">
+                        {formattedPerMember}
                     </div>
                 </div>
 
@@ -104,6 +131,10 @@ const GroupSpendingCard = React.memo(({ group }) => {
                         <span className="text-[#C2C0B6]">{t('groups.last_activity')}</span>
                         <span className="text-gray-300">{formattedDate}</span>
                     </div>
+            <div className="mt-3 pt-3 border-t border-[#595e66]">
+                <div className="flex items-center justify-between text-xs">
+                    <span className="text-[#C2C0B6]">{t('groups.last_activity')}</span>
+                    <span className="text-gray-300">{formattedDate}</span>
                 </div>
 
                 {/* Spending Progress Bar */}
@@ -130,9 +161,14 @@ const GroupSpendingCard = React.memo(({ group }) => {
                 )}
             </div>
         </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
     );
 });
 
 GroupSpendingCard.displayName = 'GroupSpendingCard';
 
-export default GroupSpendingCard; 
+export default GroupSpendingCard;
