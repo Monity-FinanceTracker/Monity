@@ -624,7 +624,10 @@
     "sort_descending": "Descending",
     "not_found_or_not_member": "Group not found or you are not a member of this group.",
     "upgrade_to_add": "Upgrade to add more",
-    "more_information": "More information"
+    "more_information": "More information",
+    "your_balance": "Your balance",
+    "you_are_owed": "You are owed",
+    "you_owe": "You owe"
   },
   "dashboard": {
     "welcome_back": "Welcome back",
