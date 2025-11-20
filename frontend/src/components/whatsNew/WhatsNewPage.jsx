@@ -24,9 +24,9 @@ const WhatsNewPage = () => {
                 {/* Empty State Section */}
                 <div className="mt-12 text-center py-16">
                     <div className="max-w-md mx-auto">
-                        <h2 className="text-2xl font-bold text-white mb-3">
+                        <h3 className="text-3xl font-bold text-white mb-3">
                             {t('whatsNew.empty_title')}
-                        </h2>
+                        </h3>
                         <p className="text-gray-400 text-base leading-relaxed">
                             {t('whatsNew.empty_description')}
                         </p>

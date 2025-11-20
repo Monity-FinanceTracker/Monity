@@ -11,7 +11,12 @@ const authenticate = async (req, res, next) => {
         const { data: { user }, error } = await supabase.auth.getUser(token);
 
         if (error || !user) {
-            logger.warn('Authentication failed: Invalid token', { token });
+            logger.warn('Authentication failed: Invalid token', { 
+                error: error?.message || 'No user returned',
+                path: req.path,
+                method: req.method,
+                tokenPrefix: token ? `${token.substring(0, 20)}...` : 'missing'
+            });
             return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
         }
 

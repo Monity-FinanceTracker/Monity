@@ -28,6 +28,22 @@ const CreateGroup = () => {
 
     return (
         <div className="flex-1 p-6">
+            {/* Back Button - Fixed position */}
+            <button
+                onClick={() => navigate('/groups')}
+                className="fixed top-4 left-4 z-10 flex items-center justify-center w-10 h-10 rounded-lg bg-[#1F1E1D] border border-[#262626] hover:border-[#56a69f] transition-colors group"
+                title={t('groups.back')}
+            >
+                <svg 
+                    className="w-5 h-5 text-[#C2C0B6] group-hover:text-[#56a69f] transition-colors" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
             <div className="max-w-md mx-auto">
                 <h1 className="text-3xl font-bold text-white mb-8 text-center">{t('groups.create_title')}</h1>
                 
