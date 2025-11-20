@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, CloseButton } from '../ui';
 import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { categoryIconOptions } from '../../utils/iconMappingData';
+import { useAnalytics } from '../../hooks/useAnalytics';
 
 /**
  * Componente unificado para adicionar receitas e despesas
@@ -17,6 +18,7 @@ const AddTransaction = ({ type = 'expense' }) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const queryClient = useQueryClient();
+    const { track } = useAnalytics();
     
     // Configuração baseada no tipo
     const config = {
@@ -26,6 +28,7 @@ const AddTransaction = ({ type = 'expense' }) => {
             colorClass: 'red',
             gradient: 'from-red-500 to-red-600',
             bgColor: 'bg-red-500/20',
+            iconColor: 'text-red-500',
             textColor: 'text-red-400',
             focusRing: 'focus:ring-red-500',
             // Use solid red background for the main call-to-action
@@ -125,6 +128,14 @@ const AddTransaction = ({ type = 'expense' }) => {
         try {
             await addTransaction(transactionData);
             
+            // Track transaction creation
+            track('transaction_created', {
+                type: type,
+                amount: transactionData.amount,
+                category: transactionData.category,
+                has_description: !!transactionData.description
+            });
+            
             // Invalidate and refetch all transaction-related queries
             await queryClient.invalidateQueries({ queryKey: ['transactions'] });
             await queryClient.invalidateQueries({ queryKey: ['balance'] });
@@ -135,6 +146,12 @@ const AddTransaction = ({ type = 'expense' }) => {
             navigate('/');
         } catch (err) {
             toast.error(err.response?.data?.message || t(`${currentConfig.translationKey}.failed`));
+            
+            // Track transaction creation failure
+            track('transaction_creation_failed', {
+                type: type,
+                error: err.response?.data?.message || 'Unknown error'
+            });
         } finally {
             setLoading(false);
         }
@@ -191,13 +208,16 @@ const AddTransaction = ({ type = 'expense' }) => {
                 <div className="max-w-2xl mx-auto">
                     {/* Header Section */}
                     <div className="text-center mb-8 mt-8">
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                        {t(`${currentConfig.translationKey}.title`)}
-                    </h1>
-                    <p className="text-[#C2C0B6] text-lg">
-                        {t(`${currentConfig.translationKey}.subtitle`)}
-                    </p>
-                </div>
+                        <div className={`inline-flex items-center justify-center w-16 h-16 ${currentConfig.bgColor} rounded-full mb-4 shadow-lg`}>
+                            <Icon className={`${currentConfig.iconColor} text-2xl`} />
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                            {t(`${currentConfig.translationKey}.title`)}
+                        </h1>
+                        <p className="text-[#C2C0B6] text-lg">
+                            {t(`${currentConfig.translationKey}.subtitle`)}
+                        </p>
+                    </div>
 
                 {/* Add Transaction Form */}
                 <div className={`bg-[#1F1E1D] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all ${shakeForm ? 'animate-shake' : ''}`}>
@@ -525,10 +545,9 @@ const AddTransaction = ({ type = 'expense' }) => {
                     </div>
                 </div>
             )}
-            </div>
+        </div>
         </div>
     );
 };
-
 export default AddTransaction;
 

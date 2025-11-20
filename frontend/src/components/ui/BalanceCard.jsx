@@ -4,11 +4,13 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import Spinner from "./Spinner";
 import { useTranslation } from "react-i18next";
 import { useBalance } from "../../hooks/useQueries";
+import { useAuth } from "../../context/useAuth";
 
 const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     const { t } = useTranslation();
+    const { user } = useAuth();
     const navigate = useNavigate();
-    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange);
+    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange, { enabled: !!user });
 
     // Calcula o tamanho da fonte baseado no comprimento do texto
     const fontSize = useMemo(() => {
@@ -23,6 +25,13 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
         return 'text-2xl'; // Números extremamente grandes
     }, [balance]);
 
+    if (!user) {
+        return (
+            <p className="text-gray-400 text-lg mb-4">
+                {t('balanceCard.loginToView', 'Faça login para ver seu saldo.')}
+            </p>
+        );
+    }
     const handleAddIncome = () => {
         navigate('/add-income');
     };

@@ -91,33 +91,34 @@ const GroupSpendingCard = ({ group }) => {
                     <span className="text-[#C2C0B6]">{t('groups.last_activity')}</span>
                     <span className="text-gray-300">{formattedDate}</span>
                 </div>
-            </div>
 
-            {/* Spending Progress Bar */}
-            {group.totalSpent > 0 && (
-                <div className="mt-3">
-                    <div className="flex justify-between text-xs text-[#C2C0B6] mb-1">
-                        <span>{t('groups.spending_level')}</span>
-                        <span className={spendingLevel.color}>
-                            {t(`groups.${spendingLevel.level}_spending`)}
-                        </span>
+                {/* Spending Progress Bar */}
+                {group.totalSpent > 0 && (
+                    <div className="mt-3">
+                        <div className="flex justify-between text-xs text-[#C2C0B6] mb-1">
+                            <span>{t('groups.spending_level')}</span>
+                            <span className={spendingLevel.color}>
+                                {t(`groups.${spendingLevel.level}_spending`)}
+                            </span>
+                        </div>
+                        <div className="w-full bg-gray-700 rounded-full h-1.5">
+                            <div
+                                className={`h-1.5 rounded-full transition-all duration-500 ${spendingLevel.level === 'low' ? 'bg-green-500' :
+                                        spendingLevel.level === 'medium' ? 'bg-yellow-500' :
+                                            spendingLevel.level === 'high' ? 'bg-orange-500' : 'bg-red-500'
+                                    }`}
+                                style={{
+                                    width: `${Math.min(100, (group.totalSpent / 1000) * 100)}%`
+                                }}
+                            ></div>
+                        </div>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-1.5">
-                        <div 
-                            className={`h-1.5 rounded-full transition-all duration-500 ${
-                                spendingLevel.level === 'low' ? 'bg-green-500' :
-                                spendingLevel.level === 'medium' ? 'bg-yellow-500' :
-                                spendingLevel.level === 'high' ? 'bg-orange-500' : 'bg-red-500'
-                            }`}
-                            style={{ 
-                                width: `${Math.min(100, (group.totalSpent / 1000) * 100)}%` 
-                            }}
-                        ></div>
-                    </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
 
-export default GroupSpendingCard; 
+GroupSpendingCard.displayName = 'GroupSpendingCard';
+
+export default GroupSpendingCard;
