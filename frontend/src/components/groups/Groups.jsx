@@ -1,38 +1,106 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { useGroups } from '../../hooks/useQueries';
 import GroupInvitations from './GroupInvitations';
-import GroupSpendingCard from './GroupSpendingCard';
+import GroupCard from './GroupCard';
 import { EmptyGroups, LoadingState } from '../ui/EmptyStates';
+import Dropdown from '../ui/Dropdown';
 
 const Groups = () => {
     const { t } = useTranslation();
     const { subscriptionTier } = useAuth();
     const { data: groups = [], isLoading: loading } = useGroups();
+    
+    const [sortBy, setSortBy] = useState('name');
+    const [sortOrder, setSortOrder] = useState('asc');
 
     const isLimited = useMemo(
         () => subscriptionTier === 'free' && groups.length >= 2,
         [subscriptionTier, groups.length]
     );
 
+    const sortedGroups = useMemo(() => {
+        const sorted = [...groups];
+        
+        sorted.sort((a, b) => {
+            let aValue, bValue;
+            
+            switch (sortBy) {
+                case 'name':
+                    aValue = a.name?.toLowerCase() || '';
+                    bValue = b.name?.toLowerCase() || '';
+                    break;
+                case 'members':
+                    aValue = a.memberCount || 0;
+                    bValue = b.memberCount || 0;
+                    break;
+                case 'total':
+                    aValue = a.totalSpent || 0;
+                    bValue = b.totalSpent || 0;
+                    break;
+                case 'activity':
+                    aValue = a.lastActivity ? new Date(a.lastActivity).getTime() : 0;
+                    bValue = b.lastActivity ? new Date(b.lastActivity).getTime() : 0;
+                    break;
+                default:
+                    return 0;
+            }
+            
+            if (typeof aValue === 'string') {
+                return sortOrder === 'asc' 
+                    ? aValue.localeCompare(bValue)
+                    : bValue.localeCompare(aValue);
+            }
+            
+            return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+        });
+        
+        return sorted;
+    }, [groups, sortBy, sortOrder]);
+
     return (
         <div className="flex-1 p-6">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-white">{t('groups.title')}</h1>
                 <div className="flex items-center gap-4">
+                    {!loading && groups.length > 0 && (
+                        <div className="flex items-center gap-2">
+                            <div className="w-40 [&_button]:h-10 [&_button]:text-sm [&_button]:rounded-lg [&_button]:px-3">
+                                <Dropdown
+                                    value={sortBy}
+                                    onChange={setSortBy}
+                                    options={[
+                                        { value: 'name', label: t('groups.sort_by_name') },
+                                        { value: 'members', label: t('groups.sort_by_members') },
+                                        { value: 'total', label: t('groups.sort_by_total') },
+                                        { value: 'activity', label: t('groups.sort_by_activity') }
+                                    ]}
+                                    placeholder={t('groups.sort_by')}
+                                    className="w-40"
+                                />
+                            </div>
+                            <button
+                                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                                className="bg-[#262626] border border-[#262626] rounded-lg px-2.5 py-1.5 text-white hover:border-[#56a69f] transition-colors min-w-[40px] h-10 flex items-center justify-center text-sm"
+                                title={sortOrder === 'asc' ? t('groups.sort_ascending') : t('groups.sort_descending')}
+                            >
+                                {sortOrder === 'asc' ? '↑' : '↓'}
+                            </button>
+                        </div>
+                    )}
                     {isLimited && (
                         <Link
                             to="/subscription"
-                            className="bg-yellow-400 text-black font-bold px-6 py-3 rounded-lg hover:bg-yellow-500 transition-colors"
+                            className="bg-yellow-400 text-black font-bold px-5 py-2.5 rounded-lg hover:bg-yellow-500 transition-colors text-sm"
                         >
                             {t('groups.upgrade_to_add')}
                         </Link>
                     )}
                     <Link
                         to="/groups/create"
-                        className={`bg-[#56a69f] !text-[#1F1E1D] font-medium px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#56a69f] !text-[#1F1E1D] font-medium px-5 py-2.5 rounded-lg hover:bg-[#4A8F88] transition-colors text-sm ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={(e) => isLimited && e.preventDefault()}
                     >
                         {t('groups.create')}
@@ -52,42 +120,9 @@ const Groups = () => {
                     <EmptyGroups />
                 </div>
             ) : (
-                <div className="space-y-4">
-                    {groups.map(group => (
-                        <div 
-                            key={group.id} 
-                            className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6 hover:border-[#3a3a3a] transition-all duration-200"
-                        >
-                            <Link 
-                                to={`/groups/${group.id}`} 
-                                className="block"
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div className="text-left">
-                                        <h2 className="text-xl font-semibold text-white mb-1">{group.name}</h2>
-                                        <p className="text-[#C2C0B6] text-sm">{t('groups.click_to_view')}</p>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        {group.totalSpent > 0 && (
-                                            <div className="text-right">
-                                                <div className="text-[#56a69f] font-bold text-lg">
-                                                    R$ {group.totalSpent.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                                                </div>
-                                                <div className="text-[#C2C0B6] text-xs">
-                                                    {group.expenseCount} {t('groups.expenses_count')}
-                                                </div>
-                                            </div>
-                                        )}
-                                        <div className="w-8 h-8 bg-[#56a69f] rounded-full flex items-center justify-center">
-                                            <span className="text-[#1F1E1D] font-bold text-sm">
-                                                {group.memberCount || 0}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <GroupSpendingCard group={group} />
-                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {sortedGroups.map(group => (
+                        <GroupCard key={group.id} group={group} />
                     ))}
                 </div>
             )}
