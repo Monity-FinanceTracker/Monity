@@ -1344,5 +1344,55 @@
     "decline": "Decline",
     "learnMore": "Learn more about our privacy policy",
     "customize": "Customize preferences"
+  },
+  "greetings": {
+    "morning": {
+      "joyful": "Good morning, {{name}}! It's a great day!",
+      "calm": "Peaceful morning to you, {{name}}",
+      "hopeful": "New day, new chances, {{name}}. Hello",
+      "curious": "What's up today, {{name}}? Good morning!",
+      "warm": "Sending morning cheer, {{name}}",
+      "formal": "Good morning, {{name}}. Be productive.",
+      "relaxed": "Slow morning, happy start, {{name}}",
+      "energetic": "Rise and shine, {{name}}. Let's go",
+      "thoughtful": "Be wise this morning, {{name}}",
+      "playful": "Hey, {{name}}! Wakey, wakey!"
+    },
+    "afternoon": {
+      "joyful": "Happy afternoon, {{name}}! Woohoo!",
+      "calm": "Afternoon peace be with you, {{name}}",
+      "hopeful": "Finish strong, {{name}}! Good afternoon",
+      "curious": "How's the day going, {{name}}?",
+      "warm": "Warm afternoon hello, {{name}}",
+      "formal": "Salutations this afternoon, {{name}}",
+      "relaxed": "Chill time, {{name}}. Afternoon bliss",
+      "energetic": "Power through, {{name}}. You got this",
+      "thoughtful": "Remember your goal, {{name}}. Hello",
+      "playful": "Time for a snack, {{name}}. Hi"
+    },
+    "night": {
+      "joyful": "Dream big, {{name}}. Good night!",
+      "calm": "Peaceful slumber tonight, {{name}}",
+      "hopeful": "Rest up for tomorrow, {{name}}",
+      "curious": "What did you achieve today, {{name}}?",
+      "warm": "Cozy night thoughts, {{name}}",
+      "formal": "Wishing you a good rest, {{name}}",
+      "relaxed": "Unwind time, {{name}}. Good night",
+      "energetic": "Recharge quickly, {{name}}. See ya",
+      "thoughtful": "Reflect on your day, {{name}}",
+      "playful": "Don't let the bed bugs bite, {{name}}!"
+    },
+    "dawn": {
+      "joyful": "Night owl greetings, {{name}}",
+      "calm": "Quiet hours peace, {{name}}",
+      "hopeful": "New dawn is coming, {{name}}",
+      "curious": "Still awake, {{name}}? What's up?",
+      "warm": "Thinking of you, late night, {{name}}",
+      "formal": "Salutations at the turn, {{name}}",
+      "relaxed": "Enjoy the deep silence, {{name}}",
+      "energetic": "Late-night focus mode, {{name}}",
+      "thoughtful": "Clarity in the dark, {{name}}",
+      "playful": "Secret midnight hello, {{name}}"
+    }
   }
 }

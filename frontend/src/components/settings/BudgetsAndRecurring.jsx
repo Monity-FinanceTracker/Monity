@@ -270,13 +270,32 @@ function RecurringTransactions() {
     }, [fetchData]);
 
     const handleProcess = async () => {
+        // Prevent multiple clicks
+        if (isLoading) return;
+
         setIsLoading(true);
+        setError(null); // Clear any previous errors
+
         try {
-            await processRecurringTransactions();
-            alert(t('recurring.processing_complete'));
-            fetchData(); // Refresh data
-        } catch {
-            setError(t('recurring.processing_error'));
+            const result = await processRecurringTransactions();
+
+            // Show success message
+            if (result?.success) {
+                const message = result.processed > 0
+                    ? t('recurring.processing_complete_count', { count: result.processed })
+                    : t('recurring.processing_complete');
+                alert(message);
+            } else {
+                alert(t('recurring.processing_complete'));
+            }
+
+            // Refresh data to show newly created transactions
+            fetchData();
+        } catch (error) {
+            console.error('Failed to process recurring transactions:', error);
+            const errorMessage = error.response?.data?.error || error.message || t('recurring.processing_error');
+            setError(errorMessage);
+            alert(errorMessage);
         } finally {
             setIsLoading(false);
         }

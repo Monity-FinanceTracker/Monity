@@ -1355,5 +1355,55 @@
     "decline": "Recusar",
     "learnMore": "Saiba mais sobre nossa política de privacidade",
     "customize": "Personalizar preferências"
+  },
+  "greetings": {
+    "morning": {
+      "joyful": "Bom dia, {{name}}! É um ótimo dia!",
+      "calm": "Manhã tranquila para você, {{name}}",
+      "hopeful": "Novo dia, novas chances, {{name}}. Olá",
+      "curious": "O que vem por aí hoje, {{name}}? Bom dia!",
+      "warm": "Enviando alegria matinal, {{name}}",
+      "formal": "Bom dia, {{name}}. Seja produtivo.",
+      "relaxed": "Manhã tranquila, começo feliz, {{name}}",
+      "energetic": "Levante e brilhe, {{name}}. Vamos lá",
+      "thoughtful": "Seja sábio nesta manhã, {{name}}",
+      "playful": "Ei, {{name}}! Acorda, acorda!"
+    },
+    "afternoon": {
+      "joyful": "Boa tarde feliz, {{name}}! Uhul!",
+      "calm": "Paz de tarde esteja com você, {{name}}",
+      "hopeful": "Termine forte, {{name}}! Boa tarde",
+      "curious": "Como está indo o dia, {{name}}?",
+      "warm": "Olá caloroso de tarde, {{name}}",
+      "formal": "Saudações nesta tarde, {{name}}",
+      "relaxed": "Hora de relaxar, {{name}}. Paz da tarde",
+      "energetic": "Continue forte, {{name}}. Você consegue",
+      "thoughtful": "Lembre-se do seu objetivo, {{name}}. Olá",
+      "playful": "Hora de um lanche, {{name}}. Oi"
+    },
+    "night": {
+      "joyful": "Sonhe grande, {{name}}. Boa noite!",
+      "calm": "Sono tranquilo esta noite, {{name}}",
+      "hopeful": "Descanse para o amanhã, {{name}}",
+      "curious": "O que você conquistou hoje, {{name}}?",
+      "warm": "Pensamentos aconchegantes da noite, {{name}}",
+      "formal": "Desejando um bom descanso, {{name}}",
+      "relaxed": "Hora de relaxar, {{name}}. Boa noite",
+      "energetic": "Recarregue rápido, {{name}}. Até mais",
+      "thoughtful": "Reflita sobre seu dia, {{name}}",
+      "playful": "Não deixe os percevejos te morderem, {{name}}!"
+    },
+    "dawn": {
+      "joyful": "Saudações de coruja da noite, {{name}}",
+      "calm": "Paz das horas quietas, {{name}}",
+      "hopeful": "Nova alvorada está chegando, {{name}}",
+      "curious": "Ainda acordado, {{name}}? O que está rolando?",
+      "warm": "Pensando em você, noite adentro, {{name}}",
+      "formal": "Saudações na virada, {{name}}",
+      "relaxed": "Aproveite o silêncio profundo, {{name}}",
+      "energetic": "Modo foco noturno, {{name}}",
+      "thoughtful": "Clareza no escuro, {{name}}",
+      "playful": "Olá secreto da meia-noite, {{name}}"
+    }
   }
 } 

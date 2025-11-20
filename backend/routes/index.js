@@ -21,6 +21,7 @@ const billingRoutes = require("./billing");
 const cashFlowRoutes = require("./cashFlow");
 const investmentCalculatorRoutes = require("./investmentCalculator");
 const analyticsRoutes = require("./analytics");
+const recurringTransactionsRoutes = require("./recurringTransactions");
 
 module.exports = (controllers, middleware) => {
   // Version 1 of the API
@@ -107,6 +108,11 @@ module.exports = (controllers, middleware) => {
     "/investment-calculator",
     middleware.auth.authenticate,
     investmentCalculatorRoutes(controllers)
+  );
+  v1Router.use(
+    "/recurring-transactions",
+    middleware.auth.authenticate,
+    recurringTransactionsRoutes(controllers)
   );
 
   // Analytics routes - mixed public/admin (auth handled per-route)
