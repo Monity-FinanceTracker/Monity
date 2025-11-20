@@ -103,6 +103,19 @@ export const useGroups = () => {
   });
 };
 
+// Group by ID Query
+export const useGroupById = (id) => {
+  return useQuery({
+    queryKey: queryKeys.groups.byId(id),
+    queryFn: async () => {
+      const response = await get(`/groups/${id}`);
+      return response.data;
+    },
+    enabled: !!id,
+    staleTime: 2 * 60 * 1000, // 2 minutes for individual group
+  });
+};
+
 // Mutation Hooks
 export const useAddTransaction = () => {
   const queryClient = useQueryClient();
@@ -146,6 +159,54 @@ export const useAddSavingsGoal = () => {
     onSuccess: () => {
       // Invalidate savings cache
       queryClient.invalidateQueries({ queryKey: queryKeys.savings.all });
+    },
+  });
+};
+
+// Group Mutations
+export const useAddGroupExpense = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ groupId, expenseData }) => {
+      const response = await post(`/groups/${groupId}/expenses`, expenseData);
+      return response.data;
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate group queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.groups.byId(variables.groupId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+    },
+  });
+};
+
+export const useInviteGroupMember = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ groupId, email }) => {
+      const response = await post(`/groups/${groupId}/invite`, { email });
+      return response.data;
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate group queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.groups.byId(variables.groupId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+    },
+  });
+};
+
+export const useSettleExpenseShare = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (shareId) => {
+      const response = await post(`/groups/shares/${shareId}/settle`);
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate all group queries to refresh expense data
+      queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
     },
   });
 };
