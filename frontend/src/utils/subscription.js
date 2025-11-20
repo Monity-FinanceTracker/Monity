@@ -27,7 +27,7 @@ export const checkSubscription = async (options = {}) => {
   const now = Date.now();
 
   // If user parameter provided and is null, return free immediately (faster than getSession)
-  if (user === null && options.hasOwnProperty('user')) {
+  if (user === null && Object.hasOwn(options, 'user')) {
     subscriptionCache = "free";
     cacheTimestamp = now;
     return "free";

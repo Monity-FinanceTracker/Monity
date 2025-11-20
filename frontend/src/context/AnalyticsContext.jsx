@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useAuth } from './useAuth';
-import analytics, { track as trackEvent, page as trackPage, identify as identifyUser } from '../utils/analytics';
+import { track as trackEvent, page as trackPage, identify as identifyUser } from '../utils/analytics';
 import { AnalyticsContext } from '../hooks/useAnalytics';
 
 /**
