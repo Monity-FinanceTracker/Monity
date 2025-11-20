@@ -874,6 +874,7 @@
     "no_results": "No categories found",
     "no_results_desc": "Try adjusting your search or filters",
     "transaction_count": "{{count}} transactions",
+    "no_transactions": "No transactions found for this category",
     "fetch_error": "Failed to load categories",
     "add_success": "Category added successfully",
     "add_error": "Failed to add category",

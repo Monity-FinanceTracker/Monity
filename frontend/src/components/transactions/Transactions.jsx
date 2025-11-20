@@ -10,15 +10,8 @@ function Transactions() {
         setChoice(!choice);
     }
     return (
-        <div className="mx-auto max-w-5xl">
-            {/* Title */}
-            <div className="mb-6 px-4 md:px-6">
-                <h3 className="text-2xl font-bold text-[#56a69f] text-left">
-                    {t('transactionsPage.title')}
-                </h3>
-            </div>
-            <div className="p-4 md:p-6 rounded-xl mt-4 md:mt-8">
-                <div className="flex justify-center items-center mb-6">
+        <div className="p-4 md:p-6 rounded-xl mt-4 md:mt-8 mx-auto max-w-5xl">
+            <div className="flex justify-center items-center mb-6">
             <span className={`text-white mr-3 font-semibold ${choice ? 'text-[#56a69f]' : 'text-[#C2C0B6]'}`}>{t('transactionsPage.expenses')}</span>
             <label className="relative inline-flex items-center cursor-pointer">
                 <input onChange={handleChoice} type="checkbox" className="sr-only peer" />
@@ -28,9 +21,8 @@ function Transactions() {
             </label>
             <span className={`text-white ml-3 font-semibold ${!choice ? 'text-[#56a69f]' : 'text-[#C2C0B6]'}`}>{t('transactionsPage.incomes')}</span>
             </div>
-                <div className="p-0 md:p-6">
-                    {choice ? <ListExpenses /> : <ListIncomes />}
-                </div>
+            <div className="p-0 md:p-6">
+                {choice ? <ListExpenses /> : <ListIncomes />}
             </div>
         </div>
     )

@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import {
   House,
   ArrowLeftRight,
@@ -24,8 +24,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
   const { t } = useTranslation();
   const { isAdmin, subscriptionTier } = useAuth();
   const premiumUser = subscriptionTier === 'premium';
-  const [isHovering, setIsHovering] = useState(false);
   const [isCollapsedHovering, setIsCollapsedHovering] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   // Estilos de transição consistentes para os NavLinks
   const navLinkTransition = {

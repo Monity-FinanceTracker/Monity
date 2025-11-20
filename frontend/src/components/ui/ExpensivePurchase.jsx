@@ -92,7 +92,7 @@ const ExpensivePurchase = React.memo(() => {
                                 <td className="py-3 pr-4">{formatDate(expense.date)}</td>
                                 <td className="py-3 px-4">{expense.category}</td>
                                 <td className="py-3 px-4">{expense.description}</td>
-                                <td className="text-[#FAF9F5] py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
+                                <td className="text-[#D97757] py-3 px-4 text-right">{formatSimpleCurrency(expense.amount, true)}</td>
                                 <td className="py-3 pl-4 text-center">
                                     <button className="text-red-400 hover:text-red-300 font-semibold transition-colors" onClick={() => handleDelete(expense.id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -115,7 +115,7 @@ const ExpensivePurchase = React.memo(() => {
                                 <p className="font-bold text-white text-lg">{expense.description}</p>
                                 <p className="text-sm text-[#C2C0B6]">{expense.category}</p>
                             </div>
-                            <p className="text-[#FAF9F5] font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
+                            <p className="text-[#D97757] font-bold text-lg">{formatSimpleCurrency(expense.amount, true)}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <p className="text-xs text-gray-500">{formatDate(expense.date)}</p>

@@ -4,13 +4,11 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import Spinner from "./Spinner";
 import { useTranslation } from "react-i18next";
 import { useBalance } from "../../hooks/useQueries";
-import { useAuth } from "../../context/useAuth";
 
 const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     const { t } = useTranslation();
-    const { user } = useAuth();
     const navigate = useNavigate();
-    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange, { enabled: !!user });
+    const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange);
 
     // Calcula o tamanho da fonte baseado no comprimento do texto
     const fontSize = useMemo(() => {
@@ -25,13 +23,6 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
         return 'text-2xl'; // Números extremamente grandes
     }, [balance]);
 
-    if (!user) {
-        return (
-            <p className="text-gray-400 text-lg mb-4">
-                {t('balanceCard.loginToView', 'Faça login para ver seu saldo.')}
-            </p>
-        );
-    }
     const handleAddIncome = () => {
         navigate('/add-income');
     };
@@ -91,9 +82,9 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
                 <div className="relative group/tooltip">
                     <button
                         onClick={handleAddExpense}
-                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#FAF9F5]/20 flex items-center justify-center hover:bg-[#FAF9F5]/30 transition-all duration-200 group"
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#D97757]/20 flex items-center justify-center hover:bg-[#D97757]/20 transition-all duration-200 group"
                     >
-                        <ArrowUp className="w-5 h-5 text-[#FAF9F5] group-hover:scale-110 transition-transform" />
+                        <ArrowUp className="w-5 h-5 text-[#D97757] group-hover:scale-110 transition-transform" />
                     </button>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-[#1F1E1D] border border-[#FAF9F5]/30 text-[#FAF9F5] text-xs font-medium rounded-lg whitespace-nowrap opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 pointer-events-none z-50">
                         {t('transactions.add_expense') || 'Add Expense'}
