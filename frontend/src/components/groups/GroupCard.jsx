@@ -87,7 +87,7 @@ const GroupCard = React.memo(({ group }) => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between mt-3 pt-4 border-t border-[#262626]">
+                        <div className="flex items-center justify-between pt-4 border-t border-[#262626]">
                             <div className="flex items-center gap-2">
                                 <div className="w-6 h-6 bg-[#56a69f]/20 rounded-full flex items-center justify-center">
                                     <span className="text-[#56a69f] font-bold text-xs">
@@ -159,4 +159,3 @@ const GroupCard = React.memo(({ group }) => {
 GroupCard.displayName = 'GroupCard';
 
 export default GroupCard;
-
