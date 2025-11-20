@@ -37,11 +37,16 @@ export const useBalance = (selectedRange = 'all_time', options = {}) => {
 };
 
 // Categories Query
-export const useCategories = (typeId = null) => {
+export const useCategories = (typeId = null, includeCounts = false) => {
   return useQuery({
-    queryKey: typeId ? queryKeys.categories.byType(typeId) : queryKeys.categories.all,
+    queryKey: typeId 
+      ? queryKeys.categories.byType(typeId) 
+      : includeCounts 
+        ? [...queryKeys.categories.all, 'withCounts'] 
+        : queryKeys.categories.all,
     queryFn: async () => {
-      const response = await get('/categories');
+      const url = includeCounts ? '/categories?includeCounts=true' : '/categories';
+      const response = await get(url);
       return response.data;
     },
     select: (data) => {

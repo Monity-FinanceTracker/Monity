@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,6 @@ const Groups = () => {
     const { t } = useTranslation();
     const { subscriptionTier } = useAuth();
     const { data: groups = [], isLoading: loading } = useGroups();
-    
     const [sortBy, setSortBy] = useState('name');
     const [sortOrder, setSortOrder] = useState('asc');
 
@@ -22,41 +21,43 @@ const Groups = () => {
     );
 
     const sortedGroups = useMemo(() => {
-        const sorted = [...groups];
-        
-        sorted.sort((a, b) => {
-            let aValue, bValue;
-            
+        if (!groups.length) return [];
+
+        const sorted = [...groups].sort((a, b) => {
+            let compareA, compareB;
+
             switch (sortBy) {
                 case 'name':
-                    aValue = a.name?.toLowerCase() || '';
-                    bValue = b.name?.toLowerCase() || '';
+                    compareA = a.name?.toLowerCase() || '';
+                    compareB = b.name?.toLowerCase() || '';
                     break;
                 case 'members':
-                    aValue = a.memberCount || 0;
-                    bValue = b.memberCount || 0;
+                    compareA = a.members?.length || 0;
+                    compareB = b.members?.length || 0;
                     break;
                 case 'total':
-                    aValue = a.totalSpent || 0;
-                    bValue = b.totalSpent || 0;
+                    compareA = a.total_spent || 0;
+                    compareB = b.total_spent || 0;
                     break;
                 case 'activity':
-                    aValue = a.lastActivity ? new Date(a.lastActivity).getTime() : 0;
-                    bValue = b.lastActivity ? new Date(b.lastActivity).getTime() : 0;
+                    compareA = new Date(a.updated_at || a.created_at).getTime();
+                    compareB = new Date(b.updated_at || b.created_at).getTime();
                     break;
                 default:
                     return 0;
             }
-            
-            if (typeof aValue === 'string') {
+
+            if (typeof compareA === 'string') {
                 return sortOrder === 'asc' 
-                    ? aValue.localeCompare(bValue)
-                    : bValue.localeCompare(aValue);
+                    ? compareA.localeCompare(compareB)
+                    : compareB.localeCompare(compareA);
             }
-            
-            return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+
+            return sortOrder === 'asc' 
+                ? compareA - compareB
+                : compareB - compareA;
         });
-        
+
         return sorted;
     }, [groups, sortBy, sortOrder]);
 

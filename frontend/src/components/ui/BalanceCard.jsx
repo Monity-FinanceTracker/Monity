@@ -91,9 +91,9 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
                 <div className="relative group/tooltip">
                     <button
                         onClick={handleAddExpense}
-                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#FAF9F5]/20 flex items-center justify-center hover:bg-[#FAF9F5]/30 transition-all duration-200 group"
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#D97757]/20 flex items-center justify-center hover:bg-[#D97757]/20 transition-all duration-200 group"
                     >
-                        <ArrowUp className="w-5 h-5 text-[#FAF9F5] group-hover:scale-110 transition-transform" />
+                        <ArrowUp className="w-5 h-5 text-[#D97757] group-hover:scale-110 transition-transform" />
                     </button>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-[#1F1E1D] border border-[#FAF9F5]/30 text-[#FAF9F5] text-xs font-medium rounded-lg whitespace-nowrap opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 pointer-events-none z-50">
                         {t('transactions.add_expense') || 'Add Expense'}
