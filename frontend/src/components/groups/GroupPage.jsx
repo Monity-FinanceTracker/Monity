@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useMemo } from 'react';
-=======
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
->>>>>>> bb699d93b631864000f73d5a9bf6a4093589e879
 import { useParams } from 'react-router-dom';
 import { searchUsers } from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
