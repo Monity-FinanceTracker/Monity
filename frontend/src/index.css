@@ -551,3 +551,19 @@ select option[selected] {
   background-color: #01C38D !important;
   color: white !important;
 }
+
+/* Prevenir background branco em inputs com autocomplete */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #262624 inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-color: #262624 !important;
+    caret-color: #ffffff !important;
+}
+
+/* Garantir que inputs em foco mantenham background escuro */
+input:focus {
+    background-color: #262624 !important;
+}
