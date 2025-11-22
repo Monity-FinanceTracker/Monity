@@ -187,7 +187,7 @@ const InvestmentCalculator = () => {
                                             type="number"
                                             value={initialInvestment}
                                             onChange={(e) => setInitialInvestment(e.target.value)}
-                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg pl-10 pr-10 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                             min="0"
                                             step="0.01"
                                             required
@@ -225,7 +225,7 @@ const InvestmentCalculator = () => {
                                             type="number"
                                             value={contributionAmount}
                                             onChange={(e) => setContributionAmount(e.target.value)}
-                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                                            className="w-full bg-[#1F1E1D] border border-[#262626] rounded-lg pl-10 pr-10 py-2.5 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                             min="0"
                                             step="0.01"
                                             required

@@ -26,15 +26,15 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         
         {/* PRO Badge - Only for premium users */}
         {subscriptionTier === 'premium' && (
-          <div className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs font-bold">
+          <div className="px-2 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: '#333333', color: '#bfbfbf' }}>
             PRO
           </div>
         )}
         
         {/* Profile Picture */}
         <div className={subscriptionTier === 'premium' ? 'premium-spinning-border' : ''}>
-          <div className="w-8 h-8 bg-[#56a69f] rounded-full flex items-center justify-center shadow-md relative z-10">
-            <span className="text-[#1F1E1D] text-lg font-bold">
+          <div className="w-7 h-7 bg-[#56a69f] rounded-full flex items-center justify-center shadow-md relative z-10">
+            <span className="text-[#1F1E1D] text-base font-bold">
               {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
                 <Icon name="User" size="sm" className="text-[#1F1E1D]" />
               )}
