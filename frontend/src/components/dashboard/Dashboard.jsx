@@ -4,15 +4,17 @@ import { BalanceCard, ExpensivePurchase, Savings, Container, Grid, Heading, Text
 import { LazyExpenseChart, LazyBalanceChart } from '../LazyComponents';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/useAuth";
+import { getDynamicGreeting } from "../../utils/greetings";
 
-function ModernCard({ children, title, subtitle, accent, isLoading = false, action }) {
+function ModernCard({ children, title, subtitle, isLoading = false, action }) {
     return (
-        <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
+        <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl px-6 py-4 hover:border-[#3a3a3a] transition-all duration-200">
             {/* Header */}
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 text-left">
-                    <h3 className={`text-xl font-bold ${accent || 'text-white'} mb-1`}>{title}</h3>
-                    {subtitle && <p className="text-gray-400 text-sm">{subtitle}</p>}
+                    <h3 className="text-xl font-bold text-[#C2C0B6] mb-1">{title}</h3>
+                    {subtitle && <p className="text-[#C2C0B6] text-sm">{subtitle}</p>}
                 </div>
                 {action && (
                     <div className="flex items-center">
@@ -39,17 +41,24 @@ function ModernCard({ children, title, subtitle, accent, isLoading = false, acti
 
 function Dashboard() {
     const { t } = useTranslation();
+    const { user } = useAuth();
     const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
+
+    // Get dynamic greeting based on time of day and user name
+    const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user');
+    const greeting = getDynamicGreeting(userName, t);
 
     return (
         <Container size="default" padding="default">
             <div className="space-y-8">
                 {/* Welcome Section */}
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2 text-balance">
-                        {t('dashboard.welcome_back')}
+                    <h1 
+                        className="text-3xl font-bold text-white mb-2 text-balance font-stratford"
+                    >
+                        {greeting}
                     </h1>
-                    <p className="text-gray-400 text-lg text-left">
+                    <p className="text-[#C2C0B6] text-lg text-left">
                         {t('dashboard.welcome_subtitle')}
                     </p>
                 </div>
@@ -70,7 +79,7 @@ function Dashboard() {
                 <ModernCard 
                     title={t('dashboardPage.expense_chart_title')} 
                     subtitle="Monthly spending breakdown"
-                    accent="text-[#FAF9F5]"
+                    accent="text-[#D97757]"
                 >
                     <LazyExpenseChart selectedRange="all_time" />
                 </ModernCard>
@@ -78,7 +87,7 @@ function Dashboard() {
                 <ModernCard 
                     title={t('dashboardPage.savings_card_title')} 
                     subtitle="Your savings progress"
-                    accent="text-green-400"
+                    accent="text-[#A69F8E]"
                 >
                     <Savings selectedRange="all_time" />
                 </ModernCard>
@@ -152,7 +161,7 @@ function Dashboard() {
                             </Link>
                             <Link 
                                 to="/add-expense" 
-                                className="flex items-center gap-3 px-4 py-3 text-[#FAF9F5] hover:bg-[#1F1E1D] transition-colors border-t border-[#262626]/50"
+                                className="flex items-center gap-3 px-4 py-3 text-[#D97757] hover:bg-[#1F1E1D] transition-colors border-t border-[#262626]/50"
                                 onClick={() => setIsFabMenuOpen(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -12,10 +12,12 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import MonityLogo from '../../assets/monity-logo-semFundo-Branca.png';
+import { useAnalytics } from '../../hooks/useAnalytics';
 
 const AIAssistantPage = () => {
     const { t } = useTranslation();
     const { subscriptionTier, user } = useAuth();
+    const { track } = useAnalytics();
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
@@ -65,6 +67,11 @@ const AIAssistantPage = () => {
     };
 
     const handleNewChat = async () => {
+        // Track new chat action
+        track('ai_chat_cleared', {
+            messages_count: messages.length
+        });
+
         try {
             const response = await clearAIChatHistory();
             if (response.success) {
@@ -85,9 +92,23 @@ const AIAssistantPage = () => {
 
         if (!messageToSend) return;
 
+        // Track AI assistant usage
+        track('tool_used', {
+            tool: 'ai_assistant',
+            action: 'send_message',
+            message_length: messageToSend.length,
+            subscription_tier: subscriptionTier
+        });
+
         // Check if limit reached before sending
         if (subscriptionTier === 'free' && usage?.today?.messagesUsed >= 3) {
             toast.error(`${t('ai.daily_limit_reached')}. ${t('ai.upgrade_message')}`);
+            
+            // Track limit reached
+            track('ai_limit_reached', {
+                subscription_tier: subscriptionTier,
+                messages_used: usage?.today?.messagesUsed
+            });
             return;
         }
 
@@ -173,17 +194,17 @@ const AIAssistantPage = () => {
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4" style={{ scrollBehavior: 'smooth' }}>
                 {!isInitialLoading && messages.length === 0 && showPrompts ? (
                     <div className="h-full flex items-center justify-center p-6">
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col items-center gap-4">
                             <img 
                                 src={MonityLogo} 
                                 alt="Monity Logo" 
                                 className="w-16 h-16"
                             />
                             <h3 
-                                className="text-4xl"
-                                style={{ fontFamily: 'Stratford, sans-serif', color: '#C2C0B6' }}
+                                className="text-4xl font-stratford text-center"
+                                style={{ color: '#C2C0B6' }}
                             >
-                                Olá! {user?.user_metadata?.name || user?.user_metadata?.full_name || 'Usuário'}
+                                How can I help you, {user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user')}?
                             </h3>
                         </div>
                     </div>
@@ -237,7 +258,7 @@ const AIAssistantPage = () => {
                         {loading && (
                             <div className="flex justify-start">
                                 <div className="bg-[#262624] rounded-2xl px-4 py-3">
-                                    <div className="flex items-center gap-2 text-gray-400">
+                                    <div className="flex items-center gap-2 text-[#C2C0B6]">
                                         <FiLoader className="animate-spin" />
                                         <span>{t('ai.thinking')}</span>
                                     </div>

@@ -7,9 +7,11 @@ import InvestmentChart from './InvestmentChart';
 import { TrendingUp, DollarSign, Target, AlertCircle, Crown } from 'lucide-react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import Dropdown from '../ui/Dropdown';
+import { useAnalytics } from '../../hooks/useAnalytics';
 
 const InvestmentCalculator = () => {
     const { t } = useTranslation();
+    const { track } = useAnalytics();
     
     // Form inputs
     const [initialInvestment, setInitialInvestment] = useState('1000');
@@ -58,6 +60,15 @@ const InvestmentCalculator = () => {
         setError(null);
         setLoading(true);
 
+        // Track investment calculator usage
+        track('tool_used', {
+            tool: 'investment_calculator',
+            action: 'calculate',
+            initial_investment: parseFloat(initialInvestment),
+            contribution_frequency: contributionFrequency,
+            interest_rate: parseFloat(annualInterestRate)
+        });
+
         try {
             const response = await post('/investment-calculator/calculate', {
                 initialInvestment: parseFloat(initialInvestment),
@@ -72,6 +83,13 @@ const InvestmentCalculator = () => {
             setGrowthData(response.data.data.growthData);
             setUsage(response.data.data.usage);
             setLimitReached(false);
+
+            // Track successful calculation
+            track('investment_calculation_success', {
+                final_amount: response.data.data.summary.finalAmount,
+                total_contributions: response.data.data.summary.totalContributions,
+                total_interest: response.data.data.summary.totalInterest
+            });
         } catch (err) {
             if (err.response?.status === 429) {
                 setError(err.response.data.message);
@@ -116,7 +134,7 @@ const InvestmentCalculator = () => {
                         {/* Usage indicator */}
                         {usage && !usage.isPremium && (
                             <div className="bg-[#1F1E1D] rounded-lg px-4 py-2 border border-[#262626]">
-                                <p className="text-sm text-gray-400">
+                                <p className="text-sm text-[#C2C0B6]">
                                     {t('investmentCalculator.simulationsUsed', {
                                         used: Number(usage.simulationsUsed ?? 0),
                                         limit: Number(usage.simulationsLimit ?? 0)
@@ -153,15 +171,9 @@ const InvestmentCalculator = () => {
                     {/* Input Form */}
                     <div className="lg:col-span-1">
                         <div className="bg-[#1F1E1D] rounded-xl p-6 border border-[#262626]">
-                            <h2 
-                                className="font-semibold text-white mb-6"
-                                style={{
-                                    fontSize: 'clamp(0.875rem, 5vw, 1.25rem)',
-                                    maxWidth: '100%'
-                                }}
-                            >
+                            <h3 className="text-2xl font-bold text-white mb-6">
                                 {t('investmentCalculator.inputParameters')}
-                            </h2>
+                            </h3>
                             
                             <form onSubmit={handleCalculate} className="space-y-5">
                                 {/* Initial Investment */}
@@ -170,7 +182,7 @@ const InvestmentCalculator = () => {
                                         {t('investmentCalculator.initialInvestment')}
                                     </label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#C2C0B6]" />
                                         <input
                                             type="number"
                                             value={initialInvestment}
@@ -208,7 +220,7 @@ const InvestmentCalculator = () => {
                                         {t('investmentCalculator.contributionAmount')}
                                     </label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#C2C0B6]" />
                                         <input
                                             type="number"
                                             value={contributionAmount}
@@ -280,18 +292,18 @@ const InvestmentCalculator = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => setAnnualInterestRate(Math.min(100, ((parseFloat(annualInterestRate) || 0) + 0.1).toFixed(1)))}
-                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                                 style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                             >
-                                                <FaChevronUp className="w-3 h-3 text-gray-400 stroke-2" />
+                                                <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => setAnnualInterestRate(Math.max(0, ((parseFloat(annualInterestRate) || 0) - 0.1).toFixed(1)))}
-                                                className="w-4 h-3 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                                className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] hover:text-white transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
                                                 style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                             >
-                                                <FaChevronDown className="w-3 h-3 text-gray-400 stroke-2" />
+                                                <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                             </button>
                                         </div>
                                     </div>
@@ -366,7 +378,7 @@ const InvestmentCalculator = () => {
                                     disabled={loading || limitReached}
                                     className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                                         loading || limitReached
-                                            ? 'bg-[#262626] text-gray-400 cursor-not-allowed'
+                                            ? 'bg-[#262626] text-[#C2C0B6] cursor-not-allowed'
                                             : 'bg-[#56a69f] !text-[#1F1E1D] hover:bg-[#4A8F88]'
                                     }`}
                                 >
@@ -442,7 +454,7 @@ const InvestmentCalculator = () => {
                         ) : (
                             <div className="bg-[#1F1E1D] rounded-xl p-12 border border-[#262626] text-center">
                                 <TrendingUp className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                                <h3 className="text-xl font-semibold text-gray-400 mb-2">
+                                <h3 className="text-xl font-semibold text-[#C2C0B6] mb-2">
                                     {t('investmentCalculator.noResults')}
                                 </h3>
                                 <p className="text-gray-500">

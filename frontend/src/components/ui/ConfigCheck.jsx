@@ -17,7 +17,7 @@ const ConfigCheck = () => {
         <div className="text-center mb-6">
           <div className="text-6xl mb-4">⚙️</div>
           <h1 className="text-2xl font-bold mb-2">Configuration Required</h1>
-          <p className="text-gray-400">
+          <p className="text-[#C2C0B6]">
             Your Monity app needs to be configured with the proper environment variables.
           </p>
         </div>

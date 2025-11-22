@@ -15,7 +15,10 @@ const BillingController = require("./billingController");
 const CashFlowController = require("./cashFlowController");
 const AIChatController = require("./aiChatController");
 const InvestmentCalculatorController = require("./investmentCalculatorController");
+const AnalyticsController = require("./analyticsController");
+const RecurringTransactionController = require("./recurringTransactionController");
 const { scheduledTransactionService } = require("../services");
+const { supabaseAdmin } = require("../config/supabase");
 
 const initializeControllers = (supabase) => {
   return {
@@ -38,6 +41,10 @@ const initializeControllers = (supabase) => {
     cashFlowController: new CashFlowController(supabase, scheduledTransactionService),
     aiChatController: new AIChatController(supabase),
     investmentCalculatorController: new InvestmentCalculatorController(supabase),
+    // Analytics controller uses admin client to bypass RLS for tracking
+    analyticsController: new AnalyticsController(supabaseAdmin),
+    // Recurring transaction controller uses scheduledTransactionService
+    recurringTransactionController: new RecurringTransactionController(scheduledTransactionService),
   };
 };
 

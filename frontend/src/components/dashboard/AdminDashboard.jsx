@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { get } from '../../utils/api';
 import { DashboardSkeleton } from '../ui/Skeleton';
+import { Link } from 'react-router-dom';
+import { BarChart3 } from 'lucide-react';
 
 function AdminDashboard() {
   const [analytics, setAnalytics] = useState(null);
@@ -137,11 +139,24 @@ function AdminDashboard() {
     <div className="text-white p-4 md:p-0 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl md:text-2xl font-bold">Admin Dashboard</h1>
-        <div className="flex items-center space-x-2 text-sm text-gray-400">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/admin/analytics"
+            className="flex items-center gap-2 px-4 py-2 bg-[#56a69f] hover:bg-[#4a8f88] text-white rounded-lg transition-colors"
+          >
+            <BarChart3 className="w-4 h-4" />
+            <span className="text-sm font-medium">View Analytics</span>
+          </Link>
+          <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span>Live Data</span>
+          </div>
+        <div className="flex items-center space-x-2 text-sm text-[#C2C0B6]">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           <span>Live Data</span>
         </div>
       </div>
+    </div>
 
       {/* Alerts */}
       {(errorsPerf?.latencyMs?.p95 > 300) && (
@@ -206,19 +221,19 @@ function AdminDashboard() {
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#56a69f]">{analytics?.users.premium || 0}</div>
-              <div className="text-sm text-gray-400">Premium Users</div>
+              <div className="text-sm text-[#C2C0B6]">Premium Users</div>
             </div>
             <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#36A2EB]">{analytics?.users.free || 0}</div>
-              <div className="text-sm text-gray-400">Free Users</div>
+              <div className="text-sm text-[#C2C0B6]">Free Users</div>
             </div>
             <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#FFCE56]">{analytics?.users.recentSignups || 0}</div>
-              <div className="text-sm text-gray-400">Recent Signups</div>
+              <div className="text-sm text-[#C2C0B6]">Recent Signups</div>
             </div>
             <div className="text-center p-4 bg-[#1F1E1D] rounded-xl border border-[#262626]">
               <div className="text-2xl font-bold text-[#FF6384]">{analytics?.categories.total || 0}</div>
-              <div className="text-sm text-gray-400">Categories</div>
+              <div className="text-sm text-[#C2C0B6]">Categories</div>
             </div>
           </div>
         </div>
@@ -244,13 +259,13 @@ function AdminDashboard() {
                           style={{ height: `${height}%` }}
                           title={`${monthNames[i]}: ${monthData.value}`}
                         ></div>
-                        <div className="text-xs text-gray-400 mt-1 text-center">{monthNames[i]}</div>
+                        <div className="text-xs text-[#C2C0B6] mt-1 text-center">{monthNames[i]}</div>
                       </div>
                     );
                   })}
                 </div>
               ) : (
-                <div className="text-center text-gray-400">
+                <div className="text-center text-[#C2C0B6]">
                   <div className="text-sm">No monthly data available</div>
                 </div>
               )}
@@ -259,19 +274,19 @@ function AdminDashboard() {
           
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>New Users</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>New Users</span>
               <span className="font-semibold text-[#56a69f] flex-shrink-0">+{trends?.monthlyGrowth?.users || 0}</span>
             </div>
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>New Transactions</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>New Transactions</span>
               <span className="font-semibold text-[#36A2EB] flex-shrink-0">+{trends?.monthlyGrowth?.transactions || 0}</span>
             </div>
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Revenue Growth</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Revenue Growth</span>
               <span className="font-semibold text-[#FFCE56] flex-shrink-0">{formatCurrency(trends?.monthlyGrowth?.revenue || 0)}</span>
             </div>
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Avg Daily Volume</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Avg Daily Volume</span>
               <span className="font-semibold flex-shrink-0">{formatCurrency(trends?.summary?.avgDailyVolume || 0)}</span>
             </div>
           </div>
@@ -286,14 +301,14 @@ function AdminDashboard() {
             <div key={index} className="bg-[#1F1E1D] p-4 rounded-xl border border-[#262626]">
               <div className="flex items-start justify-between mb-2">
                 <span className="font-medium text-white flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>{category.name || 'Category'}</span>
-                <span className="text-sm text-gray-400 flex-shrink-0 mt-0.5">#{index + 1}</span>
+                <span className="text-sm text-[#C2C0B6] flex-shrink-0 mt-0.5">#{index + 1}</span>
               </div>
               <div className="text-2xl font-bold text-[#56a69f]">{category.count || 0}</div>
-              <div className="text-sm text-gray-400">transactions</div>
+              <div className="text-sm text-[#C2C0B6]">transactions</div>
             </div>
           ))}
           {(!analytics?.categories.mostUsed || analytics.categories.mostUsed.length === 0) && (
-            <div className="col-span-full text-center py-8 text-gray-400">
+            <div className="col-span-full text-center py-8 text-[#C2C0B6]">
               No category data available
             </div>
           )}
@@ -319,13 +334,13 @@ function AdminDashboard() {
                   return (
                     <div key={i} className="flex flex-col items-center justify-end flex-1 h-full">
                       <div className="w-full rounded-t bg-[#36A2EB]" style={{ height: `${height}%` }} title={`${c.weekStart}: ${c.retained}/${c.signups}`} />
-                      <div className="text-[10px] text-gray-400 mt-1 text-center">{c.weekStart.slice(5)}</div>
+                      <div className="text-[10px] text-[#C2C0B6] mt-1 text-center">{c.weekStart.slice(5)}</div>
                     </div>
                   );
                 })}
               </div>
             ) : (
-              <div className="text-gray-400 text-sm">No cohort data</div>
+              <div className="text-[#C2C0B6] text-sm">No cohort data</div>
             )}
           </div>
         </div>
@@ -343,15 +358,15 @@ function AdminDashboard() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl border border-[#262626]">
-              <div className="text-gray-400 mb-2">30d Signups</div>
+              <div className="text-[#C2C0B6] mb-2">30d Signups</div>
               <div className="text-2xl font-bold">{monetization.funnel?.signups30 || 0}</div>
             </div>
             <div className="p-4 rounded-xl border border-[#262626]">
-              <div className="text-gray-400 mb-2">30d Active</div>
+              <div className="text-[#C2C0B6] mb-2">30d Active</div>
               <div className="text-2xl font-bold text-[#56a69f]">{monetization.funnel?.active30 || 0}</div>
             </div>
             <div className="p-4 rounded-xl border border-[#262626]">
-              <div className="text-gray-400 mb-2">30d Premium</div>
+              <div className="text-[#C2C0B6] mb-2">30d Premium</div>
               <div className="text-2xl font-bold text-[#FF6384]">{monetization.funnel?.premium30 || 0}</div>
             </div>
           </div>
@@ -377,31 +392,31 @@ function AdminDashboard() {
           <h2 className="text-xl font-semibold mb-4">Segments</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 rounded-xl border border-[#262626]">
-              <div className="text-gray-400 mb-2">By Tier</div>
+              <div className="text-[#C2C0B6] mb-2">By Tier</div>
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <div className="text-sm text-gray-400">Free</div>
+                  <div className="text-sm text-[#C2C0B6]">Free</div>
                   <div className="text-2xl font-bold">{segments.segments?.byTier?.free || 0}</div>
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm text-gray-400">Premium</div>
+                  <div className="text-sm text-[#C2C0B6]">Premium</div>
                   <div className="text-2xl font-bold text-[#56a69f]">{segments.segments?.byTier?.premium || 0}</div>
                 </div>
               </div>
             </div>
             <div className="p-4 rounded-xl border border-[#262626]">
-              <div className="text-gray-400 mb-2">By Activity</div>
+              <div className="text-[#C2C0B6] mb-2">By Activity</div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <div className="text-sm text-gray-400">Low</div>
+                  <div className="text-sm text-[#C2C0B6]">Low</div>
                   <div className="text-2xl font-bold">{segments.segments?.byActivityLevel?.low || 0}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">Medium</div>
+                  <div className="text-sm text-[#C2C0B6]">Medium</div>
                   <div className="text-2xl font-bold text-[#FFCE56]">{segments.segments?.byActivityLevel?.medium || 0}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">High</div>
+                  <div className="text-sm text-[#C2C0B6]">High</div>
                   <div className="text-2xl font-bold text-[#FF6384]">{segments.segments?.byActivityLevel?.high || 0}</div>
                 </div>
               </div>
@@ -470,19 +485,19 @@ function AdminDashboard() {
           <h2 className="text-xl font-semibold mb-4">Engagement Metrics</h2>
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Avg Daily Transactions</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Avg Daily Transactions</span>
               <span className="font-semibold flex-shrink-0">{trends?.summary?.avgDailyTransactions?.toFixed(1) || '0.0'}</span>
             </div>
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Avg Daily Volume</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Avg Daily Volume</span>
               <span className="font-semibold flex-shrink-0">{formatCurrency(trends?.summary?.avgDailyVolume)}</span>
             </div>
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Total Categories</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Total Categories</span>
               <span className="font-semibold flex-shrink-0">{analytics?.categories.total || 0}</span>
             </div>
             <div className="flex justify-between items-start">
-              <span className="text-gray-400 flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Active Users</span>
+              <span className="text-[#C2C0B6] flex-1 mr-2 leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}>Active Users</span>
               <span className="font-semibold flex-shrink-0">{analytics?.users.total || 0}</span>
             </div>
           </div>
@@ -534,7 +549,7 @@ function HealthIndicator({ label, status, value }) {
     healthy: 'text-green-400 border-green-400/20 bg-green-400/10',
     warning: 'text-yellow-400 border-yellow-400/20 bg-yellow-400/10',
     error: 'text-red-400 border-red-400/20 bg-red-400/10',
-    unknown: 'text-gray-400 border-gray-400/20 bg-gray-400/10'
+    unknown: 'text-[#C2C0B6] border-gray-400/20 bg-gray-400/10'
   };
 
   const dotColors = {

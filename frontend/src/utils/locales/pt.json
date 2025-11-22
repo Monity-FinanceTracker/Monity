@@ -184,6 +184,7 @@
     "withdraw": "Retirar",
     "allocated": "Alocado",
     "target": "Meta",
+    "current_amount": "Valor Atual",
     "overall_progress": "Progresso Geral",
     "create_first_goal": "Crie Sua Primeira Meta",
     "view_all_goals": "Ver Todas as {{count}} Metas",
@@ -202,6 +203,7 @@
     "error": "Erro",
     "filter_category": "Filtrar por categoria",
     "any_category": "Qualquer categoria",
+    "all_categories": "Todas as Categorias",
     "date_range": "Intervalo de datas",
     "amount_range": "Intervalo de valores",
     "min_amount": "Valor mínimo",
@@ -532,9 +534,12 @@
   "balanceChart": {
     "loading": "Carregando gráfico de saldo...",
     "error": "Erro: {{error}}",
+    "tryAgain": "Por favor, tente novamente mais tarde",
+    "noData": "Nenhum dado de saldo disponível ainda",
     "allTimeMessage": "Selecione \"Todo o Período\" para ver o gráfico de saldo mensal.",
     "monthlyBalance": "Saldo Mensal",
-    "title": "Visão Geral do Saldo Mensal"
+    "title": "Visão Geral do Saldo Mensal",
+    "balance": "Saldo"
   },
   "dateRangeFilter": {
     "label": "Filtrar por período",
@@ -555,6 +560,7 @@
     "totalExpenses": "Total de despesas: R${{total}}"
   },
   "transactionsPage": {
+    "title": "Transações",
     "expenses": "Despesas",
     "incomes": "Receitas"
   },
@@ -576,7 +582,7 @@
     "loading_details": "Carregando...",
     "fetch_fail": "Falha ao buscar detalhes do grupo.",
     "not_found": "Grupo não encontrado.",
-    "back": "Voltar para Grupos",
+    "back": "Voltar",
     "members": "Membros",
     "add_member": "Adicionar Membro",
     "invite_member": "Convidar Membro",
@@ -624,7 +630,20 @@
     "low_spending": "Baixa atividade",
     "medium_spending": "Atividade moderada",
     "high_spending": "Alta atividade",
-    "very_high_spending": "Muito ativo"
+    "very_high_spending": "Muito ativo",
+    "sort_by": "Ordenar por",
+    "sort_by_name": "Ordenar por Nome",
+    "sort_by_members": "Ordenar por Membros",
+    "sort_by_total": "Ordenar por Total Gasto",
+    "sort_by_activity": "Ordenar por Última Atividade",
+    "sort_ascending": "Crescente",
+    "sort_descending": "Decrescente",
+    "not_found_or_not_member": "Grupo não encontrado ou você não é membro deste grupo.",
+    "upgrade_to_add": "Fazer upgrade para adicionar mais",
+    "more_information": "Mais informações",
+    "your_balance": "Seu saldo",
+    "you_are_owed": "Você deve receber",
+    "you_owe": "Você deve"
   },
   "notifications": {
     "success": "Sucesso",
@@ -797,6 +816,7 @@
     "no_results": "Nenhum resultado encontrado",
     "no_results_desc": "Tente ajustar sua pesquisa ou filtros",
     "transaction_count": "{{count}} transações",
+    "no_transactions": "Nenhuma transação encontrada para esta categoria",
     "fetch_error": "Falha ao carregar categorias",
     "add_success": "Categoria adicionada com sucesso",
     "add_error": "Falha ao adicionar categoria",
@@ -1191,7 +1211,7 @@
     },
     "support": {
       "have_questions": "Tem dúvidas? Entre em contato em",
-      "email": "support@monity.app"
+      "email": "leo.stuart@monity-finance.com"
     }
   },
   "aiChat": {
@@ -1341,5 +1361,63 @@
     "subtitle": "As últimas atualizações do seu aplicativo financeiro Monity",
     "empty_title": "Ainda não temos atualizações para você",
     "empty_description": "Quando houver novidades, publicaremos aqui. Siga seus recursos e atualizações favoritos para se manter atualizado também."
+  },
+  "analyticsConsent": {
+    "title": "Valorizamos sua privacidade",
+    "description": "Usamos análises para melhorar sua experiência com o Monity. Isso nos ajuda a entender como você usa o aplicativo e torná-lo melhor. Respeitamos sua privacidade - seus dados ficam conosco e nunca são vendidos a terceiros. Você pode alterar suas preferências a qualquer momento nas configurações.",
+    "accept": "Aceitar",
+    "decline": "Recusar",
+    "learnMore": "Saiba mais sobre nossa política de privacidade",
+    "customize": "Personalizar preferências"
+  },
+  "greetings": {
+    "morning": {
+      "joyful": "Bom dia, {{name}}! É um ótimo dia!",
+      "calm": "Manhã tranquila para você, {{name}}",
+      "hopeful": "Novo dia, novas chances, {{name}}. Olá",
+      "curious": "O que vem por aí hoje, {{name}}? Bom dia!",
+      "warm": "Enviando alegria matinal, {{name}}",
+      "formal": "Bom dia, {{name}}. Seja produtivo.",
+      "relaxed": "Manhã tranquila, começo feliz, {{name}}",
+      "energetic": "Levante e brilhe, {{name}}. Vamos lá",
+      "thoughtful": "Seja sábio nesta manhã, {{name}}",
+      "playful": "Ei, {{name}}! Acorda, acorda!"
+    },
+    "afternoon": {
+      "joyful": "Boa tarde feliz, {{name}}! Uhul!",
+      "calm": "Paz de tarde esteja com você, {{name}}",
+      "hopeful": "Termine forte, {{name}}! Boa tarde",
+      "curious": "Como está indo o dia, {{name}}?",
+      "warm": "Olá caloroso de tarde, {{name}}",
+      "formal": "Saudações nesta tarde, {{name}}",
+      "relaxed": "Hora de relaxar, {{name}}. Paz da tarde",
+      "energetic": "Continue forte, {{name}}. Você consegue",
+      "thoughtful": "Lembre-se do seu objetivo, {{name}}. Olá",
+      "playful": "Hora de um lanche, {{name}}. Oi"
+    },
+    "night": {
+      "joyful": "Sonhe grande, {{name}}. Boa noite!",
+      "calm": "Sono tranquilo esta noite, {{name}}",
+      "hopeful": "Descanse para o amanhã, {{name}}",
+      "curious": "O que você conquistou hoje, {{name}}?",
+      "warm": "Pensamentos aconchegantes da noite, {{name}}",
+      "formal": "Desejando um bom descanso, {{name}}",
+      "relaxed": "Hora de relaxar, {{name}}. Boa noite",
+      "energetic": "Recarregue rápido, {{name}}. Até mais",
+      "thoughtful": "Reflita sobre seu dia, {{name}}",
+      "playful": "Não deixe os percevejos te morderem, {{name}}!"
+    },
+    "dawn": {
+      "joyful": "Saudações de coruja da noite, {{name}}",
+      "calm": "Paz das horas quietas, {{name}}",
+      "hopeful": "Nova alvorada está chegando, {{name}}",
+      "curious": "Ainda acordado, {{name}}? O que está rolando?",
+      "warm": "Pensando em você, noite adentro, {{name}}",
+      "formal": "Saudações na virada, {{name}}",
+      "relaxed": "Aproveite o silêncio profundo, {{name}}",
+      "energetic": "Modo foco noturno, {{name}}",
+      "thoughtful": "Clareza no escuro, {{name}}",
+      "playful": "Olá secreto da meia-noite, {{name}}"
+    }
   }
 } 

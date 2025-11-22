@@ -80,12 +80,12 @@ const Dropdown = ({
                     </div>
                 )}
                 
-                <span className="text-left flex-1">
+                <span className="text-left whitespace-nowrap overflow-hidden text-ellipsis flex-1">
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
                 
                 <svg 
-                    className={`absolute top-1/2 right-2 -translate-y-1/2 w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                    className={`absolute top-1/2 right-2 -translate-y-1/2 w-4 h-4 text-[#C2C0B6] transition-transform duration-200 ${
                         isOpen ? 'rotate-180' : 'rotate-0'
                     }`} 
                     fill="none" 
@@ -110,7 +110,7 @@ const Dropdown = ({
                             onClick={() => handleOptionClick(option)}
                             className={`
                                 w-full text-left px-4 py-3 text-white transition-colors
-                                font-sans text-base font-medium
+                                font-sans text-sm font-medium
                                 ${index === 0 ? 'rounded-t-xl' : ''}
                                 ${index === options.length - 1 ? 'rounded-b-xl' : ''}
                                 ${option.value === value 
@@ -120,7 +120,7 @@ const Dropdown = ({
                             `}
                             style={{
                                 fontFamily: "'DM Sans', sans-serif",
-                                fontSize: '16px',
+                                fontSize: '14px',
                                 fontWeight: '500'
                             }}
                         >

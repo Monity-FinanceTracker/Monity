@@ -13,14 +13,15 @@ export function AuthProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [subscriptionTier, setSubscriptionTier] = useState("free");
 
-  const refreshSubscription = useCallback(async (options = {}) => {
+  const refreshSubscription = useCallback(async (currentUser = null, options = {}) => {
     if (subscriptionCheckPromise) {
       return subscriptionCheckPromise;
     }
     subscriptionCheckPromise = (async () => {
       try {
         // Force refresh subscription when called for a new user
-        const tier = await checkSubscription({ ...options, force: true });
+        // Pass user to avoid redundant getSession() calls
+        const tier = await checkSubscription({ ...options, user: currentUser, force: true });
         setSubscriptionTier(tier);
         return tier;
       } catch (error) {
@@ -44,7 +45,7 @@ export function AuthProvider({ children }) {
       setIsAdmin(currentUser?.user_metadata?.role === "admin");
 
       if (currentUser) {
-        await refreshSubscription();
+        await refreshSubscription(currentUser);
       } else {
         // Ensure cache is cleared on initial load if no user
         clearSubscriptionCache();
@@ -62,21 +63,22 @@ export function AuthProvider({ children }) {
       
       setUser(prevUser => {
         const previousUser = prevUser;
-        
-        // Clear all caches when user changes (including switching between accounts)
+
+        // Clear user-specific caches when user changes (including switching between accounts)
         if (previousUser?.id !== currentUser?.id) {
           clearSubscriptionCache();
-          queryClient.clear(); // Clear React Query cache
-          console.log('🧹 Cleared all caches due to user change');
+          // Remove queries instead of clearing everything - gentler on the cache
+          queryClient.removeQueries();
+          console.log('🧹 Cleared user-specific caches due to user change');
         }
-        
+
         return currentUser;
       });
-      
+
       setIsAdmin(currentUser?.user_metadata?.role === "admin");
 
       if (currentUser) {
-        refreshSubscription();
+        refreshSubscription(currentUser);
       } else {
         // Clear subscription cache when user logs out
         clearSubscriptionCache();
@@ -90,19 +92,20 @@ export function AuthProvider({ children }) {
   }, [refreshSubscription]);
 
   const login = async (email, password) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (error) {
       throw new Error(error.message);
     }
-    
+
     // Clear caches to ensure fresh data for the new user
     clearSubscriptionCache();
-    queryClient.clear();
-    
-    await refreshSubscription();
+    queryClient.removeQueries(); // Remove queries instead of clearing everything
+
+    const currentUser = data?.session?.user ?? null;
+    await refreshSubscription(currentUser);
   };
 
   const signup = async (name, email, password, role = "user") => {
@@ -130,8 +133,12 @@ export function AuthProvider({ children }) {
         });
 
         clearSubscriptionCache();
-        queryClient.clear();
-        await refreshSubscription();
+        queryClient.removeQueries(); // Remove queries instead of clearing everything
+
+        // Get the user from the session we just set
+        const { data: { session } } = await supabase.auth.getSession();
+        const currentUser = session?.user ?? null;
+        await refreshSubscription(currentUser);
       }
 
       return {
@@ -148,9 +155,15 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const resendConfirmationEmail = async (email) => {
+  const resendConfirmationEmail = async (emailParam) => {
+    const targetEmail = emailParam || user?.email;
+
+    if (!targetEmail) {
+      return { success: false, error: 'Email não disponível' };
+    }
+
     try {
-      const response = await API.post('/auth/resend-confirmation', { email });
+      const response = await API.post('/auth/resend-confirmation', { email: targetEmail });
       return { success: true, data: response.data };
     } catch (error) {
       const errorMessage = error.response?.data?.error ||
@@ -192,17 +205,16 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = async () => {
-    clearSubscriptionCache();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    setUser(null);
-  };
+  const checkEmailVerification = async (emailParam) => {
+    const targetEmail = emailParam || user?.email;
 
-  const checkEmailVerification = async (email) => {
+    if (!targetEmail) {
+      return { success: false, error: 'Email não disponível', verified: false };
+    }
+
     try {
       const response = await API.get('/auth/check-verification', {
-        params: { email },
+        params: { email: targetEmail },
       });
       return {
         success: true,
@@ -216,6 +228,13 @@ export function AuthProvider({ children }) {
         'Erro ao verificar email';
       return { success: false, error: errorMessage, verified: false };
     }
+  };
+
+  const logout = async () => {
+    clearSubscriptionCache();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    setUser(null);
   };
 
   const value = {
