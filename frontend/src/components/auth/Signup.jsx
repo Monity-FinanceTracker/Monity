@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
@@ -20,6 +21,7 @@ function Signup() {
     const [, setFocusedField] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
+    const { track } = useAnalytics();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,8 +46,22 @@ function Signup() {
             if (!result.success) {
                 setError(result.error || t('signupPage.failed'));
                 setLoading(false);
+
+                // Track failed signup
+                track('auth_failed', {
+                    method: 'email',
+                    reason: 'signup_failed',
+                    error: result.error
+                });
+
                 return;
             }
+
+            // Track successful signup
+            track('user_signed_up', {
+                method: 'email',
+                premium_intent: premium
+            });
 
             if (result.requiresEmailConfirmation) {
                 navigate('/email-confirmation', { 
@@ -60,6 +76,13 @@ function Signup() {
         } catch (err) {
             // Fallback para erros inesperados
             setError(err.message || t('signupPage.failed'));
+
+            // Track failed signup
+            track('auth_failed', {
+                method: 'email',
+                reason: 'signup_error',
+                error: err.message
+            });
         } finally {
             setLoading(false);
         }

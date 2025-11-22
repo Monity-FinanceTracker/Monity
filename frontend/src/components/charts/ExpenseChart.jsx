@@ -10,6 +10,7 @@ import {
 import { get } from '../../utils/api';
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/useAuth";
+import { formatCurrency } from '../../utils/currency';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -19,6 +20,7 @@ function ExpenseChart() {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [viewMode, setViewMode] = useState('chart'); // 'chart' or 'list'
 
     useEffect(() => {
         if (!user) {
@@ -145,11 +147,82 @@ function ExpenseChart() {
         maintainAspectRatio: true
     };
 
+    // Calculate total for percentages
+    const total = chartDataValues.reduce((sum, val) => sum + val, 0);
+
+    // Render bar list view
+    const renderListView = () => (
+        <div className="w-full space-y-3 px-4 py-2">
+            {chartLabels.map((label, index) => {
+                const amount = chartDataValues[index];
+                const percentage = total > 0 ? (amount / total) * 100 : 0;
+                const color = chartColors[index % chartColors.length];
+
+                return (
+                    <div key={label} className="space-y-1">
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="text-[#C2C0B6] font-medium">{label}</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[#FAF9F5] font-semibold">
+                                    {formatCurrency(amount, 1)}
+                                </span>
+                                <span className="text-[#56a69f] text-xs font-bold min-w-[45px] text-right">
+                                    {percentage.toFixed(1)}%
+                                </span>
+                            </div>
+                        </div>
+                        <div className="w-full bg-[#262626] rounded-full h-2 overflow-hidden">
+                            <div
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{
+                                    width: `${percentage}%`,
+                                    backgroundColor: color
+                                }}
+                            />
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     return (
-        <div className="w-full flex justify-center items-center" style={{ minHeight: 300 }}>
-            <div className="max-w-[300px] w-full">
-                <Doughnut data={chartData} options={chartOptions} />
+        <div className="w-full">
+            {/* Toggle Button */}
+            <div className="flex justify-end mb-4 px-4">
+                <button
+                    onClick={() => setViewMode(viewMode === 'chart' ? 'list' : 'chart')}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-[#262626] hover:bg-[#2a2a2a] rounded-lg transition-colors text-sm text-[#C2C0B6] hover:text-[#FAF9F5]"
+                >
+                    {viewMode === 'chart' ? (
+                        <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <span>{t('expenseChart.listView', 'Vista de Lista')}</span>
+                        </>
+                    ) : (
+                        <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                            </svg>
+                            <span>{t('expenseChart.chartView', 'Vista de Gráfico')}</span>
+                        </>
+                    )}
+                </button>
             </div>
+
+            {/* Content */}
+            {viewMode === 'chart' ? (
+                <div className="w-full flex justify-center items-center" style={{ minHeight: 300 }}>
+                    <div className="max-w-[300px] w-full">
+                        <Doughnut data={chartData} options={chartOptions} />
+                    </div>
+                </div>
+            ) : (
+                renderListView()
+            )}
         </div>
     )
 }

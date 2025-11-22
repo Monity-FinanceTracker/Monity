@@ -155,32 +155,31 @@ class BalanceController {
     getMonthlyBalance = asyncHandler(async (req, res) => {
         const userId = req.user.id;
         const { month, year } = req.params;
-        
+
         // Validate parameters
         const monthNum = parseInt(month);
         const yearNum = parseInt(year);
-        
-        if (!month || !year || isNaN(monthNum) || isNaN(yearNum) || 
+
+        if (!month || !year || isNaN(monthNum) || isNaN(yearNum) ||
             monthNum < 1 || monthNum > 12 || yearNum < 2000 || yearNum > 2100) {
             console.error(`Invalid parameters: month=${month}, year=${year}`);
-            return res.status(400).json({ 
+            return res.status(400).json({
                 success: false,
                 error: `Invalid month (${month}) or year (${year}) parameter`,
                 received: { month, year }
             });
         }
-        
+
         try {
-            // Get transactions for specific month/year
-            const startDate = `${year}-${month.padStart(2, '0')}-01`;
-            const endDate = new Date(year, month, 0).toISOString().split('T')[0]; // Last day of month
+            // Calculate CUMULATIVE balance up to the end of this month
+            // Get ALL transactions up to the end of the specified month
+            const endDate = new Date(yearNum, monthNum, 0).toISOString().split('T')[0]; // Last day of month
 
             const { data: transactions, error } = await supabaseAdmin
                 .from('transactions')
                 .select('*')
                 .eq('userId', userId)
-                .gte('date', startDate)
-                .lte('date', endDate);
+                .lte('date', endDate); // Get all transactions up to this month
 
             if (error) {
                 throw error;
@@ -195,7 +194,7 @@ class BalanceController {
                 };
             });
 
-            // Calculate monthly balance
+            // Calculate cumulative balance up to this month
             let balance = 0;
             decryptedTransactions.forEach(transaction => {
                 if (transaction.typeId === 2) { // Income
@@ -203,7 +202,18 @@ class BalanceController {
                 } else if (transaction.typeId === 1) { // Expense
                     balance -= transaction.amount;
                 } else if (transaction.typeId === 3) { // Savings
-                    balance += transaction.amount;
+                    // Handle different types of savings transactions
+                    if (this.isAllocationTransaction(transaction)) {
+                        // Allocation: subtract (money moving out of available balance)
+                        balance -= transaction.amount;
+                    } else if (this.isWithdrawalTransaction(transaction)) {
+                        // Withdrawal: add back (money coming back to available balance)
+                        // Since withdrawal amount is negative, subtracting it adds to balance
+                        balance -= transaction.amount; // Subtracting negative = adding
+                    } else {
+                        // Regular savings deposit (positive amount adds to balance)
+                        balance += transaction.amount;
+                    }
                 }
             });
 

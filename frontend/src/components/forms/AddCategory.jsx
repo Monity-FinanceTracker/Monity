@@ -203,10 +203,10 @@ function AddCategory() {
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center gap-4">
                                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                                                category.typeId === 1 ? 'bg-[#FAF9F5]/20' : 'bg-[#56a69f]/20'
+                                                category.typeId === 1 ? 'bg-[#D97757]/20' : 'bg-[#56a69f]/20'
                                             }`}>
                                                 {category.typeId === 1 ? (
-                                                    <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
+                                                    <ArrowUp className="w-5 h-5 text-[#D97757]" />
                                                 ) : (
                                                     <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                                                 )}
