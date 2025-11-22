@@ -109,7 +109,7 @@ const Dropdown = ({
                             onClick={() => handleOptionClick(option)}
                             className={`
                                 w-full text-left px-4 py-3 text-white transition-colors
-                                font-sans text-base font-medium
+                                font-sans text-sm font-medium
                                 ${index === 0 ? 'rounded-t-xl' : ''}
                                 ${index === options.length - 1 ? 'rounded-b-xl' : ''}
                                 ${option.value === value 
@@ -119,7 +119,7 @@ const Dropdown = ({
                             `}
                             style={{
                                 fontFamily: "'DM Sans', sans-serif",
-                                fontSize: '16px',
+                                fontSize: '14px',
                                 fontWeight: '500'
                             }}
                         >
