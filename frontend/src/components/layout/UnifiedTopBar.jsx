@@ -94,7 +94,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
                     {/* PRO Badge - Only for premium users */}
                     {subscriptionTier === 'premium' && (
-                        <div className="text-white px-2 py-0.75 rounded-full text-xs font-bold" style={{ backgroundColor: '#424242' }}>
+                        <div className="px-2 py-0.75 rounded-full text-xs font-bold" style={{ backgroundColor: '#333333', color: '#bfbfbf' }}>
                             PRO
                         </div>
                     )}
@@ -106,8 +106,8 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 <button
                                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                                     style={{
-                                        width: '32px',
-                                        height: '32px',
+                                        width: '28px',
+                                        height: '28px',
                                         backgroundColor: '#56a69f',
                                         borderRadius: '50%',
                                         border: 'none',
@@ -123,12 +123,12 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                 >
                                 <span style={{ 
                                     color: '#1F1E1D', 
-                                    fontSize: '13px', 
+                                    fontSize: '12px', 
                                     fontWeight: 'bold',
                                     userSelect: 'none'
                                 }}>
                                     {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
-                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                                         </svg>
                                     )}
