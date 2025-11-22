@@ -20,11 +20,24 @@ const authenticate = async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
         }
 
-        req.user = user;
+        // Fetch user profile to get role and subscription_tier from profiles table
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role, subscription_tier')
+            .eq('id', user.id)
+            .single();
+
+        // Enrich user object with profile data
+        req.user = {
+            ...user,
+            role: profile?.role || user.user_metadata?.role || 'user',
+            is_admin: profile?.role === 'admin' || user.user_metadata?.role === 'admin',
+            subscription_tier: profile?.subscription_tier || user.user_metadata?.subscription_tier || 'free'
+        };
         req.token = token;
-        
-        // Note: The logic for creating a role-specific Supabase client 
-        // will be handled differently in the new architecture. 
+
+        // Note: The logic for creating a role-specific Supabase client
+        // will be handled differently in the new architecture.
         // For now, we attach the main client.
         req.supabase = supabase;
 
@@ -63,13 +76,61 @@ const checkPremium = async (req, res, next) => {
     }
 };
 
+const optionalAuth = async (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    // If no token, continue without authentication
+    if (!token) {
+        req.user = null;
+        return next();
+    }
+
+    try {
+        const { data: { user }, error } = await supabase.auth.getUser(token);
+
+        if (error || !user) {
+            // Token is invalid, but we allow the request to continue
+            req.user = null;
+            return next();
+        }
+
+        // Fetch user profile to get role and subscription_tier
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role, subscription_tier')
+            .eq('id', user.id)
+            .single();
+
+        // Enrich user object with profile data
+        req.user = {
+            ...user,
+            role: profile?.role || user.user_metadata?.role || 'user',
+            is_admin: profile?.role === 'admin' || user.user_metadata?.role === 'admin',
+            subscription_tier: profile?.subscription_tier || user.user_metadata?.subscription_tier || 'free'
+        };
+        req.token = token;
+        req.supabase = supabase;
+
+        next();
+    } catch (err) {
+        // On error, continue without authentication
+        logger.warn('Optional authentication failed, continuing without auth', { 
+            error: err.message,
+            path: req.path 
+        });
+        req.user = null;
+        next();
+    }
+};
+
 const requireRole = (requiredRole) => {
     return (req, res, next) => {
         if (!req.user) {
             return res.status(401).json({ success: false, message: 'Authentication is required.' });
         }
 
-        const userRole = req.user.user_metadata?.role || 'user';
+        // Check enriched role (from profiles table) first, then fallback to user_metadata
+        const userRole = req.user.role || req.user.user_metadata?.role || 'user';
 
         if (userRole !== requiredRole) {
             return res.status(403).json({ success: false, message: 'Forbidden: You do not have the required permissions.' });
@@ -82,6 +143,7 @@ const requireRole = (requiredRole) => {
 
 module.exports = {
     authenticate,
+    optionalAuth,
     checkPremium,
     requireRole
 };

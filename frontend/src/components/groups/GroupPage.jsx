@@ -1,94 +1,48 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { getGroupById, addGroupExpense, searchUsers, sendGroupInvitation, settleExpenseShare } from '../../utils/api';
+import { searchUsers } from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../utils/supabase';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { useGroupById, useAddGroupExpense, useInviteGroupMember, useSettleExpenseShare } from '../../hooks/useQueries';
+import { LoadingState } from '../ui/EmptyStates';
 
 const GroupPage = () => {
     const { t } = useTranslation();
     const { id } = useParams();
-    const [group, setGroup] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { user } = useAuth();
+    
+    const { data: group, isLoading: loading, error: queryError } = useGroupById(id);
+    const addExpenseMutation = useAddGroupExpense();
+    const inviteMemberMutation = useInviteGroupMember();
+    const settleShareMutation = useSettleExpenseShare();
+    
     const [newMemberEmail, setNewMemberEmail] = useState('');
     const [userSearchResults, setUserSearchResults] = useState([]);
     const [searchLoading, setSearchLoading] = useState(false);
-    const [inviteLoading, setInviteLoading] = useState(false);
     const [expenseDescription, setExpenseDescription] = useState('');
     const [expenseAmount, setExpenseAmount] = useState('');
     const [shares, setShares] = useState([]);
     const [showUserSearch, setShowUserSearch] = useState(false);
-    const { user } = useAuth();
 
-    const fetchGroup = useCallback(async () => {
-        try {
-            setLoading(true);
-            const fetchedGroup = await getGroupById(id);
-            setGroup(fetchedGroup);
-            // Initialize shares when group data is fetched
-            if (fetchedGroup && fetchedGroup.group_members) {
-                const initialShares = fetchedGroup.group_members.map(member => ({
-                    user_id: member.profiles.id,
-                    username: member.profiles.name,
-                    amount_owed: ''
-                }));
-                setShares(initialShares);
-            }
-        } catch (err) {
-            console.error('Error fetching group:', err);
-            if (err.response?.status === 404) {
-                setError('Group not found or you are not a member of this group.');
-            } else {
-                setError(t('groups.fetch_fail'));
-            }
-        } finally {
-            setLoading(false);
+    // Initialize shares when group data is available
+    const initialShares = useMemo(() => {
+        if (group && group.group_members) {
+            return group.group_members.map(member => ({
+                user_id: member.profiles.id,
+                username: member.profiles.name,
+                amount_owed: ''
+            }));
         }
-    }, [id, t]);
+        return [];
+    }, [group]);
 
+    // Update shares when group changes
     useEffect(() => {
-        fetchGroup();
-    }, [fetchGroup]);
-
-    useEffect(() => {
-        // Set up real-time subscriptions for this group
-        if (user) {
-            const groupSubscription = supabase
-                .channel(`group-${id}`)
-                .on(
-                    'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'group_members',
-                        filter: `group_id=eq.${id}`
-                    },
-                    () => {
-                        fetchGroup(); // Refresh when members change
-                    }
-                )
-                .on(
-                    'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'group_expenses',
-                        filter: `group_id=eq.${id}`
-                    },
-                    () => {
-                        fetchGroup(); // Refresh when expenses change
-                    }
-                )
-                .subscribe();
-
-            return () => {
-                supabase.removeChannel(groupSubscription);
-            };
+        if (initialShares.length > 0 && shares.length !== initialShares.length) {
+            setShares(initialShares);
         }
-    }, [id, user, fetchGroup]);
+    }, [initialShares, shares.length]);
 
     const handleSearchUsers = async (query) => {
         if (query.length < 2) {
@@ -111,18 +65,13 @@ const GroupPage = () => {
     };
 
     const handleSendInvitation = async (email) => {
-        setInviteLoading(true);
         try {
-            await sendGroupInvitation(id, email);
+            await inviteMemberMutation.mutateAsync({ groupId: id, email });
             setNewMemberEmail('');
             setUserSearchResults([]);
             setShowUserSearch(false);
-            // Show success message
-            alert(t('groups.invitation_sent'));
         } catch (error) {
-            alert(error.response?.data?.error || t('groups.invitation_failed'));
-        } finally {
-            setInviteLoading(false);
+            console.error('Failed to send invitation:', error);
         }
     };
 
@@ -131,20 +80,21 @@ const GroupPage = () => {
         // Validate that shares add up to the total expense amount
         const totalShares = shares.reduce((acc, share) => acc + parseFloat(share.amount_owed || 0), 0);
         if (Math.abs(totalShares - parseFloat(expenseAmount)) > 0.01) {
-            alert(t('groups.share_amount_error'));
             return;
         }
 
         try {
-            await addGroupExpense(id, {
-                description: expenseDescription,
-                amount: parseFloat(expenseAmount),
-                shares: shares.filter(share => parseFloat(share.amount_owed) > 0)
+            await addExpenseMutation.mutateAsync({
+                groupId: id,
+                expenseData: {
+                    description: expenseDescription,
+                    amount: parseFloat(expenseAmount),
+                    shares: shares.filter(share => parseFloat(share.amount_owed) > 0)
+                }
             });
             setExpenseDescription('');
             setExpenseAmount('');
             setShares(shares.map(s => ({ ...s, amount_owed: '' }))); // Clear amounts
-            fetchGroup(); // Refresh group details
         } catch (err) {
             console.error('Failed to add expense:', err);
         }
@@ -166,29 +116,28 @@ const GroupPage = () => {
 
     const handleSettleShare = async (shareId) => {
         try {
-            await settleExpenseShare(shareId);
-            fetchGroup(); // Refresh group details to show updated settlement status
+            await settleShareMutation.mutateAsync(shareId);
         } catch (error) {
             console.error('Failed to settle share:', error);
-            alert('Failed to settle share. Please try again.');
         }
     };
 
     if (loading) return (
         <div className="flex-1 p-6">
-            <div className="text-center text-[#C2C0B6] mt-8">{t('groups.loading_details')}</div>
+            <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] overflow-hidden">
+                <LoadingState message={t('groups.loading_details')} />
+            </div>
         </div>
     );
     
-    if (error) return (
+    if (queryError || !group) return (
         <div className="flex-1 p-6">
-            <div className="text-center text-red-400 mt-8">{error}</div>
-        </div>
-    );
-    
-    if (!group) return (
-        <div className="flex-1 p-6">
-            <div className="text-center text-[#C2C0B6] mt-8">{t('groups.not_found')}</div>
+            <div className="text-center text-red-400 mt-8">
+                {queryError?.response?.status === 404 
+                    ? t('groups.not_found_or_not_member')
+                    : t('groups.not_found')
+                }
+            </div>
         </div>
     );
 
@@ -219,9 +168,9 @@ const GroupPage = () => {
                 <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
                     <h2 className="text-xl font-semibold text-white mb-4">{t('groups.members')}</h2>
                     
-                    <div className="space-y-3 mb-6">
+                    <div className="space-y-2 mb-6">
                         {group.group_members.map(member => (
-                            <div key={member.profiles.id} className="flex items-center justify-between p-3 bg-[#1F1E1D] rounded-lg">
+                            <div key={member.profiles.id} className="flex items-center p-3 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-colors">
                                 <span className="text-white">{member.profiles.name}</span>
                             </div>
                         ))}
@@ -252,7 +201,7 @@ const GroupPage = () => {
                                             <button
                                                 key={user.id}
                                                 onClick={() => handleSendInvitation(user.email)}
-                                                disabled={inviteLoading}
+                                                disabled={inviteMemberMutation.isPending}
                                                 className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0"
                                             >
                                                 <div className="text-white">{user.name}</div>
@@ -264,7 +213,7 @@ const GroupPage = () => {
                                             <div className="text-[#C2C0B6] text-sm mb-2">{t('groups.no_users_found')}</div>
                                             <button
                                                 onClick={() => handleSendInvitation(newMemberEmail)}
-                                                disabled={inviteLoading}
+                                                disabled={inviteMemberMutation.isPending}
                                                 className="text-[#56a69f] hover:text-[#00b37e] text-sm"
                                             >
                                                 {t('groups.send_invitation_to')} {newMemberEmail}
@@ -286,22 +235,23 @@ const GroupPage = () => {
                             <p className="text-[#C2C0B6] text-center py-8">{t('groups.no_expenses')}</p>
                         ) : (
                             group.group_expenses.map(expense => (
-                                <div key={expense.id} className="p-4 bg-[#1F1E1D] rounded-lg">
+                                <div key={expense.id} className="p-4 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-colors">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-white font-medium">{expense.description}</span>
                                         <span className="text-[#56a69f] font-bold">R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="text-sm text-[#C2C0B6] mb-3">{t('groups.paid_by')} {expense.profiles.name}</div>
-                                    <div className="space-y-1">
+                                    <div className="space-y-2 pt-2 border-t border-[#1F1E1D]">
                                         {expense.expense_shares.map(share => (
                                             <div key={share.id} className="flex justify-between items-center text-sm">
-                                                <span className="text-gray-300">{share.profiles.name} {t('groups.owes')} R$ {share.amount_owed.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                <span className="text-white">{share.profiles.name} {t('groups.owes')} R$ {share.amount_owed.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                                 {share.is_settled ? (
-                                                    <span className="text-green-400 text-xs">{t('groups.settled')}</span>
+                                                    <span className="text-green-400 text-xs font-medium">{t('groups.settled')}</span>
                                                 ) : share.user_id === user.id ? (
                                                     <button 
                                                         onClick={() => handleSettleShare(share.id)}
-                                                        className="text-[#56a69f] hover:text-[#00b37e] text-xs"
+                                                        disabled={settleShareMutation.isPending}
+                                                        className="text-[#56a69f] hover:text-[#4A8F88] text-xs font-medium disabled:opacity-50"
                                                     >
                                                         {t('groups.settle')}
                                                     </button>
@@ -395,9 +345,10 @@ const GroupPage = () => {
                         
                         <button 
                             type="submit" 
-                            className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold py-3 rounded-lg hover:bg-[#4A8F88] transition-colors"
+                            disabled={addExpenseMutation.isPending}
+                            className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {t('groups.add_expense_button')}
+                            {addExpenseMutation.isPending ? t('groups.creating') : t('groups.add_expense_button')}
                         </button>
                     </form>
                 </div>

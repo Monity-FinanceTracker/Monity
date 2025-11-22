@@ -53,13 +53,13 @@ const EnhancedDashboard = () => {
         fetchDashboardData();
     }, [user]);
     // Enhanced card wrapper with loading states
-    const EnhancedCard = ({ children, title, subtitle, accent, isLoading = false, action, className = '' }) => {
+    const EnhancedCard = ({ children, title, subtitle, isLoading = false, action, className = '' }) => {
         return (
             <div className={`bg-[#1F1E1D] border border-[#262626] rounded-xl hover:border-[#3a3a3a] transition-all duration-200 ${className}`}>
                 <div className="p-6">
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex-1 text-left">
-                            <h3 className={`text-2xl font-bold ${accent || 'text-white'}`}>{title}</h3>
+                            <h3 className="text-2xl font-bold text-[#C2C0B6]">{title}</h3>
                             {subtitle && <p className="text-[#C2C0B6] text-sm mt-1">{subtitle}</p>}
                         </div>
                         {action && (
@@ -115,14 +115,14 @@ const EnhancedDashboard = () => {
                                 <div
                                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                         transaction.typeId === 1
-                                            ? 'bg-[#FAF9F5]/20'
+                                            ? 'bg-[#D97757]/20'
                                             : transaction.typeId === 2
                                             ? 'bg-[#56a69f]/20'
                                             : 'bg-blue-500/20'
                                     }`}
                                 >
                                     {transaction.typeId === 1 ? (
-                                        <ArrowUp className="w-5 h-5 text-[#FAF9F5]" />
+                                        <ArrowUp className="w-5 h-5 text-[#D97757]" />
                                     ) : transaction.typeId === 2 ? (
                                         <ArrowDown className="w-5 h-5 text-[#56a69f]" />
                                     ) : (
@@ -164,7 +164,7 @@ const EnhancedDashboard = () => {
 
     // Get dynamic greeting based on time of day and user name
     const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || t('dashboard.user');
-    const greeting = getDynamicGreeting(userName);
+    const greeting = getDynamicGreeting(userName, t);
 
     return (
         <div className="space-y-8">

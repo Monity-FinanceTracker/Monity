@@ -114,7 +114,7 @@ const SavingsOverviewCard = () => {
         <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
             {/* Title */}
             <div className="mb-6">
-                <h3 className="text-2xl font-bold text-[#56a69f] text-left">
+                <h3 className="text-2xl font-bold text-[#C2C0B6] text-left">
                     {t('savings_goals.title')}
                 </h3>
             </div>

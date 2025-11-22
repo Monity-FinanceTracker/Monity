@@ -15,8 +15,8 @@ let tokenCache = {
   expiresAt: 0,
 };
 
-// Cache duration: 5 minutes (tokens are valid for 1 hour, but we refresh more often to be safe)
-const TOKEN_CACHE_DURATION = 5 * 60 * 1000;
+// Cache duration: 30 seconds (reduced from 5 minutes for better session validation)
+const TOKEN_CACHE_DURATION = 30 * 1000;
 
 // Function to get cached or fresh token
 async function getAccessToken() {
@@ -48,12 +48,7 @@ export function clearTokenCache() {
   tokenCache.expiresAt = 0;
 }
 
-// Listen to auth state changes to clear cache on logout
-supabase.auth.onAuthStateChange((event) => {
-  if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-    clearTokenCache();
-  }
-});
+// Note: Auth state change listener removed to avoid duplicate with AuthContext
 
 API.interceptors.request.use(
     async (config) => {
@@ -68,18 +63,32 @@ API.interceptors.request.use(
     }
 );
 
-// Global 401 handler: treat invalid/expired tokens as logged out
+// Global 401 handler: try token refresh before logging out
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
     const status = error?.response?.status;
+    const originalRequest = error.config;
 
-    if (status === 401) {
+    if (status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
       try {
+        // Clear cached token
         clearTokenCache();
-        const { data: { session } } = await supabase.auth.getSession();
 
-        if (session) {
+        // Try to refresh the session
+        const { data: { session }, error: refreshError } = await supabase.auth.refreshSession();
+
+        if (session?.access_token && !refreshError) {
+          // Session refreshed successfully - retry the original request
+          originalRequest.headers.Authorization = `Bearer ${session.access_token}`;
+          return API(originalRequest);
+        }
+
+        // Refresh failed - logout only if we actually have a session to logout from
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        if (currentSession) {
           await supabase.auth.signOut();
         }
       } catch (handleError) {

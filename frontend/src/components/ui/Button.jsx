@@ -36,11 +36,11 @@ const Button = memo(({
     // Danger: Red text, no background (for delete, remove)
     danger: 'text-monity-error hover:text-red-300',
     
-    // Danger Action: Red background (for critical destructive actions)
-    dangerAction: 'bg-red-800 text-white hover:bg-red-500',
+    // Danger Action: Orange background (for expenses)
+    dangerAction: 'bg-[#D97757] text-[#30302E] hover:bg-[#C4694A]',
     
-    // Success Action: Green background (for income, positive actions)
-    successAction: 'bg-green-700 text-white hover:bg-green-600',
+    // Success Action: Teal background (for income, positive actions)
+    successAction: 'bg-[#56a69f] text-[#30302E] hover:bg-[#4a8f88]',
 
     // Legacy support (maps old variants to new system)
     primary: 'bg-monity-accent text-monity-textPrimary hover:bg-monity-accentHover',  // maps to 'action'

@@ -196,7 +196,7 @@ const CashFlowCalendar = () => {
                         </div>
                       )}
                       {dayData.expenses > 0 && (
-                        <div className="text-xs text-[#FAF9F5]">
+                        <div className="text-xs text-[#D97757]">
                           -{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(dayData.expenses)}
                         </div>
                       )}

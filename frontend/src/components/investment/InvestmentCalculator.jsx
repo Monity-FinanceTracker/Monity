@@ -7,9 +7,11 @@ import InvestmentChart from './InvestmentChart';
 import { TrendingUp, DollarSign, Target, AlertCircle, Crown } from 'lucide-react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import Dropdown from '../ui/Dropdown';
+import { useAnalytics } from '../../hooks/useAnalytics';
 
 const InvestmentCalculator = () => {
     const { t } = useTranslation();
+    const { track } = useAnalytics();
     
     // Form inputs
     const [initialInvestment, setInitialInvestment] = useState('1000');
@@ -58,6 +60,15 @@ const InvestmentCalculator = () => {
         setError(null);
         setLoading(true);
 
+        // Track investment calculator usage
+        track('tool_used', {
+            tool: 'investment_calculator',
+            action: 'calculate',
+            initial_investment: parseFloat(initialInvestment),
+            contribution_frequency: contributionFrequency,
+            interest_rate: parseFloat(annualInterestRate)
+        });
+
         try {
             const response = await post('/investment-calculator/calculate', {
                 initialInvestment: parseFloat(initialInvestment),
@@ -72,6 +83,13 @@ const InvestmentCalculator = () => {
             setGrowthData(response.data.data.growthData);
             setUsage(response.data.data.usage);
             setLimitReached(false);
+
+            // Track successful calculation
+            track('investment_calculation_success', {
+                final_amount: response.data.data.summary.finalAmount,
+                total_contributions: response.data.data.summary.totalContributions,
+                total_interest: response.data.data.summary.totalInterest
+            });
         } catch (err) {
             if (err.response?.status === 429) {
                 setError(err.response.data.message);

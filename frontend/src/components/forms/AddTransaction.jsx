@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, CloseButton } from '../ui';
 import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { categoryIconOptions } from '../../utils/iconMappingData';
+import { useAnalytics } from '../../hooks/useAnalytics';
 
 /**
  * Componente unificado para adicionar receitas e despesas
@@ -17,6 +18,7 @@ const AddTransaction = ({ type = 'expense' }) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const queryClient = useQueryClient();
+    const { track } = useAnalytics();
     
     // Configuração baseada no tipo
     const config = {
@@ -126,6 +128,14 @@ const AddTransaction = ({ type = 'expense' }) => {
         try {
             await addTransaction(transactionData);
             
+            // Track transaction creation
+            track('transaction_created', {
+                type: type,
+                amount: transactionData.amount,
+                category: transactionData.category,
+                has_description: !!transactionData.description
+            });
+            
             // Invalidate and refetch all transaction-related queries
             await queryClient.invalidateQueries({ queryKey: ['transactions'] });
             await queryClient.invalidateQueries({ queryKey: ['balance'] });
@@ -136,6 +146,12 @@ const AddTransaction = ({ type = 'expense' }) => {
             navigate('/');
         } catch (err) {
             toast.error(err.response?.data?.message || t(`${currentConfig.translationKey}.failed`));
+            
+            // Track transaction creation failure
+            track('transaction_creation_failed', {
+                type: type,
+                error: err.response?.data?.message || 'Unknown error'
+            });
         } finally {
             setLoading(false);
         }
@@ -535,6 +551,5 @@ const AddTransaction = ({ type = 'expense' }) => {
         </div>
     );
 };
-
 export default AddTransaction;
 
