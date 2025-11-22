@@ -94,7 +94,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
 
                     {/* PRO Badge - Only for premium users */}
                     {subscriptionTier === 'premium' && (
-                        <div className="bg-gray-700 text-gray-300 px-2 py-0.75 rounded-full text-xs font-bold">
+                        <div className="text-white px-2 py-0.75 rounded-full text-xs font-bold" style={{ backgroundColor: '#424242' }}>
                             PRO
                         </div>
                     )}

@@ -26,7 +26,7 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
         
         {/* PRO Badge - Only for premium users */}
         {subscriptionTier === 'premium' && (
-          <div className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs font-bold">
+          <div className="text-white px-2 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: '#424242' }}>
             PRO
           </div>
         )}
