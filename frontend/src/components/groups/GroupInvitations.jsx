@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getPendingInvitations, respondToInvitation } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
 
@@ -23,7 +23,7 @@ const GroupInvitations = () => {
         fetchInvitations();
     }, []);
 
-    const handleResponse = async (invitationId, response) => {
+    const handleResponse = useCallback(async (invitationId, response) => {
         setResponding(prev => ({ ...prev, [invitationId]: true }));
         try {
             await respondToInvitation(invitationId, response);
@@ -34,7 +34,7 @@ const GroupInvitations = () => {
         } finally {
             setResponding(prev => ({ ...prev, [invitationId]: false }));
         }
-    };
+    }, []);
 
     if (loading) {
         return (

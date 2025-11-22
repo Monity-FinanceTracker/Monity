@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { searchUsers } from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
@@ -7,6 +6,29 @@ import { useTranslation } from 'react-i18next';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { useGroupById, useAddGroupExpense, useInviteGroupMember, useSettleExpenseShare } from '../../hooks/useQueries';
 import { LoadingState } from '../ui/EmptyStates';
+
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount || 0);
+};
+
+const formatDate = (dateString, t) => {
+    if (!dateString) return t('groups.no_activity');
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = now - date;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return t('groups.today');
+    if (diffDays === 1) return t('groups.yesterday');
+    if (diffDays < 7) return t('groups.days_ago', { count: diffDays });
+    if (diffDays < 30) return t('groups.weeks_ago', { count: Math.floor(diffDays / 7) });
+    return date.toLocaleDateString('pt-BR');
+};
 
 const GroupPage = () => {
     const { t } = useTranslation();
@@ -25,6 +47,7 @@ const GroupPage = () => {
     const [expenseAmount, setExpenseAmount] = useState('');
     const [shares, setShares] = useState([]);
     const [showUserSearch, setShowUserSearch] = useState(false);
+    const [expenseError, setExpenseError] = useState('');
 
     // Initialize shares when group data is available
     const initialShares = useMemo(() => {
@@ -43,7 +66,7 @@ const GroupPage = () => {
         if (initialShares.length > 0 && shares.length !== initialShares.length) {
             setShares(initialShares);
         }
-    }, [initialShares, shares.length]);
+    }, [initialShares]);
 
     const handleSearchUsers = async (query) => {
         if (query.length < 2) {
@@ -65,7 +88,7 @@ const GroupPage = () => {
         }
     };
 
-    const handleSendInvitation = async (email) => {
+    const handleSendInvitation = useCallback(async (email) => {
         try {
             await inviteMemberMutation.mutateAsync({ groupId: id, email });
             setNewMemberEmail('');
@@ -74,13 +97,16 @@ const GroupPage = () => {
         } catch (error) {
             console.error('Failed to send invitation:', error);
         }
-    };
+    }, [id, inviteMemberMutation]);
 
     const handleAddExpense = async (e) => {
         e.preventDefault();
+        setExpenseError('');
+        
         // Validate that shares add up to the total expense amount
         const totalShares = shares.reduce((acc, share) => acc + parseFloat(share.amount_owed || 0), 0);
         if (Math.abs(totalShares - parseFloat(expenseAmount)) > 0.01) {
+            setExpenseError(t('groups.shares_must_equal_total'));
             return;
         }
 
@@ -96,32 +122,54 @@ const GroupPage = () => {
             setExpenseDescription('');
             setExpenseAmount('');
             setShares(shares.map(s => ({ ...s, amount_owed: '' }))); // Clear amounts
+            setExpenseError('');
         } catch (err) {
             console.error('Failed to add expense:', err);
+            setExpenseError(t('groups.add_expense_error') || 'Failed to add expense');
         }
     };
 
-    const handleShareChange = (userId, value) => {
-        setShares(shares.map(share =>
+    const handleShareChange = useCallback((userId, value) => {
+        setShares(prevShares => prevShares.map(share =>
             share.user_id === userId ? { ...share, amount_owed: value } : share
         ));
-    };
+        setExpenseError(''); // Clear error when user modifies shares
+    }, []);
 
-    const autoSplitExpense = () => {
-        const numMembers = shares.length;
-        if (numMembers > 0 && expenseAmount) {
-            const amountPerMember = (parseFloat(expenseAmount) / numMembers).toFixed(2);
+    const autoSplitExpense = useCallback(() => {
+        if (shares.length > 0 && expenseAmount) {
+            const amountPerMember = (parseFloat(expenseAmount) / shares.length).toFixed(2);
             setShares(shares.map(share => ({ ...share, amount_owed: amountPerMember })));
+            setExpenseError(''); // Clear error when auto-splitting
         }
-    };
+    }, [shares, expenseAmount]);
 
-    const handleSettleShare = async (shareId) => {
+    const handleSettleShare = useCallback(async (shareId) => {
         try {
             await settleShareMutation.mutateAsync(shareId);
         } catch (error) {
             console.error('Failed to settle share:', error);
         }
-    };
+    }, [settleShareMutation]);
+
+    // Calculate summary statistics - must be before early returns
+    const totalSpent = useMemo(() => {
+        if (!group?.group_expenses) return 0;
+        return group.group_expenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
+    }, [group?.group_expenses]);
+
+    const memberCount = useMemo(() => group?.group_members?.length || 0, [group?.group_members?.length]);
+    const expenseCount = useMemo(() => group?.group_expenses?.length || 0, [group?.group_expenses?.length]);
+    
+    const lastActivity = useMemo(() => {
+        if (!group?.group_expenses || group.group_expenses.length === 0) return null;
+        const dates = group.group_expenses
+            .map(e => new Date(e.created_at || e.updated_at))
+            .filter(d => !isNaN(d.getTime()))
+            .map(d => d.getTime());
+        if (dates.length === 0) return null;
+        return new Date(Math.max(...dates));
+    }, [group?.group_expenses]);
 
     if (loading) return (
         <div className="flex-1 p-6">
@@ -143,44 +191,87 @@ const GroupPage = () => {
     );
 
     return (
-        <div className="flex-1 p-6">
-            {/* Back Button - Fixed position */}
+        <div className="flex-1 p-6 max-w-7xl mx-auto">
+            {/* Back Button */}
             <button
                 onClick={() => window.history.back()}
-                className="fixed top-4 left-4 z-10 flex items-center justify-center w-10 h-10 rounded-lg bg-[#1F1E1D] border border-[#262626] hover:border-[#56a69f] transition-colors group"
+                className="mb-6 flex items-center gap-2 text-[#C2C0B6] hover:text-white transition-colors group"
                 title={t('groups.back')}
             >
                 <svg 
-                    className="w-5 h-5 text-[#C2C0B6] group-hover:text-[#56a69f] transition-colors" 
+                    className="w-5 h-5 group-hover:text-[#56a69f] transition-colors" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
                 >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
+                <span className="text-sm font-medium">{t('groups.back')}</span>
             </button>
 
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold text-white">{group.name}</h1>
+            {/* Header Section - Summary */}
+            <div className="mb-8">
+                <h1 className="text-4xl font-bold text-white mb-6 text-left">{group.name}</h1>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
+                        <div className="text-[#8B8A85] text-xs font-medium mb-2 uppercase tracking-wide">
+                            {t('groups.total_spent')}
+                        </div>
+                        <div className="text-[#56a69f] text-2xl font-bold">
+                            {formatCurrency(totalSpent)}
+                        </div>
+                    </div>
+                    
+                    <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
+                        <div className="text-[#8B8A85] text-xs font-medium mb-2 uppercase tracking-wide">
+                            {t('groups.members')}
+                        </div>
+                        <div className="text-white text-2xl font-bold">
+                            {memberCount}
+                        </div>
+                    </div>
+                    
+                    <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
+                        <div className="text-[#8B8A85] text-xs font-medium mb-2 uppercase tracking-wide">
+                            {t('groups.last_activity')}
+                        </div>
+                        <div className="text-white text-lg font-semibold">
+                            {formatDate(lastActivity, t)}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Members Section */}
-                <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
-                    <h2 className="text-xl font-semibold text-white mb-4">{t('groups.members')}</h2>
+            {/* Main Content - Layout with emphasis on Expenses */}
+            <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+                {/* Members Section - Compact */}
+                <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
+                    <div className="flex items-center justify-start mb-4">
+                        <h3 className="text-3xl font-bold text-white">{t('groups.members')}</h3>
+                    </div>
                     
-                    <div className="space-y-2 mb-6">
+                    <div className="space-y-2 mb-5">
                         {group.group_members.map(member => (
-                            <div key={member.profiles.id} className="flex items-center p-3 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-colors">
-                                <span className="text-white">{member.profiles.name}</span>
+                            <div 
+                                key={member.profiles.id} 
+                                className="flex items-center gap-2.5 p-2.5 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-all duration-200"
+                            >
+                                <div className="w-8 h-8 bg-[#56a69f]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span className="text-[#56a69f] font-semibold text-xs">
+                                        {member.profiles.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                                <span className="text-white font-medium text-sm truncate">{member.profiles.name}</span>
                             </div>
                         ))}
                     </div>
                     
-                    <div className="border-t border-[#262626] pt-4">
-                        <h3 className="text-lg font-medium text-white mb-3">{t('groups.invite_member')}</h3>
+                    {/* Invite Member Form - Compact */}
+                    <div className="pt-4 border-t border-[#262626]">
+                        <h3 className="text-sm font-semibold text-white mb-3">{t('groups.invite_member')}</h3>
                         
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             <input
                                 type="email"
                                 value={newMemberEmail}
@@ -190,32 +281,32 @@ const GroupPage = () => {
                                     setShowUserSearch(e.target.value.length >= 2);
                                 }}
                                 placeholder={t('groups.enter_email')}
-                                className="w-full px-4 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent"
+                                className="w-full px-3 py-2 text-sm bg-[#262626] border border-[#262626] rounded-lg text-white placeholder-[#8B8A85] focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
                             />
                             
                             {showUserSearch && (
-                                <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar">
+                                <div className="bg-[#262626] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar shadow-lg">
                                     {searchLoading ? (
-                                        <div className="p-3 text-[#C2C0B6] text-center">{t('groups.searching')}</div>
+                                        <div className="p-3 text-[#C2C0B6] text-center text-xs">{t('groups.searching')}</div>
                                     ) : userSearchResults.length > 0 ? (
                                         userSearchResults.map(user => (
                                             <button
                                                 key={user.id}
                                                 onClick={() => handleSendInvitation(user.email)}
                                                 disabled={inviteMemberMutation.isPending}
-                                                className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0"
+                                                className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
                                             >
-                                                <div className="text-white">{user.name}</div>
-                                                <div className="text-[#C2C0B6] text-sm">{user.email}</div>
+                                                <div className="text-white font-medium text-xs mb-0.5">{user.name}</div>
+                                                <div className="text-[#8B8A85] text-xs truncate">{user.email}</div>
                                             </button>
                                         ))
                                     ) : newMemberEmail.length >= 2 ? (
                                         <div className="p-3">
-                                            <div className="text-[#C2C0B6] text-sm mb-2">{t('groups.no_users_found')}</div>
+                                            <div className="text-[#8B8A85] text-xs mb-2">{t('groups.no_users_found')}</div>
                                             <button
                                                 onClick={() => handleSendInvitation(newMemberEmail)}
                                                 disabled={inviteMemberMutation.isPending}
-                                                className="text-[#56a69f] hover:text-[#00b37e] text-sm"
+                                                className="text-[#56a69f] hover:text-[#4A8F88] text-xs font-medium transition-colors"
                                             >
                                                 {t('groups.send_invitation_to')} {newMemberEmail}
                                             </button>
@@ -225,117 +316,108 @@ const GroupPage = () => {
                             )}
                         </div>
                     </div>
-                </div>
 
-                {/* Expenses Section - Same as before */}
-                <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] p-6">
-                    <h2 className="text-xl font-semibold text-white mb-4">{t('groups.expenses')}</h2>
-                    
-                    <div className="space-y-4 mb-6 max-h-80 overflow-y-auto custom-scrollbar">
-                        {group.group_expenses.length === 0 ? (
-                            <p className="text-[#C2C0B6] text-center py-8">{t('groups.no_expenses')}</p>
-                        ) : (
-                            group.group_expenses.map(expense => (
-                                <div key={expense.id} className="p-4 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-colors">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="text-white font-medium">{expense.description}</span>
-                                        <span className="text-[#56a69f] font-bold">R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                    </div>
-                                    <div className="text-sm text-[#C2C0B6] mb-3">{t('groups.paid_by')} {expense.profiles.name}</div>
-                                    <div className="space-y-2 pt-2 border-t border-[#1F1E1D]">
-                                        {expense.expense_shares.map(share => (
-                                            <div key={share.id} className="flex justify-between items-center text-sm">
-                                                <span className="text-white">{share.profiles.name} {t('groups.owes')} R$ {share.amount_owed.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                                {share.is_settled ? (
-                                                    <span className="text-green-400 text-xs font-medium">{t('groups.settled')}</span>
-                                                ) : share.user_id === user.id ? (
-                                                    <button 
-                                                        onClick={() => handleSettleShare(share.id)}
-                                                        disabled={settleShareMutation.isPending}
-                                                        className="text-[#56a69f] hover:text-[#4A8F88] text-xs font-medium disabled:opacity-50"
-                                                    >
-                                                        {t('groups.settle')}
-                                                    </button>
-                                                ) : (
-                                                    <span className="text-[#C2C0B6] text-xs">{t('groups.pending')}</span>
-                                                )}
-                                            </div>
-                                        ))}
+                    {/* Add Expense Form - At the bottom */}
+                    <form onSubmit={handleAddExpense} className="mt-10 pt-8 border-t border-[#262626] space-y-4">
+                        <h3 className="text-xl font-semibold text-white mb-1">{t('groups.add_expense')}</h3>
+                        
+                        {expenseError && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2">
+                                <p className="text-red-400 text-xs">{expenseError}</p>
+                            </div>
+                        )}
+                        
+                        <div className="space-y-3">
+                            <div>
+                                <label htmlFor="description" className="block text-[#C2C0B6] text-xs font-medium mb-1.5">
+                                    {t('groups.description')}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="description"
+                                    value={expenseDescription}
+                                    onChange={(e) => setExpenseDescription(e.target.value)}
+                                    className="w-full px-3 py-2 text-sm bg-[#262626] border border-[#262626] rounded-lg text-white placeholder-[#8B8A85] focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
+                                    placeholder={t('groups.description')}
+                                    required
+                                />
+                            </div>
+                            
+                            <div>
+                                <label htmlFor="amount" className="block text-[#C2C0B6] text-xs font-medium mb-1.5">
+                                    {t('groups.amount')}
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        id="amount"
+                                        value={expenseAmount}
+                                        onChange={(e) => setExpenseAmount(e.target.value)}
+                                        className="w-full px-3 py-2 pr-8 text-sm bg-[#262626] border border-[#262626] rounded-lg text-white placeholder-[#8B8A85] focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        placeholder="0.00"
+                                        required
+                                    />
+                                    <div className="absolute top-1/2 right-2 -translate-y-1/2 flex flex-col gap-0.5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setExpenseAmount(((parseFloat(expenseAmount) || 0) + 0.01).toFixed(2))}
+                                            className="w-3 h-2 flex items-center justify-center text-white hover:text-[#56a69f] transition-colors cursor-pointer"
+                                        >
+                                            <FaChevronUp className="w-2 h-2" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setExpenseAmount(Math.max(0, (parseFloat(expenseAmount) || 0) - 0.01).toFixed(2))}
+                                            className="w-3 h-2 flex items-center justify-center text-white hover:text-[#56a69f] transition-colors cursor-pointer"
+                                        >
+                                            <FaChevronDown className="w-2 h-2" />
+                                        </button>
                                     </div>
                                 </div>
-                            ))
-                        )}
-                    </div>
-                    
-                    <form onSubmit={handleAddExpense} className="border-t border-[#262626] pt-4 space-y-4">
-                        <h3 className="text-lg font-medium text-white">{t('groups.add_expense')}</h3>
-                        
-                        <div>
-                            <label htmlFor="description" className="block text-white font-medium mb-2">{t('groups.description')}</label>
-                            <input
-                                type="text"
-                                id="description"
-                                value={expenseDescription}
-                                onChange={(e) => setExpenseDescription(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent"
-                                required
-                            />
-                        </div>
-                        
-                        <div>
-                            <label htmlFor="amount" className="block text-white font-medium mb-2">{t('groups.amount')}</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="amount"
-                                value={expenseAmount}
-                                onChange={(e) => setExpenseAmount(e.target.value)}
-                                className="w-full px-4 py-2 bg-[#1F1E1D] border border-[#262626] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent"
-                                required
-                            />
+                            </div>
                         </div>
                         
                         <div>
                             <div className="flex justify-between items-center mb-3">
-                                <h4 className="text-white font-medium">{t('groups.split')}</h4>
+                                <label className="block text-[#C2C0B6] text-xs font-medium">
+                                    {t('groups.split')}
+                                </label>
                                 <button
                                     type="button"
                                     onClick={autoSplitExpense}
-                                    className="text-[#56a69f] hover:text-[#00b37e] text-sm"
+                                    className="text-[#56a69f] hover:text-[#4A8F88] text-xs font-medium transition-colors"
                                 >
                                     {t('groups.split_equally')}
                                 </button>
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 bg-[#262626] rounded-lg p-3 border border-[#262626]">
                                 {shares.map(share => (
                                     <div key={share.user_id} className="flex items-center justify-between">
-                                        <label className="text-gray-300 text-sm">{share.username}</label>
+                                        <label className="text-white text-xs font-medium">{share.username}</label>
                                         <div className="relative">
                                             <input
                                                 type="number"
                                                 step="0.01"
                                                 value={share.amount_owed}
                                                 onChange={(e) => handleShareChange(share.user_id, e.target.value)}
-                                                className="w-24 px-2 py-1 pr-6 bg-[#1F1E1D] border border-[#262626] rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-[#56a69f] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                                className="w-24 px-2 py-1.5 pr-7 text-xs bg-[#1F1E1D] border border-[#262626] rounded text-white focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                                                 placeholder="0.00"
                                             />
-                                            {/* Custom spinner arrows */}
-                                            <div className="absolute top-1/2 right-1 -translate-y-1/2 flex flex-col gap-0.5">
+                                            <div className="absolute top-1/2 right-1.5 -translate-y-1/2 flex flex-col gap-0.5">
                                                 <button
                                                     type="button"
                                                     onClick={() => handleShareChange(share.user_id, ((parseFloat(share.amount_owed) || 0) + 0.01).toFixed(2))}
-                                                    className="w-3 h-2 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
-                                                    style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                                    className="w-3 h-2 flex items-center justify-center text-white hover:text-[#56a69f] transition-colors cursor-pointer"
                                                 >
-                                                    <FaChevronUp className="w-2 h-2 text-white stroke-2" />
+                                                    <FaChevronUp className="w-2 h-2" />
                                                 </button>
                                                 <button
                                                     type="button"
                                                     onClick={() => handleShareChange(share.user_id, Math.max(0, (parseFloat(share.amount_owed) || 0) - 0.01).toFixed(2))}
-                                                    className="w-3 h-2 flex items-center justify-center text-white hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
-                                                    style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                                    className="w-3 h-2 flex items-center justify-center text-white hover:text-[#56a69f] transition-colors cursor-pointer"
                                                 >
-                                                    <FaChevronDown className="w-2 h-2 text-white stroke-2" />
+                                                    <FaChevronDown className="w-2 h-2" />
                                                 </button>
                                             </div>
                                         </div>
@@ -347,11 +429,76 @@ const GroupPage = () => {
                         <button 
                             type="submit" 
                             disabled={addExpenseMutation.isPending}
-                            className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold py-2.5 rounded-lg hover:bg-[#4A8F88] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm mb-4"
                         >
                             {addExpenseMutation.isPending ? t('groups.creating') : t('groups.add_expense_button')}
                         </button>
                     </form>
+                </div>
+
+                {/* Expenses Section - Main Focus */}
+                <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-4xl font-bold text-white">{t('groups.expenses')}</h3>
+                        <span className="text-[#8B8A85] text-sm font-medium">{expenseCount} {t('groups.expenses')}</span>
+                    </div>
+                    
+                    {/* Expenses List */}
+                    <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 max-h-[800px]">
+                        {group.group_expenses.length === 0 ? (
+                            <div className="text-center py-12">
+                                <p className="text-[#8B8A85] text-sm">{t('groups.no_expenses')}</p>
+                            </div>
+                        ) : (
+                            group.group_expenses.map(expense => (
+                                <div 
+                                    key={expense.id} 
+                                    className="p-6 bg-[#262626] rounded-xl border border-[#262626] hover:border-[#3a3a3a] transition-all duration-200 shadow-sm"
+                                >
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div className="flex-1 pr-4">
+                                            <h4 className="text-white font-bold text-lg mb-2">{expense.description}</h4>
+                                            <p className="text-[#8B8A85] text-sm">
+                                                {t('groups.paid_by')} <span className="text-white font-semibold">{expense.profiles.name}</span>
+                                            </p>
+                                        </div>
+                                        <div className="text-right flex-shrink-0">
+                                            <div className="text-[#56a69f] font-bold text-xl">
+                                                {formatCurrency(expense.amount)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="pt-4 border-t border-[#1F1E1D] space-y-2.5">
+                                        {expense.expense_shares.map(share => (
+                                            <div key={share.id} className="flex justify-between items-center py-1.5">
+                                                <span className="text-[#C2C0B6] text-sm">
+                                                    <span className="text-white font-semibold">{share.profiles.name}</span> {t('groups.owes')} <span className="text-white font-medium">{formatCurrency(share.amount_owed)}</span>
+                                                </span>
+                                                {share.is_settled ? (
+                                                    <span className="text-[#56a69f] text-xs font-semibold px-3 py-1.5 bg-[#56a69f]/10 rounded-md">
+                                                        {t('groups.settled')}
+                                                    </span>
+                                                ) : share.user_id === user.id ? (
+                                                    <button 
+                                                        onClick={() => handleSettleShare(share.id)}
+                                                        disabled={settleShareMutation.isPending}
+                                                        className="text-[#56a69f] hover:text-[#4A8F88] hover:bg-[#56a69f]/20 text-xs font-semibold px-3 py-1.5 bg-[#56a69f]/10 rounded-md transition-all disabled:opacity-50"
+                                                    >
+                                                        {t('groups.settle')}
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-[#8B8A85] text-xs font-medium px-3 py-1.5 bg-[#1F1E1D] rounded-md">
+                                                        {t('groups.pending')}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

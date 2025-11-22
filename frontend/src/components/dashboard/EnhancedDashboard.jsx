@@ -52,6 +52,7 @@ const EnhancedDashboard = () => {
 
         fetchDashboardData();
     }, [user]);
+
     // Enhanced card wrapper with loading states
     const EnhancedCard = ({ children, title, subtitle, isLoading = false, action, className = '' }) => {
         return (
