@@ -247,9 +247,80 @@ const GroupPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
                 {/* Members Section - Compact */}
                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
-                    {/* Add Expense Form - At the top */}
-                    <form onSubmit={handleAddExpense} className="mb-6 pb-6 border-b border-[#262626] space-y-4">
-                        <h3 className="text-2xl font-semibold text-white mb-1">{t('groups.add_expense')}</h3>
+                    <div className="flex items-center justify-start mb-4">
+                        <h3 className="text-3xl font-bold text-white">{t('groups.members')}</h3>
+                    </div>
+                    
+                    <div className="space-y-2 mb-5">
+                        {group.group_members.map(member => (
+                            <div 
+                                key={member.profiles.id} 
+                                className="flex items-center gap-2.5 p-2.5 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-all duration-200"
+                            >
+                                <div className="w-8 h-8 bg-[#56a69f]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span className="text-[#56a69f] font-semibold text-xs">
+                                        {member.profiles.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                                <span className="text-white font-medium text-sm truncate">{member.profiles.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* Invite Member Form - Compact */}
+                    <div className="pt-4 border-t border-[#262626]">
+                        <h3 className="text-sm font-semibold text-white mb-3">{t('groups.invite_member')}</h3>
+                        
+                        <div className="space-y-2">
+                            <input
+                                type="email"
+                                value={newMemberEmail}
+                                onChange={(e) => {
+                                    setNewMemberEmail(e.target.value);
+                                    handleSearchUsers(e.target.value);
+                                    setShowUserSearch(e.target.value.length >= 2);
+                                }}
+                                placeholder={t('groups.enter_email')}
+                                className="w-full px-3 py-2 text-sm bg-[#262626] border border-[#262626] rounded-lg text-white placeholder-[#8B8A85] focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
+                            />
+                            
+                            {showUserSearch && (
+                                <div className="bg-[#262626] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar shadow-lg">
+                                    {searchLoading ? (
+                                        <div className="p-3 text-[#C2C0B6] text-center text-xs">{t('groups.searching')}</div>
+                                    ) : userSearchResults.length > 0 ? (
+                                        userSearchResults.map(user => (
+                                            <button
+                                                key={user.id}
+                                                onClick={() => handleSendInvitation(user.email)}
+                                                disabled={inviteMemberMutation.isPending}
+                                                className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
+                                            >
+                                                <div className="text-white font-medium text-xs mb-0.5">{user.name}</div>
+                                                <div className="text-[#8B8A85] text-xs truncate">{user.email}</div>
+                                            </button>
+                                        ))
+                                    ) : newMemberEmail.length >= 2 ? (
+                                        <div className="p-3">
+                                            <div className="text-[#8B8A85] text-xs mb-2">{t('groups.no_users_found')}</div>
+                                            <button
+                                                onClick={() => handleSendInvitation(newMemberEmail)}
+                                                disabled={inviteMemberMutation.isPending}
+                                                className="text-[#56a69f] hover:text-[#4A8F88] text-xs font-medium transition-colors"
+                                            >
+                                                {t('groups.send_invitation_to')} {newMemberEmail}
+                                            </button>
+                                        </div>
+                                    ) : null}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Add Expense Form - At the bottom */}
+                    <form onSubmit={handleAddExpense} className="mt-10 pt-8 border-t border-[#262626] space-y-4">
+                        <h3 className="text-xl font-semibold text-white mb-1">{t('groups.add_expense')}</h3>
+
                         
                         {expenseError && (
                             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2">
@@ -364,76 +435,6 @@ const GroupPage = () => {
                             {addExpenseMutation.isPending ? t('groups.creating') : t('groups.add_expense_button')}
                         </button>
                     </form>
-
-                    <div className="flex items-center justify-between mb-4 mt-6">
-                        <h2 className="text-lg font-bold text-white">{t('groups.members')}</h2>
-                    </div>
-                    
-                    <div className="space-y-2 mb-5">
-                        {group.group_members.map(member => (
-                            <div 
-                                key={member.profiles.id} 
-                                className="flex items-center gap-2.5 p-2.5 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-all duration-200"
-                            >
-                                <div className="w-8 h-8 bg-[#56a69f]/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span className="text-[#56a69f] font-semibold text-xs">
-                                        {member.profiles.name.charAt(0).toUpperCase()}
-                                    </span>
-                                </div>
-                                <span className="text-white font-medium text-sm truncate">{member.profiles.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                    
-                    {/* Invite Member Form - Compact */}
-                    <div className="pt-4 border-t border-[#262626]">
-                        <h3 className="text-sm font-semibold text-white mb-3">{t('groups.invite_member')}</h3>
-                        
-                        <div className="space-y-2">
-                            <input
-                                type="email"
-                                value={newMemberEmail}
-                                onChange={(e) => {
-                                    setNewMemberEmail(e.target.value);
-                                    handleSearchUsers(e.target.value);
-                                    setShowUserSearch(e.target.value.length >= 2);
-                                }}
-                                placeholder={t('groups.enter_email')}
-                                className="w-full px-3 py-2 text-sm bg-[#262626] border border-[#262626] rounded-lg text-white placeholder-[#8B8A85] focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
-                            />
-                            
-                            {showUserSearch && (
-                                <div className="bg-[#262626] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar shadow-lg">
-                                    {searchLoading ? (
-                                        <div className="p-3 text-[#C2C0B6] text-center text-xs">{t('groups.searching')}</div>
-                                    ) : userSearchResults.length > 0 ? (
-                                        userSearchResults.map(user => (
-                                            <button
-                                                key={user.id}
-                                                onClick={() => handleSendInvitation(user.email)}
-                                                disabled={inviteMemberMutation.isPending}
-                                                className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
-                                            >
-                                                <div className="text-white font-medium text-xs mb-0.5">{user.name}</div>
-                                                <div className="text-[#8B8A85] text-xs truncate">{user.email}</div>
-                                            </button>
-                                        ))
-                                    ) : newMemberEmail.length >= 2 ? (
-                                        <div className="p-3">
-                                            <div className="text-[#8B8A85] text-xs mb-2">{t('groups.no_users_found')}</div>
-                                            <button
-                                                onClick={() => handleSendInvitation(newMemberEmail)}
-                                                disabled={inviteMemberMutation.isPending}
-                                                className="text-[#56a69f] hover:text-[#4A8F88] text-xs font-medium transition-colors"
-                                            >
-                                                {t('groups.send_invitation_to')} {newMemberEmail}
-                                            </button>
-                                        </div>
-                                    ) : null}
-                                </div>
-                            )}
-                        </div>
-                    </div>
                 </div>
 
                 {/* Expenses Section - Main Focus */}
