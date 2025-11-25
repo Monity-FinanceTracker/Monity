@@ -139,6 +139,10 @@
   background: transparent !important;
   padding: 0 !important;
   outline: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
 }
 
 .Toastify__close-button:hover {
@@ -158,6 +162,10 @@
   right: 0.75rem !important;
   z-index: 10000 !important;
   pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
 }
 
 /* Animações suaves */

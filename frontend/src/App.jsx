@@ -222,7 +222,7 @@ const App = React.memo(() => {
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
-        draggable
+        draggable={false}
         pauseOnHover
         theme="dark"
         toastClassName="monity-toast"
