@@ -189,8 +189,8 @@ export const useInviteGroupMember = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ groupId, email }) => {
-      const response = await post(`/groups/${groupId}/invite`, { email });
+    mutationFn: async ({ groupId }) => {
+      const response = await post(`/groups/${groupId}/invite`);
       return response.data;
     },
     onSuccess: (data, variables) => {
