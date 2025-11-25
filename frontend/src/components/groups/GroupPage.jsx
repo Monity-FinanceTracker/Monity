@@ -84,18 +84,11 @@ const GroupPage = () => {
                 try {
                     await navigator.clipboard.writeText(data.invitationLink);
                     setLinkCopied(true);
-                    // Show success message only when copy succeeds
-                    toast.success(t('groups.link_copied_to_clipboard'));
                     setTimeout(() => setLinkCopied(false), 3000);
                 } catch (clipboardError) {
                     // Clipboard copy failed, but link was generated successfully
                     console.warn('Failed to auto-copy link:', clipboardError);
-                    // Show message that link was generated if copy fails
-                    toast.success(t('groups.invitation_link_generated'));
                 }
-            } else {
-                // Clipboard not available, show generated message
-                toast.success(t('groups.invitation_link_generated'));
             }
         } catch (error) {
             console.error('Failed to generate invitation link:', error);
@@ -125,7 +118,6 @@ const GroupPage = () => {
             try {
                 await navigator.clipboard.writeText(invitationLink.link);
                 setLinkCopied(true);
-                toast.success(t('groups.link_copied'));
                 setTimeout(() => setLinkCopied(false), 3000);
             } catch (error) {
                 console.error('Failed to copy link:', error);
