@@ -27,7 +27,7 @@ class AuthController {
                         role: 'user',
                         name: name
                     },
-                    emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?type=email`
+                    emailRedirectTo: `${process.env.FRONTEND_URL || process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? 'https://app.monity-finance.com' : 'http://localhost:3000')}/auth/callback?type=email`
                 }
             });
 
@@ -396,10 +396,24 @@ class AuthController {
         try {
             logger.info('Google OAuth login initiated');
 
+            // Verifica se é uma requisição do app mobile
+            const isMobile = req.query.platform === 'mobile' || req.headers['user-agent']?.includes('Expo');
+            
+            // Determina a URL de redirecionamento baseado na plataforma
+            let redirectTo;
+            if (isMobile && process.env.MOBILE_OAUTH_REDIRECT_URL) {
+                // Deep link para o app mobile
+                redirectTo = process.env.MOBILE_OAUTH_REDIRECT_URL;
+                logger.info('Using mobile OAuth redirect URL');
+            } else {
+                // URL web padrão
+                redirectTo = `${process.env.FRONTEND_URL || process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? 'https://app.monity-finance.com' : 'http://localhost:3000')}/auth/callback`;
+            }
+
             const { data, error } = await this.supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback`,
+                    redirectTo: redirectTo,
                     queryParams: {
                         access_type: 'offline',
                         prompt: 'consent',
@@ -412,7 +426,13 @@ class AuthController {
                 return res.status(400).json({ error: error.message });
             }
 
-            // Redireciona o usuário diretamente para a URL do Google OAuth
+            // Para mobile, retorna a URL em JSON ao invés de redirecionar
+            if (isMobile) {
+                logger.info('Returning OAuth URL for mobile app', { url: data.url });
+                return res.json({ url: data.url });
+            }
+
+            // Para web, redireciona diretamente
             logger.info('Redirecting to Google OAuth', { url: data.url });
             res.redirect(data.url);
 
@@ -463,7 +483,7 @@ class AuthController {
             }
 
             // Redirecionar para o frontend
-            const redirectUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+            const redirectUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? 'https://app.monity-finance.com' : 'http://localhost:3000');
             res.redirect(`${redirectUrl}/dashboard?auth=success`);
 
         } catch (error) {
@@ -494,7 +514,7 @@ class AuthController {
                 type: 'signup',
                 email: email,
                 options: {
-                    emailRedirectTo: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?type=email`
+                    emailRedirectTo: `${process.env.FRONTEND_URL || process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? 'https://app.monity-finance.com' : 'http://localhost:3000')}/auth/callback?type=email`
                 }
             });
 
