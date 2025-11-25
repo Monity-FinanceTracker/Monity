@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { searchUsers } from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -66,7 +65,7 @@ const GroupPage = () => {
         if (initialShares.length > 0 && shares.length !== initialShares.length) {
             setShares(initialShares);
         }
-    }, [initialShares]);
+    }, [initialShares, shares.length]);
 
     const handleGenerateInvitationLink = useCallback(async () => {
         try {
