@@ -1,10 +1,31 @@
 const Group = require('../models/Group');
 const { logger } = require('../utils/logger');
+const { getAuthenticatedSupabaseClient } = require('../utils/supabaseClient');
+const { supabaseAdmin } = require('../config/supabase');
 
 class GroupController {
     constructor(supabase) {
         this.supabase = supabase;
         this.groupModel = new Group(supabase);
+    }
+
+    /**
+     * Get authenticated Supabase client for RLS policies
+     * Uses user token if available, otherwise falls back to admin client
+     */
+    getAuthenticatedClient(req) {
+        if (req.token) {
+            try {
+                return getAuthenticatedSupabaseClient(req.token);
+            } catch (error) {
+                logger.warn('Failed to create authenticated client, using admin client', { error: error.message });
+                // Fallback to admin client if token is invalid
+                return supabaseAdmin;
+            }
+        }
+        // If no token, use admin client (RLS will be bypassed)
+        // Note: Using admin client bypasses RLS, but backend validation ensures only group members can invite
+        return supabaseAdmin;
     }
 
     async getAllGroups(req, res) {
@@ -156,7 +177,6 @@ class GroupController {
 
     async sendGroupInvitation(req, res) {
         const groupId = req.params.id;
-        const { email } = req.body;
         const userId = req.user.id;
 
         try {
@@ -166,44 +186,28 @@ class GroupController {
                 return res.status(403).json({ error: 'You must be a member of the group to send invitations.' });
             }
 
-            // Find the user by email
-            const { data: invitedUser, error: userError } = await this.supabase
-                .from('profiles')
-                .select('id, name, email')
-                .eq('email', email)
-                .single();
+            // Generate unique invitation token (UUID v4)
+            const crypto = require('crypto');
+            const invitationToken = crypto.randomUUID();
 
-            if (userError || !invitedUser) {
-                return res.status(404).json({ error: 'User with this email not found.' });
-            }
+            // Calculate expiration date (7 days from now)
+            const expiresAt = new Date();
+            expiresAt.setDate(expiresAt.getDate() + 7);
 
-            // Check if user is already a member
-            const isAlreadyMember = await this.groupModel.isUserMember(groupId, invitedUser.id);
-            if (isAlreadyMember) {
-                return res.status(409).json({ error: 'User is already a member of this group.' });
-            }
+            // Get authenticated Supabase client for RLS policies
+            // This ensures auth.uid() works correctly in RLS policies
+            const authenticatedClient = this.getAuthenticatedClient(req);
 
-            // Check if there's already a pending invitation
-            const { data: existingInvitation } = await this.supabase
-                .from('group_invitations')
-                .select('id')
-                .eq('group_id', groupId)
-                .eq('invited_user', invitedUser.id)
-                .eq('status', 'pending')
-                .single();
-
-            if (existingInvitation) {
-                return res.status(409).json({ error: 'User already has a pending invitation to this group.' });
-            }
-
-            // Create invitation record
-            const { data: invitation, error: invitationError } = await this.supabase
+            // Create invitation record with token and expiration
+            const { data: invitation, error: invitationError } = await authenticatedClient
                 .from('group_invitations')
                 .insert({
                     group_id: groupId,
                     invited_by: userId,
-                    invited_user: invitedUser.id,
+                    invited_user: null, // Link-based invitations don't require a specific user
                     status: 'pending',
+                    invitation_token: invitationToken,
+                    expires_at: expiresAt.toISOString(),
                     created_at: new Date().toISOString()
                 })
                 .select()
@@ -213,18 +217,55 @@ class GroupController {
                 throw invitationError;
             }
 
-            // TODO: Send email notification to invited user
-            // This would integrate with a notification service
+            // Build invitation link
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+            const invitationLink = `${frontendUrl}/groups/invite/${invitationToken}`;
             
             res.json({ 
-                message: 'Invitation sent successfully', 
-                email,
-                invitedUser: invitedUser.name,
-                invitationId: invitation.id 
+                message: 'Invitation link generated successfully', 
+                invitationId: invitation.id,
+                invitationToken: invitationToken,
+                invitationLink: invitationLink,
+                expiresAt: expiresAt.toISOString()
             });
         } catch (error) {
-            logger.error('Failed to send group invitation', { userId, groupId, email, error: error.message });
-            res.status(500).json({ error: 'Failed to send group invitation' });
+            logger.error('Failed to generate group invitation link', { userId, groupId, error: error.message });
+            
+            // Check if it's a schema error (migration not run)
+            const errorMessage = error.message || '';
+            const isSchemaError = errorMessage.includes('expires_at') || 
+                                 errorMessage.includes('invitation_token') ||
+                                 errorMessage.includes('column') && (errorMessage.includes('expires_at') || errorMessage.includes('invitation_token')) ||
+                                 errorMessage.includes('schema cache');
+            
+            if (isSchemaError) {
+                return res.status(500).json({ 
+                    error: 'Database migration required. The invitation_token and expires_at columns do not exist in the group_invitations table.',
+                    code: 'MIGRATION_REQUIRED',
+                    migrationRequired: true,
+                    instructions: 'Please run the migration SQL in Supabase SQL Editor to add the required columns.',
+                    migrationSQL: `-- Run this SQL in Supabase SQL Editor:
+-- 1. Go to https://app.supabase.com
+-- 2. Select your project
+-- 3. Open "SQL Editor"
+-- 4. Copy and execute the following:
+
+ALTER TABLE group_invitations 
+ADD COLUMN IF NOT EXISTS invitation_token UUID UNIQUE;
+
+ALTER TABLE group_invitations 
+ADD COLUMN IF NOT EXISTS expires_at TIMESTAMP WITH TIME ZONE;
+
+CREATE INDEX IF NOT EXISTS idx_group_invitations_token ON group_invitations(invitation_token);
+
+CREATE INDEX IF NOT EXISTS idx_group_invitations_expires_at ON group_invitations(expires_at);`
+                });
+            }
+            
+            res.status(500).json({ 
+                error: 'Failed to generate invitation link',
+                details: error.message || 'Unknown error occurred'
+            });
         }
     }
 

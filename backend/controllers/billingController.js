@@ -1,5 +1,6 @@
 const { supabaseAdmin } = require("../config/supabase");
 const { logger } = require("../utils/logger");
+const AnalyticsService = require("../services/analyticsService");
 
 // Initialize Stripe only if the secret key is available
 let stripe = null;
@@ -12,6 +13,7 @@ if (process.env.STRIPE_SECRET_KEY) {
 class BillingController {
   constructor(supabase) {
     this.supabase = supabase;
+    this.analyticsService = new AnalyticsService(supabaseAdmin);
   }
 
   // Helper method to check if Stripe is available
@@ -175,18 +177,43 @@ class BillingController {
           const { metadata: { supabase_user_id } = {}, subscription } =
             checkoutSession;
 
-          logger.info("Processing checkout.session.completed", {
+          // ENHANCED LOGGING: Log full checkout session details
+          logger.info("Processing checkout.session.completed - DETAILED", {
             sessionId: checkoutSession.id,
             subscriptionId: subscription,
             userId: supabase_user_id,
             paymentStatus: checkoutSession.payment_status,
             status: checkoutSession.status,
+            mode: checkoutSession.mode,
+            hasMetadata: !!checkoutSession.metadata,
+            metadataKeys: Object.keys(checkoutSession.metadata || {}),
+            allMetadata: checkoutSession.metadata,
+            customerId: checkoutSession.customer,
+            amountTotal: checkoutSession.amount_total,
+            currency: checkoutSession.currency,
           });
+
+          // METADATA VALIDATION: Check if user ID exists
+          if (!supabase_user_id) {
+            logger.error("CRITICAL: Missing supabase_user_id in checkout session metadata", {
+              sessionId: checkoutSession.id,
+              hasMetadata: !!checkoutSession.metadata,
+              metadataKeys: Object.keys(checkoutSession.metadata || {}),
+              metadata: checkoutSession.metadata,
+              customerId: checkoutSession.customer,
+            });
+            // Don't break - still return 200 to Stripe, but log the issue
+            break;
+          }
 
           if (subscription && supabase_user_id) {
             // This is a subscription payment
+            logger.info("STARTING: Processing subscription payment", {
+              userId: supabase_user_id,
+              subscriptionId: subscription,
+            });
             await this.handleSubscriptionChange(supabase_user_id, subscription);
-            logger.info("Subscription updated successfully", {
+            logger.info("SUCCESS: Subscription updated successfully", {
               userId: supabase_user_id,
               subscriptionId: subscription,
             });
@@ -195,20 +222,24 @@ class BillingController {
             checkoutSession.payment_status === "paid"
           ) {
             // This is a one-time payment - upgrade user to premium
-            logger.info("Processing one-time payment upgrade", {
+            logger.info("STARTING: Processing one-time payment upgrade", {
               userId: supabase_user_id,
               sessionId: checkoutSession.id,
+              paymentStatus: checkoutSession.payment_status,
             });
 
             await this.handleOneTimePayment(supabase_user_id, checkoutSession);
-            logger.info("One-time payment processed successfully", {
+            logger.info("SUCCESS: One-time payment processed successfully", {
               userId: supabase_user_id,
             });
           } else {
-            logger.warn("Missing required data in checkout session", {
+            logger.error("SKIPPED: Missing required data in checkout session", {
               hasSubscription: !!subscription,
               hasUserId: !!supabase_user_id,
               paymentStatus: checkoutSession.payment_status,
+              status: checkoutSession.status,
+              mode: checkoutSession.mode,
+              sessionId: checkoutSession.id,
             });
           }
           break;
@@ -218,13 +249,36 @@ class BillingController {
           const subscriptionObject = event.data.object;
           const customerId = subscriptionObject.customer;
 
+          logger.info("Processing subscription event", {
+            eventType: event.type,
+            subscriptionId: subscriptionObject.id,
+            customerId: customerId,
+            status: subscriptionObject.status,
+          });
+
           const { data: [userProfile] = [], error: profileError } =
             await supabaseAdmin
               .from("profiles")
-              .select("id")
+              .select("id, email")
               .eq("stripe_customer_id", customerId);
 
-          if (!profileError && userProfile) {
+          if (profileError) {
+            logger.error("Failed to find user by stripe_customer_id", {
+              customerId: customerId,
+              error: profileError.message,
+              eventType: event.type,
+            });
+          } else if (!userProfile) {
+            logger.error("No user found with stripe_customer_id", {
+              customerId: customerId,
+              eventType: event.type,
+            });
+          } else {
+            logger.info("Found user for subscription event", {
+              userId: userProfile.id,
+              userEmail: userProfile.email,
+              customerId: customerId,
+            });
             await this.handleSubscriptionChange(
               userProfile.id,
               subscriptionObject.id
@@ -237,14 +291,35 @@ class BillingController {
           const deletedSub = event.data.object;
           const deletedCustId = deletedSub.customer;
 
+          logger.info("Processing subscription cancellation/failure", {
+            eventType: event.type,
+            subscriptionId: deletedSub.id,
+            customerId: deletedCustId,
+          });
+
           const { data: [deletedProfile] = [], error: deletedProfileError } =
             await supabaseAdmin
               .from("profiles")
-              .select("id")
+              .select("id, email, subscription_tier")
               .eq("stripe_customer_id", deletedCustId);
 
-          if (!deletedProfileError && deletedProfile) {
-            await supabaseAdmin
+          if (deletedProfileError) {
+            logger.error("Failed to find user for cancellation", {
+              customerId: deletedCustId,
+              error: deletedProfileError.message,
+            });
+          } else if (!deletedProfile) {
+            logger.warn("No user found for cancellation", {
+              customerId: deletedCustId,
+            });
+          } else {
+            logger.info("Downgrading user to free tier", {
+              userId: deletedProfile.id,
+              userEmail: deletedProfile.email,
+              currentTier: deletedProfile.subscription_tier,
+            });
+
+            const { data, error: updateError } = await supabaseAdmin
               .from("profiles")
               .update({
                 subscription_tier: "free",
@@ -253,7 +328,134 @@ class BillingController {
                 current_period_end: null,
                 plan_price_id: null,
               })
-              .eq("id", deletedProfile.id);
+              .eq("id", deletedProfile.id)
+              .select();
+
+            if (updateError) {
+              logger.error("Failed to downgrade user to free", {
+                userId: deletedProfile.id,
+                error: updateError.message,
+              });
+            } else {
+              logger.info("Successfully downgraded user to free", {
+                userId: deletedProfile.id,
+                rowsAffected: data?.length || 0,
+              });
+
+              // ANALYTICS: Track subscription cancellation
+              try {
+                await this.analyticsService.track({
+                  userId: deletedProfile.id,
+                  sessionId: deletedSub.id,
+                  eventName: event.type === 'invoice.payment_failed' ? 'payment_failed' : 'subscription_cancelled',
+                  properties: {
+                    subscriptionId: deletedSub.id,
+                    fromTier: deletedProfile.subscription_tier,
+                    toTier: 'free',
+                    reason: event.type === 'invoice.payment_failed' ? 'payment_failed' : 'cancelled',
+                  },
+                  context: {
+                    subscriptionTier: 'free',
+                  }
+                });
+                
+                logger.info("ANALYTICS: Tracked subscription cancellation event", {
+                  userId: deletedProfile.id,
+                });
+              } catch (analyticsError) {
+                logger.error("WARNING: Failed to track analytics event", {
+                  userId: deletedProfile.id,
+                  error: analyticsError.message,
+                });
+              }
+            }
+          }
+          break;
+        }
+        case "invoice.payment_succeeded": {
+          const invoice = event.data.object;
+          const customerId = invoice.customer;
+          const subscriptionId = invoice.subscription;
+
+          logger.info("Processing invoice.payment_succeeded", {
+            eventType: event.type,
+            invoiceId: invoice.id,
+            customerId: customerId,
+            subscriptionId: subscriptionId,
+            amountPaid: invoice.amount_paid,
+            currency: invoice.currency,
+          });
+
+          if (!subscriptionId) {
+            logger.warn("Invoice payment succeeded but no subscription ID", {
+              invoiceId: invoice.id,
+              customerId: customerId,
+            });
+            break;
+          }
+
+          // Find user by Stripe customer ID
+          const { data: [invoiceUserProfile] = [], error: invoiceProfileError } =
+            await supabaseAdmin
+              .from("profiles")
+              .select("id, email, subscription_tier")
+              .eq("stripe_customer_id", customerId);
+
+          if (invoiceProfileError) {
+            logger.error("Failed to find user for invoice payment", {
+              customerId: customerId,
+              error: invoiceProfileError.message,
+              invoiceId: invoice.id,
+            });
+          } else if (!invoiceUserProfile) {
+            logger.error("No user found for invoice payment", {
+              customerId: customerId,
+              invoiceId: invoice.id,
+            });
+          } else {
+            logger.info("Found user for invoice payment, updating subscription", {
+              userId: invoiceUserProfile.id,
+              userEmail: invoiceUserProfile.email,
+              currentTier: invoiceUserProfile.subscription_tier,
+              customerId: customerId,
+            });
+            await this.handleSubscriptionChange(
+              invoiceUserProfile.id,
+              subscriptionId
+            );
+            logger.info("Successfully processed invoice payment", {
+              userId: invoiceUserProfile.id,
+              invoiceId: invoice.id,
+            });
+
+            // ANALYTICS: Track invoice payment success
+            try {
+              await this.analyticsService.track({
+                userId: invoiceUserProfile.id,
+                sessionId: invoice.id,
+                eventName: 'payment_succeeded',
+                properties: {
+                  invoiceId: invoice.id,
+                  subscriptionId: subscriptionId,
+                  amount: invoice.amount_paid,
+                  currency: invoice.currency,
+                  paymentType: 'subscription',
+                },
+                context: {
+                  subscriptionTier: invoiceUserProfile.subscription_tier || 'free',
+                }
+              });
+              
+              logger.info("ANALYTICS: Tracked payment success event", {
+                userId: invoiceUserProfile.id,
+                invoiceId: invoice.id,
+              });
+            } catch (analyticsError) {
+              logger.error("WARNING: Failed to track analytics event", {
+                userId: invoiceUserProfile.id,
+                error: analyticsError.message,
+              });
+            }
           }
           break;
         }
@@ -286,10 +488,54 @@ class BillingController {
         sessionId: checkoutSession.id,
         amount: checkoutSession.amount_total,
         currency: checkoutSession.currency,
-      }); // For one-time payments, upgrade user to premium for a fixed period // You can customize this logic based on your business model
+      });
 
+      // USER VERIFICATION: Check if user exists before attempting update
+      logger.info("STEP 1: Verifying user exists in database", {
+        userId: supabase_user_id,
+      });
+
+      const { data: existingUser, error: userCheckError } = await supabaseAdmin
+        .from("profiles")
+        .select("id, email, subscription_tier, subscription_status")
+        .eq("id", supabase_user_id)
+        .single();
+
+      if (userCheckError) {
+        logger.error("CRITICAL: User lookup failed", {
+          userId: supabase_user_id,
+          error: userCheckError.message,
+          errorCode: userCheckError.code,
+          errorDetails: userCheckError.details,
+        });
+        throw new Error(`User lookup failed: ${userCheckError.message}`);
+      }
+
+      if (!existingUser) {
+        logger.error("CRITICAL: User not found in database", {
+          userId: supabase_user_id,
+          sessionId: checkoutSession.id,
+        });
+        throw new Error(`User ${supabase_user_id} not found in database`);
+      }
+
+      logger.info("STEP 1 SUCCESS: User found in database", {
+        userId: supabase_user_id,
+        userEmail: existingUser.email,
+        currentTier: existingUser.subscription_tier,
+        currentStatus: existingUser.subscription_status,
+      });
+
+      // For one-time payments, upgrade user to premium for a fixed period
       const currentPeriodEnd = new Date();
       currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1); // 1 month premium
+
+      logger.info("STEP 2: Updating user to premium", {
+        userId: supabase_user_id,
+        fromTier: existingUser.subscription_tier,
+        toTier: "premium",
+        expiresAt: currentPeriodEnd.toISOString(),
+      });
 
       const { data, error } = await supabaseAdmin
         .from("profiles")
@@ -304,23 +550,102 @@ class BillingController {
         .select();
 
       if (error) {
-        logger.error("Failed to process one-time payment upgrade", {
+        logger.error("CRITICAL: Database update failed", {
           userId: supabase_user_id,
           error: error.message,
+          errorCode: error.code,
+          errorDetails: error.details,
           sessionId: checkoutSession.id,
         });
         throw error;
       }
 
-      logger.info("Successfully processed one-time payment upgrade", {
+      if (!data || data.length === 0) {
+        logger.error("CRITICAL: No rows updated (user may have been deleted)", {
+          userId: supabase_user_id,
+          sessionId: checkoutSession.id,
+        });
+        throw new Error("Database update returned no rows");
+      }
+
+      logger.info("STEP 2 SUCCESS: Database update completed", {
+        userId: supabase_user_id,
+        rowsAffected: data?.length || 0,
+      });
+
+      // POST-UPDATE VERIFICATION: Confirm the update worked
+      logger.info("STEP 3: Verifying database update", {
+        userId: supabase_user_id,
+      });
+
+      const { data: updatedUser, error: verifyError } = await supabaseAdmin
+        .from("profiles")
+        .select("subscription_tier, subscription_status, current_period_end")
+        .eq("id", supabase_user_id)
+        .single();
+
+      if (verifyError) {
+        logger.error("WARNING: Post-update verification failed", {
+          userId: supabase_user_id,
+          error: verifyError.message,
+        });
+      } else {
+        logger.info("STEP 3 SUCCESS: Update verification completed", {
+          userId: supabase_user_id,
+          verifiedTier: updatedUser?.subscription_tier,
+          verifiedStatus: updatedUser?.subscription_status,
+          verifiedExpiry: updatedUser?.current_period_end,
+          updateSuccessful: updatedUser?.subscription_tier === "premium",
+        });
+
+        if (updatedUser?.subscription_tier !== "premium") {
+          logger.error("CRITICAL: Update verification FAILED - tier not premium!", {
+            userId: supabase_user_id,
+            expectedTier: "premium",
+            actualTier: updatedUser?.subscription_tier,
+          });
+        }
+      }
+
+      logger.info("COMPLETE: One-time payment processing finished", {
         userId: supabase_user_id,
         updatedTier: "premium",
         updatedStatus: "active",
-        rowsAffected: data?.length || 0,
         expiresAt: currentPeriodEnd.toISOString(),
       });
+
+      // ANALYTICS: Track successful premium upgrade
+      try {
+        await this.analyticsService.track({
+          userId: supabase_user_id,
+          sessionId: checkoutSession.id,
+          eventName: 'subscription_upgraded',
+          properties: {
+            fromTier: existingUser.subscription_tier || 'free',
+            toTier: 'premium',
+            paymentType: 'one_time',
+            amount: checkoutSession.amount_total,
+            currency: checkoutSession.currency,
+            sessionId: checkoutSession.id,
+            expiresAt: currentPeriodEnd.toISOString(),
+          },
+          context: {
+            subscriptionTier: 'premium',
+          }
+        });
+        
+        logger.info("ANALYTICS: Tracked subscription upgrade event", {
+          userId: supabase_user_id,
+        });
+      } catch (analyticsError) {
+        // Don't fail the payment if analytics fails
+        logger.error("WARNING: Failed to track analytics event", {
+          userId: supabase_user_id,
+          error: analyticsError.message,
+        });
+      }
     } catch (error) {
-      logger.error("Error in handleOneTimePayment", {
+      logger.error("FAILED: Error in handleOneTimePayment", {
         userId: supabase_user_id,
         sessionId: checkoutSession.id,
         error: error.message,
@@ -377,7 +702,7 @@ class BillingController {
         ).toISOString();
       }
 
-      logger.info("Updating user subscription in database", {
+      logger.info("STEP 2: Preparing to update user subscription in database", {
         userId: supabase_user_id,
         newTier: newTier,
         newStatus: newStatus,
@@ -386,24 +711,45 @@ class BillingController {
         currentPeriodEnd: currentPeriodEnd,
       });
 
-      // First, check if user profile exists
+      // First, check if user profile exists and get current state
+      logger.info("STEP 2A: Checking if user profile exists", {
+        userId: supabase_user_id,
+      });
+
       const { data: existingProfile, error: profileError } = await supabaseAdmin
         .from("profiles")
-        .select("id, email")
+        .select("id, email, subscription_tier, subscription_status")
         .eq("id", supabase_user_id)
         .single();
 
       if (profileError) {
-        logger.error("User profile not found", {
+        logger.error("CRITICAL: User profile lookup failed", {
           userId: supabase_user_id,
           error: profileError.message,
+          errorCode: profileError.code,
         });
         throw new Error(`User profile not found: ${profileError.message}`);
       }
 
       if (!existingProfile) {
+        logger.error("CRITICAL: No profile found for user", {
+          userId: supabase_user_id,
+        });
         throw new Error(`No profile found for user ${supabase_user_id}`);
       }
+
+      logger.info("STEP 2A SUCCESS: User profile found", {
+        userId: supabase_user_id,
+        email: existingProfile.email,
+        currentTier: existingProfile.subscription_tier,
+        currentStatus: existingProfile.subscription_status,
+      });
+
+      logger.info("STEP 2B: Executing database update", {
+        userId: supabase_user_id,
+        fromTier: existingProfile.subscription_tier,
+        toTier: newTier,
+      });
 
       const { data, error } = await supabaseAdmin
         .from("profiles")
@@ -418,7 +764,7 @@ class BillingController {
         .select();
 
       if (error) {
-        logger.error("Failed to update user subscription in database", {
+        logger.error("CRITICAL: Failed to update user subscription in database", {
           userId: supabase_user_id,
           error: error.message,
           errorCode: error.code,
@@ -429,20 +775,101 @@ class BillingController {
       }
 
       if (!data || data.length === 0) {
-        logger.error("No rows updated in database", {
+        logger.error("CRITICAL: No rows updated in database", {
           userId: supabase_user_id,
           subscriptionId: stripe_subscription_id,
         });
         throw new Error("No rows were updated in the database");
       }
 
-      logger.info("Successfully updated user subscription", {
+      logger.info("STEP 2B SUCCESS: Database update completed", {
         userId: supabase_user_id,
-        updatedTier: newTier,
-        updatedStatus: newStatus,
         rowsAffected: data?.length || 0,
         updatedProfile: data[0],
       });
+
+      // POST-UPDATE VERIFICATION: Confirm the update worked
+      logger.info("STEP 3: Verifying database update", {
+        userId: supabase_user_id,
+      });
+
+      const { data: verifiedProfile, error: verifyError } = await supabaseAdmin
+        .from("profiles")
+        .select("subscription_tier, subscription_status, stripe_subscription_id, current_period_end")
+        .eq("id", supabase_user_id)
+        .single();
+
+      if (verifyError) {
+        logger.error("WARNING: Post-update verification failed", {
+          userId: supabase_user_id,
+          error: verifyError.message,
+        });
+      } else {
+        const tierMatches = verifiedProfile?.subscription_tier === newTier;
+        const statusMatches = verifiedProfile?.subscription_status === newStatus;
+
+        logger.info("STEP 3 SUCCESS: Update verification completed", {
+          userId: supabase_user_id,
+          expectedTier: newTier,
+          verifiedTier: verifiedProfile?.subscription_tier,
+          tierMatches: tierMatches,
+          expectedStatus: newStatus,
+          verifiedStatus: verifiedProfile?.subscription_status,
+          statusMatches: statusMatches,
+          verifiedSubscriptionId: verifiedProfile?.stripe_subscription_id,
+          verifiedExpiry: verifiedProfile?.current_period_end,
+          updateSuccessful: tierMatches && statusMatches,
+        });
+
+        if (!tierMatches || !statusMatches) {
+          logger.error("CRITICAL: Update verification FAILED - mismatch detected!", {
+            userId: supabase_user_id,
+            tierMismatch: !tierMatches,
+            statusMismatch: !statusMatches,
+            expected: { tier: newTier, status: newStatus },
+            actual: { 
+              tier: verifiedProfile?.subscription_tier,
+              status: verifiedProfile?.subscription_status
+            },
+          });
+        }
+      }
+
+      logger.info("COMPLETE: Successfully updated user subscription", {
+        userId: supabase_user_id,
+        updatedTier: newTier,
+        updatedStatus: newStatus,
+      });
+
+      // ANALYTICS: Track subscription change
+      try {
+        await this.analyticsService.track({
+          userId: supabase_user_id,
+          sessionId: stripe_subscription_id,
+          eventName: newStatus === 'active' || newStatus === 'trialing' ? 'subscription_activated' : 'subscription_status_changed',
+          properties: {
+            fromTier: existingProfile.subscription_tier || 'free',
+            toTier: newTier,
+            subscriptionId: subscription.id,
+            status: newStatus,
+            priceId: priceId,
+            currentPeriodEnd: currentPeriodEnd,
+          },
+          context: {
+            subscriptionTier: newTier,
+          }
+        });
+        
+        logger.info("ANALYTICS: Tracked subscription change event", {
+          userId: supabase_user_id,
+          eventName: newStatus === 'active' ? 'subscription_activated' : 'subscription_status_changed',
+        });
+      } catch (analyticsError) {
+        logger.error("WARNING: Failed to track analytics event", {
+          userId: supabase_user_id,
+          error: analyticsError.message,
+        });
+      }
 
       return {
         success: true,

@@ -33,6 +33,17 @@ module.exports = (controllers, middleware) => {
   // Apply general rate limiting to all v1 routes
   v1Router.use(middleware.rateLimiter.apiLimiter);
 
+  // Public invitation link routes (before auth middleware)
+  v1Router.get(
+    "/invitations/link/:token",
+    (req, res) => controllers.invitationController.getInvitationByToken(req, res)
+  );
+  v1Router.post(
+    "/invitations/link/:token/accept",
+    middleware.auth.optionalAuth,
+    (req, res) => controllers.invitationController.acceptInvitationByLink(req, res)
+  );
+
   // Auth routes have a stricter rate limit
   v1Router.use(
     "/auth",
