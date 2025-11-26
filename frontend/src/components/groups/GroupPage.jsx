@@ -68,15 +68,28 @@ const GroupPage = () => {
     }, [initialShares, shares.length]);
 
     const handleGenerateInvitationLink = useCallback(async () => {
+        // Clear any previous errors at the start
+        setInvitationError(null);
+        
         try {
-            setInvitationError(null);
             const data = await inviteMemberMutation.mutateAsync({ groupId: id });
+            
+            // Verify we have the required data
+            if (!data || !data.invitationLink) {
+                throw new Error('Invalid response from server');
+            }
+            
+            // Successfully generated link - clear any errors and set the link
+            setInvitationError(null);
             setInvitationLink({
                 link: data.invitationLink,
                 expiresAt: data.expiresAt,
                 token: data.invitationToken
             });
             setLinkCopied(false);
+            
+            // Show success message
+            toast.success(t('groups.invitation_link_generated'));
             
             // Auto-copy link to clipboard if available
             if (data.invitationLink && navigator.clipboard) {
@@ -92,8 +105,12 @@ const GroupPage = () => {
         } catch (error) {
             console.error('Failed to generate invitation link:', error);
             
-            // Check if it's a migration error
+            // Only set error if we actually got an error response
             const errorResponse = error?.response?.data || error;
+            
+            // Clear the link if there was an error
+            setInvitationLink(null);
+            
             if (errorResponse?.migrationRequired || errorResponse?.code === 'MIGRATION_REQUIRED') {
                 setInvitationError({
                     type: 'migration',
@@ -104,11 +121,11 @@ const GroupPage = () => {
             } else {
                 setInvitationError({
                     type: 'general',
-                    message: errorResponse?.error || errorResponse?.details || t('groups.failed_to_generate_link')
+                    message: errorResponse?.error || errorResponse?.details || error?.message || t('groups.failed_to_generate_link')
                 });
             }
             
-            toast.error(errorResponse?.error || t('groups.failed_to_generate_link'));
+            toast.error(errorResponse?.error || errorResponse?.details || error?.message || t('groups.failed_to_generate_link'));
         }
     }, [id, inviteMemberMutation, t]);
 

@@ -191,12 +191,20 @@ export const useInviteGroupMember = () => {
   return useMutation({
     mutationFn: async ({ groupId }) => {
       const response = await post(`/groups/${groupId}/invite`);
-      return response.data;
+      // Ensure we return the data correctly
+      if (response && response.data) {
+        return response.data;
+      }
+      throw new Error('Invalid response from server');
     },
     onSuccess: (data, variables) => {
       // Invalidate group queries
       queryClient.invalidateQueries({ queryKey: queryKeys.groups.byId(variables.groupId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+    },
+    onError: (error) => {
+      // Log error for debugging
+      console.error('Invite group member mutation error:', error);
     },
   });
 };
