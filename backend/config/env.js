@@ -25,7 +25,7 @@ if (missingVars.length > 0 && process.env.NODE_ENV === 'production') {
 
 module.exports = {
     NODE_ENV: process.env.NODE_ENV,
-    PORT: process.env.PORT || 3001,
+    PORT: process.env.PORT || 3000,
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     SUPABASE_KEY: process.env.SUPABASE_KEY,

@@ -1,6 +1,10 @@
 const { logger } = require('../utils/logger');
 const { getAuthenticatedSupabaseClient } = require('../utils/supabaseClient');
 const { supabaseAdmin } = require('../config/supabase');
+const { 
+    maskToken, 
+    validateInvitation 
+} = require('../utils/invitationHelpers');
 
 class InvitationController {
     constructor(supabase) {
@@ -35,7 +39,7 @@ class InvitationController {
                 timestamp: new Date().toISOString()
             });
             
-            const { data: invitations, error } = await this.supabase
+            const { data: allInvitations, error } = await this.supabase
                 .from('group_invitations')
                 .select(`
                     id,
@@ -43,6 +47,7 @@ class InvitationController {
                     invited_user,
                     invited_by,
                     status,
+                    expires_at,
                     created_at,
                     groups (
                         id,
@@ -53,6 +58,24 @@ class InvitationController {
                 `)
                 .eq('invited_user', req.user.id)
                 .eq('status', 'pending');
+
+            if (error) {
+                logger.error('Database error while fetching pending invitations', {
+                    userId,
+                    error: error.message,
+                    errorCode: error.code,
+                    errorDetails: error.details
+                });
+                throw error;
+            }
+
+            // Filter out expired invitations
+            const now = new Date();
+            const invitations = (allInvitations || []).filter(inv => {
+                if (!inv.expires_at) return true; // No expiration date means it doesn't expire
+                const expiresAt = new Date(inv.expires_at);
+                return expiresAt > now;
+            });
 
             if (error) {
                 logger.error('Database error while fetching pending invitations', {
@@ -143,7 +166,7 @@ class InvitationController {
             // Get the invitation to verify it belongs to the current user
             const { data: invitation, error: fetchError } = await this.supabase
                 .from('group_invitations')
-                .select('id, group_id, invited_user, status')
+                .select('id, group_id, invited_user, status, expires_at')
                 .eq('id', invitationId)
                 .eq('invited_user', userId)
                 .eq('status', 'pending')
@@ -157,6 +180,23 @@ class InvitationController {
                     invitationExists: !!invitation
                 });
                 return res.status(404).json({ error: 'Invitation not found or not accessible.' });
+            }
+
+            // Validate invitation (expiration and status)
+            const validation = validateInvitation(invitation);
+            if (!validation.valid) {
+                logger.warn('Invitation validation failed', { 
+                    userId, 
+                    invitationId,
+                    error: validation.error,
+                    expired: validation.expired,
+                    status: validation.status
+                });
+                return res.status(validation.statusCode).json({
+                    error: validation.error,
+                    ...(validation.expired && { expired: true, expiresAt: validation.expiresAt }),
+                    ...(validation.status && { status: validation.status })
+                });
             }
 
             logger.debug('Invitation found and validated', { 
@@ -264,7 +304,7 @@ class InvitationController {
 
         try {
             logger.info('Fetching invitation by token', { 
-                token: token.substring(0, 8) + '...', // Log apenas parte do token por segurança
+                token: maskToken(token),
                 timestamp: new Date().toISOString()
             });
 
@@ -292,7 +332,7 @@ class InvitationController {
 
             if (fetchError || !invitation) {
                 logger.warn('Invitation not found by token', { 
-                    token: token.substring(0, 8) + '...',
+                    token: maskToken(token),
                     error: fetchError?.message,
                     errorCode: fetchError?.code
                 });
@@ -305,33 +345,13 @@ class InvitationController {
                 status: invitation.status
             });
 
-            // Check if invitation has expired
-            if (invitation.expires_at) {
-                const expiresAt = new Date(invitation.expires_at);
-                const now = new Date();
-                if (now > expiresAt) {
-                    logger.warn('Invitation link has expired', { 
-                        invitationId: invitation.id,
-                        expiresAt: invitation.expires_at,
-                        currentTime: now.toISOString()
-                    });
-                    return res.status(410).json({ 
-                        error: 'Invitation link has expired.',
-                        expired: true,
-                        expiresAt: invitation.expires_at
-                    });
-                }
-            }
-
-            // Check if invitation is still pending
-            if (invitation.status !== 'pending') {
-                logger.warn('Invitation already used', { 
-                    invitationId: invitation.id,
-                    currentStatus: invitation.status
-                });
-                return res.status(410).json({ 
-                    error: 'This invitation has already been used.',
-                    status: invitation.status
+            // Validate invitation (expiration and status)
+            const validation = validateInvitation(invitation);
+            if (!validation.valid) {
+                return res.status(validation.statusCode).json({
+                    error: validation.error,
+                    ...(validation.expired && { expired: true, expiresAt: validation.expiresAt }),
+                    ...(validation.status && { status: validation.status })
                 });
             }
 
@@ -370,7 +390,7 @@ class InvitationController {
 
         } catch (error) {
             logger.error('Failed to get invitation by token', { 
-                token: token.substring(0, 8) + '...',
+                token: maskToken(token),
                 error: error.message,
                 errorCode: error.code,
                 errorDetails: error.details,
@@ -387,7 +407,7 @@ class InvitationController {
 
         try {
             logger.info('Accepting invitation by link', { 
-                token: token.substring(0, 8) + '...',
+                token: maskToken(token),
                 userId: userId || 'anonymous',
                 timestamp: new Date().toISOString()
             });
@@ -401,7 +421,7 @@ class InvitationController {
 
             if (fetchError || !invitation) {
                 logger.warn('Invitation not found by token for acceptance', { 
-                    token: token.substring(0, 8) + '...',
+                    token: maskToken(token),
                     error: fetchError?.message,
                     errorCode: fetchError?.code
                 });
@@ -414,32 +434,13 @@ class InvitationController {
                 status: invitation.status
             });
 
-            // Check if invitation has expired
-            if (invitation.expires_at) {
-                const expiresAt = new Date(invitation.expires_at);
-                const now = new Date();
-                if (now > expiresAt) {
-                    logger.warn('Attempted to accept expired invitation', { 
-                        invitationId: invitation.id,
-                        expiresAt: invitation.expires_at,
-                        currentTime: now.toISOString()
-                    });
-                    return res.status(410).json({ 
-                        error: 'Invitation link has expired.',
-                        expired: true
-                    });
-                }
-            }
-
-            // Check if invitation is still pending
-            if (invitation.status !== 'pending') {
-                logger.warn('Attempted to accept already used invitation', { 
-                    invitationId: invitation.id,
-                    currentStatus: invitation.status
-                });
-                return res.status(410).json({ 
-                    error: 'This invitation has already been used.',
-                    status: invitation.status
+            // Validate invitation (expiration and status)
+            const validation = validateInvitation(invitation);
+            if (!validation.valid) {
+                return res.status(validation.statusCode).json({
+                    error: validation.error,
+                    ...(validation.expired && { expired: true }),
+                    ...(validation.status && { status: validation.status })
                 });
             }
 
@@ -563,7 +564,7 @@ class InvitationController {
 
         } catch (error) {
             logger.error('Failed to accept invitation by link', { 
-                token: token.substring(0, 8) + '...',
+                token: maskToken(token),
                 userId: userId || 'anonymous',
                 error: error.message,
                 errorCode: error.code,

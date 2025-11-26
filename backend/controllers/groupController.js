@@ -2,6 +2,13 @@ const Group = require('../models/Group');
 const { logger } = require('../utils/logger');
 const { getAuthenticatedSupabaseClient } = require('../utils/supabaseClient');
 const { supabaseAdmin } = require('../config/supabase');
+const { 
+    buildInvitationLink, 
+    calculateExpirationDate, 
+    maskToken,
+    isSchemaError,
+    createMigrationErrorResponse
+} = require('../utils/invitationHelpers');
 
 class GroupController {
     constructor(supabase) {
@@ -201,10 +208,7 @@ class GroupController {
             // Generate unique invitation token (UUID v4)
             const crypto = require('crypto');
             const invitationToken = crypto.randomUUID();
-
-            // Calculate expiration date (7 days from now)
-            const expiresAt = new Date();
-            expiresAt.setDate(expiresAt.getDate() + 7);
+            const expiresAt = calculateExpirationDate();
 
             logger.debug('Generated invitation token and expiration', { 
                 userId, 
@@ -250,16 +254,14 @@ class GroupController {
             });
 
             // Build invitation link
-            const frontendUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? 'https://app.monity-finance.com' : 'http://localhost:5173');
-            const invitationLink = `${frontendUrl}/groups/invite/${invitationToken}`;
+            const invitationLink = buildInvitationLink(invitationToken);
             
             logger.info('Group invitation link generated successfully', { 
                 userId, 
                 groupId, 
                 invitationId: invitation.id,
-                invitationToken: invitationToken.substring(0, 8) + '...', // Log apenas parte do token por segurança
-                expiresAt: expiresAt.toISOString(),
-                frontendUrl
+                invitationToken: maskToken(invitationToken),
+                expiresAt: expiresAt.toISOString()
             });
             
             res.json({ 
@@ -271,13 +273,7 @@ class GroupController {
             });
         } catch (error) {
             // Check if it's a schema error (migration not run)
-            const errorMessage = error.message || '';
-            const isSchemaError = errorMessage.includes('expires_at') || 
-                                 errorMessage.includes('invitation_token') ||
-                                 errorMessage.includes('column') && (errorMessage.includes('expires_at') || errorMessage.includes('invitation_token')) ||
-                                 errorMessage.includes('schema cache');
-            
-            if (isSchemaError) {
+            if (isSchemaError(error)) {
                 logger.error('Database schema error - migration required', { 
                     userId, 
                     groupId, 
@@ -286,27 +282,7 @@ class GroupController {
                     errorDetails: error.details,
                     hint: error.hint
                 });
-                return res.status(500).json({ 
-                    error: 'Database migration required. The invitation_token and expires_at columns do not exist in the group_invitations table.',
-                    code: 'MIGRATION_REQUIRED',
-                    migrationRequired: true,
-                    instructions: 'Please run the migration SQL in Supabase SQL Editor to add the required columns.',
-                    migrationSQL: `-- Run this SQL in Supabase SQL Editor:
--- 1. Go to https://app.supabase.com
--- 2. Select your project
--- 3. Open "SQL Editor"
--- 4. Copy and execute the following:
-
-ALTER TABLE group_invitations 
-ADD COLUMN IF NOT EXISTS invitation_token UUID UNIQUE;
-
-ALTER TABLE group_invitations 
-ADD COLUMN IF NOT EXISTS expires_at TIMESTAMP WITH TIME ZONE;
-
-CREATE INDEX IF NOT EXISTS idx_group_invitations_token ON group_invitations(invitation_token);
-
-CREATE INDEX IF NOT EXISTS idx_group_invitations_expires_at ON group_invitations(expires_at);`
-                });
+                return res.status(500).json(createMigrationErrorResponse());
             }
             
             logger.error('Failed to generate group invitation link', { 

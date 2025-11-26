@@ -225,7 +225,7 @@ export const respondToInvitation = (invitationId, response) => API.post(`/invita
 // Link-based invitation functions (public routes, no auth required)
 export const getInvitationByToken = (token) => {
     // Use fetch directly for public routes that don't require auth
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
     return fetch(`${apiUrl}/invitations/link/${token}`)
         .then(res => {
             if (!res.ok) {
@@ -237,7 +237,7 @@ export const getInvitationByToken = (token) => {
 
 export const acceptInvitationByToken = async (token) => {
     // Use fetch directly for public routes, but include auth token if available
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
     const headers = {
         'Content-Type': 'application/json'
     };
