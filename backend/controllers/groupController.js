@@ -180,11 +180,23 @@ class GroupController {
         const userId = req.user.id;
 
         try {
+            logger.info('Generating group invitation link', { 
+                userId, 
+                groupId,
+                timestamp: new Date().toISOString()
+            });
+
             // Check if the requester is a member of the group
             const isMember = await this.groupModel.isUserMember(groupId, userId);
             if (!isMember) {
+                logger.warn('User attempted to generate invitation but is not a group member', { 
+                    userId, 
+                    groupId 
+                });
                 return res.status(403).json({ error: 'You must be a member of the group to send invitations.' });
             }
+
+            logger.debug('User is a group member, proceeding with invitation generation', { userId, groupId });
 
             // Generate unique invitation token (UUID v4)
             const crypto = require('crypto');
@@ -193,6 +205,13 @@ class GroupController {
             // Calculate expiration date (7 days from now)
             const expiresAt = new Date();
             expiresAt.setDate(expiresAt.getDate() + 7);
+
+            logger.debug('Generated invitation token and expiration', { 
+                userId, 
+                groupId, 
+                tokenLength: invitationToken.length,
+                expiresAt: expiresAt.toISOString()
+            });
 
             // Get authenticated Supabase client for RLS policies
             // This ensures auth.uid() works correctly in RLS policies
@@ -214,12 +233,34 @@ class GroupController {
                 .single();
 
             if (invitationError) {
+                logger.error('Database error while creating invitation record', { 
+                    userId, 
+                    groupId, 
+                    error: invitationError.message,
+                    errorCode: invitationError.code,
+                    errorDetails: invitationError.details
+                });
                 throw invitationError;
             }
+
+            logger.debug('Invitation record created successfully', { 
+                userId, 
+                groupId, 
+                invitationId: invitation.id 
+            });
 
             // Build invitation link
             const frontendUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? 'https://app.monity-finance.com' : 'http://localhost:5173');
             const invitationLink = `${frontendUrl}/groups/invite/${invitationToken}`;
+            
+            logger.info('Group invitation link generated successfully', { 
+                userId, 
+                groupId, 
+                invitationId: invitation.id,
+                invitationToken: invitationToken.substring(0, 8) + '...', // Log apenas parte do token por segurança
+                expiresAt: expiresAt.toISOString(),
+                frontendUrl
+            });
             
             res.json({ 
                 message: 'Invitation link generated successfully', 
@@ -229,8 +270,6 @@ class GroupController {
                 expiresAt: expiresAt.toISOString()
             });
         } catch (error) {
-            logger.error('Failed to generate group invitation link', { userId, groupId, error: error.message });
-            
             // Check if it's a schema error (migration not run)
             const errorMessage = error.message || '';
             const isSchemaError = errorMessage.includes('expires_at') || 
@@ -239,6 +278,14 @@ class GroupController {
                                  errorMessage.includes('schema cache');
             
             if (isSchemaError) {
+                logger.error('Database schema error - migration required', { 
+                    userId, 
+                    groupId, 
+                    error: error.message,
+                    errorCode: error.code,
+                    errorDetails: error.details,
+                    hint: error.hint
+                });
                 return res.status(500).json({ 
                     error: 'Database migration required. The invitation_token and expires_at columns do not exist in the group_invitations table.',
                     code: 'MIGRATION_REQUIRED',
@@ -261,6 +308,16 @@ CREATE INDEX IF NOT EXISTS idx_group_invitations_token ON group_invitations(invi
 CREATE INDEX IF NOT EXISTS idx_group_invitations_expires_at ON group_invitations(expires_at);`
                 });
             }
+            
+            logger.error('Failed to generate group invitation link', { 
+                userId, 
+                groupId, 
+                error: error.message,
+                errorCode: error.code,
+                errorDetails: error.details,
+                stack: error.stack,
+                timestamp: new Date().toISOString()
+            });
             
             res.status(500).json({ 
                 error: 'Failed to generate invitation link',

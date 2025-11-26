@@ -70,10 +70,26 @@ const GroupPage = () => {
     const handleGenerateInvitationLink = useCallback(async () => {
         setInvitationError(null);
         
+        console.log('[GroupInvite] Starting invitation link generation', { 
+            groupId: id,
+            timestamp: new Date().toISOString()
+        });
+        
         try {
             const data = await inviteMemberMutation.mutateAsync({ groupId: id });
             
+            console.log('[GroupInvite] Received response from server', { 
+                groupId: id,
+                hasInvitationLink: !!data?.invitationLink,
+                hasToken: !!data?.invitationToken,
+                hasExpiresAt: !!data?.expiresAt
+            });
+            
             if (!data || !data.invitationLink) {
+                console.error('[GroupInvite] Invalid response structure', { 
+                    groupId: id,
+                    responseData: data
+                });
                 throw new Error('Invalid response from server');
             }
             
@@ -84,6 +100,13 @@ const GroupPage = () => {
             });
             setLinkCopied(false);
             
+            console.log('[GroupInvite] Invitation link generated successfully', { 
+                groupId: id,
+                invitationId: data.invitationId,
+                expiresAt: data.expiresAt,
+                linkGenerated: true
+            });
+            
             toast.success(t('groups.invitation_link_generated'));
             
             if (data.invitationLink && navigator.clipboard) {
@@ -91,17 +114,33 @@ const GroupPage = () => {
                     await navigator.clipboard.writeText(data.invitationLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 3000);
+                    console.log('[GroupInvite] Link copied to clipboard automatically', { groupId: id });
                 } catch (clipboardError) {
-                    console.warn('Failed to auto-copy link:', clipboardError);
+                    console.warn('[GroupInvite] Failed to auto-copy link to clipboard', { 
+                        groupId: id,
+                        error: clipboardError.message
+                    });
                 }
             }
         } catch (error) {
-            console.error('Failed to generate invitation link:', error);
-            
             const errorResponse = error?.response?.data || error;
+            const errorDetails = {
+                groupId: id,
+                errorMessage: error?.message,
+                errorCode: error?.response?.status,
+                errorType: errorResponse?.code || errorResponse?.migrationRequired ? 'migration' : 'general',
+                timestamp: new Date().toISOString()
+            };
+            
+            console.error('[GroupInvite] Failed to generate invitation link', errorDetails, error);
+            
             setInvitationLink(null);
             
             if (errorResponse?.migrationRequired || errorResponse?.code === 'MIGRATION_REQUIRED') {
+                console.warn('[GroupInvite] Migration required error detected', { 
+                    groupId: id,
+                    hasMigrationSQL: !!errorResponse.migrationSQL
+                });
                 setInvitationError({
                     type: 'migration',
                     message: errorResponse.error || t('groups.migration_required_error'),
@@ -122,15 +161,23 @@ const GroupPage = () => {
     const handleCopyLink = useCallback(async () => {
         if (invitationLink?.link) {
             try {
+                console.log('[GroupInvite] Copying link to clipboard', { 
+                    groupId: id,
+                    hasLink: !!invitationLink.link
+                });
                 await navigator.clipboard.writeText(invitationLink.link);
                 setLinkCopied(true);
                 setTimeout(() => setLinkCopied(false), 3000);
+                console.log('[GroupInvite] Link copied to clipboard successfully', { groupId: id });
             } catch (error) {
-                console.error('Failed to copy link:', error);
+                console.error('[GroupInvite] Failed to copy link to clipboard', { 
+                    groupId: id,
+                    error: error.message
+                });
                 toast.error(t('groups.failed_to_copy_link'));
             }
         }
-    }, [invitationLink, t]);
+    }, [invitationLink, id, t]);
 
     const handleAddExpense = async (e) => {
         e.preventDefault();
