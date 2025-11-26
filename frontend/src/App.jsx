@@ -2,7 +2,9 @@ import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import './styles/toast-custom.css';
 import { ToastContainer } from 'react-toastify';
+import ToastCloseButton from './components/ui/ToastCloseButton';
 import { usePageTracking } from './hooks/usePageTracking';
 import { useAuth } from './context/AuthContext';
 
@@ -33,12 +35,14 @@ import AnalyticsConsentBanner from './components/ui/AnalyticsConsentBanner';
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
 const Subscription = lazy(() => import('./components/navigation/Subscription'));
+const ThankYouPage = lazy(() => import('./components/subscription/ThankYouPage'));
 const SavingsGoals = lazy(() => import('./components/ui/SavingsGoals'));
 const Savings = lazy(() => import('./components/ui/Savings'));
 const CashFlowCalendar = lazy(() => import('./components/cashFlow/CashFlowCalendar'));
 const AIAssistantPage = lazy(() => import('./components/ai/AIAssistantPage'));
 const InvestmentCalculator = lazy(() => import('./components/investment/InvestmentCalculator'));
 const GroupsInfo = lazy(() => import('./components/groups/GroupsInfo'));
+const AcceptInvitationPage = lazy(() => import('./components/groups/AcceptInvitationPage'));
 const WhatsNewPage = lazy(() => import('./components/whatsNew/WhatsNewPage'));
 const AnalyticsDashboard = lazy(() => import('./components/admin/AnalyticsDashboard'));
 
@@ -215,13 +219,17 @@ const App = React.memo(() => {
         position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
-        newestOnTop={false}
+        newestOnTop={true}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
-        draggable
+        draggable={false}
         pauseOnHover
         theme="dark"
+        toastClassName="monity-toast"
+        progressClassName="monity-toast-progress"
+        bodyClassName="monity-toast-body"
+        closeButton={ToastCloseButton}
       />
       <Routes>
         {/* Public routes */}
@@ -246,6 +254,7 @@ const App = React.memo(() => {
         <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedSettings /></MainLayout></ProtectedRoute>} />
         <Route path="/budgets" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ViewOnlyRoute>} />
         <Route path="/subscription" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Subscription /></Suspense></MainLayout></ViewOnlyRoute>} />
+        <Route path="/subscription/success" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><ThankYouPage /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/savings-goals" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><SavingsGoals /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/savings" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Savings /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/financial-health" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ViewOnlyRoute>} />
@@ -255,6 +264,7 @@ const App = React.memo(() => {
         <Route path="/groups" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroups /></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups/info" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><GroupsInfo /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups/create" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyCreateGroup /></MainLayout></ProtectedRoute>} />
+        <Route path="/groups/invite/:token" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><AcceptInvitationPage /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups/:id" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroupPage /></MainLayout></ViewOnlyRoute>} />
 
         {/* Premium routes */}
