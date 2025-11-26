@@ -85,8 +85,8 @@ class BillingController {
           },
         ],
         mode: "subscription",
-        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription?canceled=true`,
+        success_url: `${process.env.CLIENT_URL || process.env.NEXT_PUBLIC_BASE_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.CLIENT_URL || process.env.NEXT_PUBLIC_BASE_URL}/subscription?canceled=true`,
         customer: customerId,
         metadata: {
           supabase_user_id: user.id,

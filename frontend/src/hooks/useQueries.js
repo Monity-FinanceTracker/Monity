@@ -191,7 +191,6 @@ export const useInviteGroupMember = () => {
   return useMutation({
     mutationFn: async ({ groupId }) => {
       const response = await post(`/groups/${groupId}/invite`);
-      // Ensure we return the data correctly
       if (response && response.data) {
         return response.data;
       }

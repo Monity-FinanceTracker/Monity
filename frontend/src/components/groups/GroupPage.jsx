@@ -68,19 +68,15 @@ const GroupPage = () => {
     }, [initialShares, shares.length]);
 
     const handleGenerateInvitationLink = useCallback(async () => {
-        // Clear any previous errors at the start
         setInvitationError(null);
         
         try {
             const data = await inviteMemberMutation.mutateAsync({ groupId: id });
             
-            // Verify we have the required data
             if (!data || !data.invitationLink) {
                 throw new Error('Invalid response from server');
             }
             
-            // Successfully generated link - clear any errors and set the link
-            setInvitationError(null);
             setInvitationLink({
                 link: data.invitationLink,
                 expiresAt: data.expiresAt,
@@ -88,27 +84,21 @@ const GroupPage = () => {
             });
             setLinkCopied(false);
             
-            // Show success message
             toast.success(t('groups.invitation_link_generated'));
             
-            // Auto-copy link to clipboard if available
             if (data.invitationLink && navigator.clipboard) {
                 try {
                     await navigator.clipboard.writeText(data.invitationLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 3000);
                 } catch (clipboardError) {
-                    // Clipboard copy failed, but link was generated successfully
                     console.warn('Failed to auto-copy link:', clipboardError);
                 }
             }
         } catch (error) {
             console.error('Failed to generate invitation link:', error);
             
-            // Only set error if we actually got an error response
             const errorResponse = error?.response?.data || error;
-            
-            // Clear the link if there was an error
             setInvitationLink(null);
             
             if (errorResponse?.migrationRequired || errorResponse?.code === 'MIGRATION_REQUIRED') {

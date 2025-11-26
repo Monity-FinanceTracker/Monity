@@ -35,6 +35,7 @@ import AnalyticsConsentBanner from './components/ui/AnalyticsConsentBanner';
 // Lazy load non-critical components
 const EnhancedCategories = lazy(() => import('./components/settings/EnhancedCategories'));
 const Subscription = lazy(() => import('./components/navigation/Subscription'));
+const ThankYouPage = lazy(() => import('./components/subscription/ThankYouPage'));
 const SavingsGoals = lazy(() => import('./components/ui/SavingsGoals'));
 const Savings = lazy(() => import('./components/ui/Savings'));
 const CashFlowCalendar = lazy(() => import('./components/cashFlow/CashFlowCalendar'));
@@ -253,6 +254,7 @@ const App = React.memo(() => {
         <Route path="/settings" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedSettings /></MainLayout></ProtectedRoute>} />
         <Route path="/budgets" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ViewOnlyRoute>} />
         <Route path="/subscription" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Subscription /></Suspense></MainLayout></ViewOnlyRoute>} />
+        <Route path="/subscription/success" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><ThankYouPage /></Suspense></MainLayout></ProtectedRoute>} />
         <Route path="/savings-goals" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><SavingsGoals /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/savings" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Savings /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/financial-health" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ViewOnlyRoute>} />
