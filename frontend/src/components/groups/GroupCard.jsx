@@ -70,7 +70,7 @@ const GroupCard = React.memo(({ group }) => {
                 to={`/groups/${group.id}`}
                 className="block"
             >
-                <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg p-6 hover:border-[#3a3a3a] transition-all duration-200 flex flex-col h-full min-h-[200px] relative">
+                <div className="bg-[#171717] border border-[#262626] rounded-lg p-6 hover:border-[#3a3a3a] transition-all duration-200 flex flex-col h-full min-h-[200px] relative">
                     <div className="mb-5">
                         <h3 className="text-xl font-semibold text-white line-clamp-2">
                             {group.name}
@@ -78,7 +78,7 @@ const GroupCard = React.memo(({ group }) => {
                     </div>
 
                     <div className="flex-1 flex flex-col justify-between">
-                        <div className="flex-1 flex flex-col justify-center">
+                        <div className="flex-1 flex flex-col justify-center mb-5">
                             <div className="text-[#56a69f] font-bold text-2xl mb-1.5">
                                 {formattedTotal}
                             </div>
