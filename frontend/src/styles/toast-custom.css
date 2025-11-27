@@ -70,8 +70,14 @@
 }
 
 .Toastify__toast--success .Toastify__toast-icon {
-  color: #56a69f !important;
-  background: rgba(86, 166, 159, 0.1) !important;
+  color: #539E98 !important;
+  background: #304744 !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon > svg {
+  color: #539E98 !important;
+  fill: #539E98 !important;
+  stroke: #539E98 !important;
 }
 
 .Toastify__toast--error .Toastify__toast-icon {
