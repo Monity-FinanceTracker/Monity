@@ -327,7 +327,7 @@ const GroupPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
                 {/* Members Section - Compact */}
                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
-                    <div className="flex items-center justify-start mb-4">
+                    <div className="flex items-center justify-center mb-4">
                         <h3 className="text-3xl font-bold text-white">{t('groups.members')}</h3>
                     </div>
                     
@@ -582,12 +582,13 @@ const GroupPage = () => {
                 {/* Expenses Section - Main Focus */}
                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6">
                     <div className="flex items-center justify-between mb-6">
+                        <div className="flex-1"></div>
                         <h3 className="text-4xl font-bold text-white">{t('groups.expenses')}</h3>
-                        <span className="text-[#8B8A85] text-sm font-medium">{expenseCount} {t('groups.expenses')}</span>
+                        <span className="text-[#8B8A85] text-sm font-medium flex-1 text-right">{expenseCount} {t('groups.expenses')}</span>
                     </div>
                     
                     {/* Expenses List */}
-                    <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 max-h-[800px]">
+                    <div className="space-y-4 overflow-y-auto hide-scrollbar max-h-[800px]">
                         {group.group_expenses.length === 0 ? (
                             <div className="text-center py-12">
                                 <p className="text-[#8B8A85] text-sm">{t('groups.no_expenses')}</p>

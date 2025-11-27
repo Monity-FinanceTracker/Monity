@@ -157,6 +157,16 @@ html, body, div, section, article, aside, nav, main, header, footer {
   width: 0;
 }
 
+/* Hide scrollbar utility class */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 :root {
   /* Font variables to match prototype setup */
   --font-dm-sans: 'DM Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
