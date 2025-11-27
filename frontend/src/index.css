@@ -567,3 +567,13 @@ input:-webkit-autofill:active {
 input:focus {
     background-color: #262624 !important;
 }
+
+/* Notification progress bar animation */
+@keyframes shrink {
+    from { 
+        width: 100%; 
+    }
+    to { 
+        width: 0%; 
+    }
+}

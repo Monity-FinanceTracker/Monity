@@ -16,7 +16,15 @@
   margin-bottom: 0.5rem !important;
   position: relative !important;
   pointer-events: auto !important;
-  overflow: visible !important;
+  overflow: hidden !important;
+}
+
+.Toastify__toast-container--bottom-right {
+  pointer-events: none !important;
+}
+
+.Toastify__toast-container--bottom-right > div {
+  pointer-events: auto !important;
 }
 
 .Toastify__toast--success {
@@ -95,6 +103,7 @@
   left: 0 !important;
   width: 100% !important;
   z-index: 1 !important;
+  transform-origin: left !important;
 }
 
 .Toastify__progress-bar--success {
@@ -111,10 +120,6 @@
 
 .Toastify__progress-bar--info {
   background: #3B82F6 !important;
-}
-
-.Toastify__progress-bar--animated {
-  animation: Toastify__progress-bar-animation linear forwards !important;
 }
 
 /* Default react-toastify close button styles */
@@ -168,24 +173,9 @@
   -ms-user-select: none !important;
 }
 
-/* Animações suaves */
+/* Animações suaves - não sobrescrever animações padrão do react-toastify */
 .Toastify__toast--rtl {
   animation: Toastify__slideInRight 0.3s ease-out !important;
-}
-
-.Toastify__toast {
-  animation: Toastify__slideInRight 0.3s ease-out !important;
-}
-
-@keyframes Toastify__slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 /* Responsividade */
