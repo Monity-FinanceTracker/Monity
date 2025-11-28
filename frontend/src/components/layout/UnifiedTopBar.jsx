@@ -204,7 +204,7 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                                             textAlign: 'left',
                                             borderRadius: '0'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(86, 166, 159, 0.2)'}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(220, 38, 38, 0.2)'}
                                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     >
                                         <Icon name="LogOut" size="sm" className="text-white" />

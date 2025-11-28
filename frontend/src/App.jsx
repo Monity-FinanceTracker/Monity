@@ -222,14 +222,16 @@ const App = React.memo(() => {
         newestOnTop={true}
         closeOnClick
         rtl={false}
-        pauseOnFocusLoss
+        pauseOnFocusLoss={false}
         draggable={false}
-        pauseOnHover
+        pauseOnHover={false}
         theme="dark"
         toastClassName="monity-toast"
         progressClassName="monity-toast-progress"
         bodyClassName="monity-toast-body"
         closeButton={ToastCloseButton}
+        enableMultiContainer={false}
+        limit={5}
       />
       <Routes>
         {/* Public routes */}
