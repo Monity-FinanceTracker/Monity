@@ -296,6 +296,19 @@ class Group {
         return enrichedGroups;
     }
 
+    async findByNameForUser(userId, name) {
+        // Get all groups for the user (already decrypted)
+        const userGroups = await this.findByUser(userId);
+        
+        // Check if any group has the same name (case-insensitive)
+        const normalizedName = name.trim().toLowerCase();
+        const duplicateGroup = userGroups.find(group => 
+            group.name && group.name.trim().toLowerCase() === normalizedName
+        );
+        
+        return duplicateGroup || null;
+    }
+
     async update(id, userId, updates) {
         const encryptedUpdates = encryptObject(GROUP_TABLE, updates);
 

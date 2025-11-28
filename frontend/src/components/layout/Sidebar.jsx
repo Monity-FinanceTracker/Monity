@@ -29,8 +29,8 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
   const { t } = useTranslation();
   const { isAdmin, subscriptionTier } = useAuth();
   const premiumUser = subscriptionTier === 'premium';
-  const [isCollapsedHovering, setIsCollapsedHovering] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isCollapsedHovering, setIsCollapsedHovering] = useState(false);
 
   // Estilos de transição consistentes para os NavLinks
   const navLinkTransition = {

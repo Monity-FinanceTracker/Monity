@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckCircle, XCircle, AlertTriangle, Info } from 'lucide-react';
 import CloseButton from './CloseButton';
@@ -26,13 +26,6 @@ export const NotificationProvider = ({ children }) => {
         };
 
         setNotifications(prev => [...prev, newNotification]);
-
-        // Auto-remove non-persistent notifications
-        if (!newNotification.persistent) {
-            setTimeout(() => {
-                removeNotification(id);
-            }, newNotification.duration);
-        }
 
         return id;
     };
@@ -121,16 +114,38 @@ const NotificationContainer = () => {
 const NotificationCard = ({ notification, onClose }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [isLeaving, setIsLeaving] = useState(false);
+    const timeoutRef = useRef(null);
 
     useEffect(() => {
         // Animate in
         setTimeout(() => setIsVisible(true), 10);
     }, []);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
+        // Clear auto-dismiss timeout if user manually closes
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
         setIsLeaving(true);
         setTimeout(onClose, 300); // Match animation duration
-    };
+    }, [onClose]);
+
+    useEffect(() => {
+        // Auto-dismiss non-persistent notifications
+        if (!notification.persistent && notification.duration) {
+            timeoutRef.current = setTimeout(() => {
+                handleClose();
+            }, notification.duration);
+        }
+
+        // Cleanup timeout on unmount or when notification changes
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, [notification.persistent, notification.duration, handleClose]);
 
     const getTypeStyles = () => {
         switch (notification.type) {
@@ -211,6 +226,7 @@ const NotificationCard = ({ notification, onClose }) => {
                         <div 
                             className="h-full bg-[#56a69f] rounded-full"
                             style={{
+                                width: '100%',
                                 animation: `shrink ${notification.duration}ms linear forwards`
                             }}
                         />
@@ -220,15 +236,5 @@ const NotificationCard = ({ notification, onClose }) => {
         </div>
     );
 };
-
-// CSS for progress bar animation
-const NotificationStyles = () => (
-    <style jsx global>{`
-        @keyframes shrink {
-            from { width: 100%; }
-            to { width: 0%; }
-        }
-    `}</style>
-);
 
 export default NotificationProvider; 

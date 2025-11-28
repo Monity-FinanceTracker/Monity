@@ -38,7 +38,7 @@ export default function TopBar({ isMobileMenuOpen, setIsMobileMenuOpen }) {
               {user?.user_metadata?.name ? user.user_metadata.name.charAt(0).toUpperCase() : (
                 <Icon name="User" size="sm" className="text-[#1F1E1D]" />
               )}
-            </span>
+          </span>
           </div>
         </div>
       </div>

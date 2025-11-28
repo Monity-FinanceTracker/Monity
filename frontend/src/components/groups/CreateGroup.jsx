@@ -1,28 +1,32 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createGroup } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
+import { useCreateGroup } from '../../hooks/useQueries';
 
 const CreateGroup = () => {
     const { t } = useTranslation();
     const [name, setName] = useState('');
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const createGroupMutation = useCreateGroup();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError(null);
         try {
-            await createGroup({ name });
+            await createGroupMutation.mutateAsync({ name });
             navigate('/groups');
         } catch (err) {
-            setError(t('groups.create_fail'));
+            // Check if it's a duplicate name error (409 status)
+            if (err?.response?.status === 409 || err?.response?.data?.error?.includes('already have a group')) {
+                setError(t('groups.duplicate_name'));
+            } else {
+                // Use error message from backend if available, otherwise use generic message
+                const errorMessage = err?.response?.data?.error || err?.response?.data?.message || t('groups.create_fail');
+                setError(errorMessage);
+            }
             console.error(err);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -73,9 +77,9 @@ const CreateGroup = () => {
                         <button
                             type="submit"
                             className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold px-4 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={loading}
+                            disabled={createGroupMutation.isPending}
                         >
-                            {loading ? t('groups.creating') : t('groups.create')}
+                            {createGroupMutation.isPending ? t('groups.creating') : t('groups.create')}
                         </button>
                     </form>
                 </div>
