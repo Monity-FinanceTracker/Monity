@@ -1,28 +1,25 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createGroup } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
+import { useCreateGroup } from '../../hooks/useQueries';
 
 const CreateGroup = () => {
     const { t } = useTranslation();
     const [name, setName] = useState('');
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const createGroupMutation = useCreateGroup();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError(null);
         try {
-            await createGroup({ name });
+            await createGroupMutation.mutateAsync({ name });
             navigate('/groups');
         } catch (err) {
             setError(t('groups.create_fail'));
             console.error(err);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -73,9 +70,9 @@ const CreateGroup = () => {
                         <button
                             type="submit"
                             className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold px-4 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={loading}
+                            disabled={createGroupMutation.isPending}
                         >
-                            {loading ? t('groups.creating') : t('groups.create')}
+                            {createGroupMutation.isPending ? t('groups.creating') : t('groups.create')}
                         </button>
                     </form>
                 </div>

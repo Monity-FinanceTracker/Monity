@@ -169,6 +169,21 @@ export const useAddSavingsGoal = () => {
 };
 
 // Group Mutations
+export const useCreateGroup = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (groupData) => {
+      const response = await post('/groups', groupData);
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate groups query to refresh the list
+      queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+    },
+  });
+};
+
 export const useAddGroupExpense = () => {
   const queryClient = useQueryClient();
   
