@@ -681,7 +681,17 @@
     "leaving_group": "Saindo...",
     "leave_group_success": "Você saiu do grupo com sucesso",
     "leave_group_error": "Falha ao sair do grupo. Por favor, tente novamente.",
-    "duplicate_name": "Você já possui um grupo com este nome. Por favor, escolha outro nome."
+    "duplicate_name": "Você já possui um grupo com este nome. Por favor, escolha outro nome.",
+    "premium_unlimited_groups": "Grupos Ilimitados",
+    "premium_upgrade_card_title": "Desbloqueie Grupos Ilimitados",
+    "premium_upgrade_card_description": "Com Premium, crie quantos grupos precisar e aproveite recursos avançados para gerenciar suas despesas compartilhadas.",
+    "groups_limit_reached": "Limite atingido",
+    "groups_approaching_limit": "Próximo do limite",
+    "upgrade_to_premium": "Fazer Upgrade",
+    "groups": "grupos",
+    "unlimited": "Ilimitado",
+    "premium_required_tooltip": "Upgrade para Premium para criar mais grupos",
+    "premium_unlimited_ai": "IA Ilimitada"
   },
   "notifications": {
     "success": "Sucesso",
