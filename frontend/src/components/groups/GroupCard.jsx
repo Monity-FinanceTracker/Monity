@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../context/useAuth';
+import { removeGroupMember } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import { Icon } from '../../utils/iconMapping';
 
 const formatCurrency = (amount) => {
@@ -29,7 +34,10 @@ const formatDate = (dateString, t) => {
 
 const GroupCard = React.memo(({ group }) => {
     const { t } = useTranslation();
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isLeaving, setIsLeaving] = useState(false);
     const dropdownRef = useRef(null);
 
     const formattedTotal = useMemo(() => formatCurrency(group.totalSpent), [group.totalSpent]);
@@ -64,13 +72,40 @@ const GroupCard = React.memo(({ group }) => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    const handleLeaveGroup = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!window.confirm(t('groups.confirm_leave_group'))) {
+            return;
+        }
+
+        if (!user?.id) {
+            toast.error(t('groups.leave_group_error'));
+            return;
+        }
+
+        setIsLeaving(true);
+        try {
+            await removeGroupMember(group.id, user.id);
+            queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+            setIsDropdownOpen(false);
+            toast.success(t('groups.leave_group_success'));
+        } catch (error) {
+            console.error('Failed to leave group:', error);
+            toast.error(t('groups.leave_group_error'));
+        } finally {
+            setIsLeaving(false);
+        }
+    };
+
     return (
         <div className="relative">
             <Link 
                 to={`/groups/${group.id}`}
                 className="block"
             >
-                <div className="bg-[#1F1E1D] border border-[#262626] rounded-lg p-6 hover:border-[#3a3a3a] transition-all duration-200 flex flex-col h-full min-h-[200px] relative">
+                <div className="bg-[#171717] border border-[#262626] rounded-lg p-6 hover:border-[#3a3a3a] transition-all duration-200 flex flex-col h-full min-h-[200px] relative">
                     <div className="mb-5">
                         <h3 className="text-xl font-semibold text-white line-clamp-2">
                             {group.name}
@@ -78,7 +113,7 @@ const GroupCard = React.memo(({ group }) => {
                     </div>
 
                     <div className="flex-1 flex flex-col justify-between">
-                        <div className="flex-1 flex flex-col justify-center">
+                        <div className="flex-1 flex flex-col justify-center mb-5">
                             <div className="text-[#56a69f] font-bold text-2xl mb-1.5">
                                 {formattedTotal}
                             </div>
@@ -148,6 +183,16 @@ const GroupCard = React.memo(({ group }) => {
                         <div className="pt-3 border-t border-[#262626]">
                             <div className="text-[#8B8A85] text-xs mb-1.5 font-medium">{t('groups.last_activity')}</div>
                             <div className="text-white font-bold text-base">{formattedDate}</div>
+                        </div>
+                        
+                        <div className="pt-3 border-t border-[#262626]">
+                            <button
+                                onClick={handleLeaveGroup}
+                                disabled={isLeaving}
+                                className="w-full text-red-400 hover:text-red-300 text-sm font-medium py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isLeaving ? t('groups.leaving_group') : t('groups.leave_group')}
+                            </button>
                         </div>
                     </div>
                 </div>

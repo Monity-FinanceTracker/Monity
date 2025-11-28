@@ -675,7 +675,13 @@
     "more_information": "Mais informações",
     "your_balance": "Seu saldo",
     "you_are_owed": "Você deve receber",
-    "you_owe": "Você deve"
+    "you_owe": "Você deve",
+    "leave_group": "Sair do Grupo",
+    "confirm_leave_group": "Tem certeza que deseja sair deste grupo?",
+    "leaving_group": "Saindo...",
+    "leave_group_success": "Você saiu do grupo com sucesso",
+    "leave_group_error": "Falha ao sair do grupo. Por favor, tente novamente.",
+    "duplicate_name": "Você já possui um grupo com este nome. Por favor, escolha outro nome."
   },
   "notifications": {
     "success": "Sucesso",
@@ -715,7 +721,7 @@
     "groups": {
       "title": "Nenhum grupo ainda",
       "description": "Compartilhe despesas com amigos e familiares criando seu primeiro grupo",
-      "create_first": "Criar Primeiro Grupo",
+      "create_first": "Criar Grupo",
       "learn_more": "Saiba Mais"
     },
     "budgets": {
