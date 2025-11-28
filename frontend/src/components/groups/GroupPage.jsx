@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 import { FaChevronUp, FaChevronDown, FaCopy, FaCheck } from 'react-icons/fa6';
 import { useGroupById, useAddGroupExpense, useInviteGroupMember, useSettleExpenseShare } from '../../hooks/useQueries';
+import { removeGroupMember } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import { LoadingState } from '../ui/EmptyStates';
 
 const formatCurrency = (amount) => {
@@ -34,6 +37,8 @@ const GroupPage = () => {
     const { t } = useTranslation();
     const { id } = useParams();
     const { user } = useAuth();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     
     const { data: group, isLoading: loading, error: queryError } = useGroupById(id);
     const addExpenseMutation = useAddGroupExpense();
@@ -47,6 +52,7 @@ const GroupPage = () => {
     const [expenseAmount, setExpenseAmount] = useState('');
     const [shares, setShares] = useState([]);
     const [expenseError, setExpenseError] = useState('');
+    const [isLeaving, setIsLeaving] = useState(false);
 
     // Initialize shares when group data is available
     const initialShares = useMemo(() => {
@@ -231,6 +237,30 @@ const GroupPage = () => {
             console.error('Failed to settle share:', error);
         }
     }, [settleShareMutation]);
+
+    const handleLeaveGroup = async () => {
+        if (!window.confirm(t('groups.confirm_leave_group'))) {
+            return;
+        }
+
+        if (!user?.id) {
+            toast.error(t('groups.leave_group_error'));
+            return;
+        }
+
+        setIsLeaving(true);
+        try {
+            await removeGroupMember(id, user.id);
+            queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+            toast.success(t('groups.leave_group_success'));
+            navigate('/groups');
+        } catch (error) {
+            console.error('Failed to leave group:', error);
+            toast.error(t('groups.leave_group_error'));
+        } finally {
+            setIsLeaving(false);
+        }
+    };
 
     // Calculate summary statistics - must be before early returns
     const totalSpent = useMemo(() => {
@@ -577,6 +607,17 @@ const GroupPage = () => {
                             {addExpenseMutation.isPending ? t('groups.creating') : t('groups.add_expense_button')}
                         </button>
                     </form>
+
+                    {/* Leave Group Section */}
+                    <div className="pt-4 mt-4 border-t border-[#262626]">
+                        <button
+                            onClick={handleLeaveGroup}
+                            disabled={isLeaving}
+                            className="w-full text-red-400 hover:text-red-300 font-semibold py-2.5 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm border border-red-400/20 hover:border-red-400/40"
+                        >
+                            {isLeaving ? t('groups.leaving_group') : t('groups.leave_group')}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Expenses Section - Main Focus */}

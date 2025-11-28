@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../context/useAuth';
+import { removeGroupMember } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import { Icon } from '../../utils/iconMapping';
 
 const formatCurrency = (amount) => {
@@ -29,7 +34,10 @@ const formatDate = (dateString, t) => {
 
 const GroupCard = React.memo(({ group }) => {
     const { t } = useTranslation();
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isLeaving, setIsLeaving] = useState(false);
     const dropdownRef = useRef(null);
 
     const formattedTotal = useMemo(() => formatCurrency(group.totalSpent), [group.totalSpent]);
@@ -62,6 +70,33 @@ const GroupCard = React.memo(({ group }) => {
         e.preventDefault();
         e.stopPropagation();
         setIsDropdownOpen(!isDropdownOpen);
+    };
+
+    const handleLeaveGroup = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!window.confirm(t('groups.confirm_leave_group'))) {
+            return;
+        }
+
+        if (!user?.id) {
+            toast.error(t('groups.leave_group_error'));
+            return;
+        }
+
+        setIsLeaving(true);
+        try {
+            await removeGroupMember(group.id, user.id);
+            queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+            setIsDropdownOpen(false);
+            toast.success(t('groups.leave_group_success'));
+        } catch (error) {
+            console.error('Failed to leave group:', error);
+            toast.error(t('groups.leave_group_error'));
+        } finally {
+            setIsLeaving(false);
+        }
     };
 
     return (
@@ -148,6 +183,16 @@ const GroupCard = React.memo(({ group }) => {
                         <div className="pt-3 border-t border-[#262626]">
                             <div className="text-[#8B8A85] text-xs mb-1.5 font-medium">{t('groups.last_activity')}</div>
                             <div className="text-white font-bold text-base">{formattedDate}</div>
+                        </div>
+                        
+                        <div className="pt-3 border-t border-[#262626]">
+                            <button
+                                onClick={handleLeaveGroup}
+                                disabled={isLeaving}
+                                className="w-full text-red-400 hover:text-red-300 text-sm font-medium py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isLeaving ? t('groups.leaving_group') : t('groups.leave_group')}
+                            </button>
                         </div>
                     </div>
                 </div>

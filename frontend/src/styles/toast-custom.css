@@ -142,8 +142,9 @@
   z-index: 10000 !important;
   pointer-events: auto !important;
   position: absolute !important;
-  top: 0.75rem !important;
+  top: 50% !important;
   right: 0.75rem !important;
+  transform: translateY(-50%) !important;
   margin: 0 !important;
   flex-shrink: 0 !important;
   border: none !important;
@@ -169,8 +170,9 @@
 /* Custom close button component styles */
 .toast-close-button {
   position: absolute !important;
-  top: 0.75rem !important;
+  top: 50% !important;
   right: 0.75rem !important;
+  transform: translateY(-50%) !important;
   z-index: 10000 !important;
   pointer-events: auto !important;
   user-select: none !important;
