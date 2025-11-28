@@ -76,6 +76,14 @@ class GroupController {
         }
 
         try {
+            // Check if user already has a group with the same name
+            const existingGroup = await this.groupModel.findByNameForUser(userId, name);
+            if (existingGroup) {
+                return res.status(409).json({ 
+                    error: 'You already have a group with this name. Please choose a different name.' 
+                });
+            }
+
             const newGroup = await this.groupModel.create({ name, created_by: userId });
             res.status(201).json(newGroup);
         } catch (error) {

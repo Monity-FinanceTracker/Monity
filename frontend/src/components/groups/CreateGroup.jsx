@@ -18,7 +18,14 @@ const CreateGroup = () => {
             await createGroupMutation.mutateAsync({ name });
             navigate('/groups');
         } catch (err) {
-            setError(t('groups.create_fail'));
+            // Check if it's a duplicate name error (409 status)
+            if (err?.response?.status === 409 || err?.response?.data?.error?.includes('already have a group')) {
+                setError(t('groups.duplicate_name'));
+            } else {
+                // Use error message from backend if available, otherwise use generic message
+                const errorMessage = err?.response?.data?.error || err?.response?.data?.message || t('groups.create_fail');
+                setError(errorMessage);
+            }
             console.error(err);
         }
     };
