@@ -396,24 +396,27 @@ const AddTransaction = ({ type = 'expense' }) => {
                         )}
 
                         {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            variant={currentConfig.buttonVariant}
-                            size="lg"
-                            fullWidth
-                            loading={loading}
-                            disabled={loading}
-                            leftIcon={!loading ? <FaPlus className="text-lg text-[#30302E]" /> : null}
-                            style={{ justifyContent: 'center' }}
-                        >
-                            {loading 
-                                ? t(`${currentConfig.translationKey}.adding`) 
-                                : t(`${currentConfig.translationKey}.add_${type}`)
-                            }
-                        </Button>
+                        <div className="pt-2">
+                            <Button
+                                type="submit"
+                                variant={currentConfig.buttonVariant}
+                                size="md"
+                                fullWidth
+                                loading={loading}
+                                disabled={loading}
+                                leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
+                                style={{ justifyContent: 'center' }}
+                            >
+                                {loading
+                                    ? t(`${currentConfig.translationKey}.adding`) 
+                                    : t(`${currentConfig.translationKey}.add_${type}`)
+                                }
+                            </Button>
+                        </div>
                     </form>
                 </div>
                 </div>
+            </div>
 
             {/* Add Category Modal */}
             {showAddCategoryModal && (
@@ -545,7 +548,6 @@ const AddTransaction = ({ type = 'expense' }) => {
                     </div>
                 </div>
             )}
-        </div>
         </div>
     );
 };

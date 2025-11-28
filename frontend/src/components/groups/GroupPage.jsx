@@ -498,6 +498,7 @@ const GroupPage = () => {
                     {/* Add Expense Form - At the bottom */}
                     <form onSubmit={handleAddExpense} className="mt-10 pt-8 border-t border-[#262626] space-y-4">
                         <h3 className="text-xl font-semibold text-white mb-1">{t('groups.add_expense')}</h3>
+
                         
                         {expenseError && (
                             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2">
