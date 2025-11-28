@@ -689,7 +689,8 @@
     "confirm_leave_group": "Are you sure you want to leave this group?",
     "leaving_group": "Leaving...",
     "leave_group_success": "You have successfully left the group",
-    "leave_group_error": "Failed to leave group. Please try again."
+    "leave_group_error": "Failed to leave group. Please try again.",
+    "duplicate_name": "You already have a group with this name. Please choose a different name."
   },
   "dashboard": {
     "welcome_back": "Welcome back",

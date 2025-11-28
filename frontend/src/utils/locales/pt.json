@@ -680,7 +680,8 @@
     "confirm_leave_group": "Tem certeza que deseja sair deste grupo?",
     "leaving_group": "Saindo...",
     "leave_group_success": "Você saiu do grupo com sucesso",
-    "leave_group_error": "Falha ao sair do grupo. Por favor, tente novamente."
+    "leave_group_error": "Falha ao sair do grupo. Por favor, tente novamente.",
+    "duplicate_name": "Você já possui um grupo com este nome. Por favor, escolha outro nome."
   },
   "notifications": {
     "success": "Sucesso",

@@ -372,7 +372,12 @@ const GroupPage = () => {
                                         {member.profiles.name.charAt(0).toUpperCase()}
                                     </span>
                                 </div>
-                                <span className="text-white font-medium text-sm truncate">{member.profiles.name}</span>
+                                <span className="text-white font-medium text-sm truncate">
+                                    {member.profiles.name}
+                                    {member.profiles.id === user?.id && (
+                                        <span className="text-[#8B8A85] text-xs ml-2">(You)</span>
+                                    )}
+                                </span>
                             </div>
                         ))}
                     </div>
