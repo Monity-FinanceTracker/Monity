@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 import { FaChevronUp, FaChevronDown, FaCopy, FaCheck } from 'react-icons/fa6';
 import { useGroupById, useAddGroupExpense, useInviteGroupMember, useSettleExpenseShare } from '../../hooks/useQueries';
+import { removeGroupMember } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import { LoadingState } from '../ui/EmptyStates';
 
 const formatCurrency = (amount) => {
@@ -34,6 +37,8 @@ const GroupPage = () => {
     const { t } = useTranslation();
     const { id } = useParams();
     const { user } = useAuth();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     
     const { data: group, isLoading: loading, error: queryError } = useGroupById(id);
     const addExpenseMutation = useAddGroupExpense();
@@ -47,6 +52,7 @@ const GroupPage = () => {
     const [expenseAmount, setExpenseAmount] = useState('');
     const [shares, setShares] = useState([]);
     const [expenseError, setExpenseError] = useState('');
+    const [isLeaving, setIsLeaving] = useState(false);
 
     // Initialize shares when group data is available
     const initialShares = useMemo(() => {
@@ -68,9 +74,31 @@ const GroupPage = () => {
     }, [initialShares, shares.length]);
 
     const handleGenerateInvitationLink = useCallback(async () => {
+        setInvitationError(null);
+        
+        console.log('[GroupInvite] Starting invitation link generation', { 
+            groupId: id,
+            timestamp: new Date().toISOString()
+        });
+        
         try {
-            setInvitationError(null);
             const data = await inviteMemberMutation.mutateAsync({ groupId: id });
+            
+            console.log('[GroupInvite] Received response from server', { 
+                groupId: id,
+                hasInvitationLink: !!data?.invitationLink,
+                hasToken: !!data?.invitationToken,
+                hasExpiresAt: !!data?.expiresAt
+            });
+            
+            if (!data || !data.invitationLink) {
+                console.error('[GroupInvite] Invalid response structure', { 
+                    groupId: id,
+                    responseData: data
+                });
+                throw new Error('Invalid response from server');
+            }
+            
             setInvitationLink({
                 link: data.invitationLink,
                 expiresAt: data.expiresAt,
@@ -78,23 +106,47 @@ const GroupPage = () => {
             });
             setLinkCopied(false);
             
-            // Auto-copy link to clipboard if available
+            console.log('[GroupInvite] Invitation link generated successfully', { 
+                groupId: id,
+                invitationId: data.invitationId,
+                expiresAt: data.expiresAt,
+                linkGenerated: true
+            });
+            
+            toast.success(t('groups.invitation_link_generated'));
+            
             if (data.invitationLink && navigator.clipboard) {
                 try {
                     await navigator.clipboard.writeText(data.invitationLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 3000);
+                    console.log('[GroupInvite] Link copied to clipboard automatically', { groupId: id });
                 } catch (clipboardError) {
-                    // Clipboard copy failed, but link was generated successfully
-                    console.warn('Failed to auto-copy link:', clipboardError);
+                    console.warn('[GroupInvite] Failed to auto-copy link to clipboard', { 
+                        groupId: id,
+                        error: clipboardError.message
+                    });
                 }
             }
         } catch (error) {
-            console.error('Failed to generate invitation link:', error);
-            
-            // Check if it's a migration error
             const errorResponse = error?.response?.data || error;
+            const errorDetails = {
+                groupId: id,
+                errorMessage: error?.message,
+                errorCode: error?.response?.status,
+                errorType: errorResponse?.code || errorResponse?.migrationRequired ? 'migration' : 'general',
+                timestamp: new Date().toISOString()
+            };
+            
+            console.error('[GroupInvite] Failed to generate invitation link', errorDetails, error);
+            
+            setInvitationLink(null);
+            
             if (errorResponse?.migrationRequired || errorResponse?.code === 'MIGRATION_REQUIRED') {
+                console.warn('[GroupInvite] Migration required error detected', { 
+                    groupId: id,
+                    hasMigrationSQL: !!errorResponse.migrationSQL
+                });
                 setInvitationError({
                     type: 'migration',
                     message: errorResponse.error || t('groups.migration_required_error'),
@@ -104,26 +156,34 @@ const GroupPage = () => {
             } else {
                 setInvitationError({
                     type: 'general',
-                    message: errorResponse?.error || errorResponse?.details || t('groups.failed_to_generate_link')
+                    message: errorResponse?.error || errorResponse?.details || error?.message || t('groups.failed_to_generate_link')
                 });
             }
             
-            toast.error(errorResponse?.error || t('groups.failed_to_generate_link'));
+            toast.error(errorResponse?.error || errorResponse?.details || error?.message || t('groups.failed_to_generate_link'));
         }
     }, [id, inviteMemberMutation, t]);
 
     const handleCopyLink = useCallback(async () => {
         if (invitationLink?.link) {
             try {
+                console.log('[GroupInvite] Copying link to clipboard', { 
+                    groupId: id,
+                    hasLink: !!invitationLink.link
+                });
                 await navigator.clipboard.writeText(invitationLink.link);
                 setLinkCopied(true);
                 setTimeout(() => setLinkCopied(false), 3000);
+                console.log('[GroupInvite] Link copied to clipboard successfully', { groupId: id });
             } catch (error) {
-                console.error('Failed to copy link:', error);
+                console.error('[GroupInvite] Failed to copy link to clipboard', { 
+                    groupId: id,
+                    error: error.message
+                });
                 toast.error(t('groups.failed_to_copy_link'));
             }
         }
-    }, [invitationLink, t]);
+    }, [invitationLink, id, t]);
 
     const handleAddExpense = async (e) => {
         e.preventDefault();
@@ -177,6 +237,30 @@ const GroupPage = () => {
             console.error('Failed to settle share:', error);
         }
     }, [settleShareMutation]);
+
+    const handleLeaveGroup = async () => {
+        if (!window.confirm(t('groups.confirm_leave_group'))) {
+            return;
+        }
+
+        if (!user?.id) {
+            toast.error(t('groups.leave_group_error'));
+            return;
+        }
+
+        setIsLeaving(true);
+        try {
+            await removeGroupMember(id, user.id);
+            queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+            toast.success(t('groups.leave_group_success'));
+            navigate('/groups');
+        } catch (error) {
+            console.error('Failed to leave group:', error);
+            toast.error(t('groups.leave_group_error'));
+        } finally {
+            setIsLeaving(false);
+        }
+    };
 
     // Calculate summary statistics - must be before early returns
     const totalSpent = useMemo(() => {
@@ -273,7 +357,7 @@ const GroupPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
                 {/* Members Section - Compact */}
                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
-                    <div className="flex items-center justify-start mb-4">
+                    <div className="flex items-center justify-center mb-4">
                         <h3 className="text-3xl font-bold text-white">{t('groups.members')}</h3>
                     </div>
                     
@@ -288,7 +372,12 @@ const GroupPage = () => {
                                         {member.profiles.name.charAt(0).toUpperCase()}
                                     </span>
                                 </div>
-                                <span className="text-white font-medium text-sm truncate">{member.profiles.name}</span>
+                                <span className="text-white font-medium text-sm truncate">
+                                    {member.profiles.name}
+                                    {member.profiles.id === user?.id && (
+                                        <span className="text-[#8B8A85] text-xs ml-2">(You)</span>
+                                    )}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -409,6 +498,7 @@ const GroupPage = () => {
                     {/* Add Expense Form - At the bottom */}
                     <form onSubmit={handleAddExpense} className="mt-10 pt-8 border-t border-[#262626] space-y-4">
                         <h3 className="text-xl font-semibold text-white mb-1">{t('groups.add_expense')}</h3>
+
                         
                         {expenseError && (
                             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2">
@@ -523,17 +613,29 @@ const GroupPage = () => {
                             {addExpenseMutation.isPending ? t('groups.creating') : t('groups.add_expense_button')}
                         </button>
                     </form>
+
+                    {/* Leave Group Section */}
+                    <div className="pt-4 mt-4 border-t border-[#262626]">
+                        <button
+                            onClick={handleLeaveGroup}
+                            disabled={isLeaving}
+                            className="w-full text-red-400 hover:text-red-300 font-semibold py-2.5 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm border border-red-400/20 hover:border-red-400/40"
+                        >
+                            {isLeaving ? t('groups.leaving_group') : t('groups.leave_group')}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Expenses Section - Main Focus */}
                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6">
                     <div className="flex items-center justify-between mb-6">
+                        <div className="flex-1"></div>
                         <h3 className="text-4xl font-bold text-white">{t('groups.expenses')}</h3>
-                        <span className="text-[#8B8A85] text-sm font-medium">{expenseCount} {t('groups.expenses')}</span>
+                        <span className="text-[#8B8A85] text-sm font-medium flex-1 text-right">{expenseCount} {t('groups.expenses')}</span>
                     </div>
                     
                     {/* Expenses List */}
-                    <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 max-h-[800px]">
+                    <div className="space-y-4 overflow-y-auto hide-scrollbar max-h-[800px]">
                         {group.group_expenses.length === 0 ? (
                             <div className="text-center py-12">
                                 <p className="text-[#8B8A85] text-sm">{t('groups.no_expenses')}</p>

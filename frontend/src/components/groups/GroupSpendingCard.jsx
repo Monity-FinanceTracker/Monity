@@ -44,7 +44,11 @@ const getSpendingLevel = (totalSpent) => {
     return { level: 'very_high', color: 'text-red-400' };
 };
 
-const GroupSpendingCard = ({ group }) => {
+/**
+ * Visual component showing group spending statistics
+ * Memoizado para evitar re-renders desnecessários
+ */
+const GroupSpendingCard = React.memo(({ group }) => {
     const { t } = useTranslation();
 
     const spendingLevel = useMemo(() => getSpendingLevel(group.totalSpent), [group.totalSpent]);
@@ -117,7 +121,7 @@ const GroupSpendingCard = ({ group }) => {
             </div>
         </div>
     );
-};
+});
 
 GroupSpendingCard.displayName = 'GroupSpendingCard';
 

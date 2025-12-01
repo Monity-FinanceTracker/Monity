@@ -169,6 +169,21 @@ export const useAddSavingsGoal = () => {
 };
 
 // Group Mutations
+export const useCreateGroup = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (groupData) => {
+      const response = await post('/groups', groupData);
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate groups query to refresh the list
+      queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+    },
+  });
+};
+
 export const useAddGroupExpense = () => {
   const queryClient = useQueryClient();
   
@@ -190,13 +205,39 @@ export const useInviteGroupMember = () => {
   
   return useMutation({
     mutationFn: async ({ groupId }) => {
+      console.log('[GroupInvite] Mutation: Starting API call', { groupId });
       const response = await post(`/groups/${groupId}/invite`);
-      return response.data;
+      
+      if (response && response.data) {
+        console.log('[GroupInvite] Mutation: API call successful', { 
+          groupId,
+          hasInvitationLink: !!response.data.invitationLink
+        });
+        return response.data;
+      }
+      
+      console.error('[GroupInvite] Mutation: Invalid response structure', { 
+        groupId,
+        hasResponse: !!response,
+        hasData: !!response?.data
+      });
+      throw new Error('Invalid response from server');
     },
     onSuccess: (data, variables) => {
+      console.log('[GroupInvite] Mutation: Success callback - invalidating queries', { 
+        groupId: variables.groupId
+      });
       // Invalidate group queries
       queryClient.invalidateQueries({ queryKey: queryKeys.groups.byId(variables.groupId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+    },
+    onError: (error) => {
+      console.error('[GroupInvite] Mutation: Error callback', { 
+        error: error.message,
+        status: error?.response?.status,
+        errorData: error?.response?.data,
+        timestamp: new Date().toISOString()
+      });
     },
   });
 };

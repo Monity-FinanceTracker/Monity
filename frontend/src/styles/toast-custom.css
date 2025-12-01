@@ -16,7 +16,15 @@
   margin-bottom: 0.5rem !important;
   position: relative !important;
   pointer-events: auto !important;
-  overflow: visible !important;
+  overflow: hidden !important;
+}
+
+.Toastify__toast-container--bottom-right {
+  pointer-events: none !important;
+}
+
+.Toastify__toast-container--bottom-right > div {
+  pointer-events: auto !important;
 }
 
 .Toastify__toast--success {
@@ -62,8 +70,14 @@
 }
 
 .Toastify__toast--success .Toastify__toast-icon {
-  color: #56a69f !important;
-  background: rgba(86, 166, 159, 0.1) !important;
+  color: #539E98 !important;
+  background: #304744 !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon > svg {
+  color: #539E98 !important;
+  fill: #539E98 !important;
+  stroke: #539E98 !important;
 }
 
 .Toastify__toast--error .Toastify__toast-icon {
@@ -95,6 +109,7 @@
   left: 0 !important;
   width: 100% !important;
   z-index: 1 !important;
+  transform-origin: left !important;
 }
 
 .Toastify__progress-bar--success {
@@ -113,10 +128,6 @@
   background: #3B82F6 !important;
 }
 
-.Toastify__progress-bar--animated {
-  animation: Toastify__progress-bar-animation linear forwards !important;
-}
-
 /* Default react-toastify close button styles */
 .Toastify__close-button {
   color: #C2C0B6 !important;
@@ -131,8 +142,9 @@
   z-index: 10000 !important;
   pointer-events: auto !important;
   position: absolute !important;
-  top: 0.75rem !important;
+  top: 50% !important;
   right: 0.75rem !important;
+  transform: translateY(-50%) !important;
   margin: 0 !important;
   flex-shrink: 0 !important;
   border: none !important;
@@ -158,8 +170,9 @@
 /* Custom close button component styles */
 .toast-close-button {
   position: absolute !important;
-  top: 0.75rem !important;
+  top: 50% !important;
   right: 0.75rem !important;
+  transform: translateY(-50%) !important;
   z-index: 10000 !important;
   pointer-events: auto !important;
   user-select: none !important;
@@ -168,24 +181,9 @@
   -ms-user-select: none !important;
 }
 
-/* Animações suaves */
+/* Animações suaves - não sobrescrever animações padrão do react-toastify */
 .Toastify__toast--rtl {
   animation: Toastify__slideInRight 0.3s ease-out !important;
-}
-
-.Toastify__toast {
-  animation: Toastify__slideInRight 0.3s ease-out !important;
-}
-
-@keyframes Toastify__slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 /* Responsividade */
