@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { get, post } from '../utils/api';
+import { get, post, put } from '../utils/api';
 import { queryKeys } from '../lib/queryClient';
 
 /**
@@ -244,7 +244,7 @@ export const useInviteGroupMember = () => {
 
 export const useSettleExpenseShare = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (shareId) => {
       const response = await post(`/groups/shares/${shareId}/settle`);
@@ -253,6 +253,69 @@ export const useSettleExpenseShare = () => {
     onSuccess: () => {
       // Invalidate all group queries to refresh expense data
       queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+    },
+  });
+};
+
+// Update Mutations
+export const useUpdateTransaction = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, transactionData }) => {
+      const response = await put(`/transactions/${id}`, transactionData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.balance.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.savings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.all });
+    },
+  });
+};
+
+export const useUpdateCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, categoryData }) => {
+      const response = await put(`/categories/${id}`, categoryData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.categories.all, 'withCounts'] });
+    },
+  });
+};
+
+export const useUpdateRecurringTransaction = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, transactionData }) => {
+      const response = await put(`/recurring-transactions/${id}`, transactionData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recurringTransactions'] });
+    },
+  });
+};
+
+export const useUpdateSavingsGoal = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, goalData }) => {
+      const response = await put(`/savings-goals/${id}`, goalData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.savings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.balance.all });
     },
   });
 };

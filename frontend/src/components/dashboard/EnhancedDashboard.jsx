@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/useAuth';
 import { get } from '../../utils/api';
 import { formatCurrency, getAmountColor } from '../../utils/currency';
+import formatDate from '../../utils/formatDate';
 import { getDynamicGreeting } from '../../utils/greetings';
 import { BalanceCard, Savings, SavingsOverviewCard, DashboardSkeleton } from '../ui';
 // Removed static imports - using lazy components instead
@@ -228,7 +229,7 @@ const EnhancedDashboard = () => {
                                     {formatCurrency(transaction.amount || 0, transaction.typeId)}
                                 </p>
                                 <p className="text-[#C2C0B6] text-xs">
-                                    {new Date(transaction.date).toLocaleDateString()}
+                                    {formatDate(transaction.date)}
                                 </p>
                             </div>
                         </div>

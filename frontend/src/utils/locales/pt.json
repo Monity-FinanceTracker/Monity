@@ -20,7 +20,9 @@
     "not_set": "Não definido",
     "or": "ou",
     "continue_with_google": "Continuar com Google",
-    "loading": "Carregando..."
+    "loading": "Carregando...",
+    "saving": "Salvando...",
+    "warning": "Aviso"
   },
   "loginPage": {
     "slogan": "Sua vida financeira com a monity",
@@ -193,7 +195,15 @@
     "goals_label": "metas",
     "unlimited": "Ilimitado",
     "premium_unlimited_goals": "Desbloqueie Metas de Poupança Ilimitadas",
-    "upgrade_to_premium": "Atualizar para Premium"
+    "upgrade_to_premium": "Atualizar para Premium",
+    "edit": "Editar",
+    "edit_goal": "Editar Meta de Poupança",
+    "edit_goal_description": "Modifique seu valor alvo ou prazo",
+    "update_goal": "Atualizar Meta",
+    "update_success": "Meta atualizada com sucesso",
+    "update_error": "Falha ao atualizar meta",
+    "current_amount_readonly": "O valor atual pode ser alterado usando os botões Alocar ou Retirar",
+    "goal_name_readonly": "O nome da meta não pode ser alterado"
   },
   "expenseList": {
     "confirm_delete": "Tem certeza que deseja excluir esta despesa?",
@@ -382,7 +392,12 @@
     "update_button": "Atualizar Recorrente",
     "add_button": "Adicionar Recorrente",
     "cancel_button": "Cancelar",
-    "card_title": "Transações Recorrentes"
+    "card_title": "Transações Recorrentes",
+    "edit": "Editar",
+    "editing_transaction": "Editando transação recorrente",
+    "update_success": "Transação recorrente atualizada com sucesso",
+    "update_error": "Falha ao atualizar transação recorrente",
+    "add_success": "Transação recorrente adicionada com sucesso"
   },
   "incomeList": {
     "confirm_delete": "Tem certeza que deseja excluir esta receita?",
@@ -624,6 +639,12 @@
     "delete_confirm": "Tem certeza que deseja excluir {{count}} transação(ões)?",
     "bulk_delete_success": "{{count}} transações excluídas com sucesso",
     "bulk_delete_error": "Falha ao excluir transações",
+    "edit": "Editar",
+    "edit_transaction": "Editar Transação",
+    "edit_success": "Transação atualizada com sucesso",
+    "edit_failed": "Falha ao atualizar transação",
+    "savings_edit_warning": "Esta é uma transação relacionada a poupança. Editar pode afetar suas metas de economia.",
+    "fill_all_fields": "Por favor, preencha todos os campos obrigatórios",
     "add_new": "Adicionar Novo",
     "add_income": "Adicionar Receita",
     "add_expense": "Adicionar Despesa",
@@ -1052,7 +1073,12 @@
     "add": "Adicionar Categoria",
     "cancel": "Cancelar",
     "edit": "Editar",
+    "edit_category": "Editar Categoria",
+    "edit_success": "Categoria atualizada com sucesso",
+    "edit_error": "Falha ao atualizar categoria",
+    "type_change_warning": "Alterar o tipo de categoria afetará todas as transações existentes.",
     "delete": "Excluir",
+    "update": "Atualizar Categoria",
     "loading": "Carregando categorias...",
     "no_results": "Nenhum resultado encontrado",
     "no_results_desc": "Tente ajustar sua pesquisa ou filtros",
@@ -1392,7 +1418,10 @@
       "fill_required": "Por favor, preencha todos os campos obrigatórios",
       "create_success": "Transação agendada criada com sucesso",
       "update_success": "Transação agendada atualizada com sucesso",
-      "save_error": "Falha ao salvar transação agendada"
+      "save_error": "Falha ao salvar transação agendada",
+      "future_date_required": "Transações agendadas devem ser apenas para datas futuras.",
+      "future_date_required_error": "Transações agendadas devem ser apenas para datas futuras. Por favor, use o recurso de transação regular para datas de hoje ou passadas.",
+      "date_min_validation": "Por favor, selecione uma data a partir de amanhã"
     }
   },
   "aiChat": {

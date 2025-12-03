@@ -1,19 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
-import { 
-    getBudgets, 
-    upsertBudget, 
-    deleteBudget, 
-    getCategories, 
-    getRecurringTransactions, 
-    addRecurringTransaction, 
-    updateRecurringTransaction, 
-    deleteRecurringTransaction, 
-    processRecurringTransactions, 
-    getTransactionTypes 
+import {
+    getBudgets,
+    upsertBudget,
+    deleteBudget,
+    getCategories,
+    getRecurringTransactions,
+    addRecurringTransaction,
+    updateRecurringTransaction,
+    deleteRecurringTransaction,
+    processRecurringTransactions,
+    getTransactionTypes
 } from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { useUpdateRecurringTransaction } from '../../hooks/useQueries';
 
 function CardWrapper({ children, title, accent }) {
     return (
@@ -246,6 +247,8 @@ function RecurringTransactions() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const updateRecurringMutation = useUpdateRecurringTransaction();
+
     const fetchData = useCallback(async () => {
         if (!user) return;
         setIsLoading(true);
@@ -304,30 +307,39 @@ function RecurringTransactions() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+        setError(null);
+
         try {
             if (isEditing) {
-                await updateRecurringTransaction(isEditing, form);
+                await updateRecurringMutation.mutateAsync({
+                    id: isEditing,
+                    transactionData: form
+                });
+                alert(t('recurring.update_success'));
             } else {
                 await addRecurringTransaction(form);
+                alert(t('recurring.add_success'));
             }
             resetForm();
             fetchData();
-        } catch {
-            setError(t('recurring.save_error'));
+        } catch (err) {
+            setError(isEditing ? t('recurring.update_error') : t('recurring.save_error'));
+            console.error(err);
         } finally {
             setIsLoading(false);
         }
     };
-    
-    const _handleEdit = (item) => {
+
+    const handleEdit = (item) => {
         setIsEditing(item.id);
         setForm({
             ...item,
             startDate: new Date(item.startDate).toISOString().split('T')[0],
             endDate: item.endDate ? new Date(item.endDate).toISOString().split('T')[0] : ''
         });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-    
+
     const _handleDelete = async (id) => {
         setIsLoading(true);
         try {
@@ -366,6 +378,14 @@ function RecurringTransactions() {
             <button onClick={handleProcess} disabled={isLoading} className="mb-4 p-2 rounded bg-blue-500 text-white w-full">
                 {isLoading ? t('recurring.processing') : t('recurring.process_now')}
             </button>
+
+            {isEditing && (
+                <div className="mb-4 p-3 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">
+                    <p className="text-[#56a69f] text-sm">
+                        {t('recurring.editing_transaction')}
+                    </p>
+                </div>
+            )}
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <input type="text" name="description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder={t('recurring.description_placeholder')} className="p-3 rounded bg-[#1F1E1D] text-white w-full" required />
@@ -506,8 +526,50 @@ function RecurringTransactions() {
                 </button>
                 {isEditing && <button onClick={resetForm} className="p-3 rounded bg-gray-500 text-white">{t('recurring.cancel_button')}</button>}
             </form>
-            
+
             {error && <p className="text-red-500">{error}</p>}
+
+            {/* Recurring Transactions List */}
+            <div className="mt-6">
+                <h3 className="text-lg font-bold mb-3 text-[#56a69f]">Your Recurring Transactions</h3>
+                {recurring.length === 0 ? (
+                    <p className="text-[#C2C0B6] text-sm">No recurring transactions yet.</p>
+                ) : (
+                    <ul className="space-y-2">
+                        {recurring.map(item => (
+                            <li key={item.id} className="flex justify-between items-center p-3 bg-[#1F1E1D] rounded-lg">
+                                <div>
+                                    <span className="font-bold text-white">{item.description}</span>
+                                    <span className="text-sm text-[#C2C0B6] block">
+                                        {item.frequency} - R$ {parseFloat(item.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => handleEdit(item)}
+                                        className="p-2 text-[#C2C0B6] hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
+                                        title={t('recurring.edit')}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </button>
+
+                                    <button
+                                        onClick={() => _handleDelete(item.id)}
+                                        className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                        title={t('recurring.delete')}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 }

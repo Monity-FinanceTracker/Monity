@@ -11,8 +11,8 @@ import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
-import { TransactionSkeleton, Dropdown } from '../ui';
-import { useCategories } from '../../hooks/useQueries';
+import { TransactionSkeleton, Dropdown, CloseButton } from '../ui';
+import { useCategories, useUpdateTransaction } from '../../hooks/useQueries';
 import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
 import { useAuth } from '../../context/useAuth';
 
@@ -57,6 +57,18 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     // UI states
     const [selectedTransactions, setSelectedTransactions] = useState(new Set());
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+
+    // Edit states
+    const [editingTransaction, setEditingTransaction] = useState(null);
+    const [editForm, setEditForm] = useState({
+        description: '',
+        amount: '',
+        date: '',
+        category: '',
+        typeId: 1,
+        metadata: null
+    });
+    const [showEditModal, setShowEditModal] = useState(false);
 
     // React Query for server state management
     const { 
@@ -254,7 +266,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     }, [transactions, debouncedSearchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
 
     const queryClient = useQueryClient();
-
+    const updateTransactionMutation = useUpdateTransaction();
 
     // Optimized delete mutation with React Query
     const _deleteTransactionMutation = useMutation({
@@ -466,7 +478,20 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             {formatCurrency(transaction.amount, transaction.typeId)}
                         </div>
                     </div>
-                    
+
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClick(transaction);
+                        }}
+                        className="text-[#C2C0B6] hover:text-[#56a69f] transition-colors p-1"
+                        title={t('transactions.edit')}
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </button>
+
                     <button
                         onClick={() => handleDelete(transaction.id)}
                         className="text-[#C2C0B6] hover:text-red-400 transition-colors p-1"
@@ -491,6 +516,68 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             console.error('Delete failed:', error);
             alert(t('transactions.delete_failed'));
         }
+    };
+
+    const handleEditClick = (transaction) => {
+        let parsedMetadata = null;
+        if (transaction.metadata) {
+            parsedMetadata = typeof transaction.metadata === 'string'
+                ? JSON.parse(transaction.metadata)
+                : transaction.metadata;
+        }
+
+        setEditingTransaction(transaction);
+        setEditForm({
+            description: transaction.description || '',
+            amount: transaction.amount || '',
+            date: new Date(transaction.date).toISOString().split('T')[0],
+            category: transaction.category || '',
+            typeId: transaction.typeId,
+            metadata: parsedMetadata
+        });
+        setShowEditModal(true);
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!editForm.description || !editForm.amount || !editForm.category) {
+            alert(t('transactions.fill_all_fields'));
+            return;
+        }
+
+        try {
+            await updateTransactionMutation.mutateAsync({
+                id: editingTransaction.id,
+                transactionData: {
+                    description: editForm.description,
+                    amount: parseFloat(editForm.amount),
+                    date: editForm.date,
+                    category: editForm.category,
+                    typeId: editForm.typeId,
+                    metadata: editForm.metadata ? JSON.stringify(editForm.metadata) : null
+                }
+            });
+
+            setShowEditModal(false);
+            setEditingTransaction(null);
+        } catch (error) {
+            console.error('Edit transaction failed:', error);
+            alert(t('transactions.edit_failed'));
+        }
+    };
+
+    const handleEditCancel = () => {
+        setShowEditModal(false);
+        setEditingTransaction(null);
+        setEditForm({
+            description: '',
+            amount: '',
+            date: '',
+            category: '',
+            typeId: 1,
+            metadata: null
+        });
     };
 
     // Dropdown handlers
@@ -849,6 +936,107 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 )}
             </div>
             </div>
+
+            {/* Edit Transaction Modal */}
+            {showEditModal && editingTransaction && (
+                <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-2 sm:p-4 pt-8 sm:pt-12 overflow-y-auto">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar">
+                        <div className="p-4 sm:p-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-xl font-bold text-white">
+                                    {t('transactions.edit_transaction')}
+                                </h2>
+                                <CloseButton onClick={handleEditCancel} />
+                            </div>
+
+                            <form onSubmit={handleEditSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.description') || 'Description'}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editForm.description}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.amount') || 'Amount'}
+                                    </label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={editForm.amount}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, amount: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.date') || 'Date'}
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={editForm.date}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, date: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.category') || 'Category'}
+                                    </label>
+                                    <Dropdown
+                                        value={editForm.category}
+                                        onChange={(value) => setEditForm(prev => ({ ...prev, category: value }))}
+                                        options={categoriesData.map(cat => ({
+                                            value: cat.name,
+                                            label: cat.name
+                                        }))}
+                                        placeholder={t('transactions.select_category') || 'Select category'}
+                                        bgColor="#232323"
+                                        menuBgColor="#232323"
+                                    />
+                                </div>
+
+                                {/* Savings Transaction Warning */}
+                                {editForm.typeId === 3 && editForm.metadata && (
+                                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                                        <p className="text-yellow-400 text-sm">
+                                            <strong>{t('common.warning')}:</strong> {t('transactions.savings_edit_warning')}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <div className="flex gap-3 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={handleEditCancel}
+                                        className="flex-1 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
+                                        {t('common.cancel')}
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={updateTransactionMutation.isPending}
+                                        className="flex-1 bg-[#56A69f] text-white py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {updateTransactionMutation.isPending ? t('common.saving') : t('common.save')}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 });

@@ -20,7 +20,9 @@
     "not_set": "Not set",
     "or": "or",
     "continue_with_google": "Continue with Google",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "warning": "Warning"
   },
   "loginPage": {
     "slogan": "Your financial life with Monity",
@@ -193,7 +195,15 @@
     "goals_label": "goals",
     "unlimited": "Unlimited",
     "premium_unlimited_goals": "Unlock Unlimited Savings Goals",
-    "upgrade_to_premium": "Upgrade to Premium"
+    "upgrade_to_premium": "Upgrade to Premium",
+    "edit": "Edit",
+    "edit_goal": "Edit Savings Goal",
+    "edit_goal_description": "Modify your target amount or deadline",
+    "update_goal": "Update Goal",
+    "update_success": "Goal updated successfully",
+    "update_error": "Failed to update goal",
+    "current_amount_readonly": "Current amount can be changed using Allocate or Withdraw buttons",
+    "goal_name_readonly": "Goal name cannot be changed"
   },
   "expenseList": {
     "confirm_delete": "Are you sure you want to delete this expense?",
@@ -382,7 +392,12 @@
     "update_button": "Update Recurring",
     "add_button": "Add Recurring",
     "cancel_button": "Cancel",
-    "card_title": "Recurring Transactions"
+    "card_title": "Recurring Transactions",
+    "edit": "Edit",
+    "editing_transaction": "Editing recurring transaction",
+    "update_success": "Recurring transaction updated successfully",
+    "update_error": "Failed to update recurring transaction",
+    "add_success": "Recurring transaction added successfully"
   },
   "incomeList": {
     "confirm_delete": "Are you sure you want to delete this income?",
@@ -854,6 +869,12 @@
     "delete_confirm": "Are you sure you want to delete {{count}} transaction(s)?",
     "bulk_delete_success": "Successfully deleted {{count}} transactions",
     "bulk_delete_error": "Failed to delete transactions",
+    "edit": "Edit",
+    "edit_transaction": "Edit Transaction",
+    "edit_success": "Transaction updated successfully",
+    "edit_failed": "Failed to update transaction",
+    "savings_edit_warning": "This is a savings-related transaction. Editing may affect your savings goals and allocations.",
+    "fill_all_fields": "Please fill in all required fields",
     "total_transactions": "Total Transactions",
     "total_income": "Total Income",
     "total_expenses": "Total Expenses",
@@ -1052,7 +1073,12 @@
     "add": "Add Category",
     "cancel": "Cancel",
     "edit": "Edit",
+    "edit_category": "Edit Category",
+    "edit_success": "Category updated successfully",
+    "edit_error": "Failed to update category",
+    "type_change_warning": "Changing the category type will affect all existing transactions using this category.",
     "delete": "Delete",
+    "update": "Update Category",
     "loading": "Loading categories...",
     "no_results": "No categories found",
     "no_results_desc": "Try adjusting your search or filters",
@@ -1418,7 +1444,10 @@
       "fill_required": "Please fill all required fields",
       "create_success": "Scheduled transaction created successfully",
       "update_success": "Scheduled transaction updated successfully",
-      "save_error": "Failed to save scheduled transaction"
+      "save_error": "Failed to save scheduled transaction",
+      "future_date_required": "Scheduled transactions must be for future dates only.",
+      "future_date_required_error": "Scheduled transactions must be for future dates only. Please use the regular transaction feature for today or past dates.",
+      "date_min_validation": "Please select a date from tomorrow onwards"
     }
   },
   "investmentCalculator": {

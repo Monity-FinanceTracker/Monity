@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import api from '../../utils/api';
@@ -6,9 +6,11 @@ import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
 import CloseButton from './CloseButton';
 import { formatSimpleCurrency } from '../../utils/currency';
+import formatDate from '../../utils/formatDate';
 import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
 import { FiStar, FiLock, FiTarget } from 'react-icons/fi';
 import PremiumUpgradeCard from '../groups/PremiumUpgradeCard';
+import { useSavingsGoals, useAddSavingsGoal, useUpdateSavingsGoal, useBalance } from '../../hooks/useQueries';
 
 const SavingsGoals = () => {
     const { t } = useTranslation();
@@ -43,7 +45,13 @@ const SavingsGoals = () => {
             document.head.removeChild(style);
         };
     }, []);
-    const [goals, setGoals] = useState([]);
+    // React Query hooks
+    const { data: goals = [], isLoading: goalsLoading } = useSavingsGoals();
+    const { data: balanceData } = useBalance();
+    const balance = balanceData?.balance || 0;
+    const addGoalMutation = useAddSavingsGoal();
+
+    // Local UI state
     const [newGoal, setNewGoal] = useState({
         goal_name: '',
         target_amount: '',
@@ -52,9 +60,36 @@ const SavingsGoals = () => {
     });
     const [addingMoney, setAddingMoney] = useState({});
     const [withdrawingMoney, setWithdrawingMoney] = useState({});
-    const [balance, setBalance] = useState(0);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Edit state
+    const [editingGoal, setEditingGoal] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editForm, setEditForm] = useState({
+        target_amount: '',
+        target_date: ''
+    });
+
+    const updateGoalMutation = useUpdateSavingsGoal();
+
+    // Helper function to convert DD/MM/YYYY to YYYY-MM-DD
+    const convertToApiFormat = (dateString) => {
+        if (!dateString) return null;
+        // Check if it's already in YYYY-MM-DD format
+        if (/^\d{4}-\d{2}-\d{2}/.test(dateString)) {
+            return dateString;
+        }
+        // Convert from DD/MM/YYYY to YYYY-MM-DD
+        const parts = dateString.split('/');
+        if (parts.length === 3) {
+            const [day, month, year] = parts;
+            // Handle 2-digit years
+            const fullYear = year.length === 2 ? `20${year}` : year;
+            return `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
+        return dateString;
+    };
 
     const isLimited = subscriptionTier === 'free' && goals.length >= 2;
 
@@ -62,23 +97,6 @@ const SavingsGoals = () => {
         () => subscriptionTier === 'free' && goals.length >= 2,
         [subscriptionTier, goals.length]
     );
-
-    const fetchGoalsAndBalance = useCallback(async () => {
-        try {
-            const [goalsResponse, balanceResponse] = await Promise.all([
-                api.get('/savings-goals'),
-                api.get('/balance/all')
-            ]);
-            setGoals(goalsResponse.data);
-            setBalance(balanceResponse.data.balance || 0);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchGoalsAndBalance();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Open modal automatically if navigated from BalanceCard
     useEffect(() => {
@@ -95,8 +113,11 @@ const SavingsGoals = () => {
     const handleAddGoal = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('/savings-goals', newGoal);
-            setGoals(prevGoals => [...prevGoals, response.data]);
+            const goalData = {
+                ...newGoal,
+                target_date: newGoal.target_date ? convertToApiFormat(newGoal.target_date) : null
+            };
+            await addGoalMutation.mutateAsync(goalData);
             setNewGoal({
                 goal_name: '',
                 target_amount: '',
@@ -104,25 +125,27 @@ const SavingsGoals = () => {
                 current_amount: ''
             });
             setIsModalOpen(false);
-            fetchGoalsAndBalance(); // Refetch data
+            // No need to call fetchGoalsAndBalance - React Query auto-refreshes
         } catch (error) {
             console.error('Error adding savings goal:', error);
+            setError(error.response?.data?.message || t('savings_goals.add_error'));
         }
     };
 
     const handleDeleteGoal = async (goalId) => {
         try {
             await api.delete(`/savings-goals/${goalId}`);
-            fetchGoalsAndBalance(); // Refetch data
+            // React Query will auto-refresh via cache invalidation
         } catch (error) {
             console.error('Error deleting savings goal:', error);
+            setError(error.response?.data?.message || t('savings_goals.delete_error'));
         }
     };
 
     const handleAllocateMoney = async (goalId, amount) => {
         try {
             await api.post(`/savings-goals/${goalId}/allocate`, { amount });
-            fetchGoalsAndBalance(); // Refetch data
+            // React Query will auto-refresh via cache invalidation
             setAddingMoney(prev => ({ ...prev, [goalId]: { isAdding: false, amount: '' } }));
         } catch (error) {
             console.error('Error allocating money:', error);
@@ -132,7 +155,7 @@ const SavingsGoals = () => {
     const handleWithdrawMoney = async (goalId, amount) => {
         try {
             await api.post(`/savings-goals/${goalId}/withdraw`, { amount });
-            fetchGoalsAndBalance(); // Refetch data
+            // React Query will auto-refresh via cache invalidation
             setWithdrawingMoney(prev => ({ ...prev, [goalId]: { isWithdrawing: false, amount: '' } }));
         } catch (error) {
             console.error('Error withdrawing money:', error);
@@ -174,6 +197,48 @@ const SavingsGoals = () => {
             ...prev,
             [goalId]: { ...prev[goalId], amount: value }
         }));
+    };
+
+    const handleEditClick = (goal) => {
+        setEditingGoal(goal);
+        setEditForm({
+            target_amount: goal.target_amount || '',
+            target_date: goal.target_date ? formatDate(goal.target_date) : ''
+        });
+        setShowEditModal(true);
+    };
+
+    const handleUpdateGoal = async (e) => {
+        e.preventDefault();
+
+        if (!editForm.target_amount) {
+            setError(t('savings_goals.target_amount_required'));
+            return;
+        }
+
+        try {
+            await updateGoalMutation.mutateAsync({
+                id: editingGoal.id,
+                goalData: {
+                    target_amount: parseFloat(editForm.target_amount),
+                    target_date: convertToApiFormat(editForm.target_date) || null
+                }
+            });
+            setShowEditModal(false);
+            setEditingGoal(null);
+            setError(null);
+            // Success notification could be added here
+        } catch (error) {
+            console.error('Error updating savings goal:', error);
+            setError(error.response?.data?.message || t('savings_goals.update_error'));
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setShowEditModal(false);
+        setEditingGoal(null);
+        setEditForm({ target_amount: '', target_date: '' });
+        setError(null);
     };
 
     return (
@@ -279,7 +344,7 @@ const SavingsGoals = () => {
                                 name="target_date"
                                 value={newGoal.target_date}
                                 onChange={handleInputChange}
-                                placeholder="mm/dd/yyyy"
+                                placeholder="DD/MM/YYYY"
                                 className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500"
                             />
                         </div>
@@ -339,9 +404,23 @@ const SavingsGoals = () => {
                             <div key={goal.id} className="bg-[#1F1E1D] border border-[#262626] p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#262626]/80">
                                 <div className="flex justify-between items-start">
                                     <h4 className="text-xl font-bold text-white">{goal.goal_name}</h4>
-                                    <CloseButton onClick={() => handleDeleteGoal(goal.id)} />
+                                    <div className="flex items-center gap-2">
+                                        {/* Edit Button */}
+                                        <button
+                                            onClick={() => handleEditClick(goal)}
+                                            className="text-[#C2C0B6] hover:text-[#56a69f] transition-colors p-1"
+                                            title={t('savings_goals.edit')}
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+
+                                        {/* Existing Delete Button */}
+                                        <CloseButton onClick={() => handleDeleteGoal(goal.id)} />
+                                    </div>
                                 </div>
-                                <p className="text-sm text-[#C2C0B6] mb-4 text-left">{t('savings_goals.target_date_label')} {goal.target_date ? new Date(goal.target_date).toLocaleDateString() : t('common.not_set')}</p>
+                                <p className="text-sm text-[#C2C0B6] mb-4 text-left">{t('savings_goals.target_date_label')} {goal.target_date ? formatDate(goal.target_date) : t('common.not_set')}</p>
                                 
                                 <div className="w-full bg-[#232323] rounded-full h-4 mb-2">
                                     <div className="bg-[#56a69f] h-4 rounded-full transition-all duration-300" style={{ width: `${progress > 100 ? 100 : progress}%` }}></div>
@@ -428,6 +507,100 @@ const SavingsGoals = () => {
                             </div>
                         )
                     })}
+                </div>
+            )}
+
+            {/* Edit Goal Modal */}
+            {showEditModal && editingGoal && (
+                <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-2 sm:p-4 pt-8 sm:pt-12 overflow-y-auto">
+                    <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-md p-4 sm:p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 className="text-xl font-bold text-white">{t('savings_goals.edit_goal')}</h2>
+                                <p className="text-sm text-[#C2C0B6] mt-1">{t('savings_goals.edit_goal_description')}</p>
+                            </div>
+                            <CloseButton onClick={handleCancelEdit} />
+                        </div>
+
+                        {error && (
+                            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                                <p className="text-red-400 text-sm">{error}</p>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleUpdateGoal} className="space-y-4 sm:space-y-6">
+                            {/* Read-only: Goal Name */}
+                            <div className="space-y-2">
+                                <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('savings_goals.goal_name')}
+                                </label>
+                                <div className="w-full bg-[#232323] border border-[#262626] text-[#8B8A85] rounded-xl p-4">
+                                    {editingGoal.goal_name}
+                                </div>
+                                <p className="text-xs text-[#8B8A85]">{t('savings_goals.goal_name_readonly')}</p>
+                            </div>
+
+                            {/* Editable: Target Amount */}
+                            <div className="space-y-2">
+                                <label htmlFor="edit_target_amount" className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('savings_goals.target_amount')} <span className="text-red-400">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    id="edit_target_amount"
+                                    value={editForm.target_amount}
+                                    onChange={(e) => setEditForm(prev => ({ ...prev, target_amount: e.target.value }))}
+                                    placeholder={t('savings_goals.target_amount_placeholder')}
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                    required
+                                />
+                            </div>
+
+                            {/* Editable: Target Date */}
+                            <div className="space-y-2">
+                                <label htmlFor="edit_target_date" className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('savings_goals.target_date')}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="edit_target_date"
+                                    value={editForm.target_date}
+                                    onChange={(e) => setEditForm(prev => ({ ...prev, target_date: e.target.value }))}
+                                    placeholder="DD/MM/YYYY"
+                                    className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-xl p-4 focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                                />
+                            </div>
+
+                            {/* Read-only: Current Amount */}
+                            <div className="space-y-2">
+                                <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('savings_goals.current_amount')}
+                                </label>
+                                <div className="w-full bg-[#232323] border border-[#262626] text-[#8B8A85] rounded-xl p-4">
+                                    {formatSimpleCurrency(editingGoal.current_amount)}
+                                </div>
+                                <p className="text-xs text-[#8B8A85]">{t('savings_goals.current_amount_readonly')}</p>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-4 pt-4">
+                                <button
+                                    type="button"
+                                    onClick={handleCancelEdit}
+                                    className="flex-1 text-white hover:text-[#56a69f] font-semibold py-4 rounded-xl transition-colors duration-200"
+                                >
+                                    {t('common.cancel')}
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={updateGoalMutation.isPending}
+                                    className="flex-1 bg-[#56a69f] text-white font-semibold py-4 rounded-xl hover:bg-[#00b37e] transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                >
+                                    {updateGoalMutation.isPending ? t('common.saving') : t('savings_goals.update_goal')}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )}
         </div>

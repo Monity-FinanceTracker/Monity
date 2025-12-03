@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Banknote, Tag, Repeat, TrendingUp, TrendingDown } from 'lucide-react';
 import api from '../../utils/api';
@@ -11,6 +11,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
   const [loading, setLoading] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [categories, setCategories] = useState([]);
+  const dateInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     description: '',
@@ -76,6 +77,26 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
       ...prev,
       [name]: value
     }));
+
+    // Set custom validation message for date input
+    if (name === 'scheduled_date' && dateInputRef.current) {
+      const input = dateInputRef.current;
+      if (value) {
+        const selectedDate = new Date(value);
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate < tomorrow) {
+          input.setCustomValidity(t('cashFlow.form.date_min_validation'));
+        } else {
+          input.setCustomValidity('');
+        }
+      } else {
+        input.setCustomValidity('');
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -84,6 +105,19 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     if (!formData.description || !formData.amount || !formData.category || !formData.scheduled_date) {
       toast.error(t('cashFlow.form.fill_required'));
       return;
+    }
+
+    // Validate that scheduled_date is in the future
+    if (formData.scheduled_date) {
+      const scheduledDate = new Date(formData.scheduled_date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      scheduledDate.setHours(0, 0, 0, 0);
+
+      if (scheduledDate <= today) {
+        toast.error(t('cashFlow.form.future_date_required_error'));
+        return;
+      }
     }
 
     setLoading(true);
@@ -282,14 +316,28 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C2C0B6]" />
               <input
+                ref={dateInputRef}
                 type="date"
                 name="scheduled_date"
                 value={formData.scheduled_date}
                 onChange={handleChange}
+                onInvalid={(e) => {
+                  if (e.target.validity.rangeUnderflow) {
+                    e.target.setCustomValidity(t('cashFlow.form.date_min_validation'));
+                  }
+                }}
+                onInput={(e) => {
+                  e.target.setCustomValidity('');
+                }}
+                min={moment().add(1, 'day').format('YYYY-MM-DD')}
+                title={t('cashFlow.form.date_min_validation')}
                 className="w-full pl-10 pr-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
                 required
               />
             </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {t('cashFlow.form.future_date_required')}
+            </p>
           </div>
 
           {/* Recurrence Pattern */}
