@@ -2,7 +2,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiStar, FiZap, FiTarget } from 'react-icons/fi';
 
-const PremiumUpgradeCard = () => {
+const PremiumUpgradeCard = ({ 
+    titleKey = 'groups.premium_unlimited_groups',
+    buttonKey = 'groups.upgrade_to_premium',
+    icon: CustomIcon = FiTarget
+}) => {
     const { t } = useTranslation();
 
     const handleUpgrade = async () => {
@@ -24,10 +28,10 @@ const PremiumUpgradeCard = () => {
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
                             <div className="w-5 h-5 bg-[#56a69f]/20 rounded flex items-center justify-center">
-                                <FiTarget className="w-3 h-3 text-[#56a69f]" />
+                                <CustomIcon className="w-3 h-3 text-[#56a69f]" />
                             </div>
                             <span className="text-white font-semibold">
-                                {t('groups.premium_unlimited_groups')}
+                                {t(titleKey)}
                             </span>
                         </div>
                     </div>
@@ -37,7 +41,7 @@ const PremiumUpgradeCard = () => {
                         className="bg-gradient-to-r from-[#56a69f] to-[#01a87a] text-white font-semibold px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#56a69f]/20 transition-all duration-300 inline-flex items-center justify-center gap-2 flex-shrink-0"
                     >
                         <FiZap className="w-4 h-4" />
-                        {t('groups.upgrade_to_premium')}
+                        {t(buttonKey)}
                     </button>
                 </div>
             </div>

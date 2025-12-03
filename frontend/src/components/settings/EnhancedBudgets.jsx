@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../ui/notificationContext';
 import { get, post, put, del } from '../../utils/api';
@@ -6,7 +6,11 @@ import { EmptyBudgets, LoadingState } from '../ui/EmptyStates';
 import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { FiStar, FiLock, FiTrendingUp } from 'react-icons/fi';
 import { CloseButton } from '../ui';
+import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
+import { PremiumFeatureCard } from '../premium';
+import PremiumUpgradeCard from '../groups/PremiumUpgradeCard';
 
 /**
  * Enhanced Budgets Component with modern UI and improved functionality
@@ -15,12 +19,14 @@ const EnhancedBudgets = () => {
     const { t } = useTranslation();
     const { success, error: notifyError } = useNotifications();
     const { subscriptionTier } = useAuth();
-    
+    const { showPrompt } = useSmartUpgradePrompt();
+
     const [budgets, setBudgets] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
     const [editingBudget, setEditingBudget] = useState(null);
+    const [showBudgetLimitCard, setShowBudgetLimitCard] = useState(false);
     const [newBudget, setNewBudget] = useState({
         name: '',
         amount: '',
@@ -56,9 +62,35 @@ const EnhancedBudgets = () => {
         fetchData();
     }, [fetchData]);
 
+    // Budget Limit Prompt - Show upgrade prompt when reaching 3 budgets (free tier limit)
+    useEffect(() => {
+        const checkBudgetLimit = async () => {
+            if (subscriptionTier !== 'free' || budgets.length < 3) return;
+
+            if (budgets.length >= 3) {
+                const hasSeenBudgetLimit = localStorage.getItem('monity_budget_limit_prompted');
+                if (!hasSeenBudgetLimit) {
+                    await showPrompt('budget_limit', {
+                        budget_count: budgets.length,
+                        source: 'budget_list'
+                    });
+                    localStorage.setItem('monity_budget_limit_prompted', 'true');
+                }
+            }
+        };
+
+        checkBudgetLimit();
+    }, [budgets, subscriptionTier, showPrompt]);
+
     const handleAddBudget = async (e) => {
         e.preventDefault();
-        
+
+        // Check if free user is trying to create more than 3 budgets
+        if (subscriptionTier === 'free' && budgets.length >= 3) {
+            setShowBudgetLimitCard(true);
+            return;
+        }
+
         try {
             const { data } = await post('/budgets', newBudget);
             setBudgets(prev => [...prev, data]);
@@ -112,6 +144,11 @@ const EnhancedBudgets = () => {
 
     const isLimited = subscriptionTier === 'free' && budgets.length >= 2;
 
+    const shouldShowPremiumCard = useMemo(
+        () => subscriptionTier === 'free' && budgets.length >= 2,
+        [subscriptionTier, budgets.length]
+    );
+
     if (loading) {
         return <LoadingState message={t('budgets.loading')} />;
     }
@@ -119,21 +156,39 @@ const EnhancedBudgets = () => {
     return (
         <div className="flex-1 p-6">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-white">{t('budgets.title')}</h1>
-                <div className="flex items-center gap-4">
-                    {isLimited && (
-                        <Link
-                            to="/subscription"
-                            className="bg-yellow-400 text-black font-bold px-6 py-3 rounded-lg hover:bg-yellow-500 transition-colors"
-                        >
-                            {t('budgets.upgrade_to_add')}
-                        </Link>
+                <div className="flex items-center gap-3">
+                    <h1 className="text-3xl font-bold text-white">{t('budgets.title')}</h1>
+                    {!loading && subscriptionTier === 'free' && budgets.length > 0 && (
+                        <div className="flex items-center gap-2 px-3 py-1 bg-[#262626] border border-[#262626] rounded-lg">
+                            <span className="text-[#C2C0B6] text-sm">
+                                {budgets.length}/2
+                            </span>
+                            <span className="text-[#8B8A85] text-xs">
+                                {t('budgets.budgets_label')}
+                            </span>
+                        </div>
                     )}
+                    {!loading && subscriptionTier === 'premium' && budgets.length > 0 && (
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">
+                            <FiStar className="w-3.5 h-3.5 text-[#56a69f]" />
+                            <span className="text-[#56a69f] text-xs font-medium">
+                                {t('budgets.unlimited')}
+                            </span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex items-center gap-4">
                     <button
-                        onClick={() => setShowAddForm(true)}
-                        className={`bg-[#56a69f] !text-[#1F1E1D] px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors font-medium ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={isLimited}
+                        onClick={() => {
+                            if (isLimited) {
+                                setShowBudgetLimitCard(true);
+                            } else {
+                                setShowAddForm(true);
+                            }
+                        }}
+                        className="bg-[#56a69f] !text-[#1F1E1D] px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors font-medium flex items-center gap-2"
                     >
+                        {isLimited && <FiLock className="w-4 h-4" />}
                         {t('budgets.add_new')}
                     </button>
                 </div>
@@ -192,6 +247,17 @@ const EnhancedBudgets = () => {
                             {budgets.filter(b => getProgressPercentage(b.spent || 0, b.amount) >= 100).length}
                         </p>
                     </div>
+                </div>
+            )}
+
+            {/* Premium Upgrade Card */}
+            {shouldShowPremiumCard && (
+                <div className="mb-6">
+                    <PremiumUpgradeCard 
+                        titleKey="budgets.premium_unlimited_budgets"
+                        buttonKey="budgets.upgrade_to_premium"
+                        icon={FiTrendingUp}
+                    />
                 </div>
             )}
 
@@ -475,6 +541,25 @@ const EnhancedBudgets = () => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Premium Feature Card Modal - Unlimited Budgets */}
+            {showBudgetLimitCard && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="relative max-w-4xl w-full">
+                        <button
+                            onClick={() => setShowBudgetLimitCard(false)}
+                            className="absolute top-4 right-4 z-10 text-white hover:text-gray-300"
+                        >
+                            <CloseButton />
+                        </button>
+                        <PremiumFeatureCard
+                            featureId="unlimited_budgets"
+                            variant="modal"
+                            onClose={() => setShowBudgetLimitCard(false)}
+                        />
                     </div>
                 </div>
             )}

@@ -13,6 +13,8 @@ import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
 import { TransactionSkeleton, Dropdown } from '../ui';
 import { useCategories } from '../../hooks/useQueries';
+import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
+import { useAuth } from '../../context/useAuth';
 
 /**
  * Calcula tamanho da fonte baseado no comprimento do valor
@@ -33,6 +35,8 @@ const getResponsiveFontSize = (value) => {
 const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { subscriptionTier } = useAuth();
+    const { showPrompt } = useSmartUpgradePrompt();
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -128,6 +132,52 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isAddNewDropdownOpen]);
+
+    // Transaction Limit Prompts - Show upgrade prompts at 10 and 50 transactions
+    useEffect(() => {
+        const checkTransactionLimits = async () => {
+            // Only check for free tier users
+            if (subscriptionTier !== 'free' || transactions.length === 0) return;
+
+            // Get transactions from current month
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            const currentMonthTransactions = transactions.filter(t => {
+                const tDate = new Date(t.date);
+                return tDate.getMonth() === currentMonth && tDate.getFullYear() === currentYear;
+            });
+
+            const monthlyCount = currentMonthTransactions.length;
+
+            // Show prompt at 10 transactions (transaction_limit)
+            if (monthlyCount >= 10 && monthlyCount < 50) {
+                const hasSeenTransactionLimit = localStorage.getItem('monity_transaction_limit_prompted');
+                if (!hasSeenTransactionLimit) {
+                    await showPrompt('transaction_limit', {
+                        transaction_count: monthlyCount,
+                        source: 'transaction_list'
+                    });
+                    localStorage.setItem('monity_transaction_limit_prompted', 'true');
+                }
+            }
+
+            // Show prompt at 50 transactions (high_transaction_volume)
+            if (monthlyCount >= 50) {
+                const hasSeenHighVolume = localStorage.getItem('monity_high_volume_prompted');
+                if (!hasSeenHighVolume) {
+                    await showPrompt('high_transaction_volume', {
+                        total_transactions: monthlyCount,
+                        source: 'transaction_list'
+                    });
+                    localStorage.setItem('monity_high_volume_prompted', 'true');
+                }
+            }
+        };
+
+        checkTransactionLimits();
+    }, [transactions, subscriptionTier, showPrompt]);
 
     // Memoized filtering and search with debounced search
     const filteredAndSortedTransactions = useMemo(() => {
@@ -309,6 +359,24 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         return false;
     };
 
+    // Helper function to check if a transaction is an investment transaction
+    const isInvestmentTransaction = (transaction) => {
+        // Check metadata for investment operations
+        if (transaction.metadata) {
+            const metadata = typeof transaction.metadata === 'string' 
+                ? JSON.parse(transaction.metadata) 
+                : transaction.metadata;
+            if (metadata?.savings_behavior === 'investment' || metadata?.savings_behavior === 'divestment') {
+                return true;
+            }
+        }
+        // Check category names
+        if (transaction.category === 'Make Investments' || transaction.category === 'Withdraw Investments') {
+            return true;
+        }
+        return false;
+    };
+
     // Calculate totals
     const totals = filteredAndSortedTransactions.reduce((acc, transaction) => {
         const amount = parseFloat(transaction.amount);
@@ -324,13 +392,16 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             } else if (isWithdrawalTransaction(transaction)) {
                 // Withdrawals increase available balance (negative amount)
                 acc.withdrawals += amount;
+            } else if (isInvestmentTransaction(transaction)) {
+                // Both making and withdrawing investments reduce savings total
+                acc.investments += Math.abs(amount);
             } else {
                 // Regular savings deposits
                 acc.savings += amount;
             }
         }
         return acc;
-    }, { income: 0, expenses: 0, savings: 0, allocations: 0, withdrawals: 0 });
+    }, { income: 0, expenses: 0, savings: 0, allocations: 0, withdrawals: 0, investments: 0 });
 
     // Net balance = income - expenses - allocations - withdrawals + savings
     // Withdrawals are negative amounts, so subtracting them adds the money back (matches backend logic: balance -= transaction.amount)
@@ -338,7 +409,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const balance = totals.income - totals.expenses - totals.allocations - totals.withdrawals + totals.savings;
 
     // Calculate total savings: regular savings + allocations - withdrawals
-    const totalSavings = totals.savings + totals.allocations - totals.withdrawals;
+    const totalSavings = totals.savings + totals.allocations - totals.withdrawals - totals.investments;
 
     // Transaction card component - Responsive for different screen sizes
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (

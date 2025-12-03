@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import api from '../../utils/api';
@@ -6,10 +6,14 @@ import { useAuth } from '../../context/useAuth';
 import { Link } from 'react-router-dom';
 import CloseButton from './CloseButton';
 import { formatSimpleCurrency } from '../../utils/currency';
+import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
+import { FiStar, FiLock, FiTarget } from 'react-icons/fi';
+import PremiumUpgradeCard from '../groups/PremiumUpgradeCard';
 
 const SavingsGoals = () => {
     const { t } = useTranslation();
     const { subscriptionTier } = useAuth();
+    const { showPrompt } = useSmartUpgradePrompt();
     const location = useLocation();
     
     // Add CSS to fix date input styling
@@ -53,6 +57,11 @@ const SavingsGoals = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const isLimited = subscriptionTier === 'free' && goals.length >= 2;
+
+    const shouldShowPremiumCard = useMemo(
+        () => subscriptionTier === 'free' && goals.length >= 2,
+        [subscriptionTier, goals.length]
+    );
 
     const fetchGoalsAndBalance = useCallback(async () => {
         try {
@@ -170,27 +179,56 @@ const SavingsGoals = () => {
     return (
         <div className="flex-1 p-6">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-white">{t('savings_goals.title')}</h1>
-                <div className="flex items-center gap-4">
-                    {isLimited && (
-                        <Link
-                            to="/subscription"
-                            className="bg-yellow-400 text-black font-bold px-6 py-3 rounded-lg hover:bg-yellow-500 transition-colors"
-                        >
-                            {t('savings_goals.upgrade_to_add')}
-                        </Link>
+                <div className="flex items-center gap-3">
+                    <h1 className="text-3xl font-bold text-white">{t('savings_goals.title')}</h1>
+                    {goals.length > 0 && subscriptionTier === 'free' && (
+                        <div className="flex items-center gap-2 px-3 py-1 bg-[#262626] border border-[#262626] rounded-lg">
+                            <span className="text-[#C2C0B6] text-sm">
+                                {goals.length}/2
+                            </span>
+                            <span className="text-[#8B8A85] text-xs">
+                                {t('savings_goals.goals_label')}
+                            </span>
+                        </div>
                     )}
+                    {goals.length > 0 && subscriptionTier === 'premium' && (
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">
+                            <FiStar className="w-3.5 h-3.5 text-[#56a69f]" />
+                            <span className="text-[#56a69f] text-xs font-medium">
+                                {t('savings_goals.unlimited')}
+                            </span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex items-center gap-4">
                     <button 
-                        onClick={() => setIsModalOpen(true)} 
-                        className={`bg-[#56a69f] !text-[#1F1E1D] px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors font-medium ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={isLimited}
+                        onClick={() => {
+                            if (isLimited) {
+                                showPrompt('savings_goal_limit');
+                            } else {
+                                setIsModalOpen(true);
+                            }
+                        }}
+                        className="bg-[#56a69f] !text-[#1F1E1D] px-6 py-3 rounded-lg hover:bg-[#4A8F88] transition-colors font-medium flex items-center gap-2"
                     >
+                        {isLimited && <FiLock className="w-4 h-4" />}
                         {t('savings_goals.add_new_goal')}
                     </button>
                 </div>
             </div>
 
-            {isModalOpen && !isLimited && (
+            {/* Premium Upgrade Card */}
+            {shouldShowPremiumCard && (
+                <div className="mb-6">
+                    <PremiumUpgradeCard 
+                        titleKey="savings_goals.premium_unlimited_goals"
+                        buttonKey="savings_goals.upgrade_to_premium"
+                        icon={FiTarget}
+                    />
+                </div>
+            )}
+
+            {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                     <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] w-full max-w-md p-6">
                         <div className="flex items-center justify-between mb-6">

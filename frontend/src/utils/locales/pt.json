@@ -189,7 +189,11 @@
     "create_first_goal": "Crie Sua Primeira Meta",
     "view_all_goals": "Ver Todas as {{count}} Metas",
     "manage_goals": "Gerenciar Metas",
-    "upgrade_to_add": "Upgrade para adicionar mais"
+    "upgrade_to_add": "Upgrade para adicionar mais",
+    "goals_label": "metas",
+    "unlimited": "Ilimitado",
+    "premium_unlimited_goals": "Desbloqueie Metas de Poupança Ilimitadas",
+    "upgrade_to_premium": "Atualizar para Premium"
   },
   "expenseList": {
     "confirm_delete": "Tem certeza que deseja excluir esta despesa?",
@@ -348,6 +352,10 @@
     "unknown_category": "Categoria Desconhecida",
     "add_success": "Orçamento adicionado com sucesso",
     "add_error": "Falha ao adicionar orçamento",
+    "budgets_label": "orçamentos",
+    "unlimited": "Ilimitado",
+    "premium_unlimited_budgets": "Desbloqueie Orçamentos Ilimitados",
+    "upgrade_to_premium": "Atualizar para Premium",
     "update_success": "Orçamento atualizado com sucesso",
     "update_error": "Falha ao atualizar orçamento",
     "delete_success": "Orçamento excluído com sucesso",
@@ -513,6 +521,72 @@
       "feature_export_desc": "Exporte seus dados e acesse insights financeiros avançados",
       "explore": "Explorar"
     },
+    "trial": {
+      "hero_title": "Experimente Premium Grátis por 7 Dias",
+      "hero_subtitle": "Desbloqueie todos os recursos premium sem compromisso.",
+      "no_credit_card": "Sem cartão de crédito",
+      "cancel_anytime": "Cancele a qualquer momento",
+      "start_trial_button": "Começar Teste Grátis",
+      "trial_benefit_1": "IA ilimitada para análise financeira",
+      "trial_benefit_2": "Orçamentos e metas sem limites",
+      "trial_benefit_3": "Categorização inteligente automática",
+      "trial_benefit_4": "Exportação completa de dados",
+      "limited_time": "Oferta por Tempo Limitado",
+      "join_users": "Junte-se a mais de 10.000 usuários"
+    },
+    "testimonials": {
+      "title": "O Que Nossos Usuários Dizem",
+      "testimonial_1_name": "Ana Silva",
+      "testimonial_1_role": "Freelancer",
+      "testimonial_1_text": "Economizei R$500 no primeiro mês ao identificar assinaturas desnecessárias!",
+      "testimonial_1_savings": "R$500 economizados",
+      "testimonial_2_name": "Carlos Santos",
+      "testimonial_2_role": "Empreendedor",
+      "testimonial_2_text": "A categorização por IA economiza pelo menos 2 horas por semana. Impagável!",
+      "testimonial_2_savings": "2h/semana economizadas",
+      "testimonial_3_name": "Marina Oliveira",
+      "testimonial_3_role": "Professora",
+      "testimonial_3_text": "Finalmente consegui controlar meu orçamento. O aplicativo é intuitivo e poderoso!",
+      "testimonial_3_savings": "100% organizada"
+    },
+    "comparison": {
+      "title": "Compare os Planos",
+      "feature_ai_messages": "Mensagens com IA",
+      "feature_budgets_goals": "Orçamentos & Metas",
+      "feature_smart_categorization": "Categorização Inteligente",
+      "feature_export": "Exportar Dados",
+      "feature_cash_flow": "Calendário de Fluxo de Caixa",
+      "feature_investment_calc": "Calculadora de Investimentos",
+      "feature_priority_support": "Suporte Prioritário",
+      "feature_advanced_analytics": "Análises Avançadas",
+      "feature_group_expenses": "Divisão de Despesas",
+      "feature_custom_categories": "Categorias Personalizadas",
+      "free_limited": "Limitado",
+      "premium_unlimited": "Ilimitado",
+      "free_basic": "Básico",
+      "premium_advanced": "Avançado",
+      "not_included": "Não incluído",
+      "included": "Incluído"
+    },
+    "premium_dashboard": {
+      "title": "Painel Premium",
+      "subscription_status": "Status da Assinatura",
+      "active": "Ativo",
+      "next_billing": "Próxima Cobrança",
+      "amount": "Valor",
+      "per_month": "/mês",
+      "usage_stats": "Estatísticas de Uso",
+      "budgets_created": "Orçamentos Criados",
+      "goals_created": "Metas de Economia Criadas",
+      "ai_messages_used": "Mensagens com IA Usadas",
+      "transactions_recorded": "Transações Registradas",
+      "current_period": "Período Atual",
+      "manage_billing": "Gerenciar Cobrança",
+      "view_invoices": "Ver Faturas",
+      "loading": "Carregando estatísticas...",
+      "unlimited": "Ilimitado",
+      "this_month": "este mês"
+    },
     "cancel_subscription": "Cancelar assinatura",
     "cta": {
       "ready_to_upgrade": "Pronto para aprimorar suas finanças?",
@@ -520,7 +594,9 @@
       "price_per_month": "por mês",
       "upgrade_button": "Atualizar para Premium",
       "processing": "Processando...",
-      "cancel_anytime": "Cancele a qualquer momento. Sem taxas ocultas."
+      "cancel_anytime": "Cancele a qualquer momento. Sem taxas ocultas.",
+      "secure_payment": "Pagamento 100% Seguro",
+      "money_back": "Garantia de Reembolso"
     },
     "support": {
       "have_questions": "Tem dúvidas? Entre em contato em",
@@ -583,6 +659,7 @@
     "welcome_back": "Bem-vindo de volta",
     "user": "Usuário",
     "welcome_subtitle": "Aqui está sua visão geral financeira para hoje",
+    "demo_subtitle": "Explore todas as funcionalidades do Monity com dados de demonstração",
     "quick_actions": "Ações Rápidas",
     "quick_actions_desc": "Tarefas comuns ao seu alcance",
     "common_tasks": "Tarefas comuns ao seu alcance",
@@ -600,6 +677,14 @@
     "balance": "Seu Saldo",
     "expenses": "Despesas Totais",
     "savings": "Poupança"
+  },
+  "demo": {
+    "mode_active": "Modo Demonstração",
+    "ready_to_start": "Pronto para começar?",
+    "signup_message": "Crie sua conta gratuita e comece a gerenciar suas finanças hoje",
+    "impressed": "Gostou do que viu?",
+    "full_features": "Crie sua conta gratuita agora e tenha acesso a todas essas funcionalidades com seus dados reais",
+    "create_free_account": "Criar Conta Gratuita"
   },
   "quickActions": {
     "add_expense": "Adicionar Despesa",
@@ -1330,7 +1415,11 @@
     "input_placeholder_limit": "Limite diário atingido",
     "send_button": "Enviar",
     "error_daily_limit": "Limite diário atingido. Atualize para premium para mensagens ilimitadas.",
-    "error_send_failed": "Falha ao enviar mensagem. Por favor, tente novamente."
+    "error_send_failed": "Falha ao enviar mensagem. Por favor, tente novamente.",
+    "messages_today": "hoje",
+    "unlimited": "Ilimitado",
+    "premium_unlimited_messages": "Desbloqueie Mensagens de IA Ilimitadas",
+    "upgrade_to_premium": "Atualizar para Premium"
   },
   "investmentCalculator": {
     "title": "Calculadora de Investimentos",
@@ -1364,7 +1453,11 @@
     "noDataToDisplay": "Sem dados para exibir",
     "totalValue": "Valor Total",
     "contributions": "Contribuições",
-    "interest": "Juros Ganhos"
+    "interest": "Juros Ganhos",
+    "simulations_label": "simulações",
+    "unlimited": "Ilimitado",
+    "premium_unlimited_simulations": "Desbloqueie Simulações de Investimento Ilimitadas",
+    "upgrade_to_premium": "Atualizar para Premium"
   },
   "groupsInfo": {
     "hero": {
@@ -1482,38 +1575,38 @@
     "afternoon": {
       "joyful": "Boa tarde feliz, {{name}}! Uhul!",
       "calm": "Paz de tarde esteja com você, {{name}}",
-      "hopeful": "Termine forte, {{name}}! Boa tarde",
+      "hopeful": "Termine forte, {{name}}! Boa tarde!",
       "curious": "Como está indo o dia, {{name}}?",
-      "warm": "Olá caloroso de tarde, {{name}}",
-      "formal": "Saudações nesta tarde, {{name}}",
-      "relaxed": "Hora de relaxar, {{name}}. Paz da tarde",
-      "energetic": "Continue forte, {{name}}. Você consegue",
-      "thoughtful": "Lembre-se do seu objetivo, {{name}}. Olá",
-      "playful": "Hora de um lanche, {{name}}. Oi"
+      "warm": "Olá caloroso de tarde, {{name}}!",
+      "formal": "Saudações nesta tarde, {{name}}!",
+      "relaxed": "Hora de relaxar, {{name}}. Paz da tarde!",
+      "energetic": "Continue forte, {{name}}. Você consegue!",
+      "thoughtful": "Lembre-se do seu objetivo, {{name}}. Olá!",
+      "playful": "Hora de um lanche, {{name}}. Oi!"
     },
     "night": {
       "joyful": "Sonhe grande, {{name}}. Boa noite!",
-      "calm": "Sono tranquilo esta noite, {{name}}",
-      "hopeful": "Descanse para o amanhã, {{name}}",
+      "calm": "Sono tranquilo esta noite, {{name}}!",
+      "hopeful": "Descanse para o amanhã, {{name}}!",
       "curious": "O que você conquistou hoje, {{name}}?",
-      "warm": "Pensamentos aconchegantes da noite, {{name}}",
-      "formal": "Desejando um bom descanso, {{name}}",
-      "relaxed": "Hora de relaxar, {{name}}. Boa noite",
-      "energetic": "Recarregue rápido, {{name}}. Até mais",
-      "thoughtful": "Reflita sobre seu dia, {{name}}",
+      "warm": "Pensamentos aconchegantes da noite, {{name}}!",
+      "formal": "Desejando um bom descanso, {{name}}!",
+      "relaxed": "Hora de relaxar, {{name}}. Boa noite!",
+      "energetic": "Recarregue rápido, {{name}}. Até mais!",
+      "thoughtful": "Reflita sobre seu dia, {{name}}!",
       "playful": "Não deixe os percevejos te morderem, {{name}}!"
     },
     "dawn": {
-      "joyful": "Saudações de coruja da noite, {{name}}",
-      "calm": "Paz das horas quietas, {{name}}",
-      "hopeful": "Nova alvorada está chegando, {{name}}",
+      "joyful": "Saudações de coruja da noite, {{name}}!",
+      "calm": "Paz das horas quietas, {{name}}!",
+      "hopeful": "Nova alvorada está chegando, {{name}}!",
       "curious": "Ainda acordado, {{name}}? O que está rolando?",
-      "warm": "Pensando em você, noite adentro, {{name}}",
-      "formal": "Saudações na virada, {{name}}",
-      "relaxed": "Aproveite o silêncio profundo, {{name}}",
-      "energetic": "Modo foco noturno, {{name}}",
-      "thoughtful": "Clareza no escuro, {{name}}",
-      "playful": "Olá secreto da meia-noite, {{name}}"
+      "warm": "Pensando em você, noite adentro, {{name}}!",
+      "formal": "Saudações na virada, {{name}}!",
+      "relaxed": "Aproveite o silêncio profundo, {{name}}!",
+      "energetic": "Modo foco noturno, {{name}}!",
+      "thoughtful": "Clareza no escuro, {{name}}!",
+      "playful": "Olá secreto da meia-noite, {{name}}!"
     }
   }
 } 

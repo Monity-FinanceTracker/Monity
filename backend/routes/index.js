@@ -11,6 +11,7 @@ const savingsGoalsRoutes = require("./savingsGoals");
 const adminRoutes = require("./admin");
 const aiRoutes = require("./ai");
 const aiChatRoutes = require("./aiChat");
+const subscriptionTierRoutes = require("./subscriptionTier");
 const subscriptionRoutes = require("./subscription");
 const balanceRoutes = require("./balance");
 const invitationRoutes = require("./invitations");
@@ -22,6 +23,9 @@ const cashFlowRoutes = require("./cashFlow");
 const investmentCalculatorRoutes = require("./investmentCalculator");
 const analyticsRoutes = require("./analytics");
 const recurringTransactionsRoutes = require("./recurringTransactions");
+const onboardingRoutes = require("./onboarding");
+const featuresRoutes = require("./features");
+const premiumRoutes = require("./premium");
 
 module.exports = (controllers, middleware) => {
   // Version 1 of the API
@@ -82,6 +86,11 @@ module.exports = (controllers, middleware) => {
   v1Router.use(
     "/subscription-tier",
     middleware.auth.authenticate,
+    subscriptionTierRoutes(controllers)
+  );
+  v1Router.use(
+    "/subscription",
+    middleware.auth.authenticate,
     subscriptionRoutes(controllers)
   );
   v1Router.use(
@@ -124,6 +133,21 @@ module.exports = (controllers, middleware) => {
     "/recurring-transactions",
     middleware.auth.authenticate,
     recurringTransactionsRoutes(controllers)
+  );
+  v1Router.use(
+    "/onboarding",
+    middleware.auth.authenticate,
+    onboardingRoutes(controllers)
+  );
+  v1Router.use(
+    "/features",
+    middleware.auth.authenticate,
+    featuresRoutes(controllers)
+  );
+  v1Router.use(
+    "/premium",
+    middleware.auth.authenticate,
+    premiumRoutes(controllers, middleware)
   );
 
   // Analytics routes - mixed public/admin (auth handled per-route)
