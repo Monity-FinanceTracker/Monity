@@ -3,12 +3,14 @@ const SavingsGoal = require('../models/SavingsGoal');
 const { logger } = require('../utils/logger');
 const { invalidateUserBalance } = require('../services/balanceCache');
 const DataExportService = require('../services/dataExportService');
+const ReferralService = require('../services/referralService');
 
 class TransactionController {
     constructor() {
         const { supabaseAdmin } = require('../config/supabase');
         this.supabase = supabaseAdmin;
         this.dataExportService = new DataExportService(supabaseAdmin);
+        this.referralService = new ReferralService(supabaseAdmin);
     }
 
     /**
@@ -172,6 +174,12 @@ class TransactionController {
                 }).catch(err => logger.error('Failed to update onboarding checklist', { error: err.message }));
             }
 
+            // Qualify referral if user was referred (first transaction trigger)
+            // This is done asynchronously and should not block the response
+            this.qualifyReferralIfNeeded(userId).catch(err =>
+                logger.error('Failed to qualify referral', { userId, error: err.message })
+            );
+
             res.status(201).json(createdTransaction);
         } catch (error) {
             logger.error('Failed to create transaction', { userId, error: error.message });
@@ -331,10 +339,70 @@ class TransactionController {
                 });
             }
 
-            res.status(500).json({ 
+            res.status(500).json({
                 error: 'Internal Server Error during transaction export',
-                message: error.message 
+                message: error.message
             });
+        }
+    }
+
+    /**
+     * Helper method to qualify referral when user adds first transaction
+     * @param {string} userId - User ID
+     */
+    async qualifyReferralIfNeeded(userId) {
+        try {
+            // Check if user has a pending referral (was referred by someone)
+            const { data: profile, error: profileError } = await this.supabase
+                .from('profiles')
+                .select('referred_by_code')
+                .eq('id', userId)
+                .single();
+
+            if (profileError) {
+                logger.debug('Could not fetch user profile for referral check', {
+                    userId,
+                    error: profileError.message
+                });
+                return;
+            }
+
+            // If user was not referred, nothing to do
+            if (!profile || !profile.referred_by_code) {
+                logger.debug('User was not referred, skipping referral qualification', { userId });
+                return;
+            }
+
+            logger.info('User was referred, attempting to qualify referral', {
+                userId,
+                referralCode: profile.referred_by_code
+            });
+
+            // Qualify the referral (this will grant rewards to referrer)
+            const result = await this.referralService.qualifyReferral(userId);
+
+            if (result.success) {
+                logger.info('Referral qualified successfully', {
+                    userId,
+                    referralId: result.referralId,
+                    rewardTier: result.rewardTier,
+                    rewardDays: result.rewardDays
+                });
+            } else {
+                logger.info('Referral not qualified', {
+                    userId,
+                    reason: result.reason,
+                    qualified: result.qualified || false
+                });
+            }
+
+        } catch (error) {
+            logger.error('Error qualifying referral', {
+                userId,
+                error: error.message,
+                stack: error.stack
+            });
+            // Don't throw - we don't want to fail transaction creation if referral fails
         }
     }
 }

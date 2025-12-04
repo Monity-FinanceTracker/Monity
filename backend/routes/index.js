@@ -26,6 +26,7 @@ const recurringTransactionsRoutes = require("./recurringTransactions");
 const onboardingRoutes = require("./onboarding");
 const featuresRoutes = require("./features");
 const premiumRoutes = require("./premium");
+const referralRoutes = require("./referrals");
 
 module.exports = (controllers, middleware) => {
   // Version 1 of the API
@@ -148,6 +149,17 @@ module.exports = (controllers, middleware) => {
     "/premium",
     middleware.auth.authenticate,
     premiumRoutes(controllers, middleware)
+  );
+  v1Router.use(
+    "/referrals",
+    middleware.auth.authenticate,
+    referralRoutes(controllers)
+  );
+
+  // Public referral code validation (used during signup)
+  v1Router.post(
+    "/referrals/validate-code-public",
+    (req, res) => controllers.referralController.validateCode(req, res)
   );
 
   // Analytics routes - mixed public/admin (auth handled per-route)

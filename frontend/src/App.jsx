@@ -27,6 +27,7 @@ import {
   UnifiedTopBar,
   NotificationProvider
 } from './components';
+import EarnedPremiumExpiryBanner from './components/premium/EarnedPremiumExpiryBanner';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import ConfigCheck from './components/ui/ConfigCheck';
 import Privace from './components/privace';
@@ -50,6 +51,7 @@ const AcceptInvitationPage = lazy(() => import('./components/groups/AcceptInvita
 const WhatsNewPage = lazy(() => import('./components/whatsNew/WhatsNewPage'));
 const AnalyticsDashboard = lazy(() => import('./components/admin/AnalyticsDashboard'));
 const DemoDashboard = lazy(() => import('./pages/DemoDashboard'));
+const ReferralDashboard = lazy(() => import('./components/referrals/ReferralDashboard'));
 
 // Import lazy components with optimized loading
 import {
@@ -269,11 +271,14 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
       <div className={`flex-1 flex flex-col transition-all duration-300 sidebar-transition ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-72'} relative ${isWhatsNewPage ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
         {/* Top navigation bar */}
         <div className={isUnauthenticated ? 'pointer-events-none opacity-60' : ''}>
-          <UnifiedTopBar 
+          <UnifiedTopBar
             isMobileMenuOpen={isMobileMenuOpen}
             onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           />
         </div>
+
+        {/* Earned Premium Expiry Banner - Shows for FREE users with expiring earned premium */}
+        {!isUnauthenticated && <EarnedPremiumExpiryBanner />}
 
         {/* Main content */}
         <main
@@ -356,6 +361,7 @@ const App = React.memo(() => {
         <Route path="/budgets" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ViewOnlyRoute>} />
         <Route path="/subscription" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Subscription /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/subscription/success" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><ThankYouPage /></Suspense></MainLayout></ProtectedRoute>} />
+        <Route path="/referrals" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><ReferralDashboard /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/savings-goals" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><SavingsGoals /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/savings" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Savings /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/financial-health" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ViewOnlyRoute>} />

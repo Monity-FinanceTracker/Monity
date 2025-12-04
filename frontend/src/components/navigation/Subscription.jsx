@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/useAuth";
 import {
   FiCheck, FiZap, FiMessageSquare, FiTrendingUp, FiTarget, FiPieChart,
-  FiLock, FiStar, FiCalendar, FiX, FiClock, FiUsers, FiShield, FiAward
+  FiLock, FiStar, FiCalendar, FiX, FiClock, FiUsers, FiShield, FiAward, FiPause, FiGift
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import api from "../../utils/api";
@@ -197,6 +197,31 @@ const Subscription = () => {
                     {t('subscription.premium_dashboard.active')}
                   </span>
                 </div>
+
+                {/* Paused Billing Status - Shows if user earned referral days */}
+                {!loadingStats && usageStats?.billing_paused_until && new Date(usageStats.billing_paused_until) > new Date() && (
+                  <div className="bg-[#56a69f]/10 border border-[#56a69f]/30 rounded-lg p-4 space-y-2">
+                    <div className="flex items-center gap-2 text-[#56a69f]">
+                      <FiPause className="w-5 h-5" />
+                      <span className="font-semibold">Cobrança Pausada</span>
+                    </div>
+                    <p className="text-sm text-[#C2C0B6]">
+                      Sua cobrança está pausada até{' '}
+                      <span className="text-white font-semibold">
+                        {new Date(usageStats.billing_paused_until).toLocaleDateString('pt-BR')}
+                      </span>
+                      {' '}graças aos seus amigos indicados!
+                    </p>
+                    {usageStats.premium_days_earned > 0 && (
+                      <div className="flex items-center gap-2 text-[#56a69f] text-sm">
+                        <FiGift className="w-4 h-4" />
+                        <span>
+                          Você economizou R${(usageStats.premium_days_earned * 0.33).toFixed(2)} convidando amigos
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {!loadingStats && usageStats?.next_billing_date && (
                   <>

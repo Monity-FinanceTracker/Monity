@@ -64,10 +64,10 @@ class SubscriptionController {
         console.error('Error fetching transactions count:', transactionsError);
       }
 
-      // Get user profile for subscription details
+      // Get user profile for subscription details (including referral billing pause info)
       const { data: profile, error: profileError } = await supabaseAdmin
         .from('profiles')
-        .select('subscription_tier, subscription_status, current_period_end')
+        .select('subscription_tier, subscription_status, current_period_end, billing_paused_until, premium_days_earned')
         .eq('id', userId)
         .single();
 
@@ -86,7 +86,9 @@ class SubscriptionController {
           current_period_end: currentPeriodEnd.toISOString(),
           subscription_tier: profile?.subscription_tier || 'free',
           subscription_status: profile?.subscription_status || 'inactive',
-          next_billing_date: profile?.current_period_end || null
+          next_billing_date: profile?.current_period_end || null,
+          billing_paused_until: profile?.billing_paused_until || null,
+          premium_days_earned: profile?.premium_days_earned || 0
         }
       });
     } catch (error) {
