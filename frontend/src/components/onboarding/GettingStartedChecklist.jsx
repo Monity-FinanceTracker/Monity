@@ -39,6 +39,7 @@ const GettingStartedChecklist = ({ userId }) => {
       description: 'Bem-vindo! Sua conta foi criada com sucesso.',
       icon: <FaCheckCircle className="text-[#56a69f]" />,
       autoComplete: true, // This is auto-completed on signup
+      autoDetect: true, // Automatically detected
       link: null
     },
     {
@@ -46,6 +47,7 @@ const GettingStartedChecklist = ({ userId }) => {
       label: 'Adicionar primeira transação',
       description: 'Registre seu primeiro gasto ou receita',
       icon: <FaPlus className="text-[#56a69f]" />,
+      autoDetect: true, // Automatically detected
       link: '/add-expense'
     },
     {
@@ -53,6 +55,7 @@ const GettingStartedChecklist = ({ userId }) => {
       label: 'Criar um orçamento',
       description: 'Defina limites para suas categorias de gastos',
       icon: <FaChartPie className="text-[#56a69f]" />,
+      autoDetect: true, // Automatically detected
       link: '/budgets'
     },
     {
@@ -60,6 +63,7 @@ const GettingStartedChecklist = ({ userId }) => {
       label: 'Definir meta de economia',
       description: 'Estabeleça objetivos financeiros e acompanhe progresso',
       icon: <FaPiggyBank className="text-[#56a69f]" />,
+      autoDetect: true, // Automatically detected
       link: '/savings-goals'
     },
     {
@@ -67,13 +71,15 @@ const GettingStartedChecklist = ({ userId }) => {
       label: 'Explorar categorização IA',
       description: 'Veja como a IA organiza suas transações automaticamente',
       icon: <FaRobot className="text-[#56a69f]" />,
-      link: '/ai-assistant'
+      autoDetect: true, // Automatically detected
+      link: '/add-expense'
     },
     {
       id: 'invite_to_group',
       label: 'Criar ou participar de grupo',
       description: 'Compartilhe despesas com família ou amigos',
       icon: <FaUsers className="text-[#56a69f]" />,
+      autoDetect: true, // Automatically detected
       link: '/groups'
     },
     {
@@ -81,44 +87,10 @@ const GettingStartedChecklist = ({ userId }) => {
       label: 'Baixar relatório',
       description: 'Exporte suas transações para análise',
       icon: <FaFileDownload className="text-[#56a69f]" />,
+      autoDetect: false, // Manual - user must mark this
       link: '/transactions'
     }
   ];
-
-  // Fetch checklist progress from backend
-  useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const response = await api.get('/onboarding/progress');
-        const data = response.data;
-        
-        setChecklistData(data.data.checklist_progress || {});
-
-        // Auto-complete create_account if not set
-        if (!data.data.checklist_progress?.create_account) {
-          await updateChecklistItem('create_account', true);
-        }
-      } catch (error) {
-        console.error('Error fetching checklist progress:', error);
-        setChecklistData({});
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Check if user has dismissed the checklist
-    const dismissed = localStorage.getItem('monity_checklist_dismissed');
-    if (dismissed === 'true') {
-      setIsDismissed(true);
-      return;
-    }
-
-    // Check if collapsed preference is saved
-    const collapsed = localStorage.getItem('monity_checklist_collapsed');
-    setIsCollapsed(collapsed === 'true');
-
-    fetchProgress();
-  }, [userId]);
 
   // Update a checklist item
   const updateChecklistItem = async (itemId, completed) => {
@@ -154,10 +126,70 @@ const GettingStartedChecklist = ({ userId }) => {
     }
   };
 
-  // Toggle checklist item
+  // Fetch checklist progress from backend
+  const fetchProgress = async () => {
+    try {
+      const response = await api.get('/onboarding/progress');
+      const data = response.data;
+      
+      setChecklistData(data.data.checklist_progress || {});
+
+      // Auto-complete create_account if not set
+      if (!data.data.checklist_progress?.create_account) {
+        await updateChecklistItem('create_account', true);
+      }
+    } catch (error) {
+      console.error('Error fetching checklist progress:', error);
+      setChecklistData({});
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Check if user has dismissed the checklist
+    const dismissed = localStorage.getItem('monity_checklist_dismissed');
+    if (dismissed === 'true') {
+      setIsDismissed(true);
+      return;
+    }
+
+    // Check if collapsed preference is saved
+    const collapsed = localStorage.getItem('monity_checklist_collapsed');
+    setIsCollapsed(collapsed === 'true');
+
+    fetchProgress();
+
+    // Set up periodic refresh (every 30 seconds)
+    const refreshInterval = setInterval(() => {
+      fetchProgress();
+    }, 30000);
+
+    // Refresh when page becomes visible (user returns to tab)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchProgress();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      clearInterval(refreshInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [userId]);
+
+  // Toggle checklist item (only for manual items)
   const handleToggleItem = (itemId, currentState) => {
     // Don't allow unchecking create_account
     if (itemId === 'create_account') return;
+
+    // Don't allow toggling auto-detectable items
+    const item = checklistItems.find(i => i.id === itemId);
+    if (item && item.autoDetect) {
+      return; // Auto-detectable items cannot be manually toggled
+    }
 
     const newState = !currentState;
     updateChecklistItem(itemId, newState);
@@ -311,13 +343,15 @@ const GettingStartedChecklist = ({ userId }) => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (!isAutoComplete) {
+                          // Only allow manual toggle for non-auto-detectable items
+                          if (!isAutoComplete && !item.autoDetect) {
                             handleToggleItem(item.id, isCompleted);
                           }
                         }}
                         className={`flex-shrink-0 mt-0.5 ${
-                          isAutoComplete ? 'cursor-default' : 'cursor-pointer'
+                          (isAutoComplete || item.autoDetect) ? 'cursor-default' : 'cursor-pointer'
                         }`}
+                        title={item.autoDetect ? 'Completado automaticamente' : undefined}
                       >
                         {isCompleted ? (
                           <FaCheckCircle className="text-[#56a69f] text-xl" />

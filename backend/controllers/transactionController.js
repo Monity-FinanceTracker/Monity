@@ -2,8 +2,96 @@ const { Transaction } = require('../models');
 const SavingsGoal = require('../models/SavingsGoal');
 const { logger } = require('../utils/logger');
 const { invalidateUserBalance } = require('../services/balanceCache');
+const DataExportService = require('../services/dataExportService');
 
 class TransactionController {
+    constructor() {
+        const { supabaseAdmin } = require('../config/supabase');
+        this.supabase = supabaseAdmin;
+        this.dataExportService = new DataExportService(supabaseAdmin);
+    }
+
+    /**
+     * Helper method to update onboarding checklist progress
+     * @param {string} userId - User ID
+     * @param {Object} items - Object with checklist items to mark as complete
+     */
+    async updateOnboardingChecklist(userId, items) {
+        try {
+            // Get current checklist progress
+            const { data: currentData, error: fetchError } = await this.supabase
+                .from('user_onboarding')
+                .select('checklist_progress')
+                .eq('user_id', userId)
+                .single();
+
+            let checklistProgress = {};
+            
+            // If record doesn't exist, create it with initial progress
+            if (fetchError && fetchError.code === 'PGRST116') {
+                // No record exists, create one with the items we want to set
+                checklistProgress = {};
+                Object.keys(items).forEach(key => {
+                    if (items[key] === true) {
+                        checklistProgress[key] = true;
+                    }
+                });
+                
+                const { error: createError } = await this.supabase
+                    .from('user_onboarding')
+                    .insert({
+                        user_id: userId,
+                        checklist_progress: checklistProgress,
+                        onboarding_completed: false,
+                        created_at: new Date().toISOString()
+                    });
+
+                if (createError) {
+                    logger.warn('Failed to create onboarding record', { userId, error: createError.message });
+                    return;
+                } else {
+                    logger.info('Created onboarding record with checklist progress', { userId, checklistProgress });
+                    return; // Already set, no need to update
+                }
+            } else if (fetchError) {
+                // Other error
+                logger.warn('Could not fetch onboarding progress', { userId, error: fetchError.message });
+                return;
+            } else {
+                // Record exists, use current progress
+                checklistProgress = currentData?.checklist_progress || {};
+            }
+            
+            // Update items
+            Object.keys(items).forEach(key => {
+                if (items[key] === true) {
+                    checklistProgress[key] = true;
+                }
+            });
+
+            // Update checklist in database
+            const { data: updateData, error: updateError } = await this.supabase
+                .from('user_onboarding')
+                .update({
+                    checklist_progress: checklistProgress
+                })
+                .eq('user_id', userId)
+                .select('checklist_progress');
+
+            if (updateError) {
+                logger.warn('Failed to update onboarding checklist', { userId, error: updateError.message, errorCode: updateError.code });
+            } else {
+                logger.info('Updated onboarding checklist successfully', { 
+                    userId, 
+                    items: Object.keys(items), 
+                    updatedProgress: updateData?.[0]?.checklist_progress || checklistProgress,
+                    download_report: checklistProgress.download_report
+                });
+            }
+        } catch (error) {
+            logger.error('Error updating onboarding checklist', { userId, error: error.message, stack: error.stack });
+        }
+    }
 
     async getAllTransactions(req, res) {
         const userId = req.user.id;
@@ -70,6 +158,18 @@ class TransactionController {
                     aiConfidence || 0.5,
                     parseFloat(amount)
                 ).catch(err => logger.error('Failed to record AI feedback', { error: err.message }));
+
+                // Mark onboarding checklist items as complete (AI categorization + first transaction)
+                // This is done asynchronously and should not block the response
+                this.updateOnboardingChecklist(userId, {
+                    add_first_transaction: true,
+                    explore_ai_categorization: true
+                }).catch(err => logger.error('Failed to update onboarding checklist', { error: err.message }));
+            } else {
+                // Mark first transaction as complete (if not already marked)
+                this.updateOnboardingChecklist(userId, {
+                    add_first_transaction: true
+                }).catch(err => logger.error('Failed to update onboarding checklist', { error: err.message }));
             }
 
             res.status(201).json(createdTransaction);
@@ -179,6 +279,62 @@ class TransactionController {
         } catch (error) {
             logger.error('Failed to delete transaction', { userId, transactionId, error: error.message });
             res.status(500).json({ error: 'Failed to delete transaction' });
+        }
+    }
+
+    async exportTransactions(req, res) {
+        const userId = req.user.id;
+        const { startDate, endDate } = req.body;
+
+        try {
+            logger.info(`Transaction export requested for user ${userId}`, { startDate, endDate });
+
+            // Export transactions as CSV
+            const csvData = await this.dataExportService.exportTransactions(userId, 'csv', {
+                startDate: startDate || null,
+                endDate: endDate || null
+            });
+
+            // Set appropriate headers for CSV download
+            const filename = `monity-transactions-${userId}-${Date.now()}.csv`;
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+            logger.info(`Transaction export completed successfully for user ${userId}`);
+
+            // Mark onboarding checklist item as complete (download_report)
+            // This is done BEFORE sending the response to ensure it executes
+            // We do it in a fire-and-forget manner but ensure it starts before response
+            this.updateOnboardingChecklist(userId, {
+                download_report: true
+            }).catch(err => {
+                logger.error('Failed to update onboarding checklist for export', { 
+                    userId, 
+                    error: err.message,
+                    stack: err.stack 
+                });
+            });
+
+            // Send CSV data after starting the checklist update
+            res.send(csvData);
+
+        } catch (error) {
+            logger.error('An unexpected error occurred during transaction export', {
+                userId,
+                error: error.message
+            });
+
+            // Handle specific error cases
+            if (error.message.includes('No transactions found')) {
+                return res.status(404).json({ 
+                    error: 'No transactions found for the given criteria.' 
+                });
+            }
+
+            res.status(500).json({ 
+                error: 'Internal Server Error during transaction export',
+                message: error.message 
+            });
         }
     }
 }

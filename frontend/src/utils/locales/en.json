@@ -905,7 +905,13 @@
     "confirm_bulk_delete": "Are you sure you want to delete {{count}} transactions?",
     "bulk_delete_failed": "Failed to delete some transactions",
     "delete": "Delete",
-    "error": "Error"
+    "error": "Error",
+    "export_csv": "Export CSV",
+    "exporting": "Exporting...",
+    "export_success": "Transactions exported successfully!",
+    "export_failed": "Failed to export transactions. Please try again.",
+    "export_no_data": "No transactions found for the selected date range.",
+    "export_premium_required": "Premium feature - Upgrade to export transactions"
   },
   "notifications": {
     "success": "Success",

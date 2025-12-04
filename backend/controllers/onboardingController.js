@@ -6,6 +6,108 @@ const { supabaseAdmin } = require('../config/supabase');
  */
 
 /**
+ * Check actual completion status by querying user data
+ * @param {string} userId - User ID
+ * @returns {Promise<Object>} Actual completion status for each checklist item
+ */
+async function checkActualCompletionStatus(userId) {
+  const actualStatus = {
+    create_account: true, // Always true if user exists
+    add_first_transaction: false,
+    set_up_budget: false,
+    create_savings_goal: false,
+    explore_ai_categorization: false,
+    invite_to_group: false,
+    download_report: false // Manual - keep as false, user must mark manually
+  };
+
+  try {
+    // Check if user has any transactions
+    const { data: transactions, error: transactionsError } = await supabaseAdmin
+      .from('transactions')
+      .select('id')
+      .eq('userId', userId)
+      .limit(1);
+
+    if (!transactionsError && transactions && transactions.length > 0) {
+      actualStatus.add_first_transaction = true;
+    }
+
+    // Check if user has any budgets
+    const { data: budgets, error: budgetsError } = await supabaseAdmin
+      .from('budgets')
+      .select('id')
+      .eq('userId', userId)
+      .limit(1);
+
+    if (!budgetsError && budgets && budgets.length > 0) {
+      actualStatus.set_up_budget = true;
+    }
+
+    // Check if user has any savings goals
+    const { data: savingsGoals, error: savingsGoalsError } = await supabaseAdmin
+      .from('savings_goals')
+      .select('id')
+      .eq('user_id', userId)
+      .limit(1);
+
+    if (!savingsGoalsError && savingsGoals && savingsGoals.length > 0) {
+      actualStatus.create_savings_goal = true;
+    }
+
+    // Check if user has used AI categorization (categorization_feedback table)
+    const { data: aiCategorization, error: aiCategorizationError } = await supabaseAdmin
+      .from('categorization_feedback')
+      .select('id')
+      .eq('user_id', userId)
+      .limit(1);
+
+    if (!aiCategorizationError && aiCategorization && aiCategorization.length > 0) {
+      actualStatus.explore_ai_categorization = true;
+    } else {
+      // Fallback: Check if user has used AI chat messages
+      const { data: aiMessages, error: aiMessagesError } = await supabaseAdmin
+        .from('ai_chat_messages')
+        .select('id')
+        .eq('userId', userId)
+        .limit(1);
+
+      if (!aiMessagesError && aiMessages && aiMessages.length > 0) {
+        actualStatus.explore_ai_categorization = true;
+      }
+    }
+
+    // Check if user is in any groups (as member or creator)
+    const { data: groupMembers, error: groupMembersError } = await supabaseAdmin
+      .from('group_members')
+      .select('group_id')
+      .eq('user_id', userId)
+      .limit(1);
+
+    if (!groupMembersError && groupMembers && groupMembers.length > 0) {
+      actualStatus.invite_to_group = true;
+    }
+
+    // Also check if user created any groups
+    const { data: createdGroups, error: createdGroupsError } = await supabaseAdmin
+      .from('groups')
+      .select('id')
+      .eq('created_by', userId)
+      .limit(1);
+
+    if (!createdGroupsError && createdGroups && createdGroups.length > 0) {
+      actualStatus.invite_to_group = true;
+    }
+
+  } catch (error) {
+    console.error('Error checking actual completion status:', error);
+    // Return partial status if some queries fail
+  }
+
+  return actualStatus;
+}
+
+/**
  * Get onboarding status and progress for a user
  * GET /api/onboarding/progress
  */
@@ -32,9 +134,49 @@ exports.getOnboardingProgress = async (req, res) => {
       estimated_income: null
     };
 
+    // Get actual completion status by checking user data
+    const actualStatus = await checkActualCompletionStatus(userId);
+
+    // Remove manual items from actualStatus (they should only come from stored progress)
+    const { download_report, ...autoDetectableStatus } = actualStatus;
+
+    // Merge actual status with stored progress
+    // For auto-detectable items: actual status takes precedence
+    // For manual items (like download_report): stored progress takes precedence
+    const storedProgress = onboarding.checklist_progress || {};
+    const mergedProgress = {
+      ...autoDetectableStatus, // Start with actual status (auto-detectable items only)
+      ...storedProgress // Then overlay stored progress (preserves manual items like download_report)
+    };
+
+    // Update database if there are changes (only for auto-detectable items)
+    const hasChanges = Object.keys(actualStatus).some(key => {
+      if (key === 'download_report') return false; // Don't auto-update manual items
+      return mergedProgress[key] !== storedProgress[key];
+    });
+
+    if (hasChanges) {
+      // Update the checklist progress in database
+      const { error: updateError } = await supabaseAdmin
+        .from('user_onboarding')
+        .update({
+          checklist_progress: mergedProgress
+        })
+        .eq('user_id', userId);
+
+      if (updateError) {
+        console.error('Error updating checklist progress:', updateError);
+        // Continue anyway, return merged progress
+      }
+    }
+
+    // Return merged progress
     res.json({
       success: true,
-      data: onboarding
+      data: {
+        ...onboarding,
+        checklist_progress: mergedProgress
+      }
     });
   } catch (error) {
     console.error('Error getting onboarding progress:', error);

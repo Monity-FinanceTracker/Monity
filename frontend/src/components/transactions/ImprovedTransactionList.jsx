@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
 import { del } from '../../utils/api';
+import API from '../../utils/api';
 import { queryKeys } from '../../lib/queryClient';
 import formatDate from '../../utils/formatDate';
 import { formatCurrency, formatSimpleCurrency, getAmountColor } from '../../utils/currency';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, Download } from 'lucide-react';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
@@ -15,6 +16,7 @@ import { TransactionSkeleton, Dropdown, CloseButton } from '../ui';
 import { useCategories, useUpdateTransaction } from '../../hooks/useQueries';
 import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
 import { useAuth } from '../../context/useAuth';
+import { toast } from 'react-toastify';
 
 /**
  * Calcula tamanho da fonte baseado no comprimento do valor
@@ -57,6 +59,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     // UI states
     const [selectedTransactions, setSelectedTransactions] = useState(new Set());
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
 
     // Edit states
     const [editingTransaction, setEditingTransaction] = useState(null);
@@ -595,6 +598,120 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         navigate('/add-expense');
     };
 
+    // Export transactions to CSV
+    const handleExportTransactions = async () => {
+        // Check if user is premium
+        if (subscriptionTier !== 'premium') {
+            showPrompt('export_transactions');
+            return;
+        }
+
+        setIsExporting(true);
+
+        try {
+            // Prepare date range if set
+            const exportData = {};
+            if (dateRange.start) {
+                exportData.startDate = dateRange.start;
+            }
+            if (dateRange.end) {
+                exportData.endDate = dateRange.end;
+            }
+
+            // Call export endpoint with blob response type
+            const response = await API.post('/transactions/export', exportData, {
+                responseType: 'blob', // Important for file download
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // Check if response is actually an error (JSON error might come as blob)
+            const contentType = response.headers['content-type'] || response.headers['Content-Type'] || '';
+            if (contentType.includes('application/json')) {
+                // Response is likely an error JSON, read it as text
+                const text = await response.data.text();
+                try {
+                    const errorData = JSON.parse(text);
+                    throw new Error(errorData.error || errorData.message || 'Export failed');
+                } catch (parseError) {
+                    // If parsing fails, throw original error
+                    throw new Error('Export failed');
+                }
+            }
+
+            // response.data is already a Blob when responseType is 'blob'
+            // Ensure it's properly typed as CSV
+            let blob;
+            if (response.data instanceof Blob) {
+                // If blob type is not CSV, recreate with correct type
+                if (response.data.type && !response.data.type.includes('csv') && !response.data.type.includes('text')) {
+                    blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+                } else {
+                    blob = response.data;
+                }
+            } else {
+                // Fallback: create blob from response data
+                blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+            }
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.style.display = 'none';
+            
+            // Generate filename with date range if applicable
+            const dateStr = dateRange.start && dateRange.end 
+                ? `${dateRange.start}_to_${dateRange.end}`
+                : new Date().toISOString().split('T')[0];
+            link.download = `monity-transactions-${dateStr}.csv`;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            
+            // Cleanup after a short delay to ensure download starts
+            setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+
+            toast.success(t('transactions.export_success') || 'Transactions exported successfully!');
+            
+            // Mark onboarding checklist item as complete (download_report)
+            // This is done asynchronously and should not block the UI
+            try {
+                const checklistResponse = await API.post('/onboarding/checklist', {
+                    item: 'download_report',
+                    completed: true
+                });
+                console.log('Checklist updated successfully:', checklistResponse.data);
+            } catch (checklistError) {
+                // Log error for debugging
+                console.error('Failed to update onboarding checklist:', checklistError);
+                console.error('Error details:', {
+                    message: checklistError.message,
+                    response: checklistError.response?.data,
+                    status: checklistError.response?.status
+                });
+            }
+        } catch (error) {
+            console.error('Export failed:', error);
+            
+            // Handle premium error
+            if (error.response?.status === 403) {
+                showPrompt('export_transactions');
+            } else if (error.response?.status === 404) {
+                toast.error(t('transactions.export_no_data') || 'No transactions found for the selected date range.');
+            } else {
+                toast.error(t('transactions.export_failed') || 'Failed to export transactions. Please try again.');
+            }
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
 
     if (loading) {
         return (
@@ -725,6 +842,30 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         >
                             <Icon name="Filter" size="sm" />
                             <span>{t('transactions.filters')}</span>
+                        </button>
+
+                        {/* Export CSV Button - Premium only */}
+                        <button
+                            onClick={handleExportTransactions}
+                            disabled={isExporting || subscriptionTier !== 'premium'}
+                            className={`border rounded-lg px-3 py-2 transition-colors flex items-center justify-center gap-2 w-full md:w-auto flex-shrink-0 ${
+                                subscriptionTier === 'premium'
+                                    ? 'bg-[#56a69f] border-[#56a69f] text-white hover:bg-[#4a8f88] hover:border-[#4a8f88] disabled:opacity-50 disabled:cursor-not-allowed'
+                                    : 'bg-[#262626] border-[#262626] text-[#C2C0B6] hover:border-[#56a69f]/50 cursor-pointer'
+                            }`}
+                            title={subscriptionTier !== 'premium' ? t('transactions.export_premium_required') || 'Premium feature' : t('transactions.export_csv') || 'Export to CSV'}
+                        >
+                            {isExporting ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    <span>{t('transactions.exporting') || 'Exporting...'}</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Download className="w-4 h-4" />
+                                    <span>{t('transactions.export_csv') || 'Export CSV'}</span>
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>

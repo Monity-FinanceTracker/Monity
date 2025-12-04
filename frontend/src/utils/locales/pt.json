@@ -674,7 +674,13 @@
     "confirm_bulk_delete": "Tem certeza que deseja excluir {{count}} transações?",
     "bulk_delete_failed": "Falha ao excluir algumas transações",
     "delete": "Excluir",
-    "error": "Erro"
+    "error": "Erro",
+    "export_csv": "Exportar CSV",
+    "exporting": "Exportando...",
+    "export_success": "Transações exportadas com sucesso!",
+    "export_failed": "Falha ao exportar transações. Por favor, tente novamente.",
+    "export_no_data": "Nenhuma transação encontrada para o período selecionado.",
+    "export_premium_required": "Recurso Premium - Faça upgrade para exportar transações"
   },
   "dashboard": {
     "welcome_back": "Bem-vindo de volta",

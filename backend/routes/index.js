@@ -64,7 +64,7 @@ module.exports = (controllers, middleware) => {
   v1Router.use(
     "/transactions",
     middleware.auth.authenticate,
-    transactionRoutes(controllers)
+    transactionRoutes(controllers, middleware)
   );
   v1Router.use(
     "/categories",
