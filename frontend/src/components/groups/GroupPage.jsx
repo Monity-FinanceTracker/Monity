@@ -71,7 +71,7 @@ const GroupPage = () => {
         if (initialShares.length > 0 && shares.length !== initialShares.length) {
             setShares(initialShares);
         }
-    }, [initialShares]);
+    }, [initialShares, shares.length]);
 
     const handleGenerateInvitationLink = useCallback(async () => {
         setInvitationError(null);

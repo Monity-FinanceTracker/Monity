@@ -108,14 +108,21 @@ export function AuthProvider({ children }) {
     await refreshSubscription(currentUser);
   };
 
-  const signup = async (name, email, password, role = "user") => {
+  const signup = async (name, email, password, referralCode = null, role = "user") => {
     try {
-      const response = await API.post('/auth/register', {
+      const requestBody = {
         email,
         password,
         name,
         role,
-      });
+      };
+
+      // Add referral code if provided
+      if (referralCode && referralCode.trim().length > 0) {
+        requestBody.referralCode = referralCode.trim().toUpperCase();
+      }
+
+      const response = await API.post('/auth/register', requestBody);
 
       if (response.data.requiresEmailConfirmation) {
         return {

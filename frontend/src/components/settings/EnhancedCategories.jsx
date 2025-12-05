@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../ui/notificationContext';
 import { del } from '../../utils/api';
-import { useCategories, useAddCategory, useTransactions } from '../../hooks/useQueries';
+import { useCategories, useAddCategory, useUpdateCategory, useTransactions } from '../../hooks/useQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../../lib/queryClient';
 import { EmptyCategories, LoadingState } from '../ui/EmptyStates';
@@ -23,12 +23,19 @@ const EnhancedCategories = () => {
     const { data: categories = [], isLoading: loading, error } = useCategories(null, true);
     const { data: allTransactions = [] } = useTransactions();
     const addCategoryMutation = useAddCategory();
-    
+    const updateCategoryMutation = useUpdateCategory();
+
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState('all');
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [newCategory, setNewCategory] = useState({
+        name: '',
+        typeId: 1
+    });
+    const [editingCategory, setEditingCategory] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editForm, setEditForm] = useState({
         name: '',
         typeId: 1
     });
@@ -62,7 +69,7 @@ const EnhancedCategories = () => {
 
     const handleDeleteCategory = async (id) => {
         if (!window.confirm(t('categories.delete_confirm'))) return;
-        
+
         try {
             await del(`/categories/${id}`);
             // Invalidate all category queries to refetch with updated data
@@ -72,6 +79,37 @@ const EnhancedCategories = () => {
         } catch (error) {
             notifyError(error.response?.data?.message || t('categories.delete_error'));
         }
+    };
+
+    const handleEditCategory = (category) => {
+        setEditingCategory(category);
+        setEditForm({
+            name: category.name,
+            typeId: category.typeId
+        });
+        setShowEditModal(true);
+    };
+
+    const handleUpdateCategory = async (e) => {
+        e.preventDefault();
+
+        try {
+            await updateCategoryMutation.mutateAsync({
+                id: editingCategory.id,
+                categoryData: editForm
+            });
+            setShowEditModal(false);
+            setEditingCategory(null);
+            success(t('categories.edit_success'));
+        } catch (error) {
+            notifyError(error.response?.data?.message || t('categories.edit_error'));
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setShowEditModal(false);
+        setEditingCategory(null);
+        setEditForm({ name: '', typeId: 1 });
     };
 
     const filteredCategories = categories.filter(category => {
@@ -160,7 +198,7 @@ const EnhancedCategories = () => {
                             >
                                 <div className="flex items-start justify-between mb-3">
                                     <div className="flex items-center gap-3">
-                                        <div 
+                                        <div
                                             className={`w-10 h-10 rounded-full flex items-center justify-center ${bgClass}`}
                                         >
                                             <ArrowIcon className="w-5 h-5" style={{ color: iconColor }} />
@@ -169,16 +207,30 @@ const EnhancedCategories = () => {
                                             <h3 className="text-white font-medium">{category.name}</h3>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteCategory(category.id);
-                                        }}
-                                        className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                                        title={t('categories.delete')}
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEditCategory(category);
+                                            }}
+                                            className="p-2 text-[#C2C0B6] hover:text-[#56a69f] hover:bg-[#56a69f]/10 rounded-lg transition-colors"
+                                            title={t('categories.edit')}
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteCategory(category.id);
+                                            }}
+                                            className="p-2 text-[#C2C0B6] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                            title={t('categories.delete')}
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="text-[#C2C0B6] text-sm text-left">
                                     {t('categories.transaction_count', { count: category.transactionCount || 0 })}
@@ -309,6 +361,76 @@ const EnhancedCategories = () => {
                                     className="flex-1 bg-[#56A69f] text-white py-2 sm:py-3 rounded-lg hover:bg-[#4A8F88] transition-colors text-sm sm:text-base"
                                 >
                                     {t('categories.add')}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Category Modal */}
+            {showEditModal && editingCategory && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] p-4 sm:p-6 overflow-y-auto custom-scrollbar">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-bold text-white">{t('categories.edit_category')}</h2>
+                            <CloseButton onClick={handleCancelEdit} />
+                        </div>
+
+                        <form onSubmit={handleUpdateCategory} className="space-y-3 sm:space-y-4">
+                            <div>
+                                <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('categories.name')}
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.name}
+                                    onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                                    className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
+                                    placeholder={t('categories.name_placeholder')}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-300 text-sm font-medium mb-2">
+                                    {t('categories.type')}
+                                </label>
+                                <Dropdown
+                                    value={editForm.typeId}
+                                    onChange={(value) => setEditForm(prev => ({ ...prev, typeId: parseInt(value) }))}
+                                    options={categoryTypes.slice(1).map(type => ({
+                                        value: type.id,
+                                        label: type.label
+                                    }))}
+                                    placeholder={t('categories.type')}
+                                    bgColor="#232323"
+                                    menuBgColor="#232323"
+                                />
+                            </div>
+
+                            {editingCategory.typeId !== editForm.typeId && (
+                                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                                    <p className="text-yellow-400 text-sm">
+                                        <strong>{t('common.warning')}:</strong> {t('categories.type_change_warning')}
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4">
+                                <button
+                                    type="button"
+                                    onClick={handleCancelEdit}
+                                    className="flex-1 bg-gray-600 text-white py-2 sm:py-3 rounded-lg hover:bg-gray-700 transition-colors"
+                                >
+                                    {t('categories.cancel')}
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={updateCategoryMutation.isPending}
+                                    className="flex-1 bg-[#56A69f] text-white py-2 sm:py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {updateCategoryMutation.isPending ? t('common.saving') : t('categories.update')}
                                 </button>
                             </div>
                         </form>

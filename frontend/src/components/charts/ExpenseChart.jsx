@@ -11,18 +11,29 @@ import { get } from '../../utils/api';
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/useAuth";
 import { formatCurrency } from '../../utils/currency';
+import { useDemoData } from '../demo';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function ExpenseChart() {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { isDemoMode, demoData } = useDemoData();
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [viewMode, setViewMode] = useState('chart'); // 'chart' or 'list'
 
     useEffect(() => {
+        // If in demo mode, use demo data
+        if (isDemoMode && demoData) {
+            const demoExpenses = demoData.transactions.filter(t => t.typeId === 1);
+            setExpenses(demoExpenses);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
         if (!user) {
             setExpenses([]);
             setLoading(false);
@@ -35,8 +46,8 @@ function ExpenseChart() {
             setError(null);
             try {
                 const response = await get('/transactions');
-                
-                const expenseData = Array.isArray(response.data) 
+
+                const expenseData = Array.isArray(response.data)
                     ? response.data.filter(transaction => transaction.typeId === 1)
                     : [];
                 setExpenses(expenseData);
@@ -46,22 +57,22 @@ function ExpenseChart() {
                 setLoading(false);
             }
         };
-        
-        fetchExpenses();
-    }, [user]);
 
-    if (!user) {
+        fetchExpenses();
+    }, [user, isDemoMode, demoData]);
+
+    if (!user && !isDemoMode) {
         return <p className="text-center text-gray-400">{t('expenseChart.loginToView', 'Faça login para ver seus gastos por categoria.')}</p>;
     }
 
-    if(loading){
+    if(loading && !isDemoMode){
         return (
             <div className="flex items-center justify-center py-12">
                 <Spinner message={t('expenseChart.loading')} />
             </div>
         )
     }
-    if(error){
+    if(error && !isDemoMode){
         return (
             <div className="text-left">
                 <p className="text-red-400">{t('expenseChart.error', { error })}</p>
