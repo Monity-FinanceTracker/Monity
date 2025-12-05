@@ -634,7 +634,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 try {
                     const errorData = JSON.parse(text);
                     throw new Error(errorData.error || errorData.message || 'Export failed');
-                } catch (parseError) {
+                } catch {
                     // If parsing fails, throw original error
                     throw new Error('Export failed');
                 }

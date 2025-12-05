@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
@@ -11,7 +11,6 @@ import { createPortal } from 'react-dom';
 const InteractiveTour = ({ steps, onComplete, onSkip }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [targetRect, setTargetRect] = useState(null);
-  const targetRef = useRef(null);
 
   const currentStepData = steps[currentStep];
 

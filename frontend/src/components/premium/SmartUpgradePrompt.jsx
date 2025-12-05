@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { useNavigate } from 'react-router-dom';
 import {
   FaCrown,
@@ -126,27 +126,60 @@ export const SmartUpgradePrompt = ({
   const [countdown, setCountdown] = useState(7);
   const config = PROMPT_CONFIGS[promptType];
 
-  if (!config) {
-    console.error(`Unknown prompt type: ${promptType}`);
-    return null;
-  }
+  const recordPromptAction = useCallback(async (action, actionType) => {
+    try {
+      await fetch('/api/v1/premium/prompt-action', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          prompt_type: promptType,
+          action_taken: action,
+          action_type: actionType,
+          context: customData
+        })
+      });
+    } catch (error) {
+      console.error('Error recording prompt action:', error);
+    }
+  }, [promptType, customData]);
+
+  const handleDismiss = useCallback((dismissType = 'manual') => {
+    // Track dismissal
+    if (window.analytics && typeof window.analytics.track === 'function') {
+      window.analytics.track('smart_prompt_dismissed', {
+        prompt_type: promptType,
+        dismiss_type: dismissType,
+        custom_data: customData
+      });
+    }
+
+    // Record dismissal in backend (7-day snooze)
+    recordPromptAction('dismissed', dismissType);
+
+    onClose?.();
+  }, [promptType, customData, onClose, recordPromptAction]);
 
   // Auto-dismiss countdown (optional - only for non-critical prompts)
   useEffect(() => {
-    if (position !== 'center') {
-      const timer = setInterval(() => {
-        setCountdown(prev => {
-          if (prev <= 1) {
-            handleDismiss('auto');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
+    if (position === 'center') {
+      return;
     }
-  }, [position]);
+    
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          handleDismiss('auto');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [position, handleDismiss]);
 
   const handleUpgrade = (action) => {
     // Track conversion
@@ -170,42 +203,6 @@ export const SmartUpgradePrompt = ({
     onClose?.();
   };
 
-  const handleDismiss = (dismissType = 'manual') => {
-    // Track dismissal
-    if (window.analytics && typeof window.analytics.track === 'function') {
-      window.analytics.track('smart_prompt_dismissed', {
-        prompt_type: promptType,
-        dismiss_type: dismissType,
-        custom_data: customData
-      });
-    }
-
-    // Record dismissal in backend (7-day snooze)
-    recordPromptAction('dismissed', dismissType);
-
-    onClose?.();
-  };
-
-  const recordPromptAction = async (action, actionType) => {
-    try {
-      await fetch('/api/v1/premium/prompt-action', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          prompt_type: promptType,
-          action_taken: action,
-          action_type: actionType,
-          context: customData
-        })
-      });
-    } catch (error) {
-      console.error('Error recording prompt action:', error);
-    }
-  };
-
   // Position variants
   const positionClasses = {
     center: 'items-center justify-center',
@@ -218,6 +215,12 @@ export const SmartUpgradePrompt = ({
     bottom: 'max-w-lg',
     top: 'max-w-lg'
   };
+
+  // Early return must be after all hooks
+  if (!config) {
+    console.error(`Unknown prompt type: ${promptType}`);
+    return null;
+  }
 
   return (
     <motion.div

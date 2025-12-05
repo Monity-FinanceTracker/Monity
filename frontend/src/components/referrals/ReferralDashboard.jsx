@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAnalytics } from '../../hooks/useAnalytics';
 
 function ReferralDashboard() {
-    const { user } = useAuth();
     const { track } = useAnalytics();
     const [loading, setLoading] = useState(true);
     const [referralData, setReferralData] = useState(null);

@@ -46,7 +46,7 @@ const SavingsGoals = () => {
         };
     }, []);
     // React Query hooks
-    const { data: goals = [], isLoading: goalsLoading } = useSavingsGoals();
+    const { data: goals = [] } = useSavingsGoals();
     const { data: balanceData } = useBalance();
     const balance = balanceData?.balance || 0;
     const addGoalMutation = useAddSavingsGoal();

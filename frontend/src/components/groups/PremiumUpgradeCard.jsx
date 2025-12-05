@@ -5,7 +5,7 @@ import { FiStar, FiZap, FiTarget } from 'react-icons/fi';
 const PremiumUpgradeCard = ({ 
     titleKey = 'groups.premium_unlimited_groups',
     buttonKey = 'groups.upgrade_to_premium',
-    icon: CustomIcon = FiTarget
+    icon: CustomIcon = FiTarget // eslint-disable-line no-unused-vars
 }) => {
     const { t } = useTranslation();
 
