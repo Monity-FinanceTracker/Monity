@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { useGroups } from '../../hooks/useQueries';
 import GroupInvitations from './GroupInvitations';
 import GroupCard from './GroupCard';
+import PremiumUpgradeCard from './PremiumUpgradeCard';
 import { EmptyGroups, LoadingState } from '../ui/EmptyStates';
 import Dropdown from '../ui/Dropdown';
+import { FiStar, FiLock } from 'react-icons/fi';
 
 const Groups = () => {
     const { t } = useTranslation();
@@ -16,6 +18,11 @@ const Groups = () => {
     const [sortOrder, setSortOrder] = useState('asc');
 
     const isLimited = useMemo(
+        () => subscriptionTier === 'free' && groups.length >= 2,
+        [subscriptionTier, groups.length]
+    );
+
+    const shouldShowPremiumCard = useMemo(
         () => subscriptionTier === 'free' && groups.length >= 2,
         [subscriptionTier, groups.length]
     );
@@ -64,7 +71,27 @@ const Groups = () => {
     return (
         <div className="flex-1 p-6">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-white">{t('groups.title')}</h1>
+                <div className="flex items-center gap-3">
+                    <h1 className="text-3xl font-bold text-white">{t('groups.title')}</h1>
+                    {!loading && subscriptionTier === 'free' && groups.length > 0 && (
+                        <div className="flex items-center gap-2 px-3 py-1 bg-[#262626] border border-[#262626] rounded-lg">
+                            <span className="text-[#C2C0B6] text-sm">
+                                {groups.length}/2
+                            </span>
+                            <span className="text-[#8B8A85] text-xs">
+                                {t('groups.groups')}
+                            </span>
+                        </div>
+                    )}
+                    {!loading && subscriptionTier === 'premium' && groups.length > 0 && (
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">
+                            <FiStar className="w-3.5 h-3.5 text-[#56a69f]" />
+                            <span className="text-[#56a69f] text-xs font-medium">
+                                {t('groups.unlimited')}
+                            </span>
+                        </div>
+                    )}
+                </div>
                 <div className="flex items-center gap-4 flex-shrink-0">
                     {!loading && groups.length > 0 && (
                         <div className="flex items-center gap-2 flex-shrink-0">
@@ -91,26 +118,34 @@ const Groups = () => {
                             </button>
                         </div>
                     )}
-                    {isLimited && (
-                        <Link
-                            to="/subscription"
-                            className="bg-yellow-400 text-black font-bold px-5 py-2.5 rounded-lg hover:bg-yellow-500 transition-colors text-sm"
-                        >
-                            {t('groups.upgrade_to_add')}
-                        </Link>
-                    )}
                     <Link
                         to="/groups/create"
-                        className={`bg-[#56a69f] !text-[#1F1E1D] font-medium px-5 py-2.5 rounded-lg hover:bg-[#4A8F88] transition-colors text-sm ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`relative bg-[#56a69f] !text-[#1F1E1D] font-medium px-5 py-2.5 rounded-lg hover:bg-[#4A8F88] transition-colors text-sm flex items-center gap-2 ${isLimited ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={(e) => isLimited && e.preventDefault()}
+                        title={isLimited ? t('groups.premium_required_tooltip') : t('groups.create')}
                     >
+                        {isLimited && (
+                            <FiLock className="w-4 h-4" />
+                        )}
                         {t('groups.create')}
+                        {isLimited && (
+                            <span className="absolute -top-1 -right-1 bg-[#56a69f] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#1F1E1D]">
+                                <FiStar className="w-2.5 h-2.5" />
+                            </span>
+                        )}
                     </Link>
                 </div>
             </div>
 
             {/* Group Invitations */}
             <GroupInvitations />
+
+            {/* Premium Upgrade Card */}
+            {shouldShowPremiumCard && (
+                <div className="mb-6">
+                    <PremiumUpgradeCard />
+                </div>
+            )}
 
             {loading ? (
                 <div className="bg-[#1F1E1D] rounded-lg border border-[#262626] overflow-hidden">

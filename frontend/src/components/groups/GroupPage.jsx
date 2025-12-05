@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import { searchUsers } from '../../utils/api';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useTranslation } from 'react-i18next';
-import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
+import { FaChevronUp, FaChevronDown, FaCopy, FaCheck } from 'react-icons/fa6';
 import { useGroupById, useAddGroupExpense, useInviteGroupMember, useSettleExpenseShare } from '../../hooks/useQueries';
+import { removeGroupMember } from '../../utils/api';
+import { queryKeys } from '../../lib/queryClient';
 import { LoadingState } from '../ui/EmptyStates';
 
 const formatCurrency = (amount) => {
@@ -34,20 +37,22 @@ const GroupPage = () => {
     const { t } = useTranslation();
     const { id } = useParams();
     const { user } = useAuth();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     
     const { data: group, isLoading: loading, error: queryError } = useGroupById(id);
     const addExpenseMutation = useAddGroupExpense();
     const inviteMemberMutation = useInviteGroupMember();
     const settleShareMutation = useSettleExpenseShare();
     
-    const [newMemberEmail, setNewMemberEmail] = useState('');
-    const [userSearchResults, setUserSearchResults] = useState([]);
-    const [searchLoading, setSearchLoading] = useState(false);
+    const [invitationLink, setInvitationLink] = useState(null);
+    const [linkCopied, setLinkCopied] = useState(false);
+    const [invitationError, setInvitationError] = useState(null);
     const [expenseDescription, setExpenseDescription] = useState('');
     const [expenseAmount, setExpenseAmount] = useState('');
     const [shares, setShares] = useState([]);
-    const [showUserSearch, setShowUserSearch] = useState(false);
     const [expenseError, setExpenseError] = useState('');
+    const [isLeaving, setIsLeaving] = useState(false);
 
     // Initialize shares when group data is available
     const initialShares = useMemo(() => {
@@ -68,36 +73,117 @@ const GroupPage = () => {
         }
     }, [initialShares]);
 
-    const handleSearchUsers = async (query) => {
-        if (query.length < 2) {
-            setUserSearchResults([]);
-            return;
-        }
-
-        setSearchLoading(true);
+    const handleGenerateInvitationLink = useCallback(async () => {
+        setInvitationError(null);
+        
+        console.log('[GroupInvite] Starting invitation link generation', { 
+            groupId: id,
+            timestamp: new Date().toISOString()
+        });
+        
         try {
-            const results = await searchUsers(query);
-            // Filter out users who are already members
-            const memberIds = group?.group_members?.map(member => member.profiles.id) || [];
-            const filteredResults = results.filter(user => !memberIds.includes(user.id));
-            setUserSearchResults(filteredResults);
+            const data = await inviteMemberMutation.mutateAsync({ groupId: id });
+            
+            console.log('[GroupInvite] Received response from server', { 
+                groupId: id,
+                hasInvitationLink: !!data?.invitationLink,
+                hasToken: !!data?.invitationToken,
+                hasExpiresAt: !!data?.expiresAt
+            });
+            
+            if (!data || !data.invitationLink) {
+                console.error('[GroupInvite] Invalid response structure', { 
+                    groupId: id,
+                    responseData: data
+                });
+                throw new Error('Invalid response from server');
+            }
+            
+            setInvitationLink({
+                link: data.invitationLink,
+                expiresAt: data.expiresAt,
+                token: data.invitationToken
+            });
+            setLinkCopied(false);
+            
+            console.log('[GroupInvite] Invitation link generated successfully', { 
+                groupId: id,
+                invitationId: data.invitationId,
+                expiresAt: data.expiresAt,
+                linkGenerated: true
+            });
+            
+            toast.success(t('groups.invitation_link_generated'));
+            
+            if (data.invitationLink && navigator.clipboard) {
+                try {
+                    await navigator.clipboard.writeText(data.invitationLink);
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 3000);
+                    console.log('[GroupInvite] Link copied to clipboard automatically', { groupId: id });
+                } catch (clipboardError) {
+                    console.warn('[GroupInvite] Failed to auto-copy link to clipboard', { 
+                        groupId: id,
+                        error: clipboardError.message
+                    });
+                }
+            }
         } catch (error) {
-            console.error('Error searching users:', error);
-        } finally {
-            setSearchLoading(false);
+            const errorResponse = error?.response?.data || error;
+            const errorDetails = {
+                groupId: id,
+                errorMessage: error?.message,
+                errorCode: error?.response?.status,
+                errorType: errorResponse?.code || errorResponse?.migrationRequired ? 'migration' : 'general',
+                timestamp: new Date().toISOString()
+            };
+            
+            console.error('[GroupInvite] Failed to generate invitation link', errorDetails, error);
+            
+            setInvitationLink(null);
+            
+            if (errorResponse?.migrationRequired || errorResponse?.code === 'MIGRATION_REQUIRED') {
+                console.warn('[GroupInvite] Migration required error detected', { 
+                    groupId: id,
+                    hasMigrationSQL: !!errorResponse.migrationSQL
+                });
+                setInvitationError({
+                    type: 'migration',
+                    message: errorResponse.error || t('groups.migration_required_error'),
+                    migrationSQL: errorResponse.migrationSQL,
+                    instructions: errorResponse.instructions
+                });
+            } else {
+                setInvitationError({
+                    type: 'general',
+                    message: errorResponse?.error || errorResponse?.details || error?.message || t('groups.failed_to_generate_link')
+                });
+            }
+            
+            toast.error(errorResponse?.error || errorResponse?.details || error?.message || t('groups.failed_to_generate_link'));
         }
-    };
+    }, [id, inviteMemberMutation, t]);
 
-    const handleSendInvitation = useCallback(async (email) => {
-        try {
-            await inviteMemberMutation.mutateAsync({ groupId: id, email });
-            setNewMemberEmail('');
-            setUserSearchResults([]);
-            setShowUserSearch(false);
-        } catch (error) {
-            console.error('Failed to send invitation:', error);
+    const handleCopyLink = useCallback(async () => {
+        if (invitationLink?.link) {
+            try {
+                console.log('[GroupInvite] Copying link to clipboard', { 
+                    groupId: id,
+                    hasLink: !!invitationLink.link
+                });
+                await navigator.clipboard.writeText(invitationLink.link);
+                setLinkCopied(true);
+                setTimeout(() => setLinkCopied(false), 3000);
+                console.log('[GroupInvite] Link copied to clipboard successfully', { groupId: id });
+            } catch (error) {
+                console.error('[GroupInvite] Failed to copy link to clipboard', { 
+                    groupId: id,
+                    error: error.message
+                });
+                toast.error(t('groups.failed_to_copy_link'));
+            }
         }
-    }, [id, inviteMemberMutation]);
+    }, [invitationLink, id, t]);
 
     const handleAddExpense = async (e) => {
         e.preventDefault();
@@ -151,6 +237,30 @@ const GroupPage = () => {
             console.error('Failed to settle share:', error);
         }
     }, [settleShareMutation]);
+
+    const handleLeaveGroup = async () => {
+        if (!window.confirm(t('groups.confirm_leave_group'))) {
+            return;
+        }
+
+        if (!user?.id) {
+            toast.error(t('groups.leave_group_error'));
+            return;
+        }
+
+        setIsLeaving(true);
+        try {
+            await removeGroupMember(id, user.id);
+            queryClient.invalidateQueries({ queryKey: queryKeys.groups.all });
+            toast.success(t('groups.leave_group_success'));
+            navigate('/groups');
+        } catch (error) {
+            console.error('Failed to leave group:', error);
+            toast.error(t('groups.leave_group_error'));
+        } finally {
+            setIsLeaving(false);
+        }
+    };
 
     // Calculate summary statistics - must be before early returns
     const totalSpent = useMemo(() => {
@@ -211,7 +321,7 @@ const GroupPage = () => {
 
             {/* Header Section - Summary */}
             <div className="mb-8">
-                <h1 className="text-4xl font-bold text-white mb-6">{group.name}</h1>
+                <h1 className="text-4xl font-bold text-white mb-6 text-left">{group.name}</h1>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
@@ -247,9 +357,147 @@ const GroupPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
                 {/* Members Section - Compact */}
                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-5">
-                    {/* Add Expense Form - At the top */}
-                    <form onSubmit={handleAddExpense} className="mb-6 pb-6 border-b border-[#262626] space-y-4">
-                        <h3 className="text-2xl font-semibold text-white mb-1">{t('groups.add_expense')}</h3>
+                    <div className="flex items-center justify-center mb-4">
+                        <h3 className="text-3xl font-bold text-white">{t('groups.members')}</h3>
+                    </div>
+                    
+                    <div className="space-y-2 mb-5">
+                        {group.group_members.map(member => (
+                            <div 
+                                key={member.profiles.id} 
+                                className="flex items-center gap-2.5 p-2.5 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-all duration-200"
+                            >
+                                <div className="w-8 h-8 bg-[#56a69f]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span className="text-[#56a69f] font-semibold text-xs">
+                                        {member.profiles.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                                <span className="text-white font-medium text-sm truncate">
+                                    {member.profiles.name}
+                                    {member.profiles.id === user?.id && (
+                                        <span className="text-[#8B8A85] text-xs ml-2">(You)</span>
+                                    )}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* Invite Member Form - Compact */}
+                    <div className="pt-4 border-t border-[#262626]">
+                        <h3 className="text-sm font-semibold text-white mb-3">{t('groups.invite_member')}</h3>
+                        
+                        <div className="space-y-3">
+                            {/* Error message display */}
+                            {invitationError && (
+                                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                                    <div className="flex items-start gap-2">
+                                        <div className="text-red-400 text-sm">⚠️</div>
+                                        <div className="flex-1">
+                                            <p className="text-red-400 text-xs font-semibold mb-1">{t('groups.error')}</p>
+                                            <p className="text-red-300 text-xs mb-2">{invitationError.message}</p>
+                                            {invitationError.type === 'migration' && invitationError.migrationSQL && (
+                                                <div className="mt-3">
+                                                    <p className="text-[#C2C0B6] text-xs font-medium mb-2">{t('groups.migration_instructions')}:</p>
+                                                    <div className="bg-[#1F1E1D] border border-[#262626] rounded p-2 max-h-32 overflow-y-auto">
+                                                        <pre className="text-[#8B8A85] text-xs whitespace-pre-wrap overflow-x-auto">
+                                                            {invitationError.migrationSQL}
+                                                        </pre>
+                                                    </div>
+                                                    <p className="text-[#8B8A85] text-xs mt-2">{t('groups.migration_steps')}</p>
+                                                </div>
+                                            )}
+                                            <button
+                                                onClick={() => setInvitationError(null)}
+                                                className="mt-2 text-red-400 hover:text-red-300 text-xs font-medium transition-colors"
+                                            >
+                                                {t('groups.dismiss')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {!invitationLink && !invitationError && (
+                                <button
+                                    onClick={handleGenerateInvitationLink}
+                                    disabled={inviteMemberMutation.isPending}
+                                    className="w-full bg-[#56a69f] text-[#1F1E1D] font-bold py-2.5 rounded-lg hover:bg-[#4A8F88] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center justify-center gap-2"
+                                >
+                                    {inviteMemberMutation.isPending ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-[#1F1E1D] border-t-transparent rounded-full animate-spin"></div>
+                                            <span>{t('groups.generating_link')}</span>
+                                        </>
+                                    ) : (
+                                        <span>{t('groups.generate_invitation_link')}</span>
+                                    )}
+                                </button>
+                            )}
+
+                            {invitationLink && (
+                                <div className="space-y-3">
+                                    <div className="bg-[#262626] border border-[#262626] rounded-lg p-3">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <input
+                                                type="text"
+                                                readOnly
+                                                value={invitationLink.link}
+                                                className="flex-1 px-2 py-1.5 text-xs bg-[#1F1E1D] border border-[#262626] rounded text-white focus:outline-none font-mono"
+                                            />
+                                            <button
+                                                onClick={handleCopyLink}
+                                                className={`px-3 py-1.5 font-semibold text-xs rounded transition-colors flex items-center gap-1.5 ${
+                                                    linkCopied 
+                                                        ? 'bg-green-600 text-white' 
+                                                        : 'bg-[#56a69f] text-[#1F1E1D] hover:bg-[#4A8F88]'
+                                                }`}
+                                                title={linkCopied ? t('groups.copied') : t('groups.copy')}
+                                            >
+                                                {linkCopied ? (
+                                                    <>
+                                                        <FaCheck className="w-3 h-3" />
+                                                        <span>{t('groups.copied')}</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <FaCopy className="w-3 h-3" />
+                                                        <span>{t('groups.copy')}</span>
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                        {invitationLink.expiresAt && (
+                                            <div className="text-[#8B8A85] text-xs mt-2 pt-2 border-t border-[#1F1E1D]">
+                                                <span className="font-medium">{t('groups.expires_at')}:</span>{' '}
+                                                {new Date(invitationLink.expiresAt).toLocaleDateString('pt-BR', { 
+                                                    day: '2-digit', 
+                                                    month: '2-digit', 
+                                                    year: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setInvitationLink(null);
+                                            setInvitationError(null);
+                                            handleGenerateInvitationLink();
+                                        }}
+                                        disabled={inviteMemberMutation.isPending}
+                                        className="w-full bg-[#262626] text-white font-semibold py-2 rounded-lg hover:bg-[#3a3a3a] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-xs border border-[#262626]"
+                                    >
+                                        {inviteMemberMutation.isPending ? t('groups.generating_link') : t('groups.generate_new_link')}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Add Expense Form - At the bottom */}
+                    <form onSubmit={handleAddExpense} className="mt-10 pt-8 border-t border-[#262626] space-y-4">
+                        <h3 className="text-xl font-semibold text-white mb-1">{t('groups.add_expense')}</h3>
                         
                         {expenseError && (
                             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2">
@@ -365,86 +613,28 @@ const GroupPage = () => {
                         </button>
                     </form>
 
-                    <div className="flex items-center justify-between mb-4 mt-6">
-                        <h2 className="text-lg font-bold text-white">{t('groups.members')}</h2>
-                    </div>
-                    
-                    <div className="space-y-2 mb-5">
-                        {group.group_members.map(member => (
-                            <div 
-                                key={member.profiles.id} 
-                                className="flex items-center gap-2.5 p-2.5 bg-[#262626] rounded-lg border border-[#262626] hover:border-[#3a3a3a] transition-all duration-200"
-                            >
-                                <div className="w-8 h-8 bg-[#56a69f]/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span className="text-[#56a69f] font-semibold text-xs">
-                                        {member.profiles.name.charAt(0).toUpperCase()}
-                                    </span>
-                                </div>
-                                <span className="text-white font-medium text-sm truncate">{member.profiles.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                    
-                    {/* Invite Member Form - Compact */}
-                    <div className="pt-4 border-t border-[#262626]">
-                        <h3 className="text-sm font-semibold text-white mb-3">{t('groups.invite_member')}</h3>
-                        
-                        <div className="space-y-2">
-                            <input
-                                type="email"
-                                value={newMemberEmail}
-                                onChange={(e) => {
-                                    setNewMemberEmail(e.target.value);
-                                    handleSearchUsers(e.target.value);
-                                    setShowUserSearch(e.target.value.length >= 2);
-                                }}
-                                placeholder={t('groups.enter_email')}
-                                className="w-full px-3 py-2 text-sm bg-[#262626] border border-[#262626] rounded-lg text-white placeholder-[#8B8A85] focus:outline-none focus:ring-2 focus:ring-[#56a69f] focus:border-transparent transition-all"
-                            />
-                            
-                            {showUserSearch && (
-                                <div className="bg-[#262626] border border-[#262626] rounded-lg max-h-40 overflow-y-auto custom-scrollbar shadow-lg">
-                                    {searchLoading ? (
-                                        <div className="p-3 text-[#C2C0B6] text-center text-xs">{t('groups.searching')}</div>
-                                    ) : userSearchResults.length > 0 ? (
-                                        userSearchResults.map(user => (
-                                            <button
-                                                key={user.id}
-                                                onClick={() => handleSendInvitation(user.email)}
-                                                disabled={inviteMemberMutation.isPending}
-                                                className="w-full text-left p-3 hover:bg-[#1F1E1D] transition-colors border-b border-[#262626] last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
-                                            >
-                                                <div className="text-white font-medium text-xs mb-0.5">{user.name}</div>
-                                                <div className="text-[#8B8A85] text-xs truncate">{user.email}</div>
-                                            </button>
-                                        ))
-                                    ) : newMemberEmail.length >= 2 ? (
-                                        <div className="p-3">
-                                            <div className="text-[#8B8A85] text-xs mb-2">{t('groups.no_users_found')}</div>
-                                            <button
-                                                onClick={() => handleSendInvitation(newMemberEmail)}
-                                                disabled={inviteMemberMutation.isPending}
-                                                className="text-[#56a69f] hover:text-[#4A8F88] text-xs font-medium transition-colors"
-                                            >
-                                                {t('groups.send_invitation_to')} {newMemberEmail}
-                                            </button>
-                                        </div>
-                                    ) : null}
-                                </div>
-                            )}
-                        </div>
+                    {/* Leave Group Section */}
+                    <div className="pt-4 mt-4 border-t border-[#262626]">
+                        <button
+                            onClick={handleLeaveGroup}
+                            disabled={isLeaving}
+                            className="w-full text-red-400 hover:text-red-300 font-semibold py-2.5 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm border border-red-400/20 hover:border-red-400/40"
+                        >
+                            {isLeaving ? t('groups.leaving_group') : t('groups.leave_group')}
+                        </button>
                     </div>
                 </div>
 
                 {/* Expenses Section - Main Focus */}
                 <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-white">{t('groups.expenses')}</h2>
-                        <span className="text-[#8B8A85] text-sm font-medium">{expenseCount} {t('groups.expenses')}</span>
+                        <div className="flex-1"></div>
+                        <h3 className="text-4xl font-bold text-white">{t('groups.expenses')}</h3>
+                        <span className="text-[#8B8A85] text-sm font-medium flex-1 text-right">{expenseCount} {t('groups.expenses')}</span>
                     </div>
                     
                     {/* Expenses List */}
-                    <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 max-h-[800px]">
+                    <div className="space-y-4 overflow-y-auto hide-scrollbar max-h-[800px]">
                         {group.group_expenses.length === 0 ? (
                             <div className="text-center py-12">
                                 <p className="text-[#8B8A85] text-sm">{t('groups.no_expenses')}</p>
@@ -476,7 +666,7 @@ const GroupPage = () => {
                                                     <span className="text-white font-semibold">{share.profiles.name}</span> {t('groups.owes')} <span className="text-white font-medium">{formatCurrency(share.amount_owed)}</span>
                                                 </span>
                                                 {share.is_settled ? (
-                                                    <span className="text-green-400 text-xs font-semibold px-3 py-1.5 bg-green-400/10 rounded-md">
+                                                    <span className="text-[#56a69f] text-xs font-semibold px-3 py-1.5 bg-[#56a69f]/10 rounded-md">
                                                         {t('groups.settled')}
                                                     </span>
                                                 ) : share.user_id === user.id ? (

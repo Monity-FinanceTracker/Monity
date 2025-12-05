@@ -52,7 +52,7 @@ const ConfigCheck = () => {
 
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_API_URL=http://localhost:3001/api/v1
+VITE_API_URL=http://localhost:3000/api/v1
 
 # For production deployment, set these in your hosting platform:
 # - Vercel: Project Settings > Environment Variables

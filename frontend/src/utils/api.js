@@ -218,9 +218,53 @@ export const settleExpenseShare = (shareId) => API.post(`/groups/shares/${shareI
 
 // User search and invitation functions
 export const searchUsers = (query) => API.get(`/users/search?q=${encodeURIComponent(query)}`).then(res => res.data);
-export const sendGroupInvitation = (groupId, email) => API.post(`/groups/${groupId}/invite`, { email }).then(res => res.data);
+export const sendGroupInvitation = (groupId) => API.post(`/groups/${groupId}/invite`).then(res => res.data);
 export const getPendingInvitations = () => API.get('/invitations/pending').then(res => res.data);
 export const respondToInvitation = (invitationId, response) => API.post(`/invitations/${invitationId}/respond`, { response }).then(res => res.data);
+
+// Link-based invitation functions (public routes, no auth required)
+export const getInvitationByToken = (token) => {
+    // Use fetch directly for public routes that don't require auth
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+    return fetch(`${apiUrl}/invitations/link/${token}`)
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(err => Promise.reject(err));
+            }
+            return res.json();
+        });
+};
+
+export const acceptInvitationByToken = async (token) => {
+    // Use fetch directly for public routes, but include auth token if available
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+    
+    // Add auth token if user is logged in
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.access_token) {
+            headers['Authorization'] = `Bearer ${session.access_token}`;
+        }
+    } catch (error) {
+        // If supabase is not available, continue without auth
+        console.warn('Could not get session for invitation acceptance:', error);
+    }
+    
+    const response = await fetch(`${apiUrl}/invitations/link/${token}/accept`, {
+        method: 'POST',
+        headers
+    });
+    
+    if (!response.ok) {
+        const err = await response.json();
+        return Promise.reject(err);
+    }
+    
+    return response.json();
+};
 
 // AI Chat functions
 export const sendAIChatMessage = (message) => API.post('/ai-chat/message', { message }).then(res => res.data);
