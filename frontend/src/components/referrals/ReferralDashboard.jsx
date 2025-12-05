@@ -139,7 +139,7 @@ function ReferralDashboard() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-[#262624]">
+            <div className="flex items-center justify-center min-h-full bg-[#262624]">
                 <div className="flex flex-col items-center">
                     <svg className="animate-spin h-10 w-10 text-[#56a69f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -154,7 +154,7 @@ function ReferralDashboard() {
     const tierInfo = referralData?.stats ? getTierInfo(referralData.stats) : null;
 
     return (
-        <div className="min-h-screen bg-[#262624] p-6">
+        <div className="min-h-full bg-[#262624] p-6">
             <div className="max-w-4xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="text-center mb-8">
