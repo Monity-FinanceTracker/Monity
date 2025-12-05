@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import {
@@ -127,7 +127,7 @@ const GettingStartedChecklist = ({ userId }) => {
   };
 
   // Fetch checklist progress from backend
-  const fetchProgress = async () => {
+  const fetchProgress = useCallback(async () => {
     try {
       const response = await api.get('/onboarding/progress');
       const data = response.data;
@@ -144,7 +144,7 @@ const GettingStartedChecklist = ({ userId }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     // Check if user has dismissed the checklist
@@ -178,7 +178,7 @@ const GettingStartedChecklist = ({ userId }) => {
       clearInterval(refreshInterval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [userId]);
+  }, [userId, fetchProgress]);
 
   // Toggle checklist item (only for manual items)
   const handleToggleItem = (itemId, currentState) => {

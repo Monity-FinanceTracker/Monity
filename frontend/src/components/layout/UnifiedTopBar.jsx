@@ -59,13 +59,17 @@ const UnifiedTopBar = ({ onMobileMenuToggle, isMobileMenuOpen }) => {
                 <div className="flex items-center gap-4">
                     {/* Free Plan Upgrade - Only for non-premium users */}
                     {subscriptionTier !== 'premium' && (
-                        <button
-                            onClick={() => navigate('/subscription')}
-                            className="text-white hover:text-gray-300 transition-colors text-sm font-medium cursor-pointer bg-transparent border-none"
-                            style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
-                        >
-                            Free Plan Upgrade
-                        </button>
+                        <div className="flex items-center gap-1.5 text-sm">
+                            <span className="text-gray-100">{t('topbar.free_plan')}</span>
+                            <span className="text-gray-400">•</span>
+                            <button
+                                onClick={() => navigate('/subscription')}
+                                className="text-gray-100 hover:text-gray-300 transition-all font-medium cursor-pointer bg-transparent border-none underline decoration-1 hover:decoration-2"
+                                style={{ background: 'none', border: 'none', padding: 0, margin: 0 }}
+                            >
+                                {t('topbar.upgrade')}
+                            </button>
+                        </div>
                     )}
 
                     {/* Notifications */}

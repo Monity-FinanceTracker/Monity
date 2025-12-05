@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { createPortal } from 'react-dom';
 import { FaTimes, FaLightbulb } from 'react-icons/fa';
 
@@ -368,14 +368,9 @@ export const FeatureDiscoveryManager = ({ children }) => {
     const interval = setInterval(checkForFeatures, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [shouldShowFeature, activeTooltip]);
+  }, [shouldShowFeature, activeTooltip, markFeatureDiscovered]);
 
-  const handleDismissTooltip = () => {
-    if (activeTooltip) {
-      markFeatureDiscovered(activeTooltip);
-      setActiveTooltip(null);
-    }
-  };
+  // handleDismissTooltip removed - not used
 
   return (
     <>
@@ -408,7 +403,7 @@ export const withFeatureDiscovery = (Component, featureName, tooltipConfig) => {
         }, 1000);
         return () => clearTimeout(timer);
       }
-    }, [shouldShowFeature, featureName]);
+    }, [shouldShowFeature]);
 
     const handleDismiss = () => {
       setShowTooltip(false);

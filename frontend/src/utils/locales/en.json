@@ -307,6 +307,8 @@
     "quick_actions": "Quick Actions",
     "add_expense": "Add Expense",
     "add_income": "Add Income",
+    "free_plan": "Free Plan",
+    "upgrade": "Upgrade",
     "view_transactions": "View Transactions",
     "view_transactions_desc": "Browse your transaction history",
     "manage_budgets": "Manage Budgets",

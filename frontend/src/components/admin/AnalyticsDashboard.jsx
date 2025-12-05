@@ -111,7 +111,7 @@ function AnalyticsDashboard() {
 
     if (loading && !dashboardData) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-[#262624]">
+            <div className="flex items-center justify-center min-h-full bg-[#262624]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 rounded-full border-4 border-[#262626]
                                   border-t-[#56a69f] animate-spin"></div>
@@ -123,7 +123,7 @@ function AnalyticsDashboard() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#262624] p-6">
+            <div className="min-h-full bg-[#262624] p-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-red-400">
                         <h3 className="font-semibold mb-2">Error Loading Analytics</h3>
@@ -193,7 +193,7 @@ function AnalyticsDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[#262624] p-4 md:p-6 lg:p-8">
+        <div className="min-h-full bg-[#262624] p-4 md:p-6 lg:p-8">
             <div className="max-w-[1600px] mx-auto space-y-6">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

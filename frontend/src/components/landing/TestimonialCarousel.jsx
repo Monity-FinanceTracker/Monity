@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
 /**
@@ -58,6 +58,11 @@ const TestimonialCarousel = ({ className = '' }) => {
     }
   ];
 
+  const handleNext = useCallback(() => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  }, [testimonials.length]);
+
   // Auto-rotate every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
@@ -65,12 +70,7 @@ const TestimonialCarousel = ({ className = '' }) => {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [currentIndex]);
-
-  const handleNext = () => {
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
+  }, [handleNext]);
 
   const handlePrev = () => {
     setDirection(-1);

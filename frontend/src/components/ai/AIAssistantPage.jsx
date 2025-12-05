@@ -206,7 +206,7 @@ const AIAssistantPage = () => {
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
 
     return (
-        <div className="h-[calc(100vh-8rem)] max-w-5xl mx-auto flex flex-col overflow-hidden">
+        <div className="h-full max-w-5xl mx-auto flex flex-col overflow-hidden">
             {/* Header - Fixed at top */}
             <div className="flex items-center justify-between px-4 py-3" style={{ flexShrink: 0 }}>
                 <button

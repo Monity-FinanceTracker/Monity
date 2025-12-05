@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import Confetti from 'react-confetti';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
@@ -30,7 +29,6 @@ const OnboardingWizard = ({ onComplete, onSkip }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   // Form data for each step
   const [formData, setFormData] = useState({
