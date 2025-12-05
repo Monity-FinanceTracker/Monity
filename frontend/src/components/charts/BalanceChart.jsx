@@ -14,17 +14,40 @@ import { get } from '../../utils/api';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../utils/currency';
 import { useAuth } from '../../context/useAuth';
+import { useDemoData } from '../demo';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function BalanceChart({ selectedRange }) {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { isDemoMode, demoData } = useDemoData();
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        // If in demo mode, generate demo monthly data
+        if (isDemoMode && demoData && selectedRange !== 'current_month') {
+            const currentBalance = demoData.profile.balance;
+            const demoHistory = [
+                { month: '2025/09', balance: currentBalance - 800 },
+                { month: '2025/10', balance: currentBalance - 500 },
+                { month: '2025/11', balance: currentBalance - 200 },
+                { month: '2025/12', balance: currentBalance }
+            ];
+            setHistory(demoHistory);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
+        if (isDemoMode && selectedRange === 'current_month') {
+            setHistory([]);
+            setLoading(false);
+            return;
+        }
+
         if (!user) {
             setHistory([]);
             setLoading(false);
@@ -87,21 +110,21 @@ function BalanceChart({ selectedRange }) {
             }
         };
         fetchChartData();
-    }, [selectedRange, t, user]);
+    }, [selectedRange, t, user, isDemoMode, demoData]);
 
-    if (!user) {
+    if (!user && !isDemoMode) {
         return <p className="text-center text-gray-400">{t('balanceChart.loginToView', 'Faça login para ver o gráfico de saldo.')}</p>;
     }
 
-    if (loading) {
+    if (loading && !isDemoMode) {
         return (
             <div className="flex items-center justify-center py-12">
                 <Spinner message={t('balanceChart.loading')} />
             </div>
         );
     }
-    
-    if (error) {
+
+    if (error && !isDemoMode) {
         return (
             <div className="text-center py-12">
                 <p className="text-red-400 mb-2">{t('balanceChart.error', { error })}</p>

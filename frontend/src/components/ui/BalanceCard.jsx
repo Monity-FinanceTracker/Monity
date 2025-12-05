@@ -5,27 +5,32 @@ import Spinner from "./Spinner";
 import { useTranslation } from "react-i18next";
 import { useBalance } from "../../hooks/useQueries";
 import { useAuth } from "../../context/useAuth";
+import { useDemoData } from "../demo";
 
 const BalanceCard = memo(function BalanceCard({ selectedRange }) {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { isDemoMode, demoData } = useDemoData();
     const navigate = useNavigate();
     const { data: balance = 0, isLoading: loading, error } = useBalance(selectedRange, { enabled: !!user });
 
+    // Use demo balance if in demo mode, otherwise use real balance
+    const displayBalance = isDemoMode && demoData ? demoData.profile.balance : balance;
+
     // Calcula o tamanho da fonte baseado no comprimento do texto
     const fontSize = useMemo(() => {
-        const formattedBalance = balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const formattedBalance = displayBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const totalLength = formattedBalance.length + 3; // +3 para "R$ "
-        
+
         // Escala o tamanho da fonte baseado no comprimento (aumentado)
         if (totalLength <= 10) return 'text-6xl'; // Números pequenos
         if (totalLength <= 15) return 'text-5xl'; // Números médios
         if (totalLength <= 20) return 'text-4xl'; // Números grandes
         if (totalLength <= 25) return 'text-3xl';  // Números muito grandes
         return 'text-2xl'; // Números extremamente grandes
-    }, [balance]);
+    }, [displayBalance]);
 
-    if (!user) {
+    if (!user && !isDemoMode) {
         return (
             <p className="text-gray-400 text-lg mb-4">
                 {t('balanceCard.loginToView', 'Faça login para ver seu saldo.')}
@@ -44,17 +49,17 @@ const BalanceCard = memo(function BalanceCard({ selectedRange }) {
         navigate('/savings-goals', { state: { openModal: true } });
     };
 
-    if (loading) {
+    if (loading && !isDemoMode) {
         return <Spinner message={t('balanceCard.loading')} size="md" center={false} />;
     }
-    if (error) {
+    if (error && !isDemoMode) {
         return <p className="text-red-500">{error?.message || t('balanceCard.fetchError')}</p>;
     }
 
     return (
         <div className="flex items-center gap-4">
             <h2 className={`${fontSize} font-bold text-white whitespace-nowrap overflow-hidden text-left`}>
-                R$ {balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                R$ {displayBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </h2>
             
             {/* Quick action buttons */}

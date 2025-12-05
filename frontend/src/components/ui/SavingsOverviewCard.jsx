@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
+import { useDemoData } from '../demo';
 
 const SavingsOverviewCard = () => {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { isDemoMode, demoData } = useDemoData();
     const [savingsData, setSavingsData] = useState({
         totalAllocated: 0,
         totalTargets: 0,
@@ -18,6 +20,24 @@ const SavingsOverviewCard = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        // If in demo mode, use demo data
+        if (isDemoMode && demoData) {
+            const demoGoals = demoData.savingsGoals || [];
+            const totalAllocated = demoGoals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+            const totalTargets = demoGoals.reduce((sum, goal) => sum + goal.targetAmount, 0);
+            const progressPercentage = totalTargets > 0 ? (totalAllocated / totalTargets) * 100 : 0;
+
+            setSavingsData({
+                totalAllocated,
+                totalTargets,
+                goals: demoGoals,
+                progressPercentage,
+                totalGoals: demoGoals.length
+            });
+            setLoading(false);
+            return;
+        }
+
         if (!user) {
             setLoading(false);
             return;
@@ -37,9 +57,9 @@ const SavingsOverviewCard = () => {
         };
 
         fetchSavingsOverview();
-    }, [user]);
+    }, [user, isDemoMode, demoData]);
 
-    if (loading) {
+    if (loading && !isDemoMode) {
         return (
             <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
                 <div className="animate-pulse">
@@ -54,7 +74,7 @@ const SavingsOverviewCard = () => {
         );
     }
 
-    if (!user) {
+    if (!user && !isDemoMode) {
         return (
             <div className="bg-[#171717] border border-[#262626] rounded-xl p-6">
                 <div className="text-center py-4">
@@ -66,7 +86,7 @@ const SavingsOverviewCard = () => {
         );
     }
 
-    if (error) {
+    if (error && !isDemoMode) {
         return (
             <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
                 <div className="text-center py-4">

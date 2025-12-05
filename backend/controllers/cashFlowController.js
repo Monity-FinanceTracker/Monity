@@ -81,6 +81,20 @@ class CashFlowController {
             });
         }
 
+        // Validate that scheduled_date is in the future
+        if (scheduled_date) {
+            const scheduledDate = new Date(scheduled_date);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            scheduledDate.setHours(0, 0, 0, 0);
+
+            if (scheduledDate <= today) {
+                return res.status(400).json({
+                    error: 'Scheduled transactions must be for future dates only. Please use the regular transaction feature for today or past dates.'
+                });
+            }
+        }
+
         try {
             const scheduledTransactionData = {
                 userId,
@@ -117,6 +131,21 @@ class CashFlowController {
         const userId = req.user.id;
         const { id } = req.params;
         const updates = req.body;
+
+        // Validate that scheduled_date or next_execution_date is in the future if provided
+        const dateToValidate = updates.scheduled_date || updates.next_execution_date;
+        if (dateToValidate) {
+            const scheduledDate = new Date(dateToValidate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            scheduledDate.setHours(0, 0, 0, 0);
+
+            if (scheduledDate <= today) {
+                return res.status(400).json({
+                    error: 'Scheduled transactions must be for future dates only. Please use the regular transaction feature for today or past dates.'
+                });
+            }
+        }
 
         try {
             const updatedTransaction = await ScheduledTransaction.update(id, userId, updates);

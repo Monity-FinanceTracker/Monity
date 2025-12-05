@@ -7,9 +7,14 @@ import Spinner from '../ui/Spinner';
 import ScheduledTransactionForm from './ScheduledTransactionForm';
 import ScheduledTransactionList from './ScheduledTransactionList';
 import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
+import { PremiumFeatureCard } from '../premium';
+import { useAuth } from '../../context/useAuth';
 
 const CashFlowCalendar = () => {
   const { t } = useTranslation();
+  const { user, subscriptionTier } = useAuth();
+  const { showPrompt } = useSmartUpgradePrompt();
   const [loading, setLoading] = useState(true);
   const [dailyBalances, setDailyBalances] = useState({});
   const [showForm, setShowForm] = useState(false);
@@ -49,6 +54,20 @@ const CashFlowCalendar = () => {
   useEffect(() => {
     fetchCalendarData(currentMonth);
   }, [currentMonth, fetchCalendarData]);
+
+  // Show premium prompt for free users
+  useEffect(() => {
+    if (user && subscriptionTier && subscriptionTier.toLowerCase() === 'free') {
+      const hasSeenCashFlowPrompt = localStorage.getItem('monity_cashflow_prompted');
+      if (!hasSeenCashFlowPrompt) {
+        showPrompt('advanced_feature_exploration', {
+          feature_name: 'Cash Flow Analysis',
+          source: 'cashflow_page'
+        });
+        localStorage.setItem('monity_cashflow_prompted', 'true');
+      }
+    }
+  }, [user, subscriptionTier, showPrompt]);
 
   const handlePrevMonth = () => {
     setCurrentMonth(moment(currentMonth).subtract(1, 'month').toDate());
@@ -95,10 +114,25 @@ const CashFlowCalendar = () => {
   const calendarDays = generateCalendarDays();
   const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-  if (loading) {
+  if (loading && !subscriptionTier) {
     return (
       <div className="flex justify-center items-center h-96">
         <Spinner />
+      </div>
+    );
+  }
+
+  // Show premium feature card for free users
+  // Check if user is free tier (case-insensitive)
+  const isFreeUser = subscriptionTier && subscriptionTier.toLowerCase() === 'free';
+
+  if (isFreeUser) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PremiumFeatureCard
+          featureId="cashflow_calendar"
+          variant="full_page"
+        />
       </div>
     );
   }

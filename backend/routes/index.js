@@ -11,6 +11,7 @@ const savingsGoalsRoutes = require("./savingsGoals");
 const adminRoutes = require("./admin");
 const aiRoutes = require("./ai");
 const aiChatRoutes = require("./aiChat");
+const subscriptionTierRoutes = require("./subscriptionTier");
 const subscriptionRoutes = require("./subscription");
 const balanceRoutes = require("./balance");
 const invitationRoutes = require("./invitations");
@@ -22,6 +23,10 @@ const cashFlowRoutes = require("./cashFlow");
 const investmentCalculatorRoutes = require("./investmentCalculator");
 const analyticsRoutes = require("./analytics");
 const recurringTransactionsRoutes = require("./recurringTransactions");
+const onboardingRoutes = require("./onboarding");
+const featuresRoutes = require("./features");
+const premiumRoutes = require("./premium");
+const referralRoutes = require("./referrals");
 
 module.exports = (controllers, middleware) => {
   // Version 1 of the API
@@ -60,7 +65,7 @@ module.exports = (controllers, middleware) => {
   v1Router.use(
     "/transactions",
     middleware.auth.authenticate,
-    transactionRoutes(controllers)
+    transactionRoutes(controllers, middleware)
   );
   v1Router.use(
     "/categories",
@@ -81,6 +86,11 @@ module.exports = (controllers, middleware) => {
   v1Router.use("/ai-chat", middleware.auth.authenticate, aiChatRoutes(controllers));
   v1Router.use(
     "/subscription-tier",
+    middleware.auth.authenticate,
+    subscriptionTierRoutes(controllers)
+  );
+  v1Router.use(
+    "/subscription",
     middleware.auth.authenticate,
     subscriptionRoutes(controllers)
   );
@@ -124,6 +134,32 @@ module.exports = (controllers, middleware) => {
     "/recurring-transactions",
     middleware.auth.authenticate,
     recurringTransactionsRoutes(controllers)
+  );
+  v1Router.use(
+    "/onboarding",
+    middleware.auth.authenticate,
+    onboardingRoutes(controllers)
+  );
+  v1Router.use(
+    "/features",
+    middleware.auth.authenticate,
+    featuresRoutes(controllers)
+  );
+  v1Router.use(
+    "/premium",
+    middleware.auth.authenticate,
+    premiumRoutes(controllers, middleware)
+  );
+  v1Router.use(
+    "/referrals",
+    middleware.auth.authenticate,
+    referralRoutes(controllers)
+  );
+
+  // Public referral code validation (used during signup)
+  v1Router.post(
+    "/referrals/validate-code-public",
+    (req, res) => controllers.referralController.validateCode(req, res)
   );
 
   // Analytics routes - mixed public/admin (auth handled per-route)

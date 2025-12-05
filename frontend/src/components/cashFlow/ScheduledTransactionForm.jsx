@@ -1,16 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Banknote, Tag, Repeat, TrendingUp, TrendingDown } from 'lucide-react';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import moment from 'moment';
-import { CloseButton } from '../ui';
+import { CloseButton, SmartCategoryButton } from '../ui';
+import { useSmartCategorization } from '../../hooks/useSmartCategorization';
 
 const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [aiSuggestionAccepted, setAiSuggestionAccepted] = useState(false);
+  const [lastSuggestionDescription, setLastSuggestionDescription] = useState('');
+  const dateInputRef = useRef(null);
+
+  // AI Categorization hook
+  const {
+    suggestions,
+    isLoading: aiLoading,
+    getSuggestions,
+    recordFeedback,
+    clearSuggestions,
+    getTopSuggestion
+  } = useSmartCategorization();
 
   const [formData, setFormData] = useState({
     description: '',
@@ -70,12 +84,140 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     fetchCategories();
   }, [formData.typeId, fetchCategories]);
 
+  // Debounced AI suggestions when description changes
+  useEffect(() => {
+    // Don't fetch if suggestion was already accepted for this description
+    if (aiSuggestionAccepted && formData.description === lastSuggestionDescription) {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      const description = formData.description?.trim() || '';
+
+      if (description.length >= 3) {
+        // Only fetch if description has changed significantly
+        if (description !== lastSuggestionDescription) {
+          const amount = parseFloat(formData.amount) || 0;
+          getSuggestions(description, amount, formData.typeId);
+          setLastSuggestionDescription(description);
+          setAiSuggestionAccepted(false);
+        }
+      } else {
+        clearSuggestions();
+        setLastSuggestionDescription('');
+        setAiSuggestionAccepted(false);
+      }
+    }, 800); // Increased debounce to 800ms
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.description, formData.amount, formData.typeId, getSuggestions, clearSuggestions, aiSuggestionAccepted, lastSuggestionDescription]);
+
+  // Handle AI suggestion acceptance
+  const handleAcceptSuggestion = useCallback((suggestion) => {
+    const suggestedCategory = suggestion.category;
+
+    // Filter categories by type
+    const filteredCategories = categories.filter(cat => cat.typeId === formData.typeId);
+
+    // Check if category exists in the list
+    const categoryExists = filteredCategories.some(cat => cat.name === suggestedCategory);
+
+    if (categoryExists) {
+      // Category exists, select it
+      setFormData(prev => ({ ...prev, category: suggestedCategory }));
+      setAiSuggestionAccepted(true);
+      setLastSuggestionDescription(formData.description);
+      clearSuggestions();
+
+      // Record feedback
+      const amount = parseFloat(formData.amount) || 0;
+      recordFeedback(
+        formData.description,
+        suggestedCategory,
+        suggestedCategory,
+        true,
+        suggestion.confidence,
+        amount
+      );
+    } else {
+      // Category doesn't exist, offer to create it
+      const shouldCreate = window.confirm(
+        t('smartCategorization.auto_create_hint') + '\n\n' +
+        t('categories.add_new') + ': ' + suggestedCategory
+      );
+
+      if (shouldCreate) {
+        // Create the category
+        const newCategory = {
+          name: suggestedCategory,
+          typeId: formData.typeId,
+          color: '#56a69f',
+          icon: 'Package'
+        };
+
+        api.post('/categories', newCategory)
+          .then((response) => {
+            const data = response.data?.data || response.data;
+            setCategories(prev => [...prev, data]);
+            setFormData(prev => ({ ...prev, category: data.name }));
+            setAiSuggestionAccepted(true);
+            setLastSuggestionDescription(formData.description);
+            clearSuggestions();
+            toast.success(t('categories.add_success'));
+
+            // Record feedback
+            const amount = parseFloat(formData.amount) || 0;
+            recordFeedback(
+              formData.description,
+              suggestedCategory,
+              data.name,
+              true,
+              suggestion.confidence,
+              amount
+            );
+          })
+          .catch(error => {
+            toast.error(t('categories.add_error'));
+            console.error('Error creating category:', error);
+          });
+      }
+    }
+  }, [formData.description, formData.amount, formData.typeId, categories, recordFeedback, clearSuggestions, t]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+
+    // Reset AI suggestion when description changes significantly
+    if (name === 'description') {
+      const newDescription = value.trim();
+      if (newDescription !== lastSuggestionDescription) {
+        setAiSuggestionAccepted(false);
+      }
+    }
+
+    // Set custom validation message for date input
+    if (name === 'scheduled_date' && dateInputRef.current) {
+      const input = dateInputRef.current;
+      if (value) {
+        const selectedDate = new Date(value);
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate < tomorrow) {
+          input.setCustomValidity(t('cashFlow.form.date_min_validation'));
+        } else {
+          input.setCustomValidity('');
+        }
+      } else {
+        input.setCustomValidity('');
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -84,6 +226,19 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
     if (!formData.description || !formData.amount || !formData.category || !formData.scheduled_date) {
       toast.error(t('cashFlow.form.fill_required'));
       return;
+    }
+
+    // Validate that scheduled_date is in the future
+    if (formData.scheduled_date) {
+      const scheduledDate = new Date(formData.scheduled_date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      scheduledDate.setHours(0, 0, 0, 0);
+
+      if (scheduledDate <= today) {
+        toast.error(t('cashFlow.form.future_date_required_error'));
+        return;
+      }
     }
 
     setLoading(true);
@@ -102,6 +257,19 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
       } else {
         await api.post('/cashflow/scheduled-transactions', payload);
         toast.success(t('cashFlow.form.create_success'));
+      }
+
+      // Record AI feedback if suggestion was used
+      const topSuggestion = getTopSuggestion();
+      if (topSuggestion && aiSuggestionAccepted) {
+        recordFeedback(
+          formData.description,
+          topSuggestion.category,
+          formData.category,
+          formData.category === topSuggestion.category,
+          topSuggestion.confidence,
+          parseFloat(formData.amount)
+        );
       }
 
       onSubmit();
@@ -131,7 +299,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               )}
             </div>
           </div>
-          
+
           {/* Close Button */}
           <div className="absolute right-4 top-4">
             <CloseButton onClick={onClose} size="sm" />
@@ -156,22 +324,20 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, typeId: 2 }))}
-                className={`p-3 rounded-lg border-2 transition-all ${
-                  formData.typeId === 2
+                className={`p-3 rounded-lg border-2 transition-all ${formData.typeId === 2
                     ? 'border-[#56a69f] bg-[#56a69f]/10 text-[#56a69f]'
                     : 'border-[#262626] text-[#C2C0B6] hover:border-[#404040]'
-                }`}
+                  }`}
               >
                 {t('cashFlow.form.income')}
               </button>
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, typeId: 1 }))}
-                className={`p-3 rounded-lg border-2 transition-all ${
-                  formData.typeId === 1
+                className={`p-3 rounded-lg border-2 transition-all ${formData.typeId === 1
                     ? 'border-red-500 bg-red-500/10 text-red-400'
                     : 'border-[#262626] text-[#C2C0B6] hover:border-[#404040]'
-                }`}
+                  }`}
               >
                 {t('cashFlow.form.expense')}
               </button>
@@ -218,6 +384,16 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
             <label className="block text-sm font-medium text-gray-300 mb-2">
               {t('cashFlow.form.category')} *
             </label>
+          {/* AI Category Suggestion */}
+          {!aiSuggestionAccepted && getTopSuggestion() && formData.description.trim().length >= 3 && (
+            <div className="mt-2 mb-2">
+              <SmartCategoryButton
+                suggestion={getTopSuggestion()}
+                onAccept={handleAcceptSuggestion}
+                isVisible={!aiLoading && suggestions.length > 0 && !aiSuggestionAccepted}
+              />
+            </div>
+          )}
             <div className="relative">
               <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C2C0B6]" />
               <select
@@ -228,7 +404,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                 required
                 disabled={loadingCategories}
               >
-                <option 
+                <option
                   value=""
                   style={{
                     minWidth: '250px',
@@ -241,8 +417,8 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                   {loadingCategories ? 'Loading categories...' : t('cashFlow.form.select_category')}
                 </option>
                 {categories.length === 0 && !loadingCategories && (
-                  <option 
-                    value="" 
+                  <option
+                    value=""
                     disabled
                     style={{
                       minWidth: '250px',
@@ -256,8 +432,8 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
                   </option>
                 )}
                 {categories.map(cat => (
-                  <option 
-                    key={cat.id} 
+                  <option
+                    key={cat.id}
                     value={cat.name}
                     style={{
                       minWidth: '250px',
@@ -282,14 +458,28 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C2C0B6]" />
               <input
+                ref={dateInputRef}
                 type="date"
                 name="scheduled_date"
                 value={formData.scheduled_date}
                 onChange={handleChange}
+                onInvalid={(e) => {
+                  if (e.target.validity.rangeUnderflow) {
+                    e.target.setCustomValidity(t('cashFlow.form.date_min_validation'));
+                  }
+                }}
+                onInput={(e) => {
+                  e.target.setCustomValidity('');
+                }}
+                min={moment().add(1, 'day').format('YYYY-MM-DD')}
+                title={t('cashFlow.form.date_min_validation')}
                 className="w-full pl-10 pr-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
                 required
               />
             </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {t('cashFlow.form.future_date_required')}
+            </p>
           </div>
 
           {/* Recurrence Pattern */}
@@ -304,7 +494,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               onChange={handleChange}
               className="w-full px-4 py-2 bg-[#262624] border border-[#262626] rounded-lg text-white focus:border-[#56a69f] focus:outline-none"
             >
-              <option 
+              <option
                 value="once"
                 style={{
                   minWidth: '250px',
@@ -316,7 +506,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               >
                 {t('cashFlow.form.once')}
               </option>
-              <option 
+              <option
                 value="daily"
                 style={{
                   minWidth: '250px',
@@ -328,7 +518,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               >
                 {t('cashFlow.form.daily')}
               </option>
-              <option 
+              <option
                 value="weekly"
                 style={{
                   minWidth: '250px',
@@ -340,7 +530,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               >
                 {t('cashFlow.form.weekly')}
               </option>
-              <option 
+              <option
                 value="monthly"
                 style={{
                   minWidth: '250px',
@@ -352,7 +542,7 @@ const ScheduledTransactionForm = ({ selectedDate, transaction, onClose, onSubmit
               >
                 {t('cashFlow.form.monthly')}
               </option>
-              <option 
+              <option
                 value="yearly"
                 style={{
                   minWidth: '250px',

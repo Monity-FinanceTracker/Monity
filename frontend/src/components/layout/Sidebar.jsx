@@ -20,7 +20,8 @@ import {
   List,
   DollarSign,
   Calculator,
-  BarChart3
+  BarChart3,
+  Gift
 } from "lucide-react";
 import sidebarIcon from "../../assets/Sidebar-Icon.png";
 import sidebarArrow from "../../assets/sidebarArrow.png";
@@ -341,6 +342,25 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                   <Calculator className="w-5 h-5" stroke="currentColor" />
                 </div>
                 <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>{t('sidebar.investment_calculator')}</span>
+              </NavLink>
+
+              {/* Referrals */}
+              <NavLink
+                to="/referrals"
+                className={({ isActive }) =>
+                  `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden ${isActive
+                    ? 'bg-[#000000] text-[#FAF9F5]'
+                    : 'text-[#C2C0B6] hover:text-[#FAF9F5] hover:bg-[#141413]'
+                  }`
+                }
+                style={navLinkTransition}
+                onClick={() => setIsMobileMenuOpen(false)}
+                title={isCollapsed ? 'Indicar Amigos' : ''}
+              >
+                <div className="w-5 h-5 flex-shrink-0 [&>svg]:stroke-current">
+                  <Gift className="w-5 h-5" stroke="currentColor" />
+                </div>
+                <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>Indicar Amigos</span>
               </NavLink>
 
             {/* Premium/Subscription Section - Only show for non-premium users */}
