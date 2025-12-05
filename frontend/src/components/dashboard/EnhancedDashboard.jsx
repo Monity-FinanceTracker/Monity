@@ -141,8 +141,8 @@ const EnhancedDashboard = () => {
     // Enhanced card wrapper with loading states
     const EnhancedCard = ({ children, title, subtitle, isLoading = false, action, className = '' }) => {
         return (
-            <div className={`bg-[#1F1E1D] border border-[#262626] rounded-xl hover:border-[#3a3a3a] transition-all duration-200 ${className}`}>
-                <div className="p-6">
+            <div className={`bg-[#1F1E1D] border border-[#262626] rounded-xl hover:border-[#3a3a3a] transition-all duration-200 h-full flex flex-col ${className}`}>
+                <div className="p-6 flex flex-col flex-1">
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex-1 text-left">
                             <h3 className="text-2xl font-bold text-[#C2C0B6]">{title}</h3>
@@ -160,7 +160,7 @@ const EnhancedDashboard = () => {
                             <div className="w-8 h-8 rounded-full border-4 border-[#242532] border-t-[#56a69f] animate-spin"></div>
                         </div>
                     ) : (
-                        <div className="w-full text-left">
+                        <div className="w-full text-left flex-1">
                             {children}
                         </div>
                     )}
@@ -297,12 +297,12 @@ const EnhancedDashboard = () => {
             </div>
 
             {/* Recent Transactions and Savings Goals - Side by Side */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div data-tour="recent-transactions">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                <div data-tour="recent-transactions" className="h-full">
                     <RecentTransactionsPreview />
                 </div>
 
-                <div data-tour="savings-section">
+                <div data-tour="savings-section" className="h-full">
                     <SavingsOverviewCard />
                 </div>
             </div>
