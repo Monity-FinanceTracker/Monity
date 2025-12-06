@@ -4,15 +4,19 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { optimizedGet, optimizedDel } from '../../utils/optimizedApi';
 import { del } from '../../utils/api';
+import API from '../../utils/api';
 import { queryKeys } from '../../lib/queryClient';
 import formatDate from '../../utils/formatDate';
 import { formatCurrency, formatSimpleCurrency, getAmountColor } from '../../utils/currency';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, Download } from 'lucide-react';
 import { Icon } from '../../utils/iconMapping.jsx';
 import { useSearchDebounce } from '../../hooks/useDebounce';
 import { monitorApiCall } from '../../utils/performanceMonitor';
-import { TransactionSkeleton, Dropdown } from '../ui';
-import { useCategories } from '../../hooks/useQueries';
+import { TransactionSkeleton, Dropdown, CloseButton } from '../ui';
+import { useCategories, useUpdateTransaction } from '../../hooks/useQueries';
+import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
+import { useAuth } from '../../context/useAuth';
+import { toast } from 'react-toastify';
 
 /**
  * Calcula tamanho da fonte baseado no comprimento do valor
@@ -33,6 +37,8 @@ const getResponsiveFontSize = (value) => {
 const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { subscriptionTier } = useAuth();
+    const { showPrompt } = useSmartUpgradePrompt();
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -53,6 +59,19 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     // UI states
     const [selectedTransactions, setSelectedTransactions] = useState(new Set());
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
+
+    // Edit states
+    const [editingTransaction, setEditingTransaction] = useState(null);
+    const [editForm, setEditForm] = useState({
+        description: '',
+        amount: '',
+        date: '',
+        category: '',
+        typeId: 1,
+        metadata: null
+    });
+    const [showEditModal, setShowEditModal] = useState(false);
 
     // React Query for server state management
     const { 
@@ -129,6 +148,52 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         };
     }, [isAddNewDropdownOpen]);
 
+    // Transaction Limit Prompts - Show upgrade prompts at 10 and 50 transactions
+    useEffect(() => {
+        const checkTransactionLimits = async () => {
+            // Only check for free tier users
+            if (subscriptionTier !== 'free' || transactions.length === 0) return;
+
+            // Get transactions from current month
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            const currentMonthTransactions = transactions.filter(t => {
+                const tDate = new Date(t.date);
+                return tDate.getMonth() === currentMonth && tDate.getFullYear() === currentYear;
+            });
+
+            const monthlyCount = currentMonthTransactions.length;
+
+            // Show prompt at 10 transactions (transaction_limit)
+            if (monthlyCount >= 10 && monthlyCount < 50) {
+                const hasSeenTransactionLimit = localStorage.getItem('monity_transaction_limit_prompted');
+                if (!hasSeenTransactionLimit) {
+                    await showPrompt('transaction_limit', {
+                        transaction_count: monthlyCount,
+                        source: 'transaction_list'
+                    });
+                    localStorage.setItem('monity_transaction_limit_prompted', 'true');
+                }
+            }
+
+            // Show prompt at 50 transactions (high_transaction_volume)
+            if (monthlyCount >= 50) {
+                const hasSeenHighVolume = localStorage.getItem('monity_high_volume_prompted');
+                if (!hasSeenHighVolume) {
+                    await showPrompt('high_transaction_volume', {
+                        total_transactions: monthlyCount,
+                        source: 'transaction_list'
+                    });
+                    localStorage.setItem('monity_high_volume_prompted', 'true');
+                }
+            }
+        };
+
+        checkTransactionLimits();
+    }, [transactions, subscriptionTier, showPrompt]);
+
     // Memoized filtering and search with debounced search
     const filteredAndSortedTransactions = useMemo(() => {
         let filtered = [...transactions];
@@ -204,7 +269,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     }, [transactions, debouncedSearchQuery, categoryFilter, dateRange, amountRange, sortBy, sortOrder]);
 
     const queryClient = useQueryClient();
-
+    const updateTransactionMutation = useUpdateTransaction();
 
     // Optimized delete mutation with React Query
     const _deleteTransactionMutation = useMutation({
@@ -309,6 +374,24 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         return false;
     };
 
+    // Helper function to check if a transaction is an investment transaction
+    const isInvestmentTransaction = (transaction) => {
+        // Check metadata for investment operations
+        if (transaction.metadata) {
+            const metadata = typeof transaction.metadata === 'string' 
+                ? JSON.parse(transaction.metadata) 
+                : transaction.metadata;
+            if (metadata?.savings_behavior === 'investment' || metadata?.savings_behavior === 'divestment') {
+                return true;
+            }
+        }
+        // Check category names
+        if (transaction.category === 'Make Investments' || transaction.category === 'Withdraw Investments') {
+            return true;
+        }
+        return false;
+    };
+
     // Calculate totals
     const totals = filteredAndSortedTransactions.reduce((acc, transaction) => {
         const amount = parseFloat(transaction.amount);
@@ -324,13 +407,16 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
             } else if (isWithdrawalTransaction(transaction)) {
                 // Withdrawals increase available balance (negative amount)
                 acc.withdrawals += amount;
+            } else if (isInvestmentTransaction(transaction)) {
+                // Both making and withdrawing investments reduce savings total
+                acc.investments += Math.abs(amount);
             } else {
                 // Regular savings deposits
                 acc.savings += amount;
             }
         }
         return acc;
-    }, { income: 0, expenses: 0, savings: 0, allocations: 0, withdrawals: 0 });
+    }, { income: 0, expenses: 0, savings: 0, allocations: 0, withdrawals: 0, investments: 0 });
 
     // Net balance = income - expenses - allocations - withdrawals + savings
     // Withdrawals are negative amounts, so subtracting them adds the money back (matches backend logic: balance -= transaction.amount)
@@ -338,7 +424,7 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const balance = totals.income - totals.expenses - totals.allocations - totals.withdrawals + totals.savings;
 
     // Calculate total savings: regular savings + allocations - withdrawals
-    const totalSavings = totals.savings + totals.allocations - totals.withdrawals;
+    const totalSavings = totals.savings + totals.allocations - totals.withdrawals - totals.investments;
 
     // Transaction card component - Responsive for different screen sizes
     const TransactionCard = ({ transaction, isSelected, onSelect }) => (
@@ -395,7 +481,20 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                             {formatCurrency(transaction.amount, transaction.typeId)}
                         </div>
                     </div>
-                    
+
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClick(transaction);
+                        }}
+                        className="text-[#C2C0B6] hover:text-[#56a69f] transition-colors p-1"
+                        title={t('transactions.edit')}
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </button>
+
                     <button
                         onClick={() => handleDelete(transaction.id)}
                         className="text-[#C2C0B6] hover:text-red-400 transition-colors p-1"
@@ -422,6 +521,68 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
         }
     };
 
+    const handleEditClick = (transaction) => {
+        let parsedMetadata = null;
+        if (transaction.metadata) {
+            parsedMetadata = typeof transaction.metadata === 'string'
+                ? JSON.parse(transaction.metadata)
+                : transaction.metadata;
+        }
+
+        setEditingTransaction(transaction);
+        setEditForm({
+            description: transaction.description || '',
+            amount: transaction.amount || '',
+            date: new Date(transaction.date).toISOString().split('T')[0],
+            category: transaction.category || '',
+            typeId: transaction.typeId,
+            metadata: parsedMetadata
+        });
+        setShowEditModal(true);
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!editForm.description || !editForm.amount || !editForm.category) {
+            alert(t('transactions.fill_all_fields'));
+            return;
+        }
+
+        try {
+            await updateTransactionMutation.mutateAsync({
+                id: editingTransaction.id,
+                transactionData: {
+                    description: editForm.description,
+                    amount: parseFloat(editForm.amount),
+                    date: editForm.date,
+                    category: editForm.category,
+                    typeId: editForm.typeId,
+                    metadata: editForm.metadata ? JSON.stringify(editForm.metadata) : null
+                }
+            });
+
+            setShowEditModal(false);
+            setEditingTransaction(null);
+        } catch (error) {
+            console.error('Edit transaction failed:', error);
+            alert(t('transactions.edit_failed'));
+        }
+    };
+
+    const handleEditCancel = () => {
+        setShowEditModal(false);
+        setEditingTransaction(null);
+        setEditForm({
+            description: '',
+            amount: '',
+            date: '',
+            category: '',
+            typeId: 1,
+            metadata: null
+        });
+    };
+
     // Dropdown handlers
     const handleAddNewClick = () => {
         setIsAddNewDropdownOpen(!isAddNewDropdownOpen);
@@ -435,6 +596,120 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
     const handleAddExpense = () => {
         setIsAddNewDropdownOpen(false);
         navigate('/add-expense');
+    };
+
+    // Export transactions to CSV
+    const handleExportTransactions = async () => {
+        // Check if user is premium
+        if (subscriptionTier !== 'premium') {
+            showPrompt('export_transactions');
+            return;
+        }
+
+        setIsExporting(true);
+
+        try {
+            // Prepare date range if set
+            const exportData = {};
+            if (dateRange.start) {
+                exportData.startDate = dateRange.start;
+            }
+            if (dateRange.end) {
+                exportData.endDate = dateRange.end;
+            }
+
+            // Call export endpoint with blob response type
+            const response = await API.post('/transactions/export', exportData, {
+                responseType: 'blob', // Important for file download
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // Check if response is actually an error (JSON error might come as blob)
+            const contentType = response.headers['content-type'] || response.headers['Content-Type'] || '';
+            if (contentType.includes('application/json')) {
+                // Response is likely an error JSON, read it as text
+                const text = await response.data.text();
+                try {
+                    const errorData = JSON.parse(text);
+                    throw new Error(errorData.error || errorData.message || 'Export failed');
+                } catch {
+                    // If parsing fails, throw original error
+                    throw new Error('Export failed');
+                }
+            }
+
+            // response.data is already a Blob when responseType is 'blob'
+            // Ensure it's properly typed as CSV
+            let blob;
+            if (response.data instanceof Blob) {
+                // If blob type is not CSV, recreate with correct type
+                if (response.data.type && !response.data.type.includes('csv') && !response.data.type.includes('text')) {
+                    blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+                } else {
+                    blob = response.data;
+                }
+            } else {
+                // Fallback: create blob from response data
+                blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+            }
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.style.display = 'none';
+            
+            // Generate filename with date range if applicable
+            const dateStr = dateRange.start && dateRange.end 
+                ? `${dateRange.start}_to_${dateRange.end}`
+                : new Date().toISOString().split('T')[0];
+            link.download = `monity-transactions-${dateStr}.csv`;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            
+            // Cleanup after a short delay to ensure download starts
+            setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+
+            toast.success(t('transactions.export_success') || 'Transactions exported successfully!');
+            
+            // Mark onboarding checklist item as complete (download_report)
+            // This is done asynchronously and should not block the UI
+            try {
+                const checklistResponse = await API.post('/onboarding/checklist', {
+                    item: 'download_report',
+                    completed: true
+                });
+                console.log('Checklist updated successfully:', checklistResponse.data);
+            } catch (checklistError) {
+                // Log error for debugging
+                console.error('Failed to update onboarding checklist:', checklistError);
+                console.error('Error details:', {
+                    message: checklistError.message,
+                    response: checklistError.response?.data,
+                    status: checklistError.response?.status
+                });
+            }
+        } catch (error) {
+            console.error('Export failed:', error);
+            
+            // Handle premium error
+            if (error.response?.status === 403) {
+                showPrompt('export_transactions');
+            } else if (error.response?.status === 404) {
+                toast.error(t('transactions.export_no_data') || 'No transactions found for the selected date range.');
+            } else {
+                toast.error(t('transactions.export_failed') || 'Failed to export transactions. Please try again.');
+            }
+        } finally {
+            setIsExporting(false);
+        }
     };
 
 
@@ -567,6 +842,30 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                         >
                             <Icon name="Filter" size="sm" />
                             <span>{t('transactions.filters')}</span>
+                        </button>
+
+                        {/* Export CSV Button - Premium only */}
+                        <button
+                            onClick={handleExportTransactions}
+                            disabled={isExporting || subscriptionTier !== 'premium'}
+                            className={`border rounded-lg px-3 py-2 transition-colors flex items-center justify-center gap-2 w-full md:w-auto flex-shrink-0 ${
+                                subscriptionTier === 'premium'
+                                    ? 'bg-[#56a69f] border-[#56a69f] text-white hover:bg-[#4a8f88] hover:border-[#4a8f88] disabled:opacity-50 disabled:cursor-not-allowed'
+                                    : 'bg-[#262626] border-[#262626] text-[#C2C0B6] hover:border-[#56a69f]/50 cursor-pointer'
+                            }`}
+                            title={subscriptionTier !== 'premium' ? t('transactions.export_premium_required') || 'Premium feature' : t('transactions.export_csv') || 'Export to CSV'}
+                        >
+                            {isExporting ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    <span>{t('transactions.exporting') || 'Exporting...'}</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Download className="w-4 h-4" />
+                                    <span>{t('transactions.export_csv') || 'Export CSV'}</span>
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -778,6 +1077,107 @@ const ImprovedTransactionList = React.memo(({ transactionType = 'all' }) => {
                 )}
             </div>
             </div>
+
+            {/* Edit Transaction Modal */}
+            {showEditModal && editingTransaction && (
+                <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-2 sm:p-4 pt-8 sm:pt-12 overflow-y-auto">
+                    <div className="bg-[#171717] rounded-lg border border-[#262626] w-full max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar">
+                        <div className="p-4 sm:p-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-xl font-bold text-white">
+                                    {t('transactions.edit_transaction')}
+                                </h2>
+                                <CloseButton onClick={handleEditCancel} />
+                            </div>
+
+                            <form onSubmit={handleEditSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.description') || 'Description'}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editForm.description}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.amount') || 'Amount'}
+                                    </label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={editForm.amount}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, amount: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.date') || 'Date'}
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={editForm.date}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, date: e.target.value }))}
+                                        className="w-full bg-[#232323] border border-[#262626] text-white rounded-lg p-3 focus:ring-2 focus:ring-[#56A69f] focus:border-transparent transition-all"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                                        {t('transactions.category') || 'Category'}
+                                    </label>
+                                    <Dropdown
+                                        value={editForm.category}
+                                        onChange={(value) => setEditForm(prev => ({ ...prev, category: value }))}
+                                        options={categoriesData.map(cat => ({
+                                            value: cat.name,
+                                            label: cat.name
+                                        }))}
+                                        placeholder={t('transactions.select_category') || 'Select category'}
+                                        bgColor="#232323"
+                                        menuBgColor="#232323"
+                                    />
+                                </div>
+
+                                {/* Savings Transaction Warning */}
+                                {editForm.typeId === 3 && editForm.metadata && (
+                                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                                        <p className="text-yellow-400 text-sm">
+                                            <strong>{t('common.warning')}:</strong> {t('transactions.savings_edit_warning')}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <div className="flex gap-3 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={handleEditCancel}
+                                        className="flex-1 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
+                                        {t('common.cancel')}
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={updateTransactionMutation.isPending}
+                                        className="flex-1 bg-[#56A69f] text-white py-3 rounded-lg hover:bg-[#4A8F88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {updateTransactionMutation.isPending ? t('common.saving') : t('common.save')}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 });

@@ -13,17 +13,21 @@ import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import MonityLogo from '../../assets/monity-logo-semFundo-Branca.png';
 import { useAnalytics } from '../../hooks/useAnalytics';
+import { useSmartUpgradePrompt } from '../premium/SmartUpgradePrompt';
+import { PremiumFeatureCard } from '../premium';
 
 const AIAssistantPage = () => {
     const { t } = useTranslation();
     const { subscriptionTier, user } = useAuth();
     const { track } = useAnalytics();
+    const { showPrompt } = useSmartUpgradePrompt();
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [usage, setUsage] = useState(null);
     const [showPrompts, setShowPrompts] = useState(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [showAILimitCard, setShowAILimitCard] = useState(false);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -40,6 +44,26 @@ const AIAssistantPage = () => {
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    // AI Feature Prompt - Show upgrade prompt when free users access AI features
+    useEffect(() => {
+        const showAIPrompt = async () => {
+            if (subscriptionTier !== 'free' || isInitialLoading) return;
+
+            const hasSeenAIPrompt = localStorage.getItem('monity_ai_feature_prompted');
+            if (!hasSeenAIPrompt) {
+                await showPrompt('ai_feature', {
+                    feature_name: 'AI Categorization',
+                    source: 'ai_assistant'
+                });
+                localStorage.setItem('monity_ai_feature_prompted', 'true');
+            }
+        };
+
+        if (!isInitialLoading) {
+            showAIPrompt();
+        }
+    }, [isInitialLoading, subscriptionTier, showPrompt]);
 
     const loadChatHistory = async () => {
         try {
@@ -103,12 +127,15 @@ const AIAssistantPage = () => {
         // Check if limit reached before sending
         if (subscriptionTier === 'free' && usage?.today?.messagesUsed >= 3) {
             toast.error(`${t('ai.daily_limit_reached')}. ${t('ai.upgrade_message')}`);
-            
+
             // Track limit reached
             track('ai_limit_reached', {
                 subscription_tier: subscriptionTier,
                 messages_used: usage?.today?.messagesUsed
             });
+
+            // Show premium feature card for AI categorization
+            setShowAILimitCard(true);
             return;
         }
 
@@ -179,7 +206,7 @@ const AIAssistantPage = () => {
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
 
     return (
-        <div className="h-[calc(100vh-8rem)] max-w-5xl mx-auto flex flex-col overflow-hidden">
+        <div className="h-full max-w-5xl mx-auto flex flex-col overflow-hidden">
             {/* Header - Fixed at top */}
             <div className="flex items-center justify-between px-4 py-3" style={{ flexShrink: 0 }}>
                 <button
@@ -314,6 +341,25 @@ const AIAssistantPage = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Premium Feature Card Modal - AI Categorization Limit */}
+            {showAILimitCard && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="relative max-w-4xl w-full">
+                        <button
+                            onClick={() => setShowAILimitCard(false)}
+                            className="absolute top-4 right-4 z-10 text-white hover:text-gray-300 bg-gray-800 rounded-full p-2"
+                        >
+                            ✕
+                        </button>
+                        <PremiumFeatureCard
+                            featureId="ai_categorization"
+                            variant="modal"
+                            onClose={() => setShowAILimitCard(false)}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

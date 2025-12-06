@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import { useAuth } from '../../context/useAuth';
+import { useDemoData } from '../demo';
 
 const SavingsOverviewCard = () => {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { isDemoMode, demoData } = useDemoData();
     const [savingsData, setSavingsData] = useState({
         totalAllocated: 0,
         totalTargets: 0,
@@ -18,6 +20,24 @@ const SavingsOverviewCard = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        // If in demo mode, use demo data
+        if (isDemoMode && demoData) {
+            const demoGoals = demoData.savingsGoals || [];
+            const totalAllocated = demoGoals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+            const totalTargets = demoGoals.reduce((sum, goal) => sum + goal.targetAmount, 0);
+            const progressPercentage = totalTargets > 0 ? (totalAllocated / totalTargets) * 100 : 0;
+
+            setSavingsData({
+                totalAllocated,
+                totalTargets,
+                goals: demoGoals,
+                progressPercentage,
+                totalGoals: demoGoals.length
+            });
+            setLoading(false);
+            return;
+        }
+
         if (!user) {
             setLoading(false);
             return;
@@ -37,12 +57,12 @@ const SavingsOverviewCard = () => {
         };
 
         fetchSavingsOverview();
-    }, [user]);
+    }, [user, isDemoMode, demoData]);
 
-    if (loading) {
+    if (loading && !isDemoMode) {
         return (
-            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
-                <div className="animate-pulse">
+            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200 h-full flex flex-col">
+                <div className="animate-pulse flex-1">
                     <div className="h-4 bg-gray-700 rounded w-1/3 mb-4"></div>
                     <div className="h-8 bg-gray-700 rounded w-1/2 mb-6"></div>
                     <div className="space-y-3">
@@ -54,10 +74,10 @@ const SavingsOverviewCard = () => {
         );
     }
 
-    if (!user) {
+    if (!user && !isDemoMode) {
         return (
-            <div className="bg-[#171717] border border-[#262626] rounded-xl p-6">
-                <div className="text-center py-4">
+            <div className="bg-[#171717] border border-[#262626] rounded-xl p-6 h-full flex flex-col">
+                <div className="text-center py-4 flex-1 flex items-center justify-center">
                     <p className="text-gray-400">
                         {t('savings_goals.login_to_view', 'Faça login para ver o resumo das suas metas de poupança.')}
                     </p>
@@ -66,10 +86,10 @@ const SavingsOverviewCard = () => {
         );
     }
 
-    if (error) {
+    if (error && !isDemoMode) {
         return (
-            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
-                <div className="text-center py-4">
+            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200 h-full flex flex-col">
+                <div className="text-center py-4 flex-1 flex items-center justify-center">
                     <p className="text-red-400">{error}</p>
                 </div>
             </div>
@@ -78,7 +98,7 @@ const SavingsOverviewCard = () => {
 
     if (savingsData.totalGoals === 0) {
         return (
-            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
+            <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                         <h3 className="text-sm font-medium text-white">
                             {t('savings_goals.title')}
@@ -90,7 +110,7 @@ const SavingsOverviewCard = () => {
                     </div>
                 </div>
                 
-                <div className="text-center py-8">
+                <div className="text-center py-8 flex-1 flex flex-col items-center justify-center">
                     <div className="mb-4">
                         <svg className="w-16 h-16 text-[#56a69f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
@@ -111,7 +131,7 @@ const SavingsOverviewCard = () => {
     }
 
     return (
-        <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
+        <div className="bg-[#1F1E1D] border border-[#262626] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200 h-full flex flex-col">
             {/* Title */}
             <div className="mb-6">
                 <h3 className="text-2xl font-bold text-[#C2C0B6] text-left">
@@ -142,7 +162,7 @@ const SavingsOverviewCard = () => {
             </div>
 
             {/* Single Progress Bar */}
-            <div className="mb-6">
+            <div className="mb-6 flex-1">
                 <div className="flex justify-between text-sm text-[#C2C0B6] mb-2">
                     <span>{t('savings_goals.overall_progress')}</span>
                     <span className="font-bold text-[#56a69f]">{savingsData.progressPercentage.toFixed(1)}%</span>

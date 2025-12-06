@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { getCategories, addTransaction, post } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { Button, CloseButton } from '../ui';
+import { Button, CloseButton, SmartCategoryButton } from '../ui';
 import { FaPlus, FaArrowTrendDown, FaArrowTrendUp, FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { categoryIconOptions } from '../../utils/iconMappingData';
 import { useAnalytics } from '../../hooks/useAnalytics';
+import { useSmartCategorization } from '../../hooks/useSmartCategorization';
 
 /**
  * Componente unificado para adicionar receitas e despesas
@@ -19,7 +20,7 @@ const AddTransaction = ({ type = 'expense' }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { track } = useAnalytics();
-    
+
     // Configuração baseada no tipo
     const config = {
         expense: {
@@ -71,9 +72,21 @@ const AddTransaction = ({ type = 'expense' }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [showCategoryError, setShowCategoryError] = useState(false);
     const [shakeForm, setShakeForm] = useState(false);
+    const [aiSuggestionAccepted, setAiSuggestionAccepted] = useState(false);
+    const [lastSuggestionDescription, setLastSuggestionDescription] = useState('');
+
+    // AI Categorization hook
+    const {
+        suggestions,
+        isLoading: aiLoading,
+        getSuggestions,
+        recordFeedback,
+        clearSuggestions,
+        getTopSuggestion
+    } = useSmartCategorization();
 
     const colorOptions = [
-        '#56a69f', '#EF4444', '#3B82F6', '#F59E0B', 
+        '#56a69f', '#EF4444', '#3B82F6', '#F59E0B',
         '#8B5CF6', '#EC4899', '#10B981', '#F97316',
         '#6366F1', '#84CC16', '#06B6D4', '#EAB308'
     ];
@@ -101,9 +114,108 @@ const AddTransaction = ({ type = 'expense' }) => {
         fetchCategories();
     }, [t, currentConfig.translationKey]);
 
+    // Debounced AI suggestions when description changes
+    useEffect(() => {
+        // Don't fetch if suggestion was already accepted for this description
+        if (aiSuggestionAccepted && transaction.description === lastSuggestionDescription) {
+            return;
+        }
+
+        const timeoutId = setTimeout(() => {
+            const description = transaction.description?.trim() || '';
+
+            if (description.length >= 3) {
+                // Only fetch if description has changed significantly
+                if (description !== lastSuggestionDescription) {
+                    const amount = parseFloat(transaction.amount) || 0;
+                    getSuggestions(description, amount, currentConfig.typeId);
+                    setLastSuggestionDescription(description);
+                    setAiSuggestionAccepted(false);
+                }
+            } else {
+                clearSuggestions();
+                setLastSuggestionDescription('');
+                setAiSuggestionAccepted(false);
+            }
+        }, 800); // Increased debounce to 800ms
+
+        return () => clearTimeout(timeoutId);
+    }, [transaction.description, transaction.amount, currentConfig.typeId, getSuggestions, clearSuggestions, aiSuggestionAccepted, lastSuggestionDescription]);
+
+    // Handle AI suggestion acceptance
+    const handleAcceptSuggestion = useCallback((suggestion) => {
+        const suggestedCategory = suggestion.category;
+
+        // Filter categories by type
+        const filteredCategories = categories.filter(c => c.typeId === currentConfig.typeId);
+
+        // Check if category exists in the list
+        const categoryExists = filteredCategories.some(cat => cat.name === suggestedCategory);
+
+        if (categoryExists) {
+            // Category exists, select it
+            setTransaction(prev => ({ ...prev, categoryName: suggestedCategory }));
+            setAiSuggestionAccepted(true);
+            setLastSuggestionDescription(transaction.description);
+            clearSuggestions();
+
+            // Record feedback
+            const amount = parseFloat(transaction.amount) || 0;
+            recordFeedback(
+                transaction.description,
+                suggestedCategory,
+                suggestedCategory,
+                true,
+                suggestion.confidence,
+                amount
+            );
+        } else {
+            // Category doesn't exist, offer to create it
+            const shouldCreate = window.confirm(
+                t('smartCategorization.auto_create_hint') + '\n\n' +
+                t('categories.add_new') + ': ' + suggestedCategory
+            );
+
+            if (shouldCreate) {
+                // Create the category
+                const newCategory = {
+                    name: suggestedCategory,
+                    typeId: currentConfig.typeId,
+                    color: '#56a69f',
+                    icon: 'Package'
+                };
+
+                post('/categories', newCategory)
+                    .then(({ data }) => {
+                        setCategories(prev => [...prev, data]);
+                        setTransaction(prev => ({ ...prev, categoryName: data.name }));
+                        setAiSuggestionAccepted(true);
+                        setLastSuggestionDescription(transaction.description);
+                        clearSuggestions();
+                        toast.success(t('categories.add_success'));
+
+                        // Record feedback
+                        const amount = parseFloat(transaction.amount) || 0;
+                        recordFeedback(
+                            transaction.description,
+                            suggestedCategory,
+                            data.name,
+                            true,
+                            suggestion.confidence,
+                            amount
+                        );
+                    })
+                    .catch(error => {
+                        toast.error(t('categories.add_error'));
+                        console.error('Error creating category:', error);
+                    });
+            }
+        }
+    }, [transaction.description, transaction.amount, categories, currentConfig.typeId, recordFeedback, clearSuggestions, t]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Verifica se não há categorias do tipo correto disponíveis
         if (filteredCategories.length === 0) {
             setShakeForm(true);
@@ -113,8 +225,8 @@ const AddTransaction = ({ type = 'expense' }) => {
         }
 
         setLoading(true);
-        const transactionData = { 
-            ...transaction, 
+        const transactionData = {
+            ...transaction,
             amount: parseFloat(transaction.amount),
             category: transaction.categoryName
         };
@@ -127,26 +239,40 @@ const AddTransaction = ({ type = 'expense' }) => {
 
         try {
             await addTransaction(transactionData);
-            
+
+            // Record AI feedback if suggestion was used
+            const topSuggestion = getTopSuggestion();
+            if (topSuggestion && aiSuggestionAccepted) {
+                recordFeedback(
+                    transactionData.description,
+                    topSuggestion.category,
+                    transactionData.category,
+                    transactionData.category === topSuggestion.category,
+                    topSuggestion.confidence,
+                    transactionData.amount
+                );
+            }
+
             // Track transaction creation
             track('transaction_created', {
                 type: type,
                 amount: transactionData.amount,
                 category: transactionData.category,
-                has_description: !!transactionData.description
+                has_description: !!transactionData.description,
+                ai_suggested: aiSuggestionAccepted
             });
-            
+
             // Invalidate and refetch all transaction-related queries
             await queryClient.invalidateQueries({ queryKey: ['transactions'] });
             await queryClient.invalidateQueries({ queryKey: ['balance'] });
             await queryClient.invalidateQueries({ queryKey: ['savings'] });
             await queryClient.invalidateQueries({ queryKey: ['budgets'] });
-            
+
             toast.success(t(`${currentConfig.translationKey}.success`));
             navigate('/');
         } catch (err) {
             toast.error(err.response?.data?.message || t(`${currentConfig.translationKey}.failed`));
-            
+
             // Track transaction creation failure
             track('transaction_creation_failed', {
                 type: type,
@@ -159,20 +285,20 @@ const AddTransaction = ({ type = 'expense' }) => {
 
     const handleAddCategory = async (e) => {
         e.preventDefault();
-        
+
         try {
             const { data } = await post('/categories', newCategory);
             setCategories(prev => [...prev, data]);
-            setNewCategory({ 
-                name: '', 
-                typeId: currentConfig.typeId, 
-                color: '#56a69f', 
-                icon: 'Package' 
+            setNewCategory({
+                name: '',
+                typeId: currentConfig.typeId,
+                color: '#56a69f',
+                icon: 'Package'
             });
             setShowAddCategoryModal(false);
             setShowCategoryError(false);
             toast.success(t('categories.add_success'));
-            
+
             // Auto-select the newly created category
             setTransaction(prev => ({ ...prev, categoryName: data.name }));
         } catch (error) {
@@ -194,10 +320,10 @@ const AddTransaction = ({ type = 'expense' }) => {
                 className="fixed top-4 left-4 z-10 flex items-center justify-center w-10 h-10 rounded-lg bg-[#1F1E1D] border border-[#262626] hover:border-[#56a69f] transition-colors group"
                 title="Voltar"
             >
-                <svg 
-                    className="w-5 h-5 text-[#C2C0B6] group-hover:text-[#56a69f] transition-colors" 
-                    fill="none" 
-                    stroke="currentColor" 
+                <svg
+                    className="w-5 h-5 text-[#C2C0B6] group-hover:text-[#56a69f] transition-colors"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                 >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -219,9 +345,9 @@ const AddTransaction = ({ type = 'expense' }) => {
                         </p>
                     </div>
 
-                {/* Add Transaction Form */}
-                <div className={`bg-[#1F1E1D] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all ${shakeForm ? 'animate-shake' : ''}`}>
-                    <style>{`
+                    {/* Add Transaction Form */}
+                    <div className={`bg-[#1F1E1D] p-6 md:p-8 rounded-2xl shadow-2xl border border-[#242532]/50 backdrop-blur-sm transition-all ${shakeForm ? 'animate-shake' : ''}`}>
+                        <style>{`
                         @keyframes shake {
                             0%, 100% { transform: translateX(0); }
                             10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
@@ -270,151 +396,166 @@ const AddTransaction = ({ type = 'expense' }) => {
                         }
                     `}</style>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Description Input */}
-                        <div className="space-y-2">
-                            <input
-                                className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 placeholder-[#C2C0B6]"
-                                placeholder={t(`${currentConfig.translationKey}.description`)}
-                                value={transaction.description}
-                                onChange={e => setTransaction(prev => ({ ...prev, description: e.target.value }))}
-                                required
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="relative">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Description Input */}
+                            <div className="space-y-2">
                                 <input
-                                    type="number"
-                                    step="0.01"
-                                    className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 pr-12 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 placeholder-[#C2C0B6] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
-                                    placeholder={t(`${currentConfig.translationKey}.amount`)}
-                                    value={transaction.amount}
-                                    onChange={e => setTransaction(prev => ({ ...prev, amount: e.target.value }))}
+                                    className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 placeholder-[#C2C0B6]"
+                                    placeholder={t(`${currentConfig.translationKey}.description`)}
+                                    value={transaction.description}
+                                    onChange={e => {
+                                        const newDescription = e.target.value;
+                                        setTransaction(prev => ({ ...prev, description: newDescription }));
+                                        // Only reset if description changed significantly
+                                        if (newDescription.trim() !== lastSuggestionDescription) {
+                                            setAiSuggestionAccepted(false);
+                                        }
+                                    }}
                                     required
                                 />
-                                {/* Custom spinner arrows */}
-                                <div className="absolute top-1/2 right-3 -translate-y-1/2 flex flex-col gap-0.5">
-                                    <button
-                                        type="button"
-                                        onClick={() => setTransaction(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
-                                        className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
-                                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
-                                    >
-                                        <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setTransaction(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
-                                        className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
-                                        style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
-                                    >
-                                        <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="relative">
-                                <input
-                                    type="date"
-                                    className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
-                                    value={transaction.date}
-                                    onChange={e => setTransaction(prev => ({ ...prev, date: e.target.value }))}
-                                    required
-                                />
-                            </div>
-                        </div>
-                        
-                        <div className="relative">
-                            <select
-                                className={`w-full bg-[#30302E] border ${showCategoryError ? 'border-red-500' : 'border-[#30302E]'} text-[#C2C0B6] rounded-xl p-4 pr-12 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium`}
-                                style={{
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    fontSize: '14px',
-                                    fontWeight: '500'
-                                }}
-                                value={transaction.categoryName}
-                                onChange={e => {
-                                    setTransaction(prev => ({ ...prev, categoryName: e.target.value }));
-                                    setShowCategoryError(false);
-                                }}
-                            >
-                                <option 
-                                    value="" 
-                                    className="bg-[#30302E] text-[#C2C0B6] font-medium"
-                                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#30302E', color: '#C2C0B6' }}
-                                >
-                                    {filteredCategories.length === 0 
-                                        ? t('addTransaction.no_categories_available')
-                                        : t(`${currentConfig.translationKey}.select_category`)
-                                    }
-                                </option>
-                                {filteredCategories.map(category => (
-                                    <option 
-                                        key={category.id} 
-                                        value={category.name} 
-                                        className="bg-[#30302E] text-[#C2C0B6] font-medium"
-                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#30302E', color: '#C2C0B6' }}
-                                    >
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <svg className="w-4 h-4 text-[#C2C0B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                        </div>
 
-                        {/* Error Alert - No Categories */}
-                        {showCategoryError && (
-                            <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-3 animate-fadeIn text-sm">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="text-red-400 font-semibold mb-1 text-sm">
-                                            {t('addTransaction.no_category_alert_title')}
-                                        </h3>
-                                        <p className="text-red-300 text-xs mb-2">
-                                            {t('addTransaction.no_category_alert_message')}
-                                        </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="relative">
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 pr-12 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 placeholder-[#C2C0B6] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                                        placeholder={t(`${currentConfig.translationKey}.amount`)}
+                                        value={transaction.amount}
+                                        onChange={e => setTransaction(prev => ({ ...prev, amount: e.target.value }))}
+                                        required
+                                    />
+                                    {/* Custom spinner arrows */}
+                                    <div className="absolute top-1/2 right-3 -translate-y-1/2 flex flex-col gap-0.5">
                                         <button
                                             type="button"
-                                            onClick={() => setShowAddCategoryModal(true)}
-                                            className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors font-medium text-xs flex items-center gap-2"
+                                            onClick={() => setTransaction(prev => ({ ...prev, amount: ((parseFloat(prev.amount) || 0) + 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
                                         >
-                                            <FaPlus className="text-xs" />
-                                            {t('addTransaction.create_category_now')}
+                                            <FaChevronUp className="w-3 h-3 text-[#C2C0B6] stroke-2" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setTransaction(prev => ({ ...prev, amount: Math.max(0, (parseFloat(prev.amount) || 0) - 0.01).toFixed(2) }))}
+                                            className="w-4 h-3 flex items-center justify-center text-[#C2C0B6] transition-colors cursor-pointer bg-transparent border-none outline-none p-0"
+                                            style={{ backgroundColor: 'transparent', border: 'none', outline: 'none', padding: 0 }}
+                                        >
+                                            <FaChevronDown className="w-3 h-3 text-[#C2C0B6] stroke-2" />
                                         </button>
                                     </div>
                                 </div>
+                                <div className="relative">
+                                    <input
+                                        type="date"
+                                        className="w-full bg-[#30302E] border border-[#30302E] text-[#C2C0B6] rounded-xl p-4 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:w-4 [&::-webkit-calendar-picker-indicator]:h-4"
+                                        value={transaction.date}
+                                        onChange={e => setTransaction(prev => ({ ...prev, date: e.target.value }))}
+                                        required
+                                    />
+                                </div>
                             </div>
-                        )}
+                            {/* AI Category Suggestion */}
+                            {!aiSuggestionAccepted && getTopSuggestion() && transaction.description.trim().length >= 3 && (
+                                <SmartCategoryButton
+                                    suggestion={getTopSuggestion()}
+                                    onAccept={handleAcceptSuggestion}
+                                    isVisible={!aiLoading && suggestions.length > 0 && !aiSuggestionAccepted}
+                                />
+                            )}
+                            <div className="relative">
+                                <select
+                                    className={`w-full bg-[#30302E] border ${showCategoryError ? 'border-red-500' : 'border-[#30302E]'} text-[#C2C0B6] rounded-xl p-4 pr-12 focus:outline-none focus:ring-0 focus:border-[#30302E] transition-all duration-200 appearance-none cursor-pointer font-sans text-sm font-medium`}
+                                    style={{
+                                        fontFamily: "'DM Sans', sans-serif",
+                                        fontSize: '14px',
+                                        fontWeight: '500'
+                                    }}
+                                    value={transaction.categoryName}
+                                    onChange={e => {
+                                        setTransaction(prev => ({ ...prev, categoryName: e.target.value }));
+                                        setShowCategoryError(false);
+                                    }}
+                                >
+                                    <option
+                                        value=""
+                                        className="bg-[#30302E] text-[#C2C0B6] font-medium"
+                                        style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#30302E', color: '#C2C0B6' }}
+                                    >
+                                        {filteredCategories.length === 0
+                                            ? t('addTransaction.no_categories_available')
+                                            : t(`${currentConfig.translationKey}.select_category`)
+                                        }
+                                    </option>
+                                    {filteredCategories.map(category => (
+                                        <option
+                                            key={category.id}
+                                            value={category.name}
+                                            className="bg-[#30302E] text-[#C2C0B6] font-medium"
+                                            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: '500', backgroundColor: '#30302E', color: '#C2C0B6' }}
+                                        >
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg className="w-4 h-4 text-[#C2C0B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
 
-                        {/* Submit Button */}
-                        <div className="pt-2">
-                            <Button
-                                type="submit"
-                                variant={currentConfig.buttonVariant}
-                                size="md"
-                                fullWidth
-                                loading={loading}
-                                disabled={loading}
-                                leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
-                                style={{ justifyContent: 'center' }}
-                            >
-                                {loading
-                                    ? t(`${currentConfig.translationKey}.adding`) 
-                                    : t(`${currentConfig.translationKey}.add_${type}`)
-                                }
-                            </Button>
-                        </div>
-                    </form>
-                </div>
+                            {/* Error Alert - No Categories */}
+                            {showCategoryError && (
+                                <div className="bg-red-500/10 border-2 border-red-500 rounded-xl p-3 animate-fadeIn text-sm">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-red-400 font-semibold mb-1 text-sm">
+                                                {t('addTransaction.no_category_alert_title')}
+                                            </h3>
+                                            <p className="text-red-300 text-xs mb-2">
+                                                {t('addTransaction.no_category_alert_message')}
+                                            </p>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowAddCategoryModal(true)}
+                                                className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors font-medium text-xs flex items-center gap-2"
+                                            >
+                                                <FaPlus className="text-xs" />
+                                                {t('addTransaction.create_category_now')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Submit Button */}
+                            <div className="pt-2">
+                                <Button
+                                    type="submit"
+                                    variant={currentConfig.buttonVariant}
+                                    size="md"
+                                    fullWidth
+                                    loading={loading}
+                                    disabled={loading}
+                                    leftIcon={!loading ? <FaPlus className="text-lg" /> : null}
+                                    style={{ justifyContent: 'center' }}
+                                >
+                                    {loading
+                                        ? t(`${currentConfig.translationKey}.adding`)
+                                        : t(`${currentConfig.translationKey}.add_${type}`)
+                                    }
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -458,7 +599,7 @@ const AddTransaction = ({ type = 'expense' }) => {
                                             setTimeout(() => setIsDropdownOpen(false), 150);
                                         }}
                                         className="w-full bg-[#1F1E1D] border border-[#262626] text-white rounded-lg p-2 sm:p-3 pr-8 sm:pr-10 focus:outline-none focus:ring-0 focus:border-[#262626] transition-all cursor-pointer"
-                                        style={{ 
+                                        style={{
                                             background: '#1F1E1D',
                                             color: 'white',
                                             appearance: 'none',
@@ -470,10 +611,10 @@ const AddTransaction = ({ type = 'expense' }) => {
                                         <option value={2}>{t('categories.income')}</option>
                                     </select>
                                     <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                                        <svg 
-                                            className={`w-5 h-5 text-[#C2C0B6] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} 
-                                            fill="none" 
-                                            stroke="currentColor" 
+                                        <svg
+                                            className={`w-5 h-5 text-[#C2C0B6] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                                            fill="none"
+                                            stroke="currentColor"
                                             viewBox="0 0 24 24"
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
@@ -494,11 +635,10 @@ const AddTransaction = ({ type = 'expense' }) => {
                                                 key={iconOption.name}
                                                 type="button"
                                                 onClick={() => setNewCategory(prev => ({ ...prev, icon: iconOption.name }))}
-                                                className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${
-                                                    newCategory.icon === iconOption.name 
-                                                        ? 'border-[#56a69f] bg-[#56a69f]/20 text-[#56a69f]' 
+                                                className={`p-2 sm:p-3 rounded-lg border transition-all flex items-center justify-center ${newCategory.icon === iconOption.name
+                                                        ? 'border-[#56a69f] bg-[#56a69f]/20 text-[#56a69f]'
                                                         : 'border-[#262626] hover:border-[#56a69f]/50 text-[#C2C0B6] hover:text-white'
-                                                }`}
+                                                    }`}
                                                 title={iconOption.label}
                                             >
                                                 <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -518,11 +658,10 @@ const AddTransaction = ({ type = 'expense' }) => {
                                             key={color}
                                             type="button"
                                             onClick={() => setNewCategory(prev => ({ ...prev, color }))}
-                                            className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 transition-all ${
-                                                newCategory.color === color 
-                                                    ? 'border-white' 
+                                            className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 transition-all ${newCategory.color === color
+                                                    ? 'border-white'
                                                     : 'border-transparent hover:border-gray-400'
-                                            }`}
+                                                }`}
                                             style={{ backgroundColor: color }}
                                         />
                                     ))}

@@ -8,6 +8,7 @@ import { TrendingUp, DollarSign, Target, AlertCircle, Crown } from 'lucide-react
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import Dropdown from '../ui/Dropdown';
 import { useAnalytics } from '../../hooks/useAnalytics';
+import PremiumUpgradeCard from '../groups/PremiumUpgradeCard';
 
 const InvestmentCalculator = () => {
     const { t } = useTranslation();
@@ -118,32 +119,47 @@ const InvestmentCalculator = () => {
     };
 
     return (
-        <div className="min-h-screen p-4 md:p-6">
+        <div className="min-h-full p-4 md:p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                            <div>
-                                <h1 className="text-3xl font-bold text-white">
-                                    {t('investmentCalculator.title')}
-                                </h1>
-                            </div>
+                            <h1 className="text-3xl font-bold text-white">
+                                {t('investmentCalculator.title')}
+                            </h1>
+                            {usage && !usage.isPremium && (
+                                <div className="flex items-center gap-2 px-3 py-1 bg-[#262626] border border-[#262626] rounded-lg">
+                                    <span className="text-[#C2C0B6] text-sm">
+                                        {Number(usage.simulationsUsed ?? 0)}/{Number(usage.simulationsLimit ?? 0)}
+                                    </span>
+                                    <span className="text-[#8B8A85] text-xs">
+                                        {t('investmentCalculator.simulations_label')}
+                                    </span>
+                                </div>
+                            )}
+                            {usage && usage.isPremium && (
+                                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">
+                                    <Crown className="w-3.5 h-3.5 text-[#56a69f]" />
+                                    <span className="text-[#56a69f] text-xs font-medium">
+                                        {t('investmentCalculator.unlimited')}
+                                    </span>
+                                </div>
+                            )}
                         </div>
-                        
-                        {/* Usage indicator */}
-                        {usage && !usage.isPremium && (
-                            <div className="bg-[#1F1E1D] rounded-lg px-4 py-2 border border-[#262626]">
-                                <p className="text-sm text-[#C2C0B6]">
-                                    {t('investmentCalculator.simulationsUsed', {
-                                        used: Number(usage.simulationsUsed ?? 0),
-                                        limit: Number(usage.simulationsLimit ?? 0)
-                                    })}
-                                </p>
-                            </div>
-                        )}
                     </div>
                 </div>
+
+                {/* Premium Upgrade Card */}
+                {limitReached && (
+                    <div className="mb-6">
+                        <PremiumUpgradeCard 
+                            titleKey="investmentCalculator.premium_unlimited_simulations"
+                            buttonKey="investmentCalculator.upgrade_to_premium"
+                            icon={TrendingUp}
+                        />
+                    </div>
+                )}
 
                 {/* Limit Reached Banner */}
                 {limitReached && (

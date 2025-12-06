@@ -3,16 +3,19 @@ const { logger } = require('../utils/logger');
 const jwt = require('jsonwebtoken');
 const { supabaseAdmin } = require('../config');
 const DataExportService = require('../services/dataExportService');
+const ReferralService = require('../services/referralService');
+const crypto = require('crypto');
 
 class AuthController {
     constructor(supabase) {
         this.supabase = supabase;
         this.userModel = new User(supabase);
         this.dataExportService = new DataExportService(supabase);
+        this.referralService = new ReferralService(supabase);
     }
 
     async register(req, res) {
-        const { email, password, name } = req.body;
+        const { email, password, name, referralCode } = req.body;
         
         try {
             // Email já foi validado pelo middleware validateEmailDeep
@@ -40,11 +43,48 @@ class AuthController {
             }
 
             if (data.user) {
-                logger.info('User registered successfully', { 
+                logger.info('User registered successfully', {
                     userId: data.user.id,
                     email: data.user.email,
-                    emailConfirmed: data.user.email_confirmed_at !== null
+                    emailConfirmed: data.user.email_confirmed_at !== null,
+                    hasReferralCode: !!referralCode
                 });
+
+                // Handle referral code if provided
+                if (referralCode && referralCode.trim().length > 0) {
+                    try {
+                        // Get IP address for fraud prevention
+                        const ipAddress = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'];
+
+                        // Generate email hash for fraud detection
+                        const emailHash = crypto.createHash('sha256').update(email.toLowerCase()).digest('hex');
+
+                        // Apply referral code
+                        await this.referralService.applyReferralCode(
+                            data.user.id,
+                            referralCode,
+                            {
+                                ipAddress,
+                                emailHash,
+                                deviceFingerprint: req.headers['x-fingerprint'] || null
+                            }
+                        );
+
+                        logger.info('Referral code applied successfully', {
+                            userId: data.user.id,
+                            referralCode: referralCode.toUpperCase()
+                        });
+
+                    } catch (referralError) {
+                        // Log error but don't fail the registration
+                        logger.error('Failed to apply referral code', {
+                            userId: data.user.id,
+                            referralCode,
+                            error: referralError.message
+                        });
+                        // Continue with registration even if referral fails
+                    }
+                }
 
                 // Criar categorias padrão de forma assíncrona apenas se email já confirmado
                 // Se email não confirmado, categorias serão criadas após confirmação

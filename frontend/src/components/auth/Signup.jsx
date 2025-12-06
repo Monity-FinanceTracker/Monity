@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
 import GoogleOAuthButton from './GoogleOAuthButton';
+import api from '../../utils/api';
 
 function Signup() {
     const { t } = useTranslation();
@@ -14,6 +15,9 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [referralCode, setReferralCode] = useState('');
+    const [referralValidation, setReferralValidation] = useState({ valid: null, message: '', referrerName: '' });
+    const [validatingReferral, setValidatingReferral] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
@@ -22,6 +26,15 @@ function Signup() {
     const navigate = useNavigate();
     const { signup } = useAuth();
     const { track } = useAnalytics();
+
+    // Check URL for referral code on mount
+    useEffect(() => {
+        const refCode = searchParams.get('ref');
+        if (refCode) {
+            setReferralCode(refCode.toUpperCase());
+            validateReferralCode(refCode);
+        }
+    }, [searchParams, validateReferralCode]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,7 +54,7 @@ function Signup() {
         }
 
         try {
-            const result = await signup(name, email, password);
+            const result = await signup(name, email, password, referralCode || null);
 
             if (!result.success) {
                 setError(result.error || t('signupPage.failed'));
@@ -116,6 +129,69 @@ function Signup() {
 
     const passwordStrength = getPasswordStrength(password);
     const passwordsMatch = password && confirmPassword && password === confirmPassword;
+
+    // Validate referral code function
+    const validateReferralCode = useCallback(async (code) => {
+        if (!code || code.trim().length === 0) {
+            setReferralValidation({ valid: null, message: '', referrerName: '' });
+            return;
+        }
+
+        setValidatingReferral(true);
+
+        try {
+            const response = await api.post('/referrals/validate-code-public', {
+                referralCode: code.toUpperCase()
+            });
+
+            if (response.data.valid) {
+                setReferralValidation({
+                    valid: true,
+                    message: `Código válido! Você e ${response.data.referrerName} receberão benefícios.`,
+                    referrerName: response.data.referrerName
+                });
+
+                // Track referral code used
+                track('referral_code_applied', {
+                    referralCode: code.toUpperCase(),
+                    referrerName: response.data.referrerName
+                });
+            } else {
+                setReferralValidation({
+                    valid: false,
+                    message: 'Código de indicação inválido ou expirado.',
+                    referrerName: ''
+                });
+            }
+        } catch {
+            setReferralValidation({
+                valid: false,
+                message: 'Erro ao validar código',
+                referrerName: ''
+            });
+        } finally {
+            setValidatingReferral(false);
+        }
+    }, [track]);
+
+    // Handle referral code change with debounce
+    const handleReferralCodeChange = (value) => {
+        const uppercased = value.toUpperCase();
+        setReferralCode(uppercased);
+
+        // Clear validation when user types
+        if (uppercased.length < 6) {
+            setReferralValidation({ valid: null, message: '', referrerName: '' });
+            return;
+        }
+
+        // Debounce validation
+        const timer = setTimeout(() => {
+            validateReferralCode(uppercased);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    };
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
@@ -347,6 +423,75 @@ function Signup() {
                                         </span>
                                     )}
                                 </div>
+                            )}
+                        </div>
+
+                        {/* Referral Code Input (Optional) */}
+                        <div className="space-y-1.5">
+                            <label htmlFor="referralCode" className="block text-white font-medium text-sm text-left">
+                                Código de Indicação <span className="text-gray-500 text-xs">(Opcional)</span>
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    id="referralCode"
+                                    value={referralCode}
+                                    onChange={(e) => handleReferralCodeChange(e.target.value)}
+                                    onFocus={() => setFocusedField('referralCode')}
+                                    onBlur={() => setFocusedField('')}
+                                    className={`w-full bg-[#262624] border ${
+                                        referralValidation.valid === true
+                                            ? 'border-green-400'
+                                            : referralValidation.valid === false
+                                            ? 'border-red-400'
+                                            : 'border-[#9C9A92]'
+                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500 uppercase`}
+                                    placeholder="ex: JOAO2847"
+                                    maxLength={12}
+                                />
+                                {/* Validation Icons */}
+                                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    {validatingReferral ? (
+                                        <svg className="animate-spin h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    ) : referralValidation.valid === true ? (
+                                        <svg className="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    ) : referralValidation.valid === false ? (
+                                        <svg className="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    ) : null}
+                                </div>
+                            </div>
+                            {/* Validation Message */}
+                            {referralValidation.message && (
+                                <div className={`text-xs flex items-start ${
+                                    referralValidation.valid ? 'text-green-400' : 'text-red-400'
+                                }`}>
+                                    <svg className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        {referralValidation.valid ? (
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        ) : (
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        )}
+                                    </svg>
+                                    <span>{referralValidation.message}</span>
+                                </div>
+                            )}
+                            {/* Benefit Message */}
+                            {!referralCode && (
+                                <p className="text-xs text-gray-400">
+                                    Tem um código de indicação? Ganhe 7 dias grátis de Premium!
+                                </p>
                             )}
                         </div>
 

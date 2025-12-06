@@ -9,8 +9,9 @@ import {
     clearAIChatHistory,
     getAIChatPrompts
 } from '../../utils/api';
-import { FiSend, FiTrash2, FiMessageSquare, FiX, FiAlertCircle, FiLoader } from 'react-icons/fi';
+import { FiSend, FiTrash2, FiMessageSquare, FiX, FiAlertCircle, FiLoader, FiStar } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import PremiumUpgradeCard from '../groups/PremiumUpgradeCard';
 
 const AIChat = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
@@ -171,9 +172,6 @@ const AIChat = ({ isOpen, onClose }) => {
 
     const isPremium = subscriptionTier === 'premium';
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
-    const messagesRemainingText = messagesRemaining === 1
-        ? t('aiChat.messages_remaining', { count: messagesRemaining })
-        : t('aiChat.messages_remaining_plural', { count: messagesRemaining });
 
     return (
         <div 
@@ -195,18 +193,25 @@ const AIChat = ({ isOpen, onClose }) => {
                         <div className="w-10 h-10 bg-gradient-to-br from-[#56a69f] to-[#01a87a] rounded-full flex items-center justify-center">
                             <FiMessageSquare className="text-white" size={20} />
                         </div>
-                        <div>
+                        <div className="flex items-center gap-2">
                             <h2 className="text-xl font-bold text-white">{t('aiChat.title')}</h2>
-                            {usage && (
-                                <p className="text-sm text-[#C2C0B6]">
-                                    {isPremium ? (
-                                        <span className="text-[#56a69f]">{t('aiChat.unlimited_messages')}</span>
-                                    ) : (
-                                        <span>
-                                            {messagesRemainingText}
-                                        </span>
-                                    )}
-                                </p>
+                            {usage && !isPremium && (
+                                <div className="flex items-center gap-2 px-2.5 py-1 bg-[#262626] border border-[#262626] rounded-lg">
+                                    <span className="text-[#C2C0B6] text-xs">
+                                        {(usage?.today?.messagesUsed || 0)}/3
+                                    </span>
+                                    <span className="text-[#8B8A85] text-xs">
+                                        {t('aiChat.messages_today')}
+                                    </span>
+                                </div>
+                            )}
+                            {usage && isPremium && (
+                                <div className="flex items-center gap-1.5 px-2 py-1 bg-[#56a69f]/10 border border-[#56a69f]/20 rounded-lg">
+                                    <FiStar className="w-3 h-3 text-[#56a69f]" />
+                                    <span className="text-[#56a69f] text-xs font-medium">
+                                        {t('aiChat.unlimited')}
+                                    </span>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -228,6 +233,17 @@ const AIChat = ({ isOpen, onClose }) => {
                         </button>
                     </div>
                 </div>
+
+                {/* Premium Upgrade Card */}
+                {!isPremium && messagesRemaining === 0 && (
+                    <div className="px-4 pt-4">
+                        <PremiumUpgradeCard 
+                            titleKey="aiChat.premium_unlimited_messages"
+                            buttonKey="aiChat.upgrade_to_premium"
+                            icon={FiMessageSquare}
+                        />
+                    </div>
+                )}
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">

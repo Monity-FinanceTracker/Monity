@@ -7,6 +7,10 @@ import { ToastContainer } from 'react-toastify';
 import ToastCloseButton from './components/ui/ToastCloseButton';
 import { usePageTracking } from './hooks/usePageTracking';
 import { useAuth } from './context/AuthContext';
+import { DemoDataProvider } from './components/demo';
+import { WelcomeHeroOverlay, SocialProofBanner } from './components/landing';
+import { OnboardingWizard } from './components/onboarding';
+import api from './utils/api';
 
 // Keep only critical components as regular imports for faster initial loading
 import {
@@ -23,6 +27,7 @@ import {
   UnifiedTopBar,
   NotificationProvider
 } from './components';
+import EarnedPremiumExpiryBanner from './components/premium/EarnedPremiumExpiryBanner';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import ConfigCheck from './components/ui/ConfigCheck';
 import Privace from './components/privace';
@@ -45,6 +50,8 @@ const GroupsInfo = lazy(() => import('./components/groups/GroupsInfo'));
 const AcceptInvitationPage = lazy(() => import('./components/groups/AcceptInvitationPage'));
 const WhatsNewPage = lazy(() => import('./components/whatsNew/WhatsNewPage'));
 const AnalyticsDashboard = lazy(() => import('./components/admin/AnalyticsDashboard'));
+const DemoDashboard = lazy(() => import('./pages/DemoDashboard'));
+const ReferralDashboard = lazy(() => import('./components/referrals/ReferralDashboard'));
 
 // Import lazy components with optimized loading
 import {
@@ -125,11 +132,62 @@ const AdminRoute = ({ children }) => {
 // Main layout for protected pages
 const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [showHeroOverlay, setShowHeroOverlay] = useState(false);
+  const [showOnboardingWizard, setShowOnboardingWizard] = useState(false);
+  const [onboardingChecked, setOnboardingChecked] = useState(false);
   const { preloadCriticalComponents } = useLazyComponentPreloader();
   const { user, loading } = useAuth();
   const location = useLocation();
   const isUnauthenticated = !user && !loading;
   const isWhatsNewPage = location.pathname === '/whats-new';
+  const isDashboard = location.pathname === '/';
+  const isDemoPage = location.pathname === '/demo';
+
+  // Check if hero overlay should be shown (first-time visitor on dashboard)
+  useEffect(() => {
+    if (isDashboard && isUnauthenticated) {
+      const heroShown = localStorage.getItem('monity_hero_shown');
+      if (!heroShown) {
+        setShowHeroOverlay(true);
+
+        // Track hero overlay view
+        if (window.analytics && typeof window.analytics.track === 'function') {
+          window.analytics.track('hero_overlay_viewed', { variant: 'A' });
+        }
+      }
+    }
+  }, [isDashboard, isUnauthenticated]);
+
+  // Check if onboarding wizard should be shown (authenticated users who haven't completed onboarding)
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      // Only check for authenticated users on dashboard
+      if (!user || loading || isUnauthenticated || onboardingChecked) {
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await api.get('/onboarding/progress');
+        const data = response.data;
+        const onboardingCompleted = data.data?.onboarding_completed || false;
+
+        // Show wizard if not completed
+        if (!onboardingCompleted && isDashboard) {
+          setShowOnboardingWizard(true);
+        }
+
+        setOnboardingChecked(true);
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+        setOnboardingChecked(true);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, [user, loading, isUnauthenticated, isDashboard, onboardingChecked]);
 
   // Preload critical components after layout is mounted
   useEffect(() => {
@@ -156,8 +214,46 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
     };
   }, [isWhatsNewPage]);
 
+  // Handle hero overlay dismissal
+  const handleHeroDismiss = () => {
+    setShowHeroOverlay(false);
+    localStorage.setItem('monity_hero_shown', 'true');
+  };
+
+  // Handle onboarding wizard completion
+  const handleOnboardingComplete = () => {
+    setShowOnboardingWizard(false);
+    // Optionally refresh the page or update state to show the dashboard with checklist
+  };
+
+  // Handle onboarding wizard skip
+  const handleOnboardingSkip = () => {
+    setShowOnboardingWizard(false);
+  };
+
   return (
-    <div className={`flex bg-[#262624] font-sans ${isWhatsNewPage ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
+    <>
+      {/* Onboarding Wizard for authenticated users who haven't completed onboarding */}
+      {showOnboardingWizard && user && !loading && (
+        <OnboardingWizard
+          onComplete={handleOnboardingComplete}
+          onSkip={handleOnboardingSkip}
+        />
+      )}
+
+      {/* Hero Overlay for first-time visitors */}
+      {showHeroOverlay && isDashboard && isUnauthenticated && (
+        <WelcomeHeroOverlay onDismiss={handleHeroDismiss} variant="A" />
+      )}
+
+      {/* Social Proof Banner for unauthenticated users on dashboard */}
+      {isDashboard && isUnauthenticated && !showHeroOverlay && (
+        <div className="fixed bottom-0 left-0 right-0 z-40">
+          <SocialProofBanner />
+        </div>
+      )}
+
+      <div className={`flex bg-[#262624] font-sans ${isWhatsNewPage ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#56a69f] text-[#1F1E1D] p-2 z-50 rounded">
         Skip to main content
       </a>
@@ -175,11 +271,14 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
       <div className={`flex-1 flex flex-col transition-all duration-300 sidebar-transition ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-72'} relative ${isWhatsNewPage ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
         {/* Top navigation bar */}
         <div className={isUnauthenticated ? 'pointer-events-none opacity-60' : ''}>
-          <UnifiedTopBar 
+          <UnifiedTopBar
             isMobileMenuOpen={isMobileMenuOpen}
             onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           />
         </div>
+
+        {/* Earned Premium Expiry Banner - Shows for FREE users with expiring earned premium */}
+        {!isUnauthenticated && <EarnedPremiumExpiryBanner />}
 
         {/* Main content */}
         <main
@@ -188,13 +287,14 @@ const MainLayout = React.memo(({ children, isMobileMenuOpen, setIsMobileMenuOpen
             isWhatsNewPage ? 'overflow-hidden min-h-0' : ''
           }`}
         >
-          <div className={isUnauthenticated ? 'pointer-events-none opacity-60' : ''}>
+          <div className={isUnauthenticated && !isDashboard && !isDemoPage ? 'pointer-events-none opacity-60' : ''}>
             {children}
           </div>
-          {isUnauthenticated && <BlockingAuthModal />}
+          {isUnauthenticated && !isDashboard && !isDemoPage && <BlockingAuthModal />}
         </main>
       </div>
     </div>
+    </>
   );
 });
 
@@ -212,10 +312,11 @@ const App = React.memo(() => {
   }, [location.pathname]);
 
   return (
-    <ErrorBoundary>
-      <ConfigCheck />
-      <NotificationProvider>
-        <ToastContainer
+    <DemoDataProvider>
+      <ErrorBoundary>
+        <ConfigCheck />
+        <NotificationProvider>
+          <ToastContainer
         position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -246,6 +347,9 @@ const App = React.memo(() => {
         <Route path="/privacy" element={<Privace />} />
         <Route path="/terms" element={<Terms />} />
 
+        {/* Demo Dashboard - Standalone demo experience */}
+        <Route path="/demo" element={<MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><DemoDashboard /></Suspense></MainLayout>} />
+
         {/* View-only routes - can view without login, actions require auth */}
         <Route path="/" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedDashboard /></MainLayout></ViewOnlyRoute>} />
         <Route path="/transactions" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyImprovedTransactionList /></MainLayout></ViewOnlyRoute>} />
@@ -257,6 +361,7 @@ const App = React.memo(() => {
         <Route path="/budgets" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyEnhancedBudgets /></MainLayout></ViewOnlyRoute>} />
         <Route path="/subscription" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Subscription /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/subscription/success" element={<ProtectedRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><ThankYouPage /></Suspense></MainLayout></ProtectedRoute>} />
+        <Route path="/referrals" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><ReferralDashboard /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/savings-goals" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><SavingsGoals /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/savings" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><Savings /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/financial-health" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyFinancialHealth /></MainLayout></ViewOnlyRoute>} />
@@ -269,8 +374,8 @@ const App = React.memo(() => {
         <Route path="/groups/invite/:token" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><AcceptInvitationPage /></Suspense></MainLayout></ViewOnlyRoute>} />
         <Route path="/groups/:id" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyGroupPage /></MainLayout></ViewOnlyRoute>} />
 
-        {/* Premium routes */}
-        <Route path="/cashflow" element={<PremiumRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><CashFlowCalendar /></Suspense></MainLayout></PremiumRoute>} />
+        {/* Premium routes - ViewOnlyRoute allows viewing the premium teaser */}
+        <Route path="/cashflow" element={<ViewOnlyRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><Suspense fallback={<Spinner />}><CashFlowCalendar /></Suspense></MainLayout></ViewOnlyRoute>} />
 
         {/* Admin route */}
         <Route path="/admin" element={<AdminRoute><MainLayout isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}><LazyAdminDashboard /></MainLayout></AdminRoute>} />
@@ -283,8 +388,9 @@ const App = React.memo(() => {
       {/* Analytics Consent Banner */}
       <AnalyticsConsentBanner />
 
-      </NotificationProvider>
-    </ErrorBoundary>
+        </NotificationProvider>
+      </ErrorBoundary>
+    </DemoDataProvider>
   );
 });
 

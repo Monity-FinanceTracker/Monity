@@ -20,7 +20,8 @@ import {
   List,
   DollarSign,
   Calculator,
-  BarChart3
+  BarChart3,
+  Gift
 } from "lucide-react";
 import sidebarIcon from "../../assets/Sidebar-Icon.png";
 import sidebarArrow from "../../assets/sidebarArrow.png";
@@ -343,37 +344,46 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen, isColla
                 <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>{t('sidebar.investment_calculator')}</span>
               </NavLink>
 
+              {/* Referrals */}
+              <NavLink
+                to="/referrals"
+                className={({ isActive }) =>
+                  `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden ${isActive
+                    ? 'bg-[#000000] text-[#FAF9F5]'
+                    : 'text-[#C2C0B6] hover:text-[#FAF9F5] hover:bg-[#141413]'
+                  }`
+                }
+                style={navLinkTransition}
+                onClick={() => setIsMobileMenuOpen(false)}
+                title={isCollapsed ? 'Indicar Amigos' : ''}
+              >
+                <div className="w-5 h-5 flex-shrink-0 [&>svg]:stroke-current">
+                  <Gift className="w-5 h-5" stroke="currentColor" />
+                </div>
+                <span className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`} style={{ color: 'inherit', ...navLinkTextTransition }}>Indicar Amigos</span>
+              </NavLink>
+
             {/* Premium/Subscription Section - Only show for non-premium users */}
             {!premiumUser && (
               <div className="mt-6">
                 <NavLink
                   to="/subscription"
                   className={({ isActive }) =>
-                    `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden transform-gpu ${isActive
-                      ? 'border'
-                      : 'border hover:border-[#4A8F88]/20'
+                    `flex items-center px-1.5 py-1.5 rounded-lg group overflow-hidden ${isActive
+                      ? 'bg-[#4A8F88]/10 border border-[#4A8F88]/20 text-[#4A8F88]'
+                      : 'text-[#4A8F88] border border-[#4A8F88]/10 hover:text-[#6BB5AB] hover:bg-[#4A8F88]/20 hover:border-[#4A8F88]/30'
                     }`
                   }
-                  style={({ isActive }) => ({ 
-                    transform: 'translateZ(0)',
-                    backfaceVisibility: 'hidden',
-                    WebkitFontSmoothing: 'antialiased',
-                    transition: 'background-color 200ms ease, color 200ms ease, border-color 200ms ease',
-                    color: '#4A8F88',
-                    backgroundColor: isActive ? 'rgba(74, 143, 136, 0.1)' : 'transparent',
-                    borderColor: isActive ? 'rgba(74, 143, 136, 0.2)' : 'rgba(74, 143, 136, 0.1)'
-                  })}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(74, 143, 136, 0.05)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = e.currentTarget.classList.contains('active') ? 'rgba(74, 143, 136, 0.1)' : 'transparent'}
+                  style={navLinkTransition}
                   onClick={() => setIsMobileMenuOpen(false)}
                   title={isCollapsed ? t('sidebar.go_premium') : ''}
                 >
-                  <div className="w-5 h-5 flex-shrink-0">
-                    <Sparkles className="w-5 h-5" />
+                  <div className="w-5 h-5 flex-shrink-0 [&>svg]:stroke-current">
+                    <Sparkles className="w-5 h-5" stroke="currentColor" />
                   </div>
                   <span 
                     className={`text-[14px] font-medium whitespace-nowrap overflow-hidden ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 ml-2.5'}`}
-                    style={navLinkTextTransition}
+                    style={{ color: 'inherit', ...navLinkTextTransition }}
                   >
                     {t('sidebar.go_premium')}
                   </span>

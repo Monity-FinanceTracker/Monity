@@ -89,7 +89,7 @@ class DataExportService {
             let query = this.supabase
                 .from('transactions')
                 .select('*')
-                .eq('user_id', userId);
+                .eq('userId', userId);
 
             if (options.startDate) {
                 query = query.gte('date', options.startDate);
@@ -110,7 +110,7 @@ class DataExportService {
 
             switch (format) {
                 case 'csv':
-                    return this.generateCsv(transactions);
+                    return this.generateTransactionCsv(transactions);
                 case 'pdf':
                     return this.generatePdf(transactions, userId);
                 case 'json':
@@ -130,12 +130,57 @@ class DataExportService {
     /**
      * Generate a CSV string from data.
      * @param {Array<Object>} data - The data to convert.
+     * @param {Array<string>} fields - Optional array of field names to include. If not provided, all fields are included.
      * @returns {string} - The CSV data as a string.
      */
-    generateCsv(data) {
-        const json2csvParser = new Parser();
+    generateCsv(data, fields = null) {
+        const options = fields ? { fields } : {};
+        const json2csvParser = new Parser(options);
         const csv = json2csvParser.parse(data);
         logger.info('CSV data generated successfully');
+        return csv;
+    }
+
+    /**
+     * Generate a CSV string from transaction data with only relevant fields.
+     * Excludes: id, typeId, metadata, isFavorite, userId, createdAt, updatedAt
+     * Maps typeId to readable type: Expense, Income, or Savings
+     * @param {Array<Object>} transactions - The transaction data (already decrypted).
+     * @returns {string} - The CSV data as a string.
+     */
+    generateTransactionCsv(transactions) {
+        // Map typeId to readable type
+        const typeMap = {
+            1: 'Expense',
+            2: 'Income',
+            3: 'Savings'
+        };
+
+        // Transform transactions to include only desired fields
+        // Note: description is already decrypted by decryptObject in exportTransactions
+        const transformedTransactions = transactions.map(tx => {
+            const transformed = {
+                date: tx.date || '',
+                description: tx.description || '', // Already decrypted - plain text
+                amount: tx.amount || 0,
+                category: tx.category || tx.categoryName || '',
+                type: typeMap[tx.typeId] || 'Unknown'
+            };
+            return transformed;
+        });
+
+        // Define fields in desired order
+        const fields = [
+            { label: 'Date', value: 'date' },
+            { label: 'Description', value: 'description' },
+            { label: 'Amount', value: 'amount' },
+            { label: 'Category', value: 'category' },
+            { label: 'Type', value: 'type' }
+        ];
+
+        const json2csvParser = new Parser({ fields });
+        const csv = json2csvParser.parse(transformedTransactions);
+        logger.info('Transaction CSV data generated successfully');
         return csv;
     }
 

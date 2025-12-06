@@ -54,18 +54,32 @@ const checkPremium = async (req, res, next) => {
     }
 
     try {
-        const { data: profile, error } = await req.supabase
-            .from('profiles')
-            .select('subscription_tier')
-            .eq('id', req.user.id)
-            .single();
+        // Use subscription_tier from req.user which was set by authenticate middleware
+        // If not available or is 'free', query the profile as fallback using admin client
+        let subscriptionTier = req.user.subscription_tier;
 
-        if (error || !profile) {
-            logger.warn('Could not retrieve user profile for premium check', { userId: req.user.id, error });
-            return res.status(404).json({ success: false, message: 'User profile not found.' });
+        // If subscription_tier is not 'premium', try to fetch from database with admin client
+        // This handles cases where the profile might not have been loaded correctly
+        if (subscriptionTier !== 'premium') {
+            const { supabaseAdmin } = require('../config/supabase');
+            const { data: profile, error } = await supabaseAdmin
+                .from('profiles')
+                .select('subscription_tier')
+                .eq('id', req.user.id)
+                .single();
+
+            if (error) {
+                logger.warn('Could not retrieve user profile for premium check', { userId: req.user.id, error });
+                // If profile doesn't exist or query fails, treat as free tier (not premium)
+                return res.status(403).json({ success: false, message: 'Forbidden: A premium subscription is required for this feature.' });
+            }
+
+            if (profile) {
+                subscriptionTier = profile.subscription_tier;
+            }
         }
 
-        if (profile.subscription_tier !== 'premium') {
+        if (subscriptionTier !== 'premium') {
             return res.status(403).json({ success: false, message: 'Forbidden: A premium subscription is required for this feature.' });
         }
 
