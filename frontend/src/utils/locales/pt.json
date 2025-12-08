@@ -22,7 +22,8 @@
     "continue_with_google": "Continuar com Google",
     "loading": "Carregando...",
     "saving": "Salvando...",
-    "warning": "Aviso"
+    "warning": "Aviso",
+    "optional": "Opcional"
   },
   "loginPage": {
     "slogan": "Sua vida financeira com a monity",
@@ -55,7 +56,12 @@
     "password_special": "Pelo menos um caractere especial",
     "failed": "Falha ao criar conta",
     "already_account": "Já tem uma conta?",
-    "login": "Entrar"
+    "login": "Entrar",
+    "referral_code_label": "Código de Indicação",
+    "referral_code_valid": "Código válido! Você e {{name}} receberão benefícios.",
+    "referral_code_invalid": "Código de indicação inválido ou expirado.",
+    "referral_code_error": "Erro ao validar código",
+    "referral_code_benefit": "Tem um código de indicação? Ganhe 7 dias grátis de Premium!"
   },
   "confirmEmail": {
     "title": "Verifique seu e-mail",
