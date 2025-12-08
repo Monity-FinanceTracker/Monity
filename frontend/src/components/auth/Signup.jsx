@@ -161,9 +161,9 @@ function Signup() {
             });
 
             if (result.requiresEmailConfirmation) {
-                navigate('/email-confirmation', { 
+                navigate('/email-confirmation', {
                     state: { email },
-                    replace: true 
+                    replace: true
                 });
                 return;
             }
@@ -213,7 +213,7 @@ function Signup() {
 
     // Memoize password strength calculation
     const passwordStrength = useMemo(() => getPasswordStrength(password), [password, t]);
-    
+
     // Memoize passwords match check
     const passwordsMatch = useMemo(() => {
         return password && confirmPassword && password === confirmPassword;
@@ -374,11 +374,11 @@ function Signup() {
                                 >
                                     {showPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
                                         </svg>
                                     ) : (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                         </svg>
                                     )}
                                 </div>
@@ -389,14 +389,13 @@ function Signup() {
                                 <div className="mt-2 space-y-2">
                                     <div className="flex items-center space-x-2">
                                         <div className="flex-1 bg-gray-700 rounded-full h-1.5">
-                                            <div 
-                                                className={`h-full rounded-full transition-all duration-300 ${
-                                                    passwordStrength.score === 0 ? 'bg-red-500 w-1/5' :
-                                                    passwordStrength.score === 1 ? 'bg-red-400 w-2/5' :
-                                                    passwordStrength.score === 2 ? 'bg-yellow-400 w-3/5' :
-                                                    passwordStrength.score === 3 ? 'bg-gray-300 w-4/5' :
-                                                    'bg-green-400 w-full'
-                                                }`}
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-300 ${passwordStrength.score === 0 ? 'bg-red-500 w-1/5' :
+                                                        passwordStrength.score === 1 ? 'bg-red-400 w-2/5' :
+                                                            passwordStrength.score === 2 ? 'bg-yellow-400 w-3/5' :
+                                                                passwordStrength.score === 3 ? 'bg-gray-300 w-4/5' :
+                                                                    'bg-green-400 w-full'
+                                                    }`}
                                             ></div>
                                         </div>
                                         <span className={`text-xs font-medium ${passwordStrength.color}`}>
@@ -423,9 +422,8 @@ function Signup() {
                                     id="confirmPassword"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className={`w-full bg-[#262624] border ${
-                                        confirmPassword && !passwordsMatch ? 'border-red-400' : 'border-[#9C9A92]'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className={`w-full bg-[#262624] border ${confirmPassword && !passwordsMatch ? 'border-red-400' : 'border-[#9C9A92]'
+                                        } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
@@ -436,11 +434,11 @@ function Signup() {
                                 >
                                     {showConfirmPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
                                         </svg>
                                     ) : (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                         </svg>
                                     )}
                                 </div>
@@ -482,13 +480,12 @@ function Signup() {
                                     id="referralCode"
                                     value={referralCode}
                                     onChange={(e) => handleReferralCodeChange(e.target.value)}
-                                    className={`w-full bg-[#262624] border ${
-                                        referralValidation.valid === true
+                                    className={`w-full bg-[#262624] border ${referralValidation.valid === true
                                             ? 'border-green-400'
                                             : referralValidation.valid === false
-                                            ? 'border-red-400'
-                                            : 'border-[#9C9A92]'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500 uppercase`}
+                                                ? 'border-red-400'
+                                                : 'border-[#9C9A92]'
+                                        } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500 uppercase`}
                                     placeholder="ex: JOAO2847"
                                     maxLength={12}
                                 />
@@ -512,9 +509,8 @@ function Signup() {
                             </div>
                             {/* Validation Message */}
                             {referralValidation.message && (
-                                <div className={`text-xs flex items-start ${
-                                    referralValidation.valid ? 'text-green-400' : 'text-red-400'
-                                }`}>
+                                <div className={`text-xs flex items-start ${referralValidation.valid ? 'text-green-400' : 'text-red-400'
+                                    }`}>
                                     <svg className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         {referralValidation.valid ? (
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -568,8 +564,8 @@ function Signup() {
 
                     {/* Enhanced Login Link */}
                     <div className="mt-4 text-center">
-                        <Link 
-                            to="/login" 
+                        <Link
+                            to="/login"
                             className="inline-flex items-center justify-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 group"
                         >
                             {t('signupPage.login')}
@@ -582,8 +578,8 @@ function Signup() {
 
                 {/* Footer with Privacy Policy and Terms Links */}
                 <div className="mt-8 text-center">
-                    <a 
-                        href="/privacy" 
+                    <a
+                        href="/privacy"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-[#C2C0B6] hover:text-[#56a69f] transition-colors duration-200"
@@ -591,8 +587,8 @@ function Signup() {
                         Privacy Policy
                     </a>
                     <span className="text-gray-600 mx-3">•</span>
-                    <a 
-                        href="/terms" 
+                    <a
+                        href="/terms"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-[#C2C0B6] hover:text-[#56a69f] transition-colors duration-200"
