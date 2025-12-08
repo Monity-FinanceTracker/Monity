@@ -1,6 +1,4 @@
-
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useAnalytics } from '../../hooks/useAnalytics';
@@ -223,55 +221,6 @@ function Signup() {
 
     // Handle referral code change with proper debounce
     const handleReferralCodeChange = useCallback((value) => {
-    const passwordStrength = getPasswordStrength(password);
-    const passwordsMatch = password && confirmPassword && password === confirmPassword;
-
-    // Validate referral code function
-    const validateReferralCode = useCallback(async (code) => {
-        if (!code || code.trim().length === 0) {
-            setReferralValidation({ valid: null, message: '', referrerName: '' });
-            return;
-        }
-
-        setValidatingReferral(true);
-
-        try {
-            const response = await api.post('/referrals/validate-code-public', {
-                referralCode: code.toUpperCase()
-            });
-
-            if (response.data.valid) {
-                setReferralValidation({
-                    valid: true,
-                    message: `Código válido! Você e ${response.data.referrerName} receberão benefícios.`,
-                    referrerName: response.data.referrerName
-                });
-
-                // Track referral code used
-                track('referral_code_applied', {
-                    referralCode: code.toUpperCase(),
-                    referrerName: response.data.referrerName
-                });
-            } else {
-                setReferralValidation({
-                    valid: false,
-                    message: 'Código de indicação inválido ou expirado.',
-                    referrerName: ''
-                });
-            }
-        } catch {
-            setReferralValidation({
-                valid: false,
-                message: 'Erro ao validar código',
-                referrerName: ''
-            });
-        } finally {
-            setValidatingReferral(false);
-        }
-    }, [track]);
-
-    // Handle referral code change with debounce
-    const handleReferralCodeChange = (value) => {
         const uppercased = value.toUpperCase();
         setReferralCode(uppercased);
 
