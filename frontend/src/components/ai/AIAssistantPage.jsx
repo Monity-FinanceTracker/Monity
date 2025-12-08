@@ -30,10 +30,10 @@ const AIAssistantPage = () => {
     const [showAILimitCard, setShowAILimitCard] = useState(false);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
-
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
 
     useEffect(() => {
         loadChatHistory();
@@ -206,21 +206,21 @@ const AIAssistantPage = () => {
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
 
     return (
-        <div className="h-full max-w-5xl mx-auto flex flex-col overflow-hidden">
-            {/* Header - Fixed at top */}
-            <div className="flex items-center justify-between px-4 py-3" style={{ flexShrink: 0 }}>
-                <button
-                    onClick={handleNewChat}
-                    className="text-[#56a69f] hover:text-[#4A8F88] transition-colors font-medium text-sm flex items-center gap-2"
-                >
-                    <span>+ New chat</span>
-                </button>
-            </div>
+        <div className="h-[calc(100vh-8rem)] max-w-5xl mx-auto flex flex-col" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 8rem)' }}>
+                {/* Header - Fixed at top */}
+                <div className="flex items-center justify-between px-4 py-3" style={{ flexShrink: 0 }}>
+                    <button
+                        onClick={handleNewChat}
+                        className="text-[#56a69f] hover:text-[#4A8F88] transition-colors font-medium text-sm flex items-center gap-2"
+                    >
+                        <span>+ New chat</span>
+                    </button>
+                </div>
 
-            {/* Messages Container - Scrollable */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 pb-4" style={{ scrollBehavior: 'smooth' }}>
+                {/* Messages Container - Scrollable */}
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4" style={{ scrollBehavior: 'smooth', minHeight: 0 }}>
                 {!isInitialLoading && messages.length === 0 && showPrompts ? (
-                    <div className="h-full flex items-center justify-center p-6">
+                    <div className="flex items-center justify-center p-6" style={{ minHeight: 0, flex: '1 1 0', display: 'flex' }}>
                         <div className="flex flex-col items-center gap-4">
                             <img
                                 src={MonityLogo}
@@ -315,7 +315,7 @@ const AIAssistantPage = () => {
             )}
 
             {/* Input - Fixed at bottom */}
-            <div className="sticky bottom-0 p-4 border-t border-[#262626] bg-[#262624] z-10" style={{ flexShrink: 0 }}>
+            <div className="p-4 border-t border-[#262626] bg-[#262624] z-10" style={{ flexShrink: 0, marginTop: 'auto' }}>
                 <div className="flex gap-2">
                     <input
                         ref={inputRef}
