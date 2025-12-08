@@ -176,32 +176,32 @@ function AdminDashboard() {
           title="Total Users"
           value={analytics?.users.total || 0}
           color="text-[#56a69f]"
-          bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
+          bgGradient="from-[#232420] to-[#1F1E1D]"
         />
         <MetricCard
           title="Total Transactions"
           value={formatNumber(analytics?.transactions.total || 0)}
           color="text-[#36A2EB]"
-          bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
+          bgGradient="from-[#232420] to-[#1F1E1D]"
         />
         <MetricCard
           title="Total Volume"
           value={formatCurrency((analytics?.transactions.byType.expenses || 0) + (analytics?.transactions.byType.income || 0) + (analytics?.transactions.byType.savings || 0))}
           color="text-[#FF6384]"
-          bgGradient="from-[#FF6384]/20 to-[#FF6384]/5"
+          bgGradient="from-[#232420] to-[#1F1E1D]"
         />
         <MetricCard
           title="Conversion Rate"
           value={`${conversionRate}%`}
           color="text-[#FFCE56]"
-          bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5"
+          bgGradient="from-[#232420] to-[#1F1E1D]"
         />
         {monetization && (
           <MetricCard
             title="MRR"
             value={formatCurrency(monetization?.revenue?.mrr || 0)}
             color="text-[#56a69f]"
-            bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
+            bgGradient="from-[#232420] to-[#1F1E1D]"
           />
         )}
         {monetization && (
@@ -209,7 +209,7 @@ function AdminDashboard() {
             title="ARPU"
             value={formatCurrency(monetization?.revenue?.arpu || 0)}
             color="text-[#36A2EB]"
-            bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
+            bgGradient="from-[#232420] to-[#1F1E1D]"
           />
         )}
       </div>
@@ -320,10 +320,10 @@ function AdminDashboard() {
         <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Engagement</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <MetricCard title="DAU" value={engagement.dau} color="text-[#56a69f]" bgGradient="from-[#56a69f]/20 to-[#56a69f]/5" />
-            <MetricCard title="WAU" value={engagement.wau} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
-            <MetricCard title="MAU" value={engagement.mau} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
-            <MetricCard title="Retention Cohorts" value={`${engagement.cohort?.length || 0} wks`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/20 to-[#FF6384]/5" />
+            <MetricCard title="DAU" value={engagement.dau} color="text-[#56a69f]" bgGradient="from-[#56a69f]/40 to-[#56a69f]/20" />
+            <MetricCard title="WAU" value={engagement.wau} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/40 to-[#36A2EB]/20" />
+            <MetricCard title="MAU" value={engagement.mau} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/40 to-[#FFCE56]/20" />
+            <MetricCard title="Retention Cohorts" value={`${engagement.cohort?.length || 0} wks`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/40 to-[#FF6384]/20" />
           </div>
           <div className="h-24 bg-[#1F1E1D] rounded-lg border border-[#262626] p-4 flex items-center justify-center">
             {engagement.cohort && engagement.cohort.length > 0 ? (
@@ -352,9 +352,9 @@ function AdminDashboard() {
           <h2 className="text-xl font-semibold mb-4">Monetization</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <MetricCard title="Users" value={monetization.users?.total || 0} color="text-white" bgGradient="from-[#242532]/40 to-[#1F1E1D]/0" />
-            <MetricCard title="Premium" value={monetization.users?.premium || 0} color="text-[#56a69f]" bgGradient="from-[#56a69f]/20 to-[#56a69f]/5" />
-            <MetricCard title="MRR" value={formatCurrency(monetization.revenue?.mrr || 0)} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
-            <MetricCard title="ARPU" value={formatCurrency(monetization.revenue?.arpu || 0)} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
+            <MetricCard title="Premium" value={monetization.users?.premium || 0} color="text-[#56a69f]" bgGradient="from-[#56a69f]/40 to-[#56a69f]/20" />
+            <MetricCard title="MRR" value={formatCurrency(monetization.revenue?.mrr || 0)} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/40 to-[#36A2EB]/20" />
+            <MetricCard title="ARPU" value={formatCurrency(monetization.revenue?.arpu || 0)} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/40 to-[#FFCE56]/20" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl border border-[#262626]">
@@ -378,10 +378,10 @@ function AdminDashboard() {
         <div className="bg-[#1F1E1D] p-6 rounded-2xl border border-[#262626]">
           <h2 className="text-xl font-semibold mb-4">Errors & Performance</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <MetricCard title="p50 Latency" value={`${errorsPerf.latencyMs?.p50 || 0} ms`} color="text-[#56a69f]" bgGradient="from-[#56a69f]/20 to-[#56a69f]/5" />
-            <MetricCard title="p95 Latency" value={`${errorsPerf.latencyMs?.p95 || 0} ms`} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5" />
-            <MetricCard title="p99 Latency" value={`${errorsPerf.latencyMs?.p99 || 0} ms`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/20 to-[#FF6384]/5" />
-            <MetricCard title="Avg Latency" value={`${errorsPerf.latencyMs?.avg || 0} ms`} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5" />
+            <MetricCard title="p50 Latency" value={`${errorsPerf.latencyMs?.p50 || 0} ms`} color="text-[#56a69f]" bgGradient="from-[#56a69f]/40 to-[#56a69f]/20" />
+            <MetricCard title="p95 Latency" value={`${errorsPerf.latencyMs?.p95 || 0} ms`} color="text-[#FFCE56]" bgGradient="from-[#FFCE56]/40 to-[#FFCE56]/20" />
+            <MetricCard title="p99 Latency" value={`${errorsPerf.latencyMs?.p99 || 0} ms`} color="text-[#FF6384]" bgGradient="from-[#FF6384]/40 to-[#FF6384]/20" />
+            <MetricCard title="Avg Latency" value={`${errorsPerf.latencyMs?.avg || 0} ms`} color="text-[#36A2EB]" bgGradient="from-[#36A2EB]/40 to-[#36A2EB]/20" />
           </div>
         </div>
       )}
@@ -434,25 +434,25 @@ function AdminDashboard() {
               title="Avg Monthly Income"
               value={formatCurrency(financialHealth.avgMonthlyIncome)}
               color="text-[#56a69f]"
-              bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
+              bgGradient="from-[#232420] to-[#1F1E1D]"
             />
             <MetricCard
               title="Avg Monthly Expenses"
               value={formatCurrency(financialHealth.avgMonthlyExpenses)}
               color="text-[#FF6384]"
-              bgGradient="from-[#FF6384]/20 to-[#FF6384]/5"
+              bgGradient="from-[#232420] to-[#1F1E1D]"
             />
             <MetricCard
               title="Savings Rate"
               value={`${financialHealth.savingsRate}%`}
               color="text-[#36A2EB]"
-              bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
+              bgGradient="from-[#232420] to-[#1F1E1D]"
             />
             <MetricCard
               title="Total Savings"
               value={formatCurrency(financialHealth.totalSavings)}
               color="text-[#FFCE56]"
-              bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5"
+              bgGradient="from-[#232420] to-[#1F1E1D]"
             />
           </div>
         </div>
@@ -467,13 +467,13 @@ function AdminDashboard() {
               title="Prediction Accuracy"
               value={`${aiStats.accuracy}%`}
               color="text-[#56a69f]"
-              bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
+              bgGradient="from-[#232420] to-[#1F1E1D]"
             />
             <MetricCard
               title="Total Predictions"
               value={formatNumber(aiStats.totalPredictions)}
               color="text-[#36A2EB]"
-              bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
+              bgGradient="from-[#232420] to-[#1F1E1D]"
             />
           </div>
         </div>

@@ -260,7 +260,7 @@ function AnalyticsDashboard() {
                             value={metrics.dau?.toLocaleString() || '0'}
                             icon={<Users className="w-6 h-6" />}
                             color="text-[#56a69f]"
-                            bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
+                            bgGradient="from-[#232420] to-[#1F1E1D]"
                             loading={loading}
                         />
                         <EnhancedMetricCard
@@ -268,7 +268,7 @@ function AnalyticsDashboard() {
                             value={metrics.mau?.toLocaleString() || '0'}
                             icon={<TrendingUp className="w-6 h-6" />}
                             color="text-[#36A2EB]"
-                            bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
+                            bgGradient="from-[#232420] to-[#1F1E1D]"
                             loading={loading}
                         />
                         <EnhancedMetricCard
@@ -276,7 +276,7 @@ function AnalyticsDashboard() {
                             value={metrics.newSignups?.toLocaleString() || '0'}
                             icon={<UserPlus className="w-6 h-6" />}
                             color="text-[#FFCE56]"
-                            bgGradient="from-[#FFCE56]/20 to-[#FFCE56]/5"
+                            bgGradient="from-[#232420] to-[#1F1E1D]"
                             loading={loading}
                         />
                         <EnhancedMetricCard
@@ -284,7 +284,7 @@ function AnalyticsDashboard() {
                             value={`${metrics.conversionRate?.toFixed(1) || '0'}%`}
                             icon={<Target className="w-6 h-6" />}
                             color="text-green-400"
-                            bgGradient="from-green-500/20 to-green-500/5"
+                            bgGradient="from-[#232420] to-[#1F1E1D]"
                             loading={loading}
                         />
                     </div>
@@ -301,7 +301,7 @@ function AnalyticsDashboard() {
                             value={metrics.totalSessions?.toLocaleString() || '0'}
                             subtitle="User sessions tracked"
                             color="text-[#56a69f]"
-                            bgGradient="from-[#56a69f]/20 to-[#56a69f]/5"
+                            bgGradient="from-[#232420] to-[#1F1E1D]"
                             loading={loading}
                         />
                         <EnhancedMetricCard
@@ -309,7 +309,7 @@ function AnalyticsDashboard() {
                             value={formatDuration(avgSessionDuration || 0)}
                             icon={<Clock className="w-6 h-6" />}
                             color="text-[#36A2EB]"
-                            bgGradient="from-[#36A2EB]/20 to-[#36A2EB]/5"
+                            bgGradient="from-[#232420] to-[#1F1E1D]"
                             loading={loading}
                         />
                         <EnhancedMetricCard
@@ -317,7 +317,7 @@ function AnalyticsDashboard() {
                             value={`${aiAcceptanceRate || 0}%`}
                             icon={<Brain className="w-6 h-6" />}
                             color="text-purple-400"
-                            bgGradient="from-purple-500/20 to-purple-500/5"
+                            bgGradient="from-[#232420] to-[#1F1E1D]"
                             loading={loading}
                         />
                     </div>
@@ -369,12 +369,12 @@ function AnalyticsDashboard() {
                             {events && events.length > 0 ? (
                                 events.slice(0, 10).map((event, index) => (
                                     <div key={index} className="flex items-center justify-between
-                                                               p-3 bg-gradient-to-r from-[#56a69f]/10 to-transparent
+                                                               p-3 bg-gradient-to-r from-[#56a69f]/50 to-transparent
                                                                rounded-lg border border-[#262626]/50
                                                                hover:border-[#56a69f]/30 transition-colors">
                                         <div className="flex items-center gap-3">
                                             <span className="text-xs font-medium text-[#56a69f]
-                                                           bg-[#56a69f]/10 px-2 py-1 rounded">
+                                                           bg-[#56a69f]/50 px-2 py-1 rounded">
                                                 #{index + 1}
                                             </span>
                                             <span className="text-sm text-white font-medium">
@@ -411,7 +411,7 @@ function AnalyticsDashboard() {
                         {features && features.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {features.slice(0, 8).map((feature, index) => (
-                                    <div key={index} className="p-4 bg-gradient-to-r from-[#56a69f]/10 to-transparent
+                                    <div key={index} className="p-4 bg-gradient-to-r from-[#56a69f]/50 to-transparent
                                                                rounded-lg border border-[#262626]/50
                                                                hover:border-[#56a69f]/30 transition-colors">
                                         <div className="flex items-start justify-between mb-2">
