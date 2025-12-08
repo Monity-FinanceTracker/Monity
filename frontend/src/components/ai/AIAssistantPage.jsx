@@ -222,12 +222,12 @@ const AIAssistantPage = () => {
                 {!isInitialLoading && messages.length === 0 && showPrompts ? (
                     <div className="h-full flex items-center justify-center p-6">
                         <div className="flex flex-col items-center gap-4">
-                            <img 
-                                src={MonityLogo} 
-                                alt="Monity Logo" 
+                            <img
+                                src={MonityLogo}
+                                alt="Monity Logo"
                                 className="w-16 h-16"
                             />
-                            <h3 
+                            <h3
                                 className="text-4xl font-stratford text-center"
                                 style={{ color: '#C2C0B6' }}
                             >
@@ -243,11 +243,10 @@ const AIAssistantPage = () => {
                                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
                                 <div
-                                    className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                                        message.role === 'user'
+                                    className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.role === 'user'
                                             ? 'bg-[#141413] text-white'
                                             : 'bg-[#262624] text-white'
-                                    }`}
+                                        }`}
                                 >
                                     {message.role === 'assistant' ? (
                                         <div className="text-left prose-sm sm:prose-base">
@@ -262,7 +261,7 @@ const AIAssistantPage = () => {
                                                     h1: (props) => <h1 className="text-xl font-bold mb-2 mt-2 text-white" {...props} />,
                                                     h2: (props) => <h2 className="text-lg font-bold mb-2 mt-2 text-white" {...props} />,
                                                     h3: (props) => <h3 className="text-base font-bold mb-1 mt-1 text-white" {...props} />,
-                                                    code: ({inline, ...props}) => 
+                                                    code: ({ inline, ...props }) =>
                                                         inline ? (
                                                             <code className="bg-gray-700 px-1 py-0.5 rounded text-sm text-white" {...props} />
                                                         ) : (
