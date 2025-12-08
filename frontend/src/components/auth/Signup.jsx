@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { useTranslation } from 'react-i18next';
 import monityLogo from '../../assets/Logo-Escrito-Branca.png';
@@ -22,10 +22,80 @@ function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [, setFocusedField] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
     const { track } = useAnalytics();
+
+    // AbortController ref for canceling in-flight requests
+    const abortControllerRef = useRef(null);
+    const debounceTimerRef = useRef(null);
+
+    // Validate referral code function
+    const validateReferralCode = useCallback(async (code) => {
+        if (!code || code.trim().length === 0) {
+            setReferralValidation({ valid: null, message: '', referrerName: '' });
+            return;
+        }
+
+        // Cancel previous request if any
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+
+        // Create new AbortController for this request
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController;
+
+        setValidatingReferral(true);
+
+        try {
+            const response = await api.post('/referrals/validate-code-public', {
+                referralCode: code.toUpperCase()
+            }, {
+                signal: abortController.signal
+            });
+
+            // Check if request was aborted
+            if (abortController.signal.aborted) {
+                return;
+            }
+
+            if (response.data.valid) {
+                setReferralValidation({
+                    valid: true,
+                    message: t('signupPage.referral_code_valid', { name: response.data.referrerName }),
+                    referrerName: response.data.referrerName
+                });
+
+                // Track referral code used
+                track('referral_code_applied', {
+                    referralCode: code.toUpperCase(),
+                    referrerName: response.data.referrerName
+                });
+            } else {
+                setReferralValidation({
+                    valid: false,
+                    message: t('signupPage.referral_code_invalid'),
+                    referrerName: ''
+                });
+            }
+        } catch (error) {
+            // Don't update state if request was aborted
+            if (error.name === 'AbortError' || abortController.signal.aborted) {
+                return;
+            }
+            setReferralValidation({
+                valid: false,
+                message: t('signupPage.referral_code_error'),
+                referrerName: ''
+            });
+        } finally {
+            // Only update state if this is still the current request
+            if (!abortController.signal.aborted) {
+                setValidatingReferral(false);
+            }
+        }
+    }, [track, t]);
 
     // Check URL for referral code on mount
     useEffect(() => {
@@ -35,6 +105,20 @@ function Signup() {
             validateReferralCode(refCode);
         }
     }, [searchParams, validateReferralCode]);
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            // Cancel any in-flight requests
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+            // Clear any pending timers
+            if (debounceTimerRef.current) {
+                clearTimeout(debounceTimerRef.current);
+            }
+        };
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -77,9 +161,9 @@ function Signup() {
             });
 
             if (result.requiresEmailConfirmation) {
-                navigate('/email-confirmation', { 
+                navigate('/email-confirmation', {
                     state: { email },
-                    replace: true 
+                    replace: true
                 });
                 return;
             }
@@ -127,57 +211,23 @@ function Signup() {
         return { score, strength, color, feedback };
     };
 
-    const passwordStrength = getPasswordStrength(password);
-    const passwordsMatch = password && confirmPassword && password === confirmPassword;
+    // Memoize password strength calculation
+    const passwordStrength = useMemo(() => getPasswordStrength(password), [password, t]);
 
-    // Validate referral code function
-    const validateReferralCode = useCallback(async (code) => {
-        if (!code || code.trim().length === 0) {
-            setReferralValidation({ valid: null, message: '', referrerName: '' });
-            return;
-        }
+    // Memoize passwords match check
+    const passwordsMatch = useMemo(() => {
+        return password && confirmPassword && password === confirmPassword;
+    }, [password, confirmPassword]);
 
-        setValidatingReferral(true);
-
-        try {
-            const response = await api.post('/referrals/validate-code-public', {
-                referralCode: code.toUpperCase()
-            });
-
-            if (response.data.valid) {
-                setReferralValidation({
-                    valid: true,
-                    message: `Código válido! Você e ${response.data.referrerName} receberão benefícios.`,
-                    referrerName: response.data.referrerName
-                });
-
-                // Track referral code used
-                track('referral_code_applied', {
-                    referralCode: code.toUpperCase(),
-                    referrerName: response.data.referrerName
-                });
-            } else {
-                setReferralValidation({
-                    valid: false,
-                    message: 'Código de indicação inválido ou expirado.',
-                    referrerName: ''
-                });
-            }
-        } catch {
-            setReferralValidation({
-                valid: false,
-                message: 'Erro ao validar código',
-                referrerName: ''
-            });
-        } finally {
-            setValidatingReferral(false);
-        }
-    }, [track]);
-
-    // Handle referral code change with debounce
-    const handleReferralCodeChange = (value) => {
+    // Handle referral code change with proper debounce
+    const handleReferralCodeChange = useCallback((value) => {
         const uppercased = value.toUpperCase();
         setReferralCode(uppercased);
+
+        // Clear previous timer
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+        }
 
         // Clear validation when user types
         if (uppercased.length < 6) {
@@ -186,12 +236,10 @@ function Signup() {
         }
 
         // Debounce validation
-        const timer = setTimeout(() => {
+        debounceTimerRef.current = setTimeout(() => {
             validateReferralCode(uppercased);
         }, 500);
-
-        return () => clearTimeout(timer);
-    };
+    }, [validateReferralCode]);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#262624] p-4 relative overflow-hidden">
@@ -255,8 +303,6 @@ function Signup() {
                                     id="name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    onFocus={() => setFocusedField('name')}
-                                    onBlur={() => setFocusedField('')}
                                     className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="Your full name"
                                     required
@@ -287,8 +333,6 @@ function Signup() {
                                     id="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    onFocus={() => setFocusedField('email')}
-                                    onBlur={() => setFocusedField('')}
                                     className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="your@email.com"
                                     required
@@ -319,8 +363,6 @@ function Signup() {
                                     id="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    onFocus={() => setFocusedField('password')}
-                                    onBlur={() => setFocusedField('')}
                                     className="w-full bg-[#262624] border border-[#9C9A92] text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500"
                                     placeholder="••••••••"
                                     required
@@ -332,11 +374,11 @@ function Signup() {
                                 >
                                     {showPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
                                         </svg>
                                     ) : (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                         </svg>
                                     )}
                                 </div>
@@ -347,14 +389,13 @@ function Signup() {
                                 <div className="mt-2 space-y-2">
                                     <div className="flex items-center space-x-2">
                                         <div className="flex-1 bg-gray-700 rounded-full h-1.5">
-                                            <div 
-                                                className={`h-full rounded-full transition-all duration-300 ${
-                                                    passwordStrength.score === 0 ? 'bg-red-500 w-1/5' :
-                                                    passwordStrength.score === 1 ? 'bg-red-400 w-2/5' :
-                                                    passwordStrength.score === 2 ? 'bg-yellow-400 w-3/5' :
-                                                    passwordStrength.score === 3 ? 'bg-gray-300 w-4/5' :
-                                                    'bg-green-400 w-full'
-                                                }`}
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-300 ${passwordStrength.score === 0 ? 'bg-red-500 w-1/5' :
+                                                        passwordStrength.score === 1 ? 'bg-red-400 w-2/5' :
+                                                            passwordStrength.score === 2 ? 'bg-yellow-400 w-3/5' :
+                                                                passwordStrength.score === 3 ? 'bg-gray-300 w-4/5' :
+                                                                    'bg-green-400 w-full'
+                                                    }`}
                                             ></div>
                                         </div>
                                         <span className={`text-xs font-medium ${passwordStrength.color}`}>
@@ -381,11 +422,8 @@ function Signup() {
                                     id="confirmPassword"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    onFocus={() => setFocusedField('confirmPassword')}
-                                    onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#262624] border ${
-                                        confirmPassword && !passwordsMatch ? 'border-red-400' : 'border-[#9C9A92]'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
+                                    className={`w-full bg-[#262624] border ${confirmPassword && !passwordsMatch ? 'border-red-400' : 'border-[#9C9A92]'
+                                        } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500`}
                                     placeholder="••••••••"
                                     required
                                 />
@@ -396,11 +434,11 @@ function Signup() {
                                 >
                                     {showConfirmPassword ? (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
                                         </svg>
                                     ) : (
                                         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                         </svg>
                                     )}
                                 </div>
@@ -429,7 +467,7 @@ function Signup() {
                         {/* Referral Code Input (Optional) */}
                         <div className="space-y-1.5">
                             <label htmlFor="referralCode" className="block text-white font-medium text-sm text-left">
-                                Código de Indicação <span className="text-gray-500 text-xs">(Opcional)</span>
+                                {t('signupPage.referral_code_label')} <span className="text-gray-500 text-xs">({t('common.optional')})</span>
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -442,15 +480,12 @@ function Signup() {
                                     id="referralCode"
                                     value={referralCode}
                                     onChange={(e) => handleReferralCodeChange(e.target.value)}
-                                    onFocus={() => setFocusedField('referralCode')}
-                                    onBlur={() => setFocusedField('')}
-                                    className={`w-full bg-[#262624] border ${
-                                        referralValidation.valid === true
+                                    className={`w-full bg-[#262624] border ${referralValidation.valid === true
                                             ? 'border-green-400'
                                             : referralValidation.valid === false
-                                            ? 'border-red-400'
-                                            : 'border-[#9C9A92]'
-                                    } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500 uppercase`}
+                                                ? 'border-red-400'
+                                                : 'border-[#9C9A92]'
+                                        } text-white rounded-xl pl-10 pr-12 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#01C38D] transition-all duration-300 placeholder-gray-500 uppercase`}
                                     placeholder="ex: JOAO2847"
                                     maxLength={12}
                                 />
@@ -474,9 +509,8 @@ function Signup() {
                             </div>
                             {/* Validation Message */}
                             {referralValidation.message && (
-                                <div className={`text-xs flex items-start ${
-                                    referralValidation.valid ? 'text-green-400' : 'text-red-400'
-                                }`}>
+                                <div className={`text-xs flex items-start ${referralValidation.valid ? 'text-green-400' : 'text-red-400'
+                                    }`}>
                                     <svg className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         {referralValidation.valid ? (
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -490,7 +524,7 @@ function Signup() {
                             {/* Benefit Message */}
                             {!referralCode && (
                                 <p className="text-xs text-gray-400">
-                                    Tem um código de indicação? Ganhe 7 dias grátis de Premium!
+                                    {t('signupPage.referral_code_benefit')}
                                 </p>
                             )}
                         </div>
@@ -530,8 +564,8 @@ function Signup() {
 
                     {/* Enhanced Login Link */}
                     <div className="mt-4 text-center">
-                        <Link 
-                            to="/login" 
+                        <Link
+                            to="/login"
                             className="inline-flex items-center justify-center text-[#56a69f] hover:text-[#56a69f]/80 font-semibold transition-colors duration-200 group"
                         >
                             {t('signupPage.login')}
@@ -544,8 +578,8 @@ function Signup() {
 
                 {/* Footer with Privacy Policy and Terms Links */}
                 <div className="mt-8 text-center">
-                    <a 
-                        href="/privacy" 
+                    <a
+                        href="/privacy"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-[#C2C0B6] hover:text-[#56a69f] transition-colors duration-200"
@@ -553,8 +587,8 @@ function Signup() {
                         Privacy Policy
                     </a>
                     <span className="text-gray-600 mx-3">•</span>
-                    <a 
-                        href="/terms" 
+                    <a
+                        href="/terms"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-[#C2C0B6] hover:text-[#56a69f] transition-colors duration-200"

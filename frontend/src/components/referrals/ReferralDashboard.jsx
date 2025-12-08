@@ -1,17 +1,9 @@
 import { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { useAuth } from '../../context/AuthContext';
-=======
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 import api from '../../utils/api';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAnalytics } from '../../hooks/useAnalytics';
 
 function ReferralDashboard() {
-<<<<<<< HEAD
-    const { user } = useAuth();
-=======
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
     const { track } = useAnalytics();
     const [loading, setLoading] = useState(true);
     const [referralData, setReferralData] = useState(null);
@@ -145,11 +137,7 @@ function ReferralDashboard() {
 
     if (loading) {
         return (
-<<<<<<< HEAD
-            <div className="flex items-center justify-center min-h-screen bg-[#262624]">
-=======
             <div className="flex items-center justify-center min-h-full bg-[#262624]">
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
                 <div className="flex flex-col items-center">
                     <svg className="animate-spin h-10 w-10 text-[#56a69f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -164,11 +152,7 @@ function ReferralDashboard() {
     const tierInfo = referralData?.stats ? getTierInfo(referralData.stats) : null;
 
     return (
-<<<<<<< HEAD
-        <div className="min-h-screen bg-[#262624] p-6">
-=======
         <div className="min-h-full bg-[#262624] p-6">
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
             <div className="max-w-4xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="text-center mb-8">

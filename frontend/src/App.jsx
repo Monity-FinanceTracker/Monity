@@ -6,7 +6,7 @@ import './styles/toast-custom.css';
 import { ToastContainer } from 'react-toastify';
 import ToastCloseButton from './components/ui/ToastCloseButton';
 import { usePageTracking } from './hooks/usePageTracking';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from './context/useAuth';
 import { DemoDataProvider } from './components/demo';
 import { WelcomeHeroOverlay, SocialProofBanner } from './components/landing';
 import { OnboardingWizard } from './components/onboarding';

@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-=======
 import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 import Confetti from 'react-confetti';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import api from '../../utils/api';
 import {
   FaCheckCircle,
@@ -34,10 +29,6 @@ const OnboardingWizard = ({ onComplete, onSkip }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
-<<<<<<< HEAD
-  const navigate = useNavigate();
-=======
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 
   // Form data for each step
   const [formData, setFormData] = useState({

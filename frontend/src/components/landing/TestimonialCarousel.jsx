@@ -58,14 +58,11 @@ const TestimonialCarousel = ({ className = '' }) => {
     }
   ];
 
-<<<<<<< HEAD
-=======
   const handleNext = useCallback(() => {
     setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   }, [testimonials.length]);
 
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
   // Auto-rotate every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
@@ -73,16 +70,7 @@ const TestimonialCarousel = ({ className = '' }) => {
     }, 5000);
 
     return () => clearInterval(timer);
-<<<<<<< HEAD
-  }, [currentIndex]);
-
-  const handleNext = () => {
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
-=======
   }, [handleNext]);
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 
   const handlePrev = () => {
     setDirection(-1);

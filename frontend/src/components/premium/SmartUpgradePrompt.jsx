@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-=======
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 import { useNavigate } from 'react-router-dom';
 import {
   FaCrown,
@@ -131,29 +126,6 @@ export const SmartUpgradePrompt = ({
   const [countdown, setCountdown] = useState(7);
   const config = PROMPT_CONFIGS[promptType];
 
-<<<<<<< HEAD
-  if (!config) {
-    console.error(`Unknown prompt type: ${promptType}`);
-    return null;
-  }
-
-  // Auto-dismiss countdown (optional - only for non-critical prompts)
-  useEffect(() => {
-    if (position !== 'center') {
-      const timer = setInterval(() => {
-        setCountdown(prev => {
-          if (prev <= 1) {
-            handleDismiss('auto');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [position]);
-=======
   const recordPromptAction = useCallback(async (action, actionType) => {
     try {
       await fetch('/api/v1/premium/prompt-action', {
@@ -208,7 +180,6 @@ export const SmartUpgradePrompt = ({
 
     return () => clearInterval(timer);
   }, [position, handleDismiss]);
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 
   const handleUpgrade = (action) => {
     // Track conversion
@@ -232,45 +203,6 @@ export const SmartUpgradePrompt = ({
     onClose?.();
   };
 
-<<<<<<< HEAD
-  const handleDismiss = (dismissType = 'manual') => {
-    // Track dismissal
-    if (window.analytics && typeof window.analytics.track === 'function') {
-      window.analytics.track('smart_prompt_dismissed', {
-        prompt_type: promptType,
-        dismiss_type: dismissType,
-        custom_data: customData
-      });
-    }
-
-    // Record dismissal in backend (7-day snooze)
-    recordPromptAction('dismissed', dismissType);
-
-    onClose?.();
-  };
-
-  const recordPromptAction = async (action, actionType) => {
-    try {
-      await fetch('/api/v1/premium/prompt-action', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          prompt_type: promptType,
-          action_taken: action,
-          action_type: actionType,
-          context: customData
-        })
-      });
-    } catch (error) {
-      console.error('Error recording prompt action:', error);
-    }
-  };
-
-=======
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
   // Position variants
   const positionClasses = {
     center: 'items-center justify-center',
@@ -284,15 +216,12 @@ export const SmartUpgradePrompt = ({
     top: 'max-w-lg'
   };
 
-<<<<<<< HEAD
-=======
   // Early return must be after all hooks
   if (!config) {
     console.error(`Unknown prompt type: ${promptType}`);
     return null;
   }
 
->>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
   return (
     <motion.div
       initial={{ opacity: 0 }}
