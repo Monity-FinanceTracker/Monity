@@ -206,7 +206,7 @@ const AIAssistantPage = () => {
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
 
     return (
-        <div className="h-full max-w-5xl mx-auto flex flex-col overflow-hidden">
+        <div className="h-[calc(100vh-8rem)] max-w-5xl mx-auto flex flex-col overflow-hidden">
             {/* Header - Fixed at top */}
             <div className="flex items-center justify-between px-4 py-3" style={{ flexShrink: 0 }}>
                 <button
@@ -218,7 +218,7 @@ const AIAssistantPage = () => {
             </div>
 
             {/* Messages Container - Scrollable */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4" style={{ scrollBehavior: 'smooth' }}>
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 pb-4" style={{ scrollBehavior: 'smooth' }}>
                 {!isInitialLoading && messages.length === 0 && showPrompts ? (
                     <div className="h-full flex items-center justify-center p-6">
                         <div className="flex flex-col items-center gap-4">
@@ -316,7 +316,7 @@ const AIAssistantPage = () => {
             )}
 
             {/* Input - Fixed at bottom */}
-            <div className="p-4 border-t border-[#262626] bg-[#262624]" style={{ flexShrink: 0 }}>
+            <div className="sticky bottom-0 p-4 border-t border-[#262626] bg-[#262624] z-10" style={{ flexShrink: 0 }}>
                 <div className="flex gap-2">
                     <input
                         ref={inputRef}
