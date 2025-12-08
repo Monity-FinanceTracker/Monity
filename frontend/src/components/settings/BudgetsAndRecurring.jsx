@@ -6,7 +6,6 @@ import {
     getCategories,
     getRecurringTransactions,
     addRecurringTransaction,
-    updateRecurringTransaction,
     deleteRecurringTransaction,
     processRecurringTransactions,
     getTransactionTypes

@@ -5,7 +5,7 @@ import {
   FiCheck, FiZap, FiMessageSquare, FiTrendingUp, FiTarget, FiPieChart,
   FiLock, FiStar, FiCalendar, FiX, FiClock, FiUsers, FiShield, FiAward, FiPause, FiGift
 } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
 import api from "../../utils/api";
 
 const Subscription = () => {

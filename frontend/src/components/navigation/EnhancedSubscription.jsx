@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/useAuth";
 import { useSearchParams } from 'react-router-dom';
+<<<<<<< HEAD
 import { motion } from 'framer-motion';
+=======
+import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
+>>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 import {
   FiCheck,
   FiX,

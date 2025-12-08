@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { motion, AnimatePresence } from 'framer-motion';
+=======
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
+>>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 import { useNavigate } from 'react-router-dom';
 import {
   FaLock,

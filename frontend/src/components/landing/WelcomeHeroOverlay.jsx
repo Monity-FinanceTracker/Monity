@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+=======
+import React, { useEffect, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
+>>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 import { X, TrendingUp, Users, Brain, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +17,20 @@ const WelcomeHeroOverlay = ({ onDismiss, variant = 'A' }) => {
   const navigate = useNavigate();
   const [autoDismissTimer, setAutoDismissTimer] = useState(10);
 
+<<<<<<< HEAD
+=======
+  const handleDismiss = useCallback(() => {
+    // Track dismissal
+    if (window.analytics && typeof window.analytics.track === 'function') {
+      window.analytics.track('hero_overlay_dismissed', {
+        variant,
+        time_on_screen: 10 - autoDismissTimer
+      });
+    }
+    onDismiss();
+  }, [onDismiss, variant, autoDismissTimer]);
+
+>>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
   // Auto-dismiss after 10 seconds
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,6 +44,7 @@ const WelcomeHeroOverlay = ({ onDismiss, variant = 'A' }) => {
     }, 1000);
 
     return () => clearInterval(timer);
+<<<<<<< HEAD
   }, []);
 
   const handleDismiss = () => {
@@ -37,6 +57,9 @@ const WelcomeHeroOverlay = ({ onDismiss, variant = 'A' }) => {
     }
     onDismiss();
   };
+=======
+  }, [handleDismiss]);
+>>>>>>> 638ba468f69d08521c1f3c83b31a7312cd1828b1
 
   const handleSignup = () => {
     // Track CTA click

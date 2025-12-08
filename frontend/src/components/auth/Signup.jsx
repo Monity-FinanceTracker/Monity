@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useAnalytics } from '../../hooks/useAnalytics';
@@ -34,7 +34,7 @@ function Signup() {
             setReferralCode(refCode.toUpperCase());
             validateReferralCode(refCode);
         }
-    }, [searchParams]);
+    }, [searchParams, validateReferralCode]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -131,7 +131,7 @@ function Signup() {
     const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
     // Validate referral code function
-    const validateReferralCode = async (code) => {
+    const validateReferralCode = useCallback(async (code) => {
         if (!code || code.trim().length === 0) {
             setReferralValidation({ valid: null, message: '', referrerName: '' });
             return;
@@ -163,7 +163,7 @@ function Signup() {
                     referrerName: ''
                 });
             }
-        } catch (error) {
+        } catch {
             setReferralValidation({
                 valid: false,
                 message: 'Erro ao validar código',
@@ -172,7 +172,7 @@ function Signup() {
         } finally {
             setValidatingReferral(false);
         }
-    };
+    }, [track]);
 
     // Handle referral code change with debounce
     const handleReferralCodeChange = (value) => {

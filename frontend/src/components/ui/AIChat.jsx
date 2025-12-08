@@ -172,9 +172,6 @@ const AIChat = ({ isOpen, onClose }) => {
 
     const isPremium = subscriptionTier === 'premium';
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
-    const messagesRemainingText = messagesRemaining === 1
-        ? t('aiChat.messages_remaining', { count: messagesRemaining })
-        : t('aiChat.messages_remaining_plural', { count: messagesRemaining });
 
     return (
         <div 

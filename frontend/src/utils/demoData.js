@@ -458,7 +458,7 @@ export const generateDemoCategories = () => [
 // Get expense chart data (last 6 months)
 export const generateDemoExpenseChartData = () => {
   const months = ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  return months.map((month, index) => ({
+  return months.map((month) => ({
     month,
     expenses: 4500 + Math.random() * 1500, // R$ 4500-6000
     income: 8500 + Math.random() * 1000, // R$ 8500-9500
