@@ -30,10 +30,10 @@ const AIAssistantPage = () => {
     const [showAILimitCard, setShowAILimitCard] = useState(false);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
-
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
 
     useEffect(() => {
         loadChatHistory();
@@ -206,7 +206,7 @@ const AIAssistantPage = () => {
     const messagesRemaining = isPremium ? null : Math.max(0, 3 - (usage?.today?.messagesUsed || 0));
 
     return (
-        <div className="h-full max-w-5xl mx-auto flex flex-col overflow-hidden">
+        <div className="h-[calc(100vh-8rem)] max-w-5xl mx-auto flex flex-col" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 8rem)' }}>
             {/* Header - Fixed at top */}
             <div className="flex items-center justify-between px-4 py-3" style={{ flexShrink: 0 }}>
                 <button
@@ -217,17 +217,17 @@ const AIAssistantPage = () => {
                 </button>
             </div>
 
-            {/* Messages Container - Scrollable */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4" style={{ scrollBehavior: 'smooth' }}>
+                {/* Messages Container - Scrollable */}
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4" style={{ scrollBehavior: 'smooth', minHeight: 0 }}>
                 {!isInitialLoading && messages.length === 0 && showPrompts ? (
-                    <div className="h-full flex items-center justify-center p-6">
+                    <div className="flex items-center justify-center p-6" style={{ minHeight: 0, flex: '1 1 0', display: 'flex' }}>
                         <div className="flex flex-col items-center gap-4">
-                            <img 
-                                src={MonityLogo} 
-                                alt="Monity Logo" 
+                            <img
+                                src={MonityLogo}
+                                alt="Monity Logo"
                                 className="w-16 h-16"
                             />
-                            <h3 
+                            <h3
                                 className="text-4xl font-stratford text-center"
                                 style={{ color: '#C2C0B6' }}
                             >
@@ -243,11 +243,10 @@ const AIAssistantPage = () => {
                                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
                                 <div
-                                    className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                                        message.role === 'user'
+                                    className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.role === 'user'
                                             ? 'bg-[#141413] text-white'
                                             : 'bg-[#262624] text-white'
-                                    }`}
+                                        }`}
                                 >
                                     {message.role === 'assistant' ? (
                                         <div className="text-left prose-sm sm:prose-base">
@@ -262,7 +261,7 @@ const AIAssistantPage = () => {
                                                     h1: (props) => <h1 className="text-xl font-bold mb-2 mt-2 text-white" {...props} />,
                                                     h2: (props) => <h2 className="text-lg font-bold mb-2 mt-2 text-white" {...props} />,
                                                     h3: (props) => <h3 className="text-base font-bold mb-1 mt-1 text-white" {...props} />,
-                                                    code: ({inline, ...props}) => 
+                                                    code: ({ inline, ...props }) =>
                                                         inline ? (
                                                             <code className="bg-gray-700 px-1 py-0.5 rounded text-sm text-white" {...props} />
                                                         ) : (
@@ -316,7 +315,7 @@ const AIAssistantPage = () => {
             )}
 
             {/* Input - Fixed at bottom */}
-            <div className="p-4 border-t border-[#262626] bg-[#262624]" style={{ flexShrink: 0 }}>
+            <div className="p-4 border-t border-[#262626] bg-[#262624] z-10" style={{ flexShrink: 0, marginTop: 'auto' }}>
                 <div className="flex gap-2">
                     <input
                         ref={inputRef}

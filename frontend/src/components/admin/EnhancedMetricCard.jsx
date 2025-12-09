@@ -12,7 +12,7 @@ function EnhancedMetricCard({
     trend = null,  // percentage change (e.g., 12.5 for +12.5%)
     icon,
     color = 'text-[#56a69f]',
-    bgGradient = 'from-[#56a69f]/20 to-[#56a69f]/5',
+    bgGradient = 'from-[#232420] to-[#1F1E1D]',
     subtitle = null,
     loading = false
 }) {

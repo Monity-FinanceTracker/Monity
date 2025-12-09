@@ -31,6 +31,28 @@ const InteractiveTour = ({ steps, onComplete, onSkip }) => {
       }
     };
 
+    // Scroll to target element smoothly to ensure it's visible
+    const scrollToTarget = () => {
+      const element = document.querySelector(currentStepData.target);
+      if (element) {
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+          element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+          
+          // Update position after scroll animation completes
+          setTimeout(() => {
+            updateTargetPosition();
+          }, 500);
+        }, 100);
+      }
+    };
+
+    // Initial scroll and position update
+    scrollToTarget();
     updateTargetPosition();
 
     // Update on resize or scroll

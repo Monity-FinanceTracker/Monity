@@ -98,3 +98,8 @@ debug-*.js
 *.tmp
 *.temp
 
+# Merge conflict files
+*.orig
+* 2.*
+* (2).*
+

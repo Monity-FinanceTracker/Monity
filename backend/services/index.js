@@ -21,7 +21,6 @@ module.exports = {
   financialHealthService,
   scheduledTransactionService,
   AIChatService,
-  EmailValidationService,
   emailValidationService,
   emailMetricsService,
 };

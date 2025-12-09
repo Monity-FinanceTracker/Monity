@@ -102,7 +102,6 @@ const DemoDashboard = () => {
                                         transaction.typeId
                                     )}`}
                                 >
-                                    {transaction.typeId === 1 ? '-' : '+'}
                                     {formatCurrency(transaction.amount, transaction.typeId)}
                                 </div>
                                 <div className="text-xs text-[#C2C0B6]">
@@ -284,7 +283,7 @@ const DemoDashboard = () => {
                             className="bg-[#232323] text-[#FAF9F5] border border-[#3a3a3a] rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#56a69f]/50"
                         >
                             <option value="current_month">{t('common.current_month')}</option>
-                            <option value="all_time">{t('common.all_time')}</option>
+                            <option value="all_time">{t('dashboard.all_time')}</option>
                         </select>
                     }
                 >

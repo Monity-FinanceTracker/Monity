@@ -277,8 +277,8 @@ const EnhancedDashboard = () => {
                 </div>
             </div>
 
-            {/* Getting Started Checklist - Only for authenticated users */}
-            {user && (
+            {/* Getting Started Checklist - Only for authenticated users, hidden during tour */}
+            {user && !isTourActive && (
                 <GettingStartedChecklist userId={user.id} />
             )}
 
